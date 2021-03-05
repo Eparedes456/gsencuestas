@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "175557992206",
+    "project_id": "gsencuesta-99fab",
+    "storage_bucket": "gsencuesta-99fab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175557992206:android:d82c5fb7cf1b9b889d815f",
+        "android_client_info": {
+          "package_name": "pe.gob.regionsanmartin.gsencuesta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175557992206-7s2i40f15ijt6nle5ul01qmrvtqbuo08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxDZCX0LbI8qu8Ducjcx8x2i8TVAbarFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175557992206-7s2i40f15ijt6nle5ul01qmrvtqbuo08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
