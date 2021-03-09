@@ -16,13 +16,13 @@ class PreguntaModel {
   String  enunciado;
   String  tipo_pregunta;
   String  apariencia;
-  int     requerido;
+  bool     requerido;
   String  requerido_msj;
-  int     readonly;
+  bool     readonly;
   String  defecto;
   String  calculation;
-  String  constraint;
-  String  constraint_msj;
+  String  restriccion;
+  String  restriccion_msj;
   String  relevant;
   String  choice_filter;
   String  bind_name;
@@ -31,14 +31,15 @@ class PreguntaModel {
   String  bind_field_length;
   String  bind_field_placeholder;
   int     orden;
-  int     estado;
+  bool     estado;
   String  updated_at;
+  String created_at;
    
     PreguntaModel({
 
       this.id_pregunta,this.id_bloque,this.id_encuesta,this.enunciado,this.tipo_pregunta,this.apariencia,this.requerido,this.requerido_msj,this.readonly,this.defecto,
-      this.calculation,this.constraint,this.constraint_msj,this.relevant,this.choice_filter,this.bind_name,this.bind_type,this.bind_field_length,this.bind_field_placeholder,
-      this.orden,this.estado,this.updated_at
+      this.calculation,this.restriccion,this.restriccion_msj,this.relevant,this.choice_filter,this.bind_name,this.bind_type,this.bind_field_length,this.bind_field_placeholder,
+      this.orden,this.estado,this.updated_at,this.created_at
 
     });
 
@@ -48,7 +49,7 @@ class PreguntaModel {
   factory PreguntaModel.fromJson(Map<String, dynamic> json) => PreguntaModel(
 
 
-    id_pregunta             : json["id_encuesta"],
+    id_pregunta             : json["idPregunta"],
     id_bloque               : json['id_bloque'],
     id_encuesta             : json['id_proyecto'],
     enunciado               : json['enunciado'],
@@ -58,17 +59,18 @@ class PreguntaModel {
     readonly                : json['readonly'],
     defecto                 : json['defecto'],
     calculation             : json['calculation'],
-    constraint              : json['constraint'],
-    constraint_msj          : json['constraint_msj'], 
+    restriccion             : json['restriccion'],
+    restriccion_msj         : json['restriccion_msj'], 
     relevant                : json['relevant'],
     choice_filter           : json['choice_filter'],
     bind_name               : json['bind_name'],
     bind_type               : json['bind_type'],
-    bind_field_length       : json['bind_field_length'],
-    bind_field_placeholder  : json['bind_field_placeholder'],
+    bind_field_length       : json['bindFieldLength'],
+    bind_field_placeholder  : json['bindFieldPlaceholder'],
     orden                   : json['orden'],
     estado                  : json['estado'],
-    updated_at              : json['updated_at']        
+    updated_at              : json['updatedAt'],
+    created_at              : json['createdAt']         
 
   );
 
@@ -89,8 +91,8 @@ class PreguntaModel {
       'readonly'                : readonly,
       'defecto'                 : defecto,
       'calculation'             : calculation,
-      'constraint'              : constraint,
-      'constraint_msj'          : constraint_msj, 
+      'restriccion'             : restriccion,
+      'restriccion_msj'         : restriccion_msj, 
       'relevant'                : relevant,
       'choice_filter'           : choice_filter,
       'bind_name'               : bind_name,
@@ -99,7 +101,8 @@ class PreguntaModel {
       'bind_field_placeholder'  : bind_field_placeholder,
       'orden'                   : orden,
       'estado'                  : estado,       
-      'updated_at'              : updated_at
+      'updated_at'              : updated_at,
+      'created_at'              : created_at
 
     };
 

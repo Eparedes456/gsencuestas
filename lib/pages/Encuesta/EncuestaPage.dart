@@ -77,9 +77,7 @@ class EncuestaPage extends StatelessWidget {
                           child: MaterialButton(
                             onPressed: (){
 
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (BuildContext context) => QuizPage())
-                              );
+                              _.navigateToQuiz();
 
                             },
                             child: Text(

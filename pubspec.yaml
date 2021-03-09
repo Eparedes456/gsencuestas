@@ -32,6 +32,7 @@ dependencies:
   geolocator: ^6.2.1
   image_picker:
   sqflite:
+  connectivity:
 
 dev_dependencies:
   flutter_test:

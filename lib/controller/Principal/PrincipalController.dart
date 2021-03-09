@@ -15,6 +15,9 @@ class PrincipalController extends GetxController{
   List<ProyectoModel> _proyectos = [];
   List<ProyectoModel> get  proyectos => _proyectos;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   @override
   void onReady() {
     // TODO: implement onReady
@@ -82,6 +85,12 @@ class PrincipalController extends GetxController{
       });
 
       print(proyectos.length);
+
+      if(proyectos.length > 0 ){
+
+        _isLoading = true;
+
+      }
 
     }else if( resultado == 1){
 

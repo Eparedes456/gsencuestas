@@ -15,7 +15,7 @@ class ApiServices {
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
-      print(response.data);
+      //print(response.data);
 
       return response.data;
 
@@ -47,7 +47,7 @@ class ApiServices {
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
-      print(response.data);
+      //print(response.data);
 
       return response.data;
 
@@ -77,6 +77,38 @@ class ApiServices {
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
+      //print(response.data);
+
+      return response.data;
+
+    }else if(response.statusCode == 500){
+
+      print('Error de servidor,consulte con el encargado del sistema');
+
+      return 1;
+
+    }else if(response.statusCode == 401){
+
+      print('Estimado usuario su sesion a expirado.');
+      return 2;
+
+    }else{
+
+      print('la ruta que usted especifica no existe');
+      return 3;
+
+    }
+
+  }
+
+  /* onsultar a la tabla parametros para descargar la tabla usuarios  */
+
+  consultarParametros()async{
+
+    Response response = await dio.get(base_url + "parametros");
+    if(response.statusCode == 200){
+
+      print('Respuesta de servidor exitosa!');
       print(response.data);
 
       return response.data;
@@ -98,6 +130,38 @@ class ApiServices {
       return 3;
 
     }
+
+  }
+
+
+  getAllUsers()async{
+
+    Response response = await dio.get(base_url + "usuario");
+    if(response.statusCode == 200){
+
+      print('Respuesta de servidor exitosa!');
+      print(response.data);
+
+      return response.data;
+
+    }else if(response.statusCode == 500){
+
+      print('Error de servidor,consulte con el encargado del sistema');
+
+      return 1;
+
+    }else if(response.statusCode == 401){
+
+      print('Estimado usuario su sesion a expirado.');
+      return 2;
+
+    }else{
+
+      print('la ruta que usted especifica no existe');
+      return 3;
+
+    }
+
 
   }
 

@@ -3,6 +3,8 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/pages/quiz/QuizPage.dart';
+import 'package:gsencuesta/services/apiServices.dart';
 
 class EncuestaController extends GetxController{
 
@@ -24,6 +26,8 @@ class EncuestaController extends GetxController{
 
   }
 
+  ApiServices apiConexion= new ApiServices();
+
   String _imagePortada = "";
   String get imagePortada => _imagePortada;
 
@@ -39,7 +43,11 @@ class EncuestaController extends GetxController{
   String _fechaFin = "";
   String get fechaFin => _fechaFin;
 
+  String _totalPreguntas = "";
+  String get totalPreguntas => _totalPreguntas;
 
+  String _idEncuesta = "";
+  String get idEncuesta => _idEncuesta;
 
 
   loadData(EncuestaModel encuesta){
@@ -49,14 +57,33 @@ class EncuestaController extends GetxController{
     _titulo         = encuesta.titulo;
     _fechaFin       = encuesta.fechaFin;
     _fechaInicio    = encuesta.fechaInicio;
+    _idEncuesta     = encuesta.idEncuesta.toString();
 
     update();
-  
+    
+    getPreguntas(encuesta.idEncuesta.toString());
+
+  }
+
+  getPreguntas(String idEncuesta)async{
+
+    var resultado = await apiConexion.getPreguntasxEncuesta(idEncuesta);  
+    var  preguntas = resultado["pregunta"];
+    
 
   }
 
 
+  navigateToQuiz(){
 
+    Get.to(
+
+      QuizPage(),
+      arguments: _idEncuesta
+
+    );
+
+  }
 
 
 

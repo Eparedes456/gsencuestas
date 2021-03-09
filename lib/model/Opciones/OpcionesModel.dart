@@ -9,17 +9,22 @@ List<OpcionesModel> opcionesFromJson(String str) =>
 
 class OpcionesModel {
 
+  int     idPreguntaGrupoOpcion;
+  int     idGrupoOpcion;
   int     id_opcion;
   int     id_pregunta;
   String  valor;
   String  label;
   int     orden;
-  String  estado;
-  String  updated_at;  
+  bool    estado;
+  String  createdAt;  
+  String  updated_at;
+  
    
     OpcionesModel({
 
-      this.id_opcion,this.id_pregunta,this.valor,this.label,this.orden,this.estado,this.updated_at
+      this.idPreguntaGrupoOpcion,this.idGrupoOpcion,this.id_opcion,this.id_pregunta,this.valor,this.label,this.orden,this.estado,this.createdAt,
+      this.updated_at
 
     });
 
@@ -28,13 +33,16 @@ class OpcionesModel {
 
   factory OpcionesModel.fromJson(Map<String, dynamic> json) => OpcionesModel(
 
-    id_opcion     : json["id_opcion"],
-    id_pregunta   : json["id_pregunta"],
-    valor         : json['valor'],
-    label         : json['label'],
-    orden         : json['orden'],
-    estado        : json['estado'],
-    updated_at    : json['updated_at']       
+    idPreguntaGrupoOpcion   : json["idPreguntaGrupoOpcion"],
+    idGrupoOpcion           : json["idGrupoOpcion"],
+    id_opcion               : json["idOpcion"],
+    id_pregunta             : json["idPregunta"],
+    valor                   : json['valor'],
+    label                   : json['label'],
+    orden                   : json['orden'],
+    estado                  : json['estado'],
+    createdAt               : json['createdAt'] ,
+    updated_at              : json['updatedAt']       
 
   );
 
@@ -44,14 +52,17 @@ class OpcionesModel {
   Map<String,dynamic> toJson(){
 
     return {
-
-      'id_opcion'     : id_opcion,
-      'id_pregunta'   : id_pregunta,
-      'valor'         : valor,
-      'label'         : label,
-      'orden'         : orden,
-      'estado'        : estado,
-      'updated_at'    : updated_at
+      
+      'idPreguntaGrupoOpcion' : idPreguntaGrupoOpcion,
+      'idGruoOpcion'          : idGrupoOpcion,
+      'id_opcion'             : id_opcion,
+      'id_pregunta'           : id_pregunta,
+      'valor'                 : valor,
+      'label'                 : label,
+      'orden'                 : orden,
+      'estado'                : estado,
+      'createdAt'             : createdAt,
+      'updated_at'            : updated_at
 
 
     };

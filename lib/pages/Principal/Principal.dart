@@ -15,15 +15,7 @@ class PrincipalPage extends StatelessWidget {
     return GetBuilder<PrincipalController>(
       init: PrincipalController(),
       builder: (_) => Scaffold(
-        /*appBar: AppBar(
-          backgroundColor: Colors.green[700],
-          title: Container(
-            height: 40,
-            child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
-          ),
-          centerTitle: true,
-          elevation: 0,
-        ),*/
+        
         drawer: Drawer(
           child: menu(_),
         ),
@@ -105,6 +97,17 @@ class PrincipalPage extends StatelessWidget {
               ),
               SizedBox(height: 30,),
 
+              _.isLoading == false?  Container(
+               
+                child: Center(
+
+                  child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                  )
+                  
+                ),
+              ):
+
               Container(
                 height: size.height,
                 child: ListView.builder(
@@ -125,40 +128,7 @@ class PrincipalPage extends StatelessWidget {
 
                   }
                 ),
-                /*child: ListView(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  children: [
-
-                    buildCard(
-                      _, 
-                      context, 
-                      Color.fromRGBO(67, 197, 217, 1),
-                      'Ficha de Cacao','Encuesta relacionado a las parcelas y plagas.',
-                      'https://concepto.de/wp-content/uploads/2018/08/cacao-e1533849112880.jpg',
-                      'Proyecto De Alto Rendimiento cacao para eel mundo desde Tarapoto , San Martin.'
-                    ),
-
-                    buildCard(
-                      _, 
-                      context, 
-                      Color.fromRGBO(67, 197, 217, 1),
-                      'Ficha de Cacao','Encuesta relacionado a las parcelas y plagas.',
-                      'https://cdn.shopify.com/s/files/1/0152/8230/7158/files/spanishfruitsanddelicacies01_e642f6b8-40b3-450a-bc5d-97ea052ab52b_1024x1024.jpg?v=1566818066',
-                      'Proyecto Naranja'
-                    ),
-
-                    buildCard(
-                      _, 
-                      context, 
-                      Color.fromRGBO(67, 197, 217, 1),
-                      'Ficha de Cacao','Encuesta relacionado a las parcelas y plagas.',
-                      'https://www.caracteristicas.co/wp-content/uploads/2018/09/cafe-2-e1578772193199.jpg',
-                      'Proyecto Cafe'
-                    ),
-
-                  ],
-                ),*/
+                
               )
             ],
           ),

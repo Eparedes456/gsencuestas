@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
+import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/services/apiServices.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -12,6 +15,8 @@ class QuizController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    var idEncuesta = Get.arguments;
+    this.getPreguntas(idEncuesta.toString());   
   }
 
   @override
@@ -20,10 +25,114 @@ class QuizController extends GetxController{
     super.onReady();
   }
 
-
+  ApiServices apiConexion = new ApiServices();
   String _tipo_pregunta = 'Texto';
   String get tipo_pregunta => _tipo_pregunta;
+  List<PreguntaModel> _preguntas = [];
+  List<PreguntaModel> get preguntas => _preguntas;
+  List<OpcionesModel> _opcionesPreguntas = [];
+  List<OpcionesModel> get opcionesPreguntas => _opcionesPreguntas;
 
+
+
+  getPreguntas(String idEncuesta)async{
+
+    var response = await apiConexion.getPreguntasxEncuesta(idEncuesta);
+
+    if(response != 1 && response != 2 && response  != 3){
+
+      var data = response["pregunta"];
+      //print(response["pregunta"]);
+
+      int idPregunta;
+
+      data.forEach((item){
+
+        idPregunta = item["idPregunta"];
+
+        _preguntas.add(
+          PreguntaModel(
+
+            id_pregunta       : item["idPregunta"],
+            id_bloque         : item["id_bloque"],
+            id_encuesta       : item["id_encuesta"],
+            enunciado         : item["enunciado"],
+            tipo_pregunta     : item["tipo_pregunta"],
+            apariencia        : item["apariencia"],
+            requerido         : item["requerido"],
+            requerido_msj     : item["requerido_msj"],
+            readonly          : item["readonly"],
+            defecto           : item["defecto"],
+            calculation       : item["calculation"],
+            restriccion       : item["restriccion"],
+            restriccion_msj   : item["restriccion_msj"],
+            relevant          : item["relevant"],
+            choice_filter     : item["choice_filter"], 
+            bind_name         : item["bind_name"],
+            bind_type         : item["bind_type"],
+            bind_field_length : item["bind_field_length"],
+            bind_field_placeholder  : item["bind_field_placeholder"],
+            orden             : item["orden"],
+            estado            : item["estado"],
+            updated_at        : item["createdAt"],
+            created_at        : item["updatedAt"]
+
+          )
+        );
+        print('hola');
+        var preguOpcion = item["preguntaGrupoOpcion"];
+        int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+        var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
+        var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+        print(idPreguOpcion);
+        //print(idgrupoOpcion);
+        //print(opciones);
+
+        opciones.forEach((item2){
+
+          _opcionesPreguntas.add(
+
+            OpcionesModel(
+
+              idPreguntaGrupoOpcion   : idPreguOpcion,
+              idGrupoOpcion           : idgrupoOpcion,
+              id_opcion               : item2["idOpcion"],
+              id_pregunta             : idPregunta,
+              valor                   : item2["valor"],
+              label                   : item2["label"], 
+              orden                   : item2["orden"],
+              estado                  : item2["estado"],
+              createdAt               : item2["createdAt"],
+              updated_at              : item2["updatedAt"],  
+
+            )
+
+          );
+
+        });
+      });
+
+      print(_opcionesPreguntas.length);
+      //print(_preguntas.length);
+
+
+    }else if( response == 1){
+
+      print('Error de servidor');
+
+    }else if(response == 2){
+
+      print(' eRROR DE TOKEN');
+
+    }else{
+
+      print('Error, no existe la pagina 404');
+
+    }
+
+    update();
+
+  }
 
 
 
