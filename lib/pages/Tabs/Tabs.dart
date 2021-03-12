@@ -28,7 +28,12 @@ class TabsPage extends StatelessWidget {
     return Scaffold(
 
       body: Obx(
-        ()=>Center(child: bodyContent.elementAt(tabsController.selectIndex),)
+        ()=>IndexedStack(
+          children: [
+            Center(child: bodyContent.elementAt(tabsController.selectIndex),)
+          ],
+          //child: Center(child: bodyContent.elementAt(tabsController.selectIndex),)
+        )
       ),
 
       bottomNavigationBar: Obx(

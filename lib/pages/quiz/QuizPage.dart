@@ -42,7 +42,7 @@ class QuizPage extends StatelessWidget {
               
 
               SizedBox(height: 30,),
-              SizedBox(height: 20,),
+             
 
               Container(
                 height: MediaQuery.of(context).size.height,
@@ -52,7 +52,8 @@ class QuizPage extends StatelessWidget {
                   itemCount: _.preguntas.length,
                   itemBuilder: (context,index){
                     var enunciadoPregunta = _.preguntas[index].enunciado;
-                    var numPregunta = 0;
+                    var numPregunta = index + 1;
+                    
                     var id_pregunta = _.preguntas[index].id_pregunta;
 
                     print(_.preguntas[index]);
@@ -61,14 +62,14 @@ class QuizPage extends StatelessWidget {
 
                       return Column(
                         children: [
-                          TextFieldWidget(enunciadoPregunta),
+                          TextFieldWidget(enunciadoPregunta,numPregunta.toString()),
                           SizedBox(height: 50,)
                         ],
                       );
 
                     }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
-                      return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_);
+                      return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
                     }
 
@@ -114,7 +115,7 @@ class QuizPage extends StatelessWidget {
 }
 
 
-TextFieldWidget(String enunciado){
+TextFieldWidget(String enunciado, String  numPregunta){
 
   return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),
@@ -123,12 +124,13 @@ TextFieldWidget(String enunciado){
         child: Card(
           elevation: 5,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
               Padding(
                 padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
                 child: Text(
-                  '$enunciado',
+                  '$numPregunta.- $enunciado',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontFamily: 'Poppins',
@@ -161,7 +163,7 @@ TextFieldWidget(String enunciado){
 
 }
 
-SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ){
+SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildContext context, String numPregunta){
 
   return Padding(
     padding: EdgeInsets.only(left: 20,right: 20),
@@ -170,12 +172,13 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ){
       child: Card(
         elevation: 5,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             Padding(
               padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
               child: Text(
-                '$enunciado',
+                '$numPregunta.- $enunciado',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Poppins',
@@ -188,21 +191,59 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ){
               height: 20,
             ),
             Container(
-              height: 300,
+              height: 280,
               child: ListView.builder(
                 itemCount: _.opcionesPreguntas.length,
                 itemBuilder: (context,index){
 
                   if(id_pregunta == _.opcionesPreguntas[index].id_pregunta){
 
-                    return RadioListTile(
+                    return Padding(
+                      padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
+                      child: GestureDetector(
+                        onTap: (){
+
+                          print(_.opcionesPreguntas[index].valor);
+
+                        },
+                        child: Container(
+                          height: 50,
+                          
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color:  Colors.grey[300],
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding:  EdgeInsets.only(left: 20,right:10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                
+                                Expanded(
+                                  child: Text(
+                                    _.opcionesPreguntas[index].label
+                                  )
+                                ),
+
+                                Icon(Icons.check_circle_outline)
+                                
+
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                    /*return RadioListTile(
                       value: _.opcionesPreguntas[index].id_opcion,
                       groupValue: _.opcionesPreguntas[index].id_opcion,
                       subtitle: Text('${_.opcionesPreguntas[index].label}'),
                       onChanged: (value){
                         print('Presionado : $value');
                       }
-                    );
+                    );*/
 
                   }else{
 

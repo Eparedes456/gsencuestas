@@ -1,3 +1,5 @@
+import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
+import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
@@ -45,7 +47,7 @@ class DBProvider{
             logo TEXT,
             dinamico INTEGER,
             estado  INTEGER,
-            updated_at TEXT,
+            updated_at TEXT
           )
         
         
@@ -87,9 +89,9 @@ class DBProvider{
             readonly INTEGER,
             defecto TEXT,
             calculation TEXT,
-            constraint TEXT,
-            constraint_msj TEXT,
-            relevant TEXT,
+            reglas TEXT,
+            reglas_msj TEXT,
+            relevante TEXT,
             choice_filter TEXT,
             bind_name TEXT,
             bind_type TEXT,
@@ -99,7 +101,7 @@ class DBProvider{
             estado INTEGER,
             updated_at TEXT,
             foreign key(id_bloque) references bloque(id_bloque),
-            foreign key(id_encuesta) references encuesta(id_encuesta),
+            foreign key(id_encuesta) references encuesta(id_encuesta)
             
 
           )
@@ -145,7 +147,7 @@ class DBProvider{
             observacion TEXT,
             estado INTEGER,
             updated_at TEXT,
-            foreign key(id_encuesta) references encuesta(id_encuesta),
+            foreign key(id_encuesta) references encuesta(id_encuesta)
 
 
           )
@@ -165,7 +167,7 @@ class DBProvider{
             valor TEXT,
             estado INTEGER,
             updated_at TEXT,
-            foreign key(id_pregunta) references pregunta(id_pregunta),
+            foreign key(id_pregunta) references pregunta(id_pregunta)
 
 
           )
@@ -176,10 +178,49 @@ class DBProvider{
 
         );
 
+        await db.execute(
+          '''
+          CREATE TABLE usuario(
+
+            idUsuario INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT,
+            apellidoPaterno TEXT,
+            apellidoMaterno TEXT,
+            dni TEXT,
+            email TEXT,
+            username TEXT,
+            password TEXT,
+            estado TEXT,
+            createdAt TEXT
+           
+
+          )
+
+          '''
+        );
+
+        await db.execute(
+          '''
+          CREATE TABLE proyecto(
+            idProyecto INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT,
+            abreviatura TEXT,
+            nombreResponsable TEXT,
+            logo TEXT,
+            latitud TEXT,
+            longitud TEXT,
+            estado TEXT,
+            createdAt TEXT,
+            updatedAt TEXT
+          )
+
+          '''
+        );
+
         
 
       },
-      version: 1
+      version: 2
 
     ); 
 
@@ -187,11 +228,88 @@ class DBProvider{
   }
 
 
-  //CREACION DE   LAS CONSULTAS SQL PA
+  //CREACION DE   LAS CONSULTAS SQL LOCAL
 
+  /*Consulta traer todos los usuarios */
+  getAllUsuarios()async{
+
+    final db = await database;
+    var respuesta = await db.query("usuario");
+
+    List<UsuarioModel> listUser = respuesta.isNotEmpty ? 
+      respuesta.map((e) => UsuarioModel.fromMap(e)).toList() :[];
+
+    return listUser;
+    
+
+  }
+
+  /*Consulta insertar todos los usuarios */
+
+  insertUsuarios(UsuarioModel nuevoUsuario)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("usuario", nuevoUsuario.toMap());
+    return respuesta;
+
+  }
 
   
 
+  /* Consulta de eliminar a todos los usuarios TRUNCATE TABLE usuario */
+
+  deleteAllUsuario()async{
+
+    final db = await database;
+    var respuesta = await db.delete("usuario");
+
+  }
+
+  /* Consulta de login  */
+  consultLogueo(String username, String pass)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM usuario WHERE username = '$username'
+      '''
+    );
+
+    //print(respuesta);
+
+    List<UsuarioModel> listUser = respuesta.isNotEmpty ? 
+      respuesta.map((e) => UsuarioModel.fromMap(e)).toList() :[];
+
+    return listUser;
+
+  }
+
+  
+  /*Consulta de insertar los proyectos */
+  
+  insertProyectos(ProyectoModel nuevoProyecto)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
+    return respuesta;
+
+  }
+
+  /* Consultar todos los proyectos  */
+
+  getAllProyectos()async{
+
+    final db = await database;
+    var respuesta = await db.query("proyecto");
+
+    List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
+      respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+
+    return listProyectos;
+    
+
+  }
 
 
 

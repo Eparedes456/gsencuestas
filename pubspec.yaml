@@ -27,12 +27,15 @@ dependencies:
   cupertino_icons: ^1.0.0
   get:
   dio:
+  http:
   firebase_messaging:
   font_awesome_flutter:
   geolocator: ^6.2.1
   image_picker:
   sqflite:
-  connectivity:
+  shared_preferences:
+  data_connection_checker:
+  dbcrypt:
 
 dev_dependencies:
   flutter_test:

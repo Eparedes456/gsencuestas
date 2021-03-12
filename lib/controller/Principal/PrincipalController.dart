@@ -1,12 +1,17 @@
 import 'dart:convert';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
-import 'package:gsencuesta/model/Proyecto/Proyectomodel.dart';
+import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
+
+import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:gsencuesta/pages/Perfil/ProfilePage.dart';
 import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -14,6 +19,10 @@ class PrincipalController extends GetxController{
 
   List<ProyectoModel> _proyectos = [];
   List<ProyectoModel> get  proyectos => _proyectos;
+
+  /* Modelo de lista de usuarios de usuarios */
+
+  List<UsuarioModel> _usuarios = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -29,13 +38,155 @@ class PrincipalController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    this.getProyectos();
+    //this.getProyectos();
+    this.insertUserDb();
   }
 
   ApiServices apiConexion = new ApiServices();
 
   navigateToProfile(){
     Get.to(ProfilePage());
+  }
+  
+  validarCarga()async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var connectionInternet = await DataConnectionChecker().connectionStatus;
+
+    if(connectionInternet == DataConnectionStatus.connected ){
+
+      print('verifico en la tabla parametros para actualziar o no hacer nada');
+
+      insertUserDb();
+
+
+
+    }else{
+
+      var flag = preferences.getString('primeraCarga');
+
+      if(flag != null){
+
+        print('Consulto mi base de datos local');
+        List<ProyectoModel> listProyectoDbLocal = await DBProvider.db.getAllProyectos();
+
+        
+
+
+      }
+
+    }
+
+  }
+
+  insertUserDb()async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var flag = preferences.getString('primeraCarga');
+
+    if(flag == "Si"){
+
+      print("Consulto a la base de datos a la tabla proyecto");
+
+
+    }else{
+
+      await DBProvider.db.deleteAllUsuario();
+      var listUserApi = await apiConexion.getAllUsers();
+
+      listUserApi.forEach((item){
+
+        _usuarios.add(
+
+          UsuarioModel(
+
+            
+            idUsuario       : item["idUsuario"],
+            nombre          : item["nombre"],
+            apellidoPaterno : item["apellidoPaterno"],
+            apellidoMaterno : item["apellidoMaterno"],
+            dni             : item["dni"],
+            email           : item["email"],
+            username        : item["login"],
+            password        : item["password"],
+            estado          : item["estado"].toString(),
+            createdAt       : item["createdAt"],
+          )
+
+        );
+      });
+
+      print(_usuarios);
+
+      for (var i = 0; i < _usuarios.length ; i++) {
+
+        await DBProvider.db.insertUsuarios(_usuarios[i]);  
+      }
+
+      var listProyecto = await apiConexion.getProyectos();
+
+      if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
+
+      listProyecto.forEach((item){
+
+        _proyectos.add(
+
+          ProyectoModel(
+            idProyecto: item["idProyecto"],
+            nombre: item["nombre"],
+            abreviatura: item["abreviatura"],
+            nombreResponsable: item["nombre_responsable"],
+            logo: item["logo"],
+            latitud: item["latitud"],
+            longitud: item["longitud"],
+            estado: item["estado"].toString(),
+            createdAt: item["createdAt"],
+            updatedAt: item["updatedAt"]
+
+          )
+
+        );
+      });
+
+      print(_proyectos.length);
+      for (var j = 0; j < _proyectos.length ; j++) {
+
+        await DBProvider.db.insertProyectos(_proyectos[j]); 
+
+      }
+      
+
+      if(_proyectos.length > 0 ){
+
+        _isLoading = true;
+
+      }
+
+    }else if( listProyecto == 1){
+
+      print('Error de servidor');
+
+    }else if(listProyecto == 2){
+
+      print(' eRROR DE TOKEN');
+
+    }else{
+
+      print('Error, no existe la pagina 404');
+
+    }
+
+  
+      List<UsuarioModel> listUserDbLocal = await  DBProvider.db.getAllUsuarios();
+      List<ProyectoModel> listProyectoDbLocal = await DBProvider.db.getAllProyectos();
+      var insertDataLocal = "Si";
+      preferences.setString('primeraCarga', insertDataLocal);
+
+      print(listUserDbLocal);
+      print(listProyectoDbLocal);
+      update();
+
+    }
   }
 
   navigateToProyecto(){
@@ -51,7 +202,7 @@ class PrincipalController extends GetxController{
 
   }
 
-  getProyectos()async{
+  /*getProyectos()async{
 
     var resultado = await apiConexion.getProyectos();
 
@@ -76,7 +227,7 @@ class PrincipalController extends GetxController{
             logo                : item["logo"],
             latitud             : item["latitud"],
             longitud            : item["longitud"],
-            estado              : item["estado"],    
+            estado              : item["estado"].toString(),    
           )
 
         );
@@ -110,7 +261,7 @@ class PrincipalController extends GetxController{
     
     //print(modelo);
 
-  }
+  }*/
 
 
 }

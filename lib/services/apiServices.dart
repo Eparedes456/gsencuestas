@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ApiServices {
@@ -10,18 +14,34 @@ class ApiServices {
 
   getProyectos()async{
 
-    Response response = await dio.get(base_url + "/proyecto");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+    //var response = await dio.get(base_url + "/proyecto");
+    var response = await http.get(
+      base_url + "proyecto",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      }
+    );
 
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
-      //print(response.data);
+      print(response);
+      var decodedData = json.decode(response.body);
 
-      return response.data;
+      return decodedData;
 
     }else if(response.statusCode == 500){
 
       print('Error de servidor,consulte con el encargado del sistema');
+      print(response.body);
 
       return 1;
 
@@ -159,6 +179,54 @@ class ApiServices {
 
       print('la ruta que usted especifica no existe');
       return 3;
+
+    }
+
+
+  }
+
+  ingresar(String username, String password)async{
+    var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
+
+    Map dataSend = {
+        "password"  : password,
+        "username"  : username
+    };
+    String body = json.encode(dataSend);
+
+    var response = await http.post(
+
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:body,
+
+    );
+
+    if(response.statusCode == 200){
+
+      print(response.body);
+      final decodedData = json.decode(response.body);
+
+      return decodedData;
+
+    }else if(response.statusCode == 500){
+
+      print('Error de servidor');
+
+      return 1;
+
+    }else if(response.statusCode == 401){
+
+      print('Error de token , sesion expirada');
+      return 0;
+
+    }else{
+
+      final decodedData = json.decode(response.body);
+
+      return decodedData;
 
     }
 

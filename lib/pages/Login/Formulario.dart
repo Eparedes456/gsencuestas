@@ -47,6 +47,7 @@ class Formulario extends StatelessWidget {
               SizedBox(height: 20,),
               
               TextField(
+                controller: _.username,
                 decoration: InputDecoration(
                   hintText: 'Usuario',
                   suffixIcon: Icon(Icons.person)
@@ -55,6 +56,8 @@ class Formulario extends StatelessWidget {
               SizedBox(height: 20,),
               
               TextField(
+                obscureText: true,
+                controller: _.password,
                 decoration: InputDecoration(
                   hintText: 'Contraseña',
                   suffixIcon: Icon(Icons.visibility)
@@ -66,7 +69,9 @@ class Formulario extends StatelessWidget {
               GestureDetector(
                 onTap: (){
                   print('holi');
-                  _.navigateToTabs();
+                  //_.navigateToTabs();
+                  _.login();
+                  //_.loginApi();
                 },
                 child: Container(
                   alignment: Alignment.center,
