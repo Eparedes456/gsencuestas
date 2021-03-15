@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
@@ -23,6 +24,7 @@ class PrincipalController extends GetxController{
   /* Modelo de lista de usuarios de usuarios */
 
   List<UsuarioModel> _usuarios = [];
+  List<EncuestaModel> _encuestas = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -39,7 +41,7 @@ class PrincipalController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     //this.getProyectos();
-    this.insertUserDb();
+    this.validarCarga();
   }
 
   ApiServices apiConexion = new ApiServices();
@@ -52,30 +54,96 @@ class PrincipalController extends GetxController{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var connectionInternet = await DataConnectionChecker().connectionStatus;
+    var flag1 = preferences.getString('primeraCarga');
 
     if(connectionInternet == DataConnectionStatus.connected ){
 
       print('verifico en la tabla parametros para actualziar o no hacer nada');
+      
+      if(flag1 == null){
 
-      insertUserDb();
+        insertUserDb();
+
+      }else{
+
+        var listProyecto = await apiConexion.getProyectos();
+
+        if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
+
+          listProyecto.forEach((item){
+
+            _proyectos.add(
+
+              ProyectoModel(
+                idProyecto: item["idProyecto"],
+                nombre: item["nombre"],
+                abreviatura: item["abreviatura"],
+                nombreResponsable: item["nombre_responsable"],
+                logo: item["logo"],
+                latitud: item["latitud"],
+                longitud: item["longitud"],
+                estado: item["estado"].toString(),
+                createdAt: item["createdAt"],
+                updatedAt: item["updatedAt"]
+
+              )
+
+            );
+          });
+
+          print(_proyectos.length);
+          
+          if(_proyectos.length > 0 ){
+
+            _isLoading = true;
+          }
+
+          
+
+        }else if( listProyecto == 1){
+
+          print('Error de servidor');
+
+        }else if(listProyecto == 2){
+
+          print(' eRROR DE TOKEN');
+
+        }else{
+
+          print('Error, no existe la pagina 404');
+
+        }
 
 
+
+
+      }
 
     }else{
 
-      var flag = preferences.getString('primeraCarga');
+      
 
-      if(flag != null){
+      if(flag1 != null){
 
         print('Consulto mi base de datos local');
-        List<ProyectoModel> listProyectoDbLocal = await DBProvider.db.getAllProyectos();
 
-        
+        _proyectos = await DBProvider.db.getAllProyectos();
+
+        print(_proyectos);
+
+
+        if(_proyectos.length > 0 ){
+
+          _isLoading = true;
+
+        }
 
 
       }
 
     }
+
+    update();
 
   }
 
@@ -153,9 +221,46 @@ class PrincipalController extends GetxController{
 
         await DBProvider.db.insertProyectos(_proyectos[j]); 
 
-      }
-      
+        var listEncuestaApi = await apiConexion.getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
 
+        print(listEncuestaApi);
+
+        listEncuestaApi.forEach((item){
+
+          _encuestas.add(
+
+            EncuestaModel(
+
+              idEncuesta: item["idEncuesta"],
+              titulo: item["titulo"],
+              descripcion: item["descripcion"],
+              url_guia: item["url_guia"],
+              expira: item["expira"].toString(),
+              fechaInicio: item["fechaInicio"],
+              fechaFin: item["fechaFin"],
+              logo: item["logo"],
+              dinamico: item["dinamico"].toString(),
+              esquema: item["esquema"],
+              estado: item["estado"],
+              createdAt: item["createdAt"],
+              updatedAt: item["updatedAt"]
+
+
+            )
+
+          );
+
+        });
+
+        for (var k = 0; k < _encuestas.length; k++) {
+
+          await DBProvider.db.insertEncuestasxProyecto(_encuestas[k]);
+          
+        }
+
+
+      }
+ 
       if(_proyectos.length > 0 ){
 
         _isLoading = true;
@@ -189,7 +294,7 @@ class PrincipalController extends GetxController{
     }
   }
 
-  navigateToProyecto(){
+  navigateToProyecto(String idProyecto){
 
     
 
@@ -202,66 +307,6 @@ class PrincipalController extends GetxController{
 
   }
 
-  /*getProyectos()async{
-
-    var resultado = await apiConexion.getProyectos();
-
-    print(resultado);
-
-    if(resultado != 1 && resultado != 2 && resultado  != 3 ){
-
-      resultado.forEach((item){
-
-        
-
-        _proyectos.add(
-
-          ProyectoModel(
-
-            createdAt           : item["createdAt"],
-            updatedAt           : item["updatedAt"],
-            idProyecto          : item["idProyecto"],
-            nombre              : item["nombre"],
-            abreviatura         : item["abreviatura"],
-            nombreResponsable   : item["nombre_responsable"], 
-            logo                : item["logo"],
-            latitud             : item["latitud"],
-            longitud            : item["longitud"],
-            estado              : item["estado"].toString(),    
-          )
-
-        );
-
-
-      });
-
-      print(proyectos.length);
-
-      if(proyectos.length > 0 ){
-
-        _isLoading = true;
-
-      }
-
-    }else if( resultado == 1){
-
-      print('Error de servidor');
-
-    }else if(resultado == 2){
-
-      print(' eRROR DE TOKEN');
-
-    }else{
-
-      print('Error, no existe la pagina 404');
-
-    }
-
-    update();
-    
-    //print(modelo);
-
-  }*/
 
 
 }

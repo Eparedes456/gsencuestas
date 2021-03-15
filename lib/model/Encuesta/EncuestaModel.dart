@@ -1,44 +1,51 @@
 import 'dart:convert';
 
 
+EncuestaModel proyectoFromJson(String str){
 
+  final jsonData = json.decode(str);
+  return EncuestaModel.fromMap(jsonData);
 
+}
 
-List<EncuestaModel> employeeFromJson(String str) => List<EncuestaModel>.from(json.decode(str).map((x) => EncuestaModel.fromJson(x)));
+String proyectoToJson( EncuestaModel data ){
 
-String employeeToJson(List<EncuestaModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+  final dyn = data.toMap();
 
+  return json.encode(dyn);
+
+}
 
 
 class EncuestaModel{
 
-  String createdAt;
-  String updatedAt;
+  
   int idEncuesta;
   String titulo;
   String descripcion;
   String url_guia;
-  bool expira;
+  String expira;
   String fechaInicio; 
   String fechaFin;
   String logo;  
-  bool dinamico;
+  String dinamico;
   String esquema;
-  bool estado;
+  String estado;
+  String createdAt;
+  String updatedAt;
   
 
   EncuestaModel(
       {
-        this.createdAt,this.updatedAt,this.idEncuesta,this.titulo,this.descripcion,this.url_guia,this.expira,this.fechaInicio,this.fechaFin,this.logo,
-        this.dinamico,this.esquema,this.estado,
+        this.idEncuesta,this.titulo,this.descripcion,this.url_guia,this.expira,this.fechaInicio,this.fechaFin,this.logo,
+        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,
         
       }
   );
 
-  factory EncuestaModel.fromJson(Map<String, dynamic> json) => EncuestaModel(
+  factory EncuestaModel.fromMap(Map<String, dynamic> json) => EncuestaModel(
 
-    createdAt           : json['createdAt'],
-    updatedAt           : json['updatedAt'],
+    
     idEncuesta          : json['idEncuesta'],
     titulo              : json['titulo'],
     descripcion         : json['descripcion'],
@@ -50,14 +57,15 @@ class EncuestaModel{
     dinamico            : json['dinamico'],
     esquema             : json['esquema'],
     estado              : json['estado'],
+    createdAt           : json['createdAt'],
+    updatedAt           : json['updatedAt'],
   );
 
-  Map<String,dynamic> toJson(){
+  Map<String,dynamic> toMap(){
 
     return{
 
-      'createdAt'           : createdAt,
-      'updateAt'            : updatedAt,
+      
       'idEncuesta'          : idEncuesta,
       'titulo'              : titulo,
       'descripcion'         : descripcion,
@@ -68,7 +76,9 @@ class EncuestaModel{
       'logo'                : logo,
       'dinamico'            : dinamico,
       'esquema'             : esquema,
-      'estado'              : estado   
+      'estado'              : estado,
+      'createdAt'           : createdAt,
+      'updatedAt'            : updatedAt,   
 
     };
 

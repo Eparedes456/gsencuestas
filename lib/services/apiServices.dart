@@ -62,14 +62,29 @@ class ApiServices {
 
   getEncuestasxProyecto(String idProyecto)async{
 
-    Response response = await dio.get(base_url + "encuesta/byProyecto/$idProyecto");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+   
+    var response = await http.get(
+      base_url + "encuesta/byProyecto/$idProyecto",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      }
+    );
 
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
       //print(response.data);
+      var decodedData = json.decode(response.body);
 
-      return response.data;
+      return decodedData;
 
     }else if(response.statusCode == 500){
 
@@ -93,13 +108,29 @@ class ApiServices {
 
   getPreguntasxEncuesta(String idEncuesta)async{
 
-    Response response = await dio.get(base_url + "encuesta/$idEncuesta");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+
+    var response = await http.get(
+      base_url + "encuesta/$idEncuesta",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      }
+    );
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
       //print(response.data);
+      var decodedData = json.decode(response.body);
 
-      return response.data;
+      return decodedData;
+      
 
     }else if(response.statusCode == 500){
 

@@ -1,3 +1,4 @@
+import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -311,6 +312,31 @@ class DBProvider{
 
   }
 
+  /*Consulta de insertar las encuestas por proyecto */
+  
+  insertEncuestasxProyecto(EncuestaModel nuevoEncuesta)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
+    return respuesta;
+
+  }
+
+
+  /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
+  consultEncuestaxProyecto(String idProyecto)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM encuesta WHERE idProyecto = '$idProyecto'
+      '''
+    );
+
+  }
+
+  
 
 
 }
