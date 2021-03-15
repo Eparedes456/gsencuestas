@@ -277,11 +277,13 @@ class PrincipalController extends GetxController{
     
       var lissencuesta =  await DBProvider.db.getAllEncuestas();
 
+      List listPreguntas = [];
+
       for (var n = 0; n < _encuestas.length; n++) {
 
         var idEncuesta = _encuestas[n].idEncuesta.toString();
         var listPreguntasxEncuesta = await apiConexion.getPreguntasxEncuesta(idEncuesta);
-        var listPreguntas = listPreguntasxEncuesta["pregunta"];
+        listPreguntas = listPreguntasxEncuesta["pregunta"];
 
         listPreguntas.forEach((item)async{
             int idPregunta = item["idPregunta"];
@@ -312,17 +314,32 @@ class PrincipalController extends GetxController{
                 estado            : item["estado"].toString(),
                 updated_at        : item["updatedAt"],
                 created_at        : item["createdAt"]
-              )
+              ),
+
+              
+              /*var preguOpcion = element["preguntaGrupoOpcion"];
+              int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+              var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+              int idPregunta = element["idPregunta"];*/
 
             );
 
             var preguOpcion = item["preguntaGrupoOpcion"];
             int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-            var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
-            var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
-            print(idPreguOpcion);
+            var listOpciones =  preguOpcion[0]["grupoOpcion"]["opcion"];
 
-            opciones.forEach((item2){
+            print(listOpciones);
+        });
+        
+      } 
+ 
+
+
+      /*listPreguntas.forEach((element) { 
+
+        
+
+        opciones.forEach((item2){
 
             _opcionesPreguntas.add(
 
@@ -342,11 +359,10 @@ class PrincipalController extends GetxController{
 
             );
 
-          });
-
         });
-        
-      }
+
+
+      });*/
 
       for (var e = 0; e < _preguntas.length; e++) {
 
