@@ -101,8 +101,8 @@ class LoginController extends GetxController{
 
         case DataConnectionStatus.disconnected:
         print('You are disconnected from the internet.');
-        Get.back();
-        loading('Lo sentimos usted no cuenta con servicio a internet, conectese a una red de internet para poder usar la aplicación.', 'Error');
+        //Get.back();
+        //loading('Lo sentimos usted no cuenta con servicio a internet, conectese a una red de internet para poder usar la aplicación.', 'Error');
         break;
       }
 
@@ -112,6 +112,7 @@ class LoginController extends GetxController{
 
   login()async{
 
+    loading('Verificando las credenciales',' Cargando');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var connectionInternet = await DataConnectionChecker().connectionStatus;
 
@@ -120,7 +121,7 @@ class LoginController extends GetxController{
     if(connectionInternet == DataConnectionStatus.connected){
 
       print('Estoy conectado a internet, consulto a la api');
-      loading('Verificando las credenciales',' Cargando');
+      
       loginApi();
 
     }else{

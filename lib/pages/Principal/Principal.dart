@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Principal/PrincipalController.dart';
+import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 
 
 class PrincipalPage extends StatelessWidget {
@@ -122,7 +123,8 @@ class PrincipalPage extends StatelessWidget {
                         _.proyectos[index].nombre, 
                         _.proyectos[index].logo, 
                         _.proyectos[index].nombre,
-                        proyectoId.toString()
+                        proyectoId.toString(),
+                        _.proyectos[index]
                       );
 
                     }
@@ -147,7 +149,7 @@ class PrincipalPage extends StatelessWidget {
 
 
 
-buildCard(PrincipalController _ , BuildContext context, Color color, String titulo, String subtitle, String  imageUrl,String name,String idProyecto){
+buildCard(PrincipalController _ , BuildContext context, Color color, String titulo, String subtitle, String  imageUrl,String name,String idProyecto, ProyectoModel proyectoData){
   return Padding(
     padding:  EdgeInsets.only(left: 20,right: 20,bottom: 20),
     child: Stack(
@@ -155,7 +157,9 @@ buildCard(PrincipalController _ , BuildContext context, Color color, String titu
 
         GestureDetector(
           onTap: (){
-            _.navigateToProyecto(idProyecto);
+            _.navigateToProyecto(proyectoData);
+            print(idProyecto);
+            print(proyectoData);
             //print("holi");
 
           },

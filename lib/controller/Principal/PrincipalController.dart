@@ -221,6 +221,8 @@ class PrincipalController extends GetxController{
 
         await DBProvider.db.insertProyectos(_proyectos[j]); 
 
+        var idProyecto = _proyectos[j].idProyecto.toString();
+
         var listEncuestaApi = await apiConexion.getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
 
         print(listEncuestaApi);
@@ -231,19 +233,20 @@ class PrincipalController extends GetxController{
 
             EncuestaModel(
 
-              idEncuesta: item["idEncuesta"],
-              titulo: item["titulo"],
-              descripcion: item["descripcion"],
-              url_guia: item["url_guia"],
-              expira: item["expira"].toString(),
-              fechaInicio: item["fechaInicio"],
-              fechaFin: item["fechaFin"],
-              logo: item["logo"],
-              dinamico: item["dinamico"].toString(),
-              esquema: item["esquema"],
-              estado: item["estado"],
-              createdAt: item["createdAt"],
-              updatedAt: item["updatedAt"]
+              idEncuesta    : item["idEncuesta"],
+              idProyecto    : idProyecto.toString(),
+              titulo        : item["titulo"],
+              descripcion   : item["descripcion"],
+              url_guia      : item["url_guia"],
+              expira        : item["expira"].toString(),
+              fechaInicio   : item["fechaInicio"],
+              fechaFin      : item["fechaFin"],
+              logo          : item["logo"],
+              dinamico      : item["dinamico"].toString(),
+              esquema       : item["esquema"],
+              estado        : item["estado"].toString(),
+              createdAt     : item["createdAt"],
+              updatedAt     : item["updatedAt"]
 
 
             )
@@ -260,6 +263,10 @@ class PrincipalController extends GetxController{
 
 
       }
+
+      var encuestasDBLocal = await DBProvider.db.getAllEncuestas();
+
+      print(encuestasDBLocal);
  
       if(_proyectos.length > 0 ){
 
@@ -287,21 +294,21 @@ class PrincipalController extends GetxController{
       var insertDataLocal = "Si";
       preferences.setString('primeraCarga', insertDataLocal);
 
-      print(listUserDbLocal);
-      print(listProyectoDbLocal);
+      //print(listUserDbLocal);
+      //print(listProyectoDbLocal);
       update();
 
     }
   }
 
-  navigateToProyecto(String idProyecto){
+  navigateToProyecto(ProyectoModel proyecto){
 
     
 
     Get.to(
 
       ProyectoPage(),
-      arguments:  this._proyectos
+      arguments:  proyecto  //this._proyectos
     
     );
 

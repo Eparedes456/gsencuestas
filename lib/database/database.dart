@@ -37,18 +37,20 @@ class DBProvider{
           '''
           CREATE TABLE encuesta(
 
-            id_encuesta INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_proyecto INTEGER,
+            idEncuesta INTEGER PRIMARY KEY AUTOINCREMENT,
+            idProyecto TEXT,
             titulo TEXT,
             descripcion TEXT,
             url_guia TEXT,
-            expira INTEGER,
-            fecha_inicio TEXT,
-            fecha_fin TEXT,
+            expira TEXT,
+            fechaInicio TEXT,
+            fechaFin TEXT,
             logo TEXT,
-            dinamico INTEGER,
-            estado  INTEGER,
-            updated_at TEXT
+            dinamico TEXT,
+            esquema TEXT,
+            estado  TEXT,
+            createdAt TEXT,
+            updatedAt TEXT
           )
         
         
@@ -322,6 +324,19 @@ class DBProvider{
 
   }
 
+  /* Traer todas las encuestas  */
+
+  getAllEncuestas() async{
+
+    final db = await database;
+    var respuesta = await db.query("encuesta");
+
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+
+    return listEncuesta;
+  }
+
 
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
   consultEncuestaxProyecto(String idProyecto)async{
@@ -333,6 +348,11 @@ class DBProvider{
       SELECT * FROM encuesta WHERE idProyecto = '$idProyecto'
       '''
     );
+
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+
+    return listEncuesta;
 
   }
 

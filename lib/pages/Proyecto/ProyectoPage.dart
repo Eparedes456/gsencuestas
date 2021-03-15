@@ -46,7 +46,7 @@ class ProyectoPage extends StatelessWidget {
 
                           ]
                         ),
-                        child: ClipRRect(
+                        child: Container() /*ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: FadeInImage(
                             image: NetworkImage('${_.imagen}'),
@@ -55,7 +55,7 @@ class ProyectoPage extends StatelessWidget {
                           ) 
                           
                           
-                        ),
+                        ),*/
                       ),
 
                       Row(

@@ -1,7 +1,9 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/pages/Encuesta/EncuestaPage.dart';
@@ -41,11 +43,11 @@ class ProyectoController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     
-    List datos = Get.arguments;
+    ProyectoModel datosProyecto = Get.arguments;
 
     
     
-    this.loadProyecto(datos);
+    this.loadProyecto(datosProyecto);
   }
 
   @override
@@ -58,13 +60,13 @@ class ProyectoController extends GetxController{
   }
 
 
-  loadProyecto( proyecto){
+  loadProyecto( ProyectoModel data){
 
     
-    _imagen = proyecto[0].logo;
-    _nombreProyecto = proyecto[0].nombre;
-    _descripcionProyecto = proyecto[0].nombre;
-    id_proyecto = proyecto[0].idProyecto;
+   _imagen = data.logo;
+    _nombreProyecto = data.nombre;
+    _descripcionProyecto = data.nombre;
+    id_proyecto = data.idProyecto;
     _isLoadingData = true;
     update();
     loadEncuestas(id_proyecto.toString());
@@ -73,61 +75,87 @@ class ProyectoController extends GetxController{
   loadEncuestas(String idProyecto)async{
 
 
-    var resultado = await apiConexion.getEncuestasxProyecto(idProyecto);
+    var connectionInternet = await DataConnectionChecker().connectionStatus;
 
-    if(resultado != 1 && resultado != 2 && resultado  != 3 ){
+    if(connectionInternet == DataConnectionStatus.connected){
 
-      resultado.forEach((item){
+      var resultado = await apiConexion.getEncuestasxProyecto(idProyecto);
+
+      if(resultado != 1 && resultado != 2 && resultado  != 3 ){
+
+        resultado.forEach((item){
 
         
 
-        _encuestas.add(
+          _encuestas.add(
 
-          EncuestaModel(
+            EncuestaModel(
 
-            createdAt           : item["createdAt"],
-            updatedAt           : item["updatedAt"],
-            idEncuesta          : item["idEncuesta"],
-            titulo              : item["titulo"],
-            descripcion         : item["descripcion"],
-            url_guia            : item["url_guia"], 
-            expira              : item["expira"],
-            fechaInicio         : item["fechaInicio"],
-            fechaFin            : item["fechaFin"],
-            logo                : item["logo"],
-            dinamico            : item["dinamico"] ,
-            esquema             : item["esquema"] ,
-            estado              : item["estado"],    
-          )
+              createdAt           : item["createdAt"].toString(),
+              updatedAt           : item["updatedAt"].toString(),
+              idEncuesta          : item["idEncuesta"],
+              titulo              : item["titulo"].toString(),
+              descripcion         : item["descripcion"].toString(),
+              url_guia            : item["url_guia"].toString(), 
+              expira              : item["expira"].toString(),
+              fechaInicio         : item["fechaInicio"].toString(),
+              fechaFin            : item["fechaFin"].toString(),
+              logo                : item["logo"].toString(),
+              dinamico            : item["dinamico"].toString(),
+              esquema             : item["esquema"].toString(),
+              estado              : item["estado"].toString(),    
+            )
 
-        );
+          );
 
 
-      });
+        });
 
-      print(_encuestas.length);
+       
 
-      if(_encuestas.length > 0){
+        print(_encuestas.length);
 
-        _isLoadingEncuestas = true;
+        if(_encuestas.length > 0){
+
+          _isLoadingEncuestas = true;
+
+        }
+
+
+
+      }else if( resultado == 1){
+
+        print('Error de servidor');
+
+      }else if(resultado == 2){
+
+        print(' eRROR DE TOKEN');
+
+      }else{
+
+        print('Error, no existe la pagina 404');
 
       }
 
 
 
-    }else if( resultado == 1){
-
-      print('Error de servidor');
-
-    }else if(resultado == 2){
-
-      print(' eRROR DE TOKEN');
-
     }else{
 
-      print('Error, no existe la pagina 404');
+      
+
+      _encuestas = await DBProvider.db.consultEncuestaxProyecto(idProyecto);
+
+      print(_encuestas);
+
+      
+
+
+      
+    
 
     }
+
+    
     update();
 
 
