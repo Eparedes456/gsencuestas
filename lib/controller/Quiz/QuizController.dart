@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/services/apiServices.dart';
@@ -37,98 +39,114 @@ class QuizController extends GetxController{
 
   getPreguntas(String idEncuesta)async{
 
-    var response = await apiConexion.getPreguntasxEncuesta(idEncuesta);
+    var connectionInternet = await DataConnectionChecker().connectionStatus;
 
-    if(response != 1 && response != 2 && response  != 3){
+    if(connectionInternet == DataConnectionStatus.connected ){
 
-      var data = response["pregunta"];
-      //print(response["pregunta"]);
+      var response = await apiConexion.getPreguntasxEncuesta(idEncuesta);
 
-      int idPregunta;
+      if(response != 1 && response != 2 && response  != 3){
 
-      data.forEach((item){
+        var data = response["pregunta"];
+        //print(response["pregunta"]);
 
-        idPregunta = item["idPregunta"];
+        int idPregunta;
 
-        _preguntas.add(
-          PreguntaModel(
+        data.forEach((item){
 
-            id_pregunta       : item["idPregunta"],
-            id_bloque         : item["id_bloque"],
-            id_encuesta       : item["id_encuesta"],
-            enunciado         : item["enunciado"],
-            tipo_pregunta     : item["tipo_pregunta"],
-            apariencia        : item["apariencia"],
-            requerido         : item["requerido"],
-            requerido_msj     : item["requerido_msj"],
-            readonly          : item["readonly"],
-            defecto           : item["defecto"],
-            calculation       : item["calculation"],
-            restriccion       : item["restriccion"],
-            restriccion_msj   : item["restriccion_msj"],
-            relevant          : item["relevant"],
-            choice_filter     : item["choice_filter"], 
-            bind_name         : item["bind_name"],
-            bind_type         : item["bind_type"],
-            bind_field_length : item["bind_field_length"],
-            bind_field_placeholder  : item["bind_field_placeholder"],
-            orden             : item["orden"],
-            estado            : item["estado"],
-            updated_at        : item["createdAt"],
-            created_at        : item["updatedAt"]
+          idPregunta = item["idPregunta"];
 
-          )
-        );
-        print('hola');
-        var preguOpcion = item["preguntaGrupoOpcion"];
-        int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-        var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
-        var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
-        print(idPreguOpcion);
-        //print(idgrupoOpcion);
-        //print(opciones);
+          _preguntas.add(
+            PreguntaModel(
 
-        opciones.forEach((item2){
-
-          _opcionesPreguntas.add(
-
-            OpcionesModel(
-
-              idPreguntaGrupoOpcion   : idPreguOpcion,
-              idGrupoOpcion           : idgrupoOpcion,
-              id_opcion               : item2["idOpcion"],
-              id_pregunta             : idPregunta,
-              valor                   : item2["valor"],
-              label                   : item2["label"], 
-              orden                   : item2["orden"],
-              estado                  : item2["estado"],
-              createdAt               : item2["createdAt"],
-              updated_at              : item2["updatedAt"],  
+              id_pregunta       : item["idPregunta"],
+              id_bloque         : item["id_bloque"],
+              idEncuesta       : item["id_encuesta"],
+              enunciado         : item["enunciado"],
+              tipo_pregunta     : item["tipo_pregunta"],
+              apariencia        : item["apariencia"],
+              requerido         : item["requerido"].toString(),
+              requerido_msj     : item["requerido_msj"],
+              readonly          : item["readonly"].toString(),
+              defecto           : item["defecto"],
+              calculation       : item["calculation"],
+              restriccion       : item["restriccion"],
+              restriccion_msj   : item["restriccion_msj"],
+              relevant          : item["relevant"],
+              choice_filter     : item["choice_filter"], 
+              bind_name         : item["bind_name"],
+              bind_type         : item["bind_type"],
+              bind_field_length : item["bind_field_length"],
+              bind_field_placeholder  : item["bind_field_placeholder"],
+              orden             : item["orden"],
+              estado            : item["estado"].toString(),
+              updated_at        : item["createdAt"],
+              created_at        : item["updatedAt"]
 
             )
-
           );
+          print('hola');
+          var preguOpcion = item["preguntaGrupoOpcion"];
+          int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+          var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
+          var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+          print(idPreguOpcion);
+          //print(idgrupoOpcion);
+          //print(opciones);
 
+          opciones.forEach((item2){
+
+            _opcionesPreguntas.add(
+
+              OpcionesModel(
+
+                idPreguntaGrupoOpcion   : idPreguOpcion,
+                id_opcion               : item2["idOpcion"],
+                idPregunta              : idPregunta,
+                valor                   : item2["valor"],
+                label                   : item2["label"], 
+                orden                   : item2["orden"],
+                estado                  : item2["estado"],
+                createdAt               : item2["createdAt"],
+                updated_at              : item2["updatedAt"],  
+
+              )
+
+            );
+
+          });
         });
-      });
 
-      print(_opcionesPreguntas.length);
-      //print(_preguntas.length);
+        print(_opcionesPreguntas.length);
+        //print(_preguntas.length);
 
 
-    }else if( response == 1){
+      }else if( response == 1){
 
-      print('Error de servidor');
+        print('Error de servidor');
 
-    }else if(response == 2){
+      }else if(response == 2){
 
-      print(' eRROR DE TOKEN');
+        print(' eRROR DE TOKEN');
+
+      }else{
+
+        print('Error, no existe la pagina 404');
+
+      }
+
 
     }else{
 
-      print('Error, no existe la pagina 404');
+      _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+      print(_preguntas);
+
 
     }
+
+    
+
+    
 
     update();
 

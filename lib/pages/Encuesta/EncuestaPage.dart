@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
@@ -37,10 +38,28 @@ class EncuestaPage extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
-                      child: Image(
+                      child: CachedNetworkImage(
+                        imageUrl: '${_.imagePortada}',
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Center(
+
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+
+                              Icon(Icons.error,color: Colors.red,),
+                              SizedBox(height: 8,),
+                              Text('Lo sentimos no pudimos cargar la imagen')
+                            ],
+                          )
+                        ),
+                        fit: BoxFit.cover,
+                      )
+                      
+                      /*Image(
                         image: NetworkImage('${_.imagePortada}'),
                         fit: BoxFit.cover,
-                      ),
+                      ),*/
                     ),
                   )
                 ),
@@ -162,7 +181,7 @@ class EncuestaPage extends StatelessWidget {
                             
                             Center(
                               child: Text(
-                                _.fechaInicio,
+                                "20 de Marzo",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins'
@@ -195,7 +214,7 @@ class EncuestaPage extends StatelessWidget {
 
                             Center(
                               child: Text(
-                                _.fechaFin == null ? 'No registra' : _.fechaFin,
+                                'No registra', //_.fechaFin == null ? 'No registra' : _.fechaFin,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins'

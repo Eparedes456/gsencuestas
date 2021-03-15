@@ -196,7 +196,7 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildCo
                 itemCount: _.opcionesPreguntas.length,
                 itemBuilder: (context,index){
 
-                  if(id_pregunta == _.opcionesPreguntas[index].id_pregunta){
+                  if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
 
                     return Padding(
                       padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),

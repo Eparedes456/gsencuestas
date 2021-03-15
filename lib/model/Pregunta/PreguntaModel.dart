@@ -1,24 +1,32 @@
 import 'dart:convert';
 
-List<PreguntaModel> preguntaFromJson(String str) =>
-    List<PreguntaModel>.from(json.decode(str).map((x) => PreguntaModel.fromJson(x)));
+PreguntaModel proyectoFromJson(String str){
 
-    String preguntaToJson(List<PreguntaModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+  final jsonData = json.decode(str);
+  return PreguntaModel.fromMap(jsonData);
 
+}
+
+String proyectoToJson( PreguntaModel data ){
+
+  final dyn = data.toMap();
+
+  return json.encode(dyn);
+
+}
 
 class PreguntaModel {
 
   
   int     id_pregunta;
   int     id_bloque;
-  int     id_encuesta;
+  int     idEncuesta;
   String  enunciado;
   String  tipo_pregunta;
   String  apariencia;
-  bool     requerido;
+  String     requerido;
   String  requerido_msj;
-  bool     readonly;
+  String     readonly;
   String  defecto;
   String  calculation;
   String  restriccion;
@@ -31,13 +39,13 @@ class PreguntaModel {
   String  bind_field_length;
   String  bind_field_placeholder;
   int     orden;
-  bool     estado;
+  String  estado;
   String  updated_at;
   String created_at;
    
     PreguntaModel({
 
-      this.id_pregunta,this.id_bloque,this.id_encuesta,this.enunciado,this.tipo_pregunta,this.apariencia,this.requerido,this.requerido_msj,this.readonly,this.defecto,
+      this.id_pregunta,this.id_bloque,this.idEncuesta,this.enunciado,this.tipo_pregunta,this.apariencia,this.requerido,this.requerido_msj,this.readonly,this.defecto,
       this.calculation,this.restriccion,this.restriccion_msj,this.relevant,this.choice_filter,this.bind_name,this.bind_type,this.bind_field_length,this.bind_field_placeholder,
       this.orden,this.estado,this.updated_at,this.created_at
 
@@ -46,12 +54,12 @@ class PreguntaModel {
 
      // El from json es para mostrare los datos de la base de datos local
 
-  factory PreguntaModel.fromJson(Map<String, dynamic> json) => PreguntaModel(
+  factory PreguntaModel.fromMap(Map<String, dynamic> json) => PreguntaModel(
 
 
     id_pregunta             : json["idPregunta"],
     id_bloque               : json['id_bloque'],
-    id_encuesta             : json['id_proyecto'],
+    idEncuesta             : json['idEncuesta'],
     enunciado               : json['enunciado'],
     tipo_pregunta           : json['tipo_pregunta'],
     apariencia              : json['apariencia'],
@@ -77,13 +85,13 @@ class PreguntaModel {
 
   //  El toJson es para insertar los datos a la base de dato local
 
-  Map<String,dynamic> toJson(){
+  Map<String,dynamic> toMap(){
 
     return {
     
-      'id_pregunta'             : id_pregunta,
+      'idPregunta'             : id_pregunta,
       'id_bloque'               : id_bloque,
-      'id_encuesta'             : id_encuesta,
+      'idEncuesta'             : idEncuesta,
       'enunciado'               : enunciado,
       'tipo_pregunta'           : tipo_pregunta,
       'apariencia'              : apariencia,

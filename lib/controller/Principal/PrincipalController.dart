@@ -6,6 +6,8 @@ import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
+import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
@@ -25,6 +27,8 @@ class PrincipalController extends GetxController{
 
   List<UsuarioModel> _usuarios = [];
   List<EncuestaModel> _encuestas = [];
+  List<PreguntaModel> _preguntas = [];
+  List<OpcionesModel> _opcionesPreguntas = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -217,16 +221,22 @@ class PrincipalController extends GetxController{
       });
 
       print(_proyectos.length);
-      for (var j = 0; j < _proyectos.length ; j++) {
 
-        await DBProvider.db.insertProyectos(_proyectos[j]); 
+      
+      for (var x = 0; x < _proyectos.length ; x++) {
 
-        var idProyecto = _proyectos[j].idProyecto.toString();
+       await DBProvider.db.insertProyectos(_proyectos[x]);
+
+      }
+
+      var lissproyecto =  await DBProvider.db.getAllProyectos();
+
+      //print(lissproyecto);
+
+      for (var j = 0; j < _proyectos.length; j++) {
 
         var listEncuestaApi = await apiConexion.getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
-
-        print(listEncuestaApi);
-
+        var idProyecto = _proyectos[j].idProyecto.toString();
         listEncuestaApi.forEach((item){
 
           _encuestas.add(
@@ -255,18 +265,124 @@ class PrincipalController extends GetxController{
 
         });
 
-        for (var k = 0; k < _encuestas.length; k++) {
+        
+      }
 
-          await DBProvider.db.insertEncuestasxProyecto(_encuestas[k]);
-          
-        }
+      for (var m = 0; m < _encuestas.length ; m++) {
 
+       await DBProvider.db.insertEncuestasxProyecto(_encuestas[m]);
 
       }
 
-      var encuestasDBLocal = await DBProvider.db.getAllEncuestas();
+    
+      var lissencuesta =  await DBProvider.db.getAllEncuestas();
 
-      print(encuestasDBLocal);
+      for (var n = 0; n < _encuestas.length; n++) {
+
+        var idEncuesta = _encuestas[n].idEncuesta.toString();
+        var listPreguntasxEncuesta = await apiConexion.getPreguntasxEncuesta(idEncuesta);
+        var listPreguntas = listPreguntasxEncuesta["pregunta"];
+
+        listPreguntas.forEach((item)async{
+            int idPregunta = item["idPregunta"];
+            _preguntas.add(
+
+              PreguntaModel(
+
+                id_pregunta       : item["idPregunta"],
+                id_bloque         : item["id_bloque"],
+                idEncuesta       :  int.parse(idEncuesta),
+                enunciado         : item["enunciado"],
+                tipo_pregunta     : item["tipo_pregunta"],
+                apariencia        : item["apariencia"],
+                requerido         : item["requerido"].toString(),
+                requerido_msj     : item["requerido_msj"],
+                readonly          : item["readonly"].toString(),
+                defecto           : item["defecto"],
+                calculation       : item["calculation"],
+                restriccion       : item["restriccion"].toString(),
+                restriccion_msj   : item["restriccion_msj"],
+                relevant          : item["relevant"],
+                choice_filter     : item["choice_filter"], 
+                bind_name         : item["bind_name"],
+                bind_type         : item["bind_type"],
+                bind_field_length : item["bind_field_length"],
+                bind_field_placeholder  : item["bind_field_placeholder"],
+                orden             : item["orden"],
+                estado            : item["estado"].toString(),
+                updated_at        : item["updatedAt"],
+                created_at        : item["createdAt"]
+              )
+
+            );
+
+            var preguOpcion = item["preguntaGrupoOpcion"];
+            int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+            var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
+            var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+            print(idPreguOpcion);
+
+            opciones.forEach((item2){
+
+            _opcionesPreguntas.add(
+
+              OpcionesModel(
+
+                id_opcion               : item2["idOpcion"],
+                idPreguntaGrupoOpcion   : idPreguOpcion,
+                idPregunta              : idPregunta,
+                valor                   : item2["valor"],
+                label                   : item2["label"], 
+                orden                   : item2["orden"],
+                estado                  : item2["estado"].toString(),
+                createdAt               : item2["createdAt"],
+                updated_at              : item2["updatedAt"],  
+
+              )
+
+            );
+
+          });
+
+        });
+        
+      }
+
+      for (var e = 0; e < _preguntas.length; e++) {
+
+        await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
+        
+      }
+
+      var lisspreguntas =  await DBProvider.db.getAllPreguntas();
+      print(lisspreguntas);
+
+      for (var r = 0; r < _opcionesPreguntas.length; r++) {
+
+        await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
+
+      }
+
+      var lissopciones =  await DBProvider.db.getAllOpciones();
+      print(lissopciones);
+
+
+
+      //for (var j = 0; j < _proyectos.length ; j++) {
+
+        
+
+        /*for (var k = 0; k < _encuestas.length; k++) {
+
+          //await DBProvider.db.insertEncuestasxProyecto(_encuestas[k]);
+        
+        }*/
+
+        
+
+
+      //}
+
  
       if(_proyectos.length > 0 ){
 

@@ -148,6 +148,13 @@ class ProyectoController extends GetxController{
       print(_encuestas);
 
       
+      print(_encuestas.length);
+
+      if(_encuestas.length > 0){
+
+        _isLoadingEncuestas = true;
+
+      }
 
 
       

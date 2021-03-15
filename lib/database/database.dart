@@ -1,4 +1,6 @@
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
+import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,7 +39,7 @@ class DBProvider{
           '''
           CREATE TABLE encuesta(
 
-            idEncuesta INTEGER PRIMARY KEY AUTOINCREMENT,
+            idEncuesta INTEGER PRIMARY KEY,
             idProyecto TEXT,
             titulo TEXT,
             descripcion TEXT,
@@ -81,30 +83,30 @@ class DBProvider{
           '''
           CREATE TABLE pregunta(
 
-            id_pregunta INTEGER PRIMARY KEY AUTOINCREMENT,
+            idPregunta INTEGER PRIMARY KEY,
             id_bloque INTEGER,
-            id_encuesta INTEGER,
+            idEncuesta INTEGER,
             enunciado TEXT,
             tipo_pregunta TEXT,
             apariencia TEXT,
             requerido INTEGER,
             requerido_msj TEXT,
-            readonly INTEGER,
+            readonly TEXT,
             defecto TEXT,
             calculation TEXT,
-            reglas TEXT,
-            reglas_msj TEXT,
-            relevante TEXT,
+            restriccion TEXT,
+            restriccion_msj TEXT,
+            relevant TEXT,
             choice_filter TEXT,
             bind_name TEXT,
             bind_type TEXT,
-            bind_field_length INTEGER,
+            bind_field_length TEXT,
             bind_field_placeholder TEXT,
             orden INTEGER,
-            estado INTEGER,
-            updated_at TEXT,
-            foreign key(id_bloque) references bloque(id_bloque),
-            foreign key(id_encuesta) references encuesta(id_encuesta)
+            estado TEXT,
+            created_at TEXT,
+            updated_at TEXT
+            
             
 
           )
@@ -120,13 +122,15 @@ class DBProvider{
           CREATE TABLE opcion(
 
             id_opcion INTEGER PRIMARY KEY,
-            id_pregunta INTEGER,
+            idPreguntaGrupoOpcion TEXT,
+            idPregunta INTEGER,
             valor TEXT,
             label TEXT,
             orden INTEGER,
-            estado INTEGER,
-            updated_at TEXT,
-            foreign key(id_pregunta) references encuesta(id_pregunta)
+            estado TEXT,
+            createdAt TEXT,
+            updated_at TEXT
+            
 
           )'''
 
@@ -185,7 +189,7 @@ class DBProvider{
           '''
           CREATE TABLE usuario(
 
-            idUsuario INTEGER PRIMARY KEY AUTOINCREMENT,
+            idUsuario INTEGER PRIMARY KEY,
             nombre TEXT,
             apellidoPaterno TEXT,
             apellidoMaterno TEXT,
@@ -205,7 +209,7 @@ class DBProvider{
         await db.execute(
           '''
           CREATE TABLE proyecto(
-            idProyecto INTEGER PRIMARY KEY AUTOINCREMENT,
+            idProyecto INTEGER PRIMARY KEY,
             nombre TEXT,
             abreviatura TEXT,
             nombreResponsable TEXT,
@@ -223,7 +227,7 @@ class DBProvider{
         
 
       },
-      version: 2
+      version: 4
 
     ); 
 
@@ -294,8 +298,14 @@ class DBProvider{
   insertProyectos(ProyectoModel nuevoProyecto)async{
 
     final db  = await database;
-    var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
-    return respuesta;
+
+    
+
+      var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
+      return respuesta;
+    
+
+    
 
   }
 
@@ -319,8 +329,14 @@ class DBProvider{
   insertEncuestasxProyecto(EncuestaModel nuevoEncuesta)async{
 
     final db  = await database;
-    var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
-    return respuesta;
+
+    
+
+      var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
+      return respuesta;
+    
+
+    
 
   }
 
@@ -356,7 +372,73 @@ class DBProvider{
 
   }
 
+  /* CONSULTA DE INSERCIÓN DE LA TABLA PREGUNTAS */
+
+  /*Consulta de insertar las encuestas por proyecto */
   
+  insertPreguntasxEncuestas(PreguntaModel nuevaPregunta)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("pregunta", nuevaPregunta.toMap());
+    return respuesta;
+
+  }
+
+  /* Traer todas las preguntas  */
+
+  getAllPreguntas() async{
+
+    final db = await database;
+    var respuesta = await db.query("pregunta");
+
+    List<PreguntaModel> listPregunta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => PreguntaModel.fromMap(e)).toList() :[];
+
+    return listPregunta;
+  }
+
+  /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
+  consultPreguntaxEncuesta(String idEncuesta)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM pregunta WHERE idEncuesta = '$idEncuesta'
+      '''
+    );
+
+    List<PreguntaModel> listPreguntas = respuesta.isNotEmpty ? 
+      respuesta.map((e) => PreguntaModel.fromMap(e)).toList() :[];
+
+    return listPreguntas;
+
+  }
+
+  /*Consulta de insertar las opciones por pregunta */
+  
+  insertOpcionesxPregunta(OpcionesModel nuevaOpcion)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("opcion", nuevaOpcion.toMap());
+    return respuesta;
+
+  }
+
+  /* Traer todas las opciones  */
+
+  getAllOpciones() async{
+
+    final db = await database;
+    var respuesta = await db.query("opcion");
+
+    List<OpcionesModel> listOpciones = respuesta.isNotEmpty ? 
+      respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];
+
+    return listOpciones;
+  }
+
+
 
 
 }

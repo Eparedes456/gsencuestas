@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Proyecto/ProyectoController.dart';
@@ -46,16 +47,37 @@ class ProyectoPage extends StatelessWidget {
 
                           ]
                         ),
-                        child: Container() /*ClipRRect(
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                          child: FadeInImage(
+                          child: CachedNetworkImage(
+
+                            imageUrl: '${_.imagen}',
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Center(
+
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+
+                                  Icon(Icons.error,color: Colors.red,),
+                                  SizedBox(height: 8,),
+                                  Text('Lo sentimos no pudimos cargar la imagen')
+                                ],
+                              )
+                            ),
+                            fit: BoxFit.cover,
+
+                          )
+                          
+                          
+                          /*FadeInImage(
                             image: NetworkImage('${_.imagen}'),
                             placeholder: NetworkImage('https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif'),
                             fit: BoxFit.cover,
-                          ) 
+                          )*/ 
                           
                           
-                        ),*/
+                        ),
                       ),
 
                       Row(
@@ -185,12 +207,33 @@ class ProyectoPage extends StatelessWidget {
                                 bottom: 15,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
-                                  child: FadeInImage(
+                                  child: CachedNetworkImage(
+
+                                    width: 110,
+                                    imageUrl: '${_.encuestas[index].logo}',
+                                    placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
+                                    errorWidget: (context, url, error) => Center(
+
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+
+                                          Icon(Icons.error,color: Colors.red,),
+                                          SizedBox(height: 8,),
+                                          Text('Lo sentimos no pudimos cargar la imagen')
+                                        ],
+                                      )
+                                    ),
+                                    fit: BoxFit.cover,
+
+                                  )
+                                  
+                                  /*FadeInImage(
                                     width: 110,
                                     placeholder: AssetImage('assets/images/loading.gif'),
                                     image: NetworkImage('${_.encuestas[index].logo}'),
                                     fit: BoxFit.cover,
-                                  )
+                                  )*/
                                   
                                   
                                 ),
