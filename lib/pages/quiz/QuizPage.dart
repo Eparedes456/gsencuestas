@@ -21,91 +21,93 @@ class QuizPage extends StatelessWidget {
           centerTitle: true,
         ),
 
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-              Padding(
-                padding: EdgeInsets.only(top: 40,left: 20),
-                child: Text(
-                  'Total de preguntas a responder ${_.preguntas.length}',
-                  style: TextStyle(
-                    
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                Padding(
+                  padding: EdgeInsets.only(top: 40,left: 20),
+                  child: Text(
+                    'Total de preguntas a responder ${_.preguntas.length}',
+                    style: TextStyle(
+                      
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700
+                    ),
                   ),
                 ),
-              ),
 
-              
+                
 
-              SizedBox(height: 30,),
-             
+                SizedBox(height: 30,),
+               
 
-              Container(
-                height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemCount: _.preguntas.length,
-                  itemBuilder: (context,index){
-                    var enunciadoPregunta = _.preguntas[index].enunciado;
-                    var numPregunta = index + 1;
-                    
-                    var id_pregunta = _.preguntas[index].id_pregunta;
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: _.preguntas.length,
+                    itemBuilder: (context,index){
+                      var enunciadoPregunta = _.preguntas[index].enunciado;
+                      var numPregunta = index + 1;
+                      
+                      var id_pregunta = _.preguntas[index].id_pregunta;
 
-                    print(_.preguntas[index]);
+                      print(_.preguntas[index]);
 
-                    if(_.preguntas[index].tipo_pregunta == "INPUTABLE"){
+                      if(_.preguntas[index].tipo_pregunta == "INPUTABLE"){
 
-                      return Column(
-                        children: [
-                          TextFieldWidget(enunciadoPregunta,numPregunta.toString()),
-                          SizedBox(height: 50,)
-                        ],
-                      );
+                        return Column(
+                          children: [
+                            TextFieldWidget(enunciadoPregunta,numPregunta.toString()),
+                            SizedBox(height: 50,)
+                          ],
+                        );
 
-                    }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
+                      }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
-                      return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
-
-                    }
-
-                    
-
-                  }
-                ),
-              ),
-              SizedBox(height: 20,)
-
-              /*Padding(
-                padding:  EdgeInsets.only(right: 23,top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-
-                    
-                    MaterialButton(
-                      color: Color.fromRGBO(0, 102, 84, 1),
-                      child: Text(
-                        'Continuar',
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
-                      ),
-                      onPressed: (){
+                        return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
                       }
-                    )
 
-                  ],
+                      
+
+                    }
+                  ),
                 ),
-              )*/
+                SizedBox(height: 20,)
+
+                /*Padding(
+                  padding:  EdgeInsets.only(right: 23,top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+
+                      
+                      MaterialButton(
+                        color: Color.fromRGBO(0, 102, 84, 1),
+                        child: Text(
+                          'Continuar',
+                          style: TextStyle(
+                            color: Colors.white
+                          ),
+                        ),
+                        onPressed: (){
+
+                        }
+                      )
+
+                    ],
+                  ),
+                )*/
 
 
-            ],
+              ],
+            ),
           ),
         )
         
@@ -191,7 +193,7 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildCo
               height: 20,
             ),
             Container(
-              height: 280,
+              height: _.opcionesPreguntas.length == 2 ? 90 : 280,
               child: ListView.builder(
                 itemCount: _.opcionesPreguntas.length,
                 itemBuilder: (context,index){
@@ -207,7 +209,7 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildCo
 
                         },
                         child: Container(
-                          height: 50,
+                          height:   50,
                           
                           width: double.infinity,
                           decoration: BoxDecoration(

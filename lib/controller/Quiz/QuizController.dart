@@ -106,7 +106,7 @@ class QuizController extends GetxController{
                 valor                   : item2["valor"],
                 label                   : item2["label"], 
                 orden                   : item2["orden"],
-                estado                  : item2["estado"],
+                estado                  : item2["estado"].toString(),
                 createdAt               : item2["createdAt"],
                 updated_at              : item2["updatedAt"],  
 

@@ -316,12 +316,6 @@ class PrincipalController extends GetxController{
                 created_at        : item["createdAt"]
               ),
 
-              
-              /*var preguOpcion = element["preguntaGrupoOpcion"];
-              int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-              var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
-              int idPregunta = element["idPregunta"];*/
-
             );
 
             var preguOpcion = item["preguntaGrupoOpcion"];
@@ -329,41 +323,32 @@ class PrincipalController extends GetxController{
             var listOpciones =  preguOpcion[0]["grupoOpcion"]["opcion"];
 
             print(listOpciones);
+
+            listOpciones.forEach((item2){
+
+              _opcionesPreguntas.add(
+
+                OpcionesModel(
+
+                  id_opcion               : item2["idOpcion"],
+                  idPreguntaGrupoOpcion   : idPreguOpcion,
+                  idPregunta              : idPregunta,
+                  valor                   : item2["valor"],
+                  label                   : item2["label"], 
+                  orden                   : item2["orden"],
+                  estado                  : item2["estado"].toString(),
+                  createdAt               : item2["createdAt"],
+                  updated_at              : item2["updatedAt"], 
+                )
+
+              );
+
+            });
+
         });
         
       } 
  
-
-
-      /*listPreguntas.forEach((element) { 
-
-        
-
-        opciones.forEach((item2){
-
-            _opcionesPreguntas.add(
-
-              OpcionesModel(
-
-                id_opcion               : item2["idOpcion"],
-                idPreguntaGrupoOpcion   : idPreguOpcion,
-                idPregunta              : idPregunta,
-                valor                   : item2["valor"],
-                label                   : item2["label"], 
-                orden                   : item2["orden"],
-                estado                  : item2["estado"].toString(),
-                createdAt               : item2["createdAt"],
-                updated_at              : item2["updatedAt"],  
-
-              )
-
-            );
-
-        });
-
-
-      });*/
-
       for (var e = 0; e < _preguntas.length; e++) {
 
         await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
@@ -373,11 +358,11 @@ class PrincipalController extends GetxController{
       var lisspreguntas =  await DBProvider.db.getAllPreguntas();
       print(lisspreguntas);
 
-      for (var r = 0; r < _opcionesPreguntas.length; r++) {
+      /*for (var r = 0; r < _opcionesPreguntas.length; r++) {
 
         await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
 
-      }
+      }*/
 
       var lissopciones =  await DBProvider.db.getAllOpciones();
       print(lissopciones);
