@@ -6,10 +6,12 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuizController extends GetxController{
 
@@ -17,7 +19,7 @@ class QuizController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    var idEncuesta = Get.arguments;
+    idEncuesta = Get.arguments;
     this.getPreguntas(idEncuesta.toString());   
   }
 
@@ -34,6 +36,11 @@ class QuizController extends GetxController{
   List<PreguntaModel> get preguntas => _preguntas;
   List<OpcionesModel> _opcionesPreguntas = [];
   List<OpcionesModel> get opcionesPreguntas => _opcionesPreguntas;
+  var idEncuesta;
+
+  bool _isLoadingData = false;
+
+  bool get isLoadingData => _isLoadingData; 
 
 
 
@@ -100,15 +107,16 @@ class QuizController extends GetxController{
 
               OpcionesModel(
 
-                idPreguntaGrupoOpcion   : idPreguOpcion,
-                id_opcion               : item2["idOpcion"],
+                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
+                idOpcion               : item2["idOpcion"],
                 idPregunta              : idPregunta,
                 valor                   : item2["valor"],
                 label                   : item2["label"], 
                 orden                   : item2["orden"],
                 estado                  : item2["estado"].toString(),
                 createdAt               : item2["createdAt"],
-                updated_at              : item2["updatedAt"],  
+                updated_at              : item2["updatedAt"],
+                selected                : false   
 
               )
 
@@ -135,12 +143,28 @@ class QuizController extends GetxController{
 
       }
 
+      _isLoadingData = true;
 
     }else{
 
       _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
       print(_preguntas);
 
+      for (var i = 0; i < _preguntas.length; i++) {
+
+        print(_preguntas[i].id_pregunta);
+        var idPregunta = _preguntas[i].id_pregunta;
+
+        _opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+
+        
+      }
+
+      //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta);
+
+      print(_opcionesPreguntas);
+
+      _isLoadingData = true;
 
     }
 
@@ -205,6 +229,42 @@ class QuizController extends GetxController{
 
   }
 
+  /*  Obtener simple widget respuesta */
+
+  List<OpcionesModel> _pickOpcion = [];
+  List<OpcionesModel> get pickOpcion => _pickOpcion;
+
+  capturarRespuestaSimple(OpcionesModel opcionEscogida){
+
+    int count = 0;
+    _opcionesPreguntas.forEach((element) { 
+
+    
+
+      if(element.idPregunta == opcionEscogida.idPregunta){
+
+        print(element);
+        _opcionesPreguntas[count].selected = false;
+
+        if(element.idOpcion ==  opcionEscogida.idOpcion ){
+
+          _opcionesPreguntas[count].selected = true;
+
+
+        }
+
+
+      }
+
+      count++;
+
+    });
+
+
+    update(['simple']);
+
+  }
+
   modalLoading(String mensaje){
     Get.dialog(
 
@@ -233,6 +293,35 @@ class QuizController extends GetxController{
     );
 
   }
+
+  guardarFicha()async{
+
+    //SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    /*Map sendData ={
+
+      //'id_ficha'    : 1,
+      'id_usuario'    : preferences.getString('idUsuario'),
+      'id_encuesta'   : idEncuesta,
+      'latitud'       : _latitud,
+      'longitud'      : _longitud,
+      'fecha_inicio'  : '12/12/21',
+      'fecha_fin'     : '13/12/21',
+      'observacion'   :   
+
+
+
+    };*/
+
+    Get.to(
+      FichaPage()
+    );
+
+
+
+  }
+
+
 
 
 }

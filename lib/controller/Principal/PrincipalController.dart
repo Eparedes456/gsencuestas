@@ -330,8 +330,8 @@ class PrincipalController extends GetxController{
 
                 OpcionesModel(
 
-                  id_opcion               : item2["idOpcion"],
-                  idPreguntaGrupoOpcion   : idPreguOpcion,
+                  idOpcion                : item2["idOpcion"],
+                  idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
                   idPregunta              : idPregunta,
                   valor                   : item2["valor"],
                   label                   : item2["label"], 
@@ -358,31 +358,17 @@ class PrincipalController extends GetxController{
       var lisspreguntas =  await DBProvider.db.getAllPreguntas();
       print(lisspreguntas);
 
-      /*for (var r = 0; r < _opcionesPreguntas.length; r++) {
+      for (var r = 0; r < _opcionesPreguntas.length; r++) {
 
         await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
 
-      }*/
+      }
 
       var lissopciones =  await DBProvider.db.getAllOpciones();
       print(lissopciones);
 
 
 
-      //for (var j = 0; j < _proyectos.length ; j++) {
-
-        
-
-        /*for (var k = 0; k < _encuestas.length; k++) {
-
-          //await DBProvider.db.insertEncuestasxProyecto(_encuestas[k]);
-        
-        }*/
-
-        
-
-
-      //}
 
  
       if(_proyectos.length > 0 ){

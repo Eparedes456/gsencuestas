@@ -19,8 +19,8 @@ String opcionToJson( OpcionesModel data ){
 class OpcionesModel {
 
 
-  int     id_opcion;
-  int     idPreguntaGrupoOpcion;
+  int     idOpcion;
+  String  idPreguntaGrupoOpcion;
   int     idPregunta;
   String  valor;
   String  label;
@@ -28,12 +28,13 @@ class OpcionesModel {
   String    estado;
   String  createdAt;  
   String  updated_at;
+  bool    selected;
   
    
     OpcionesModel({
 
-      this.id_opcion,this.idPreguntaGrupoOpcion,this.idPregunta,this.valor,this.label,this.orden,this.estado,this.createdAt,
-      this.updated_at
+      this.idOpcion,this.idPreguntaGrupoOpcion,this.idPregunta,this.valor,this.label,this.orden,this.estado,this.createdAt,
+      this.updated_at,this.selected
 
     });
 
@@ -42,15 +43,16 @@ class OpcionesModel {
 
   factory OpcionesModel.fromMap(Map<String, dynamic> json) => OpcionesModel(
 
-    id_opcion               : json["idOpcion"],
-    idPreguntaGrupoOpcion   : json["idPreguntaGrupoOpcion"],
+    idOpcion                : json["idOpcion"],
+    idPreguntaGrupoOpcion   : json["idPreguntaGrupoOpcion"]  ,
     idPregunta              : json["idPregunta"],
     valor                   : json['valor'],
     label                   : json['label'],
     orden                   : json['orden'],
     estado                  : json['estado'],
     createdAt               : json['createdAt'] ,
-    updated_at              : json['updatedAt']       
+    updated_at              : json['updatedAt'],
+    selected                : false                  
 
   );
 
@@ -61,7 +63,7 @@ class OpcionesModel {
 
     return {
       
-      'id_opcion'             : id_opcion,
+      'id_opcion'             : idOpcion,
       'idPreguntaGrupoOpcion' : idPreguntaGrupoOpcion,
       'idPregunta'            : idPregunta,
       'valor'                 : valor,
@@ -69,7 +71,7 @@ class OpcionesModel {
       'orden'                 : orden,
       'estado'                : estado,
       'createdAt'             : createdAt,
-      'updated_at'            : updated_at
+      'updated_at'            : updated_at,
 
 
     };

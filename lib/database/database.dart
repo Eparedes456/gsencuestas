@@ -121,7 +121,8 @@ class DBProvider{
         
           CREATE TABLE opcion(
 
-            id_opcion INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_opcion INTEGER,
             idPreguntaGrupoOpcion TEXT,
             idPregunta INTEGER,
             valor TEXT,
@@ -438,6 +439,25 @@ class DBProvider{
     return listOpciones;
   }
 
+  /* Traer Opciones por pregunta */
+
+  getOpcionesxPregunta(String idPregunta)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM opcion WHERE idPregunta = $idPregunta
+      
+      '''
+    );
+
+    List<OpcionesModel> listOpcionesxPregunta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];
+
+    return listOpcionesxPregunta;
+
+  }
 
 
 
