@@ -26,46 +26,6 @@ class SimpleSelectPage extends StatelessWidget {
                       );
                       
                       
-                      /*Padding(
-                        padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
-                        child: GestureDetector(
-                          onTap: (){
-
-                            //print(_.opcionesPreguntas[index].valor);
-
-                            _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
-
-                          },
-                          child: Container(
-                            height:   45,
-                            
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color:  _.pickOpcion.length == 0 ? Colors.grey : _.pickOpcion[index].idOpcion == _.opcionesPreguntas[index].idOpcion ? Colors.green : Colors.grey ,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding:  EdgeInsets.only(left: 20,right:10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  
-                                  Expanded(
-                                    child: Text(
-                                      _.opcionesPreguntas[index].label
-                                    )
-                                  ),
-
-                                  Icon(Icons.check_circle_outline)
-                                  
-
-
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );*/
                       
 
                     }else{
@@ -93,11 +53,11 @@ class Opciones extends StatelessWidget {
       init: QuizController(),
       id: 'simple',
       builder: (_)=> Padding(
-                          padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
-                          child: GestureDetector(
+        padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
+        child: GestureDetector(
                             onTap: (){
 
-                              //print(_.opcionesPreguntas[index].valor);
+                              
 
                               _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
 
@@ -130,8 +90,8 @@ class Opciones extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+        ),
+      ),
     );
   }
 }

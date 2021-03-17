@@ -37,6 +37,7 @@ dependencies:
   data_connection_checker:
   dbcrypt:
   cached_network_image:
+  dropdownfield:
 
 dev_dependencies:
   flutter_test:
