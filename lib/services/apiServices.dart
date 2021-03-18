@@ -264,6 +264,55 @@ class ApiServices {
 
   }
 
+  /* Listar a todos las personas a encuestar */
+
+  getAllEncuestados()async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+    var response = await http.get(
+      base_url + "encuestado",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      }
+    );
+    if(response.statusCode == 200){
+
+      print('Respuesta de servidor exitosa!');
+      //print(response.data);
+      var decodedData = json.decode(response.body);
+
+      return decodedData;
+      
+
+    }else if(response.statusCode == 500){
+
+      print('Error de servidor,consulte con el encargado del sistema');
+
+      return 1;
+
+    }else if(response.statusCode == 401){
+
+      print('Estimado usuario su sesion a expirado.');
+      return 2;
+
+    }else{
+
+      print('la ruta que usted especifica no existe');
+      return 3;
+
+    }
+
+
+  }
+
+
 
   /* Funcion Post */
 

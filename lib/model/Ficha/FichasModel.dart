@@ -1,10 +1,19 @@
 import 'dart:convert';
 
-List<FichasModel> fichasFromJson(String str) =>
-    List<FichasModel>.from(json.decode(str).map((x) => FichasModel.fromJson(x)));
+FichasModel opcionFromJson(String str){
 
-    String fichasToJson(List<FichasModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+  final jsonData = json.decode(str);
+  return FichasModel.fromMap(jsonData);
+
+}
+
+String opcionToJson( FichasModel data ){
+
+  final dyn = data.toMap();
+
+  return json.encode(dyn);
+
+}
 
 
 class FichasModel {
@@ -32,7 +41,7 @@ class FichasModel {
 
      // El from json es para mostrare los datos de la base de datos local
 
-  factory FichasModel.fromJson(Map<String, dynamic> json) => FichasModel(
+  factory FichasModel.fromMap(Map<String, dynamic> json) => FichasModel(
 
     id_ficha        : json["id_ficha"],
     id_encuesta     : json["id_encuesta"],
@@ -50,7 +59,7 @@ class FichasModel {
 
   //  El toJson es para insertar los datos a la base de dato local
 
-  Map<String,dynamic> toJson(){
+  Map<String,dynamic> toMap(){
 
     return {
 

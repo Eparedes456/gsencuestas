@@ -47,7 +47,7 @@ class QuizPage extends StatelessWidget {
                       itemCount: _.preguntas.length,
                       itemBuilder: (BuildContext context, index){
 
-                        var enunciadoPregunta = _.preguntas[index].enunciado;
+                        var enunciadoPregunta =   _.preguntas[index].enunciado;
                         var numPregunta = index + 1;
                         var id_pregunta = _.preguntas[index].id_pregunta;
 
