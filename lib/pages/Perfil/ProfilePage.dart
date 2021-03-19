@@ -114,36 +114,43 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
 
-                  Container(
-                    height: 80,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                  GestureDetector(
+                    onTap: (){
 
-                        Icon(
-                          Icons.account_circle,
-                          size: 35,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 8,),
-                        Text(
-                          'Editar Datos',
-                          style: TextStyle(
-                            color: Color.fromRGBO(67, 81, 99, 1),
-                            fontSize: 13,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w700
+                      _.navigateToEditProfile();
+
+                    },
+                    child: Container(
+                      height: 80,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+
+                          Icon(
+                            Icons.account_circle,
+                            size: 35,
+                            color: Colors.grey,
                           ),
-                        )
+                          SizedBox(height: 8,),
+                          Text(
+                            'Editar Datos',
+                            style: TextStyle(
+                              color: Color.fromRGBO(67, 81, 99, 1),
+                              fontSize: 13,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w700
+                            ),
+                          )
 
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
