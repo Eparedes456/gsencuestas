@@ -94,6 +94,7 @@ class PrincipalPage extends StatelessWidget {
                     ],
                   ),
               ),
+              SizedBox(height: 20,),
 
               _.isLoading == false?  Expanded(
                  

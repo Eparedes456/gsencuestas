@@ -17,7 +17,7 @@ class QuizPage extends StatelessWidget {
       builder: (_)=> Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          title: Text('Nombre de la encuesta'),
+          title: Text(_.tituloEncuesta),
           centerTitle: true,
         ),
 

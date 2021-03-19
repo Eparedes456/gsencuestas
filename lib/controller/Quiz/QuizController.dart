@@ -19,7 +19,9 @@ class QuizController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    idEncuesta = Get.arguments;
+    var listDataEncuesta = Get.arguments;
+    idEncuesta = listDataEncuesta["idEncuesta"];
+    _tituloEncuesta  = listDataEncuesta["tituloEncuesta"];
     this.getPreguntas(idEncuesta.toString());   
   }
 
@@ -36,6 +38,8 @@ class QuizController extends GetxController{
   List<PreguntaModel> get preguntas => _preguntas;
   List<OpcionesModel> _opcionesPreguntas = [];
   List<OpcionesModel> get opcionesPreguntas => _opcionesPreguntas;
+  String _tituloEncuesta = "";
+  String get tituloEncuesta =>  _tituloEncuesta; 
   var idEncuesta;
 
   bool _isLoadingData = false;
@@ -59,7 +63,7 @@ class QuizController extends GetxController{
 
         int idPregunta;
 
-        data.forEach((item){
+        data.forEach((item){  
 
           idPregunta = item["idPregunta"];
 

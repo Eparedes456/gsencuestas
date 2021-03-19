@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class EncuestaPage extends StatelessWidget {
                   child: ListView(
                     children: [
                       
-                      SizedBox(height: 40,),
+                      SizedBox(height: 80,),
 
                       Padding(
                         padding: const EdgeInsets.only(left: 20,right: 20),
@@ -140,13 +141,23 @@ class EncuestaPage extends StatelessWidget {
                                 ),
 
                                 Expanded(
-                                  child: Text(
-                                    _.titulo,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4.8),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaY: 19.2,sigmaX: 19.2
+                                      ),
+                                      child: Text(
+                                        
+                                        _.titulo,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -246,13 +257,13 @@ class EncuestaPage extends StatelessWidget {
                           children: [
 
                             Center(
-                              child: Text(
-                                '25',
+                              child:  _.listPregunta.length > 0 ? Text(
+                                _.listPregunta.length.toString(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Poppins'
                                 ),
-                              ),
+                              ) :CircularProgressIndicator() ,
                             ),
                             SizedBox(height: 8,),
                             Text(

@@ -6,13 +6,15 @@ import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:gsencuesta/pages/Login/RegisterUser.dart';
-
+import 'dart:io';
+import 'dart:async';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dbcrypt/dbcrypt.dart';
+import 'package:flutter_string_encryption/flutter_string_encryption.dart';
+
 
 class LoginController extends GetxController{
 
@@ -47,6 +49,8 @@ class LoginController extends GetxController{
 
   TextEditingController get username => _username;
   TextEditingController get password => _password;
+
+  
 
   loading(String mensaje, String valor){
 
@@ -138,12 +142,13 @@ class LoginController extends GetxController{
 
         loading('Verificando las credenciales',' Cargando');
 
-        var contrasena = _password.text;
-        var contrEncriptada = DBCrypt().hashpw(contrasena, DBCrypt().gensalt());
-        print(contrasena);
-        print(contrEncriptada);
+        //var contrasena = _password.text;
+        //var contrEncriptada =  await FlutterBcrypt.hashPw(password: contrasena, salt: r'$2b$06$C6UzMDM.H6dfI/f/IKxGhu');  //DBCrypt().hashpw(contrasena, DBCrypt().gensalt());
+        print('************************');
+        //print(contrasena);
+        //print(contrEncriptada);
 
-        List<UsuarioModel> response = await DBProvider.db.consultLogueo(_username.text, contrEncriptada);
+        List<UsuarioModel> response = await DBProvider.db.consultLogueo(_username.text, '');
 
         print(response);
 
@@ -182,6 +187,15 @@ class LoginController extends GetxController{
 
   loginApi()async{
 
+    final cryptor = new PlatformStringCryptor();
+    final salt =  await cryptor.generateSalt();
+    final key = "jIkj0VOLhFpOJSpI7SibjA==:RZ03+kGZ/9Di3PT0a3xUDibD6gmb2RIhTVF+mQfZqy0=";
+    
+    var contrEncriptada = await cryptor.encrypt(_password.text, key);
+
+    print('************************');
+    print(contrEncriptada);
+      
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var resultado = await apiConexion.ingresar(_username.text, _password.text);
 

@@ -35,9 +35,10 @@ dependencies:
   sqflite:
   shared_preferences:
   data_connection_checker:
-  dbcrypt:
+  flutter_string_encryption:
   cached_network_image:
   dropdownfield:
+  intl:
 
 dev_dependencies:
   flutter_test:

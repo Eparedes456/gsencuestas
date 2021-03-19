@@ -312,6 +312,49 @@ class ApiServices {
 
   }
 
+  /* Buscar al encuestado por nombre */
+
+  findEncuestado(String data)async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+    var response = await http.get(
+      base_url + "encuestado?query=$data",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      }
+    );
+
+    if(response.statusCode == 200){
+
+      var decodedData = json.decode(response.body);
+
+      return decodedData;
+
+    }else if(response.statusCode == 401){
+
+      return 1;
+      
+    }else if(response.statusCode == 500){
+
+      return 2;
+
+    }else{
+
+      return 3;
+
+    }
+
+
+
+  }
+
 
 
   /* Funcion Post */

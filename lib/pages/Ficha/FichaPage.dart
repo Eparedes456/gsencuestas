@@ -31,24 +31,60 @@ class FichaPage extends StatelessWidget {
 
               ),
 
-              SelectEncuestado(),
+              Padding(
+                padding:  EdgeInsets.only(left: 20,right: 20),
+                child: Container(
 
-              /*Padding(
-                padding: EdgeInsets.only(left:20,right: 20),
-                child: DropDownField(
-                  controller: _.encuestadoSelected,
-                  hintStyle: TextStyle(fontSize: 14),
-                  hintText: 'Seleccione al encuestado',
-                  enabled: true,
-                  items: _.ciudades,
-                  onValueChanged: (valor){
+                  height: 45,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: Row(
+                    children: [
 
-                    
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        iconSize: 18, 
+                        onPressed: (){
 
-                  },
+                          print('Buscar');
+                          _.showModalSearch();
+
+                        }
+                      ),
+
+                      GestureDetector(
+                        onTap: (){
+
+                          print('Buscar');
+                          _.showModalSearch();
+
+                        },
+                        child: Text(
+                          'Busca por nombre o Nº de documento',
+                          style: TextStyle(
+                            fontSize: 13
+                          ),
+                        ),
+                      ),
+
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        iconSize: 18,
+                        onPressed: (){
+
+                          print('Eliminar busqueda');
+
+                        },
+                      )
+
+                    ],
+                  ),
+
                 ),
-              ),*/
-
+              ),
 
               SizedBox(height: 20,),
 
@@ -58,29 +94,33 @@ class FichaPage extends StatelessWidget {
               ),
 
               Padding(
-                  padding:  EdgeInsets.only(left: 10,right: 10),
+                  padding:  EdgeInsets.only(left: 10,right: 10,top: 20),
                   child: Center(
                     child: GestureDetector(
                       onTap: (){
-                        //_.pickImage();
+                        _.pickImage();
                       },
-                      child: /*_.imagepath == null ?*/ Container(
+                      child: _.imagepath == null ? Container(
                         height: 200,
-                        width: double.infinity,
+                        width: 800,
                         //color: Colors.black,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage('https://superwalter.com.ar/wp-content/uploads/2020/10/no-photo-available.png'),
+                            image: AssetImage('assets/images/no-image.png'),
                             fit: BoxFit.cover
                           )
                         ),
-                      ) 
+                      ): Container(
+                        height: 300,
+                        width: double.infinity,
+                        child: Image.file(_.imagepath,fit: BoxFit.cover,),
+                      ),
                     ),
                   ),
               ),
 
               Padding(
-                padding: EdgeInsets.only(left:20,right: 20),
+                padding: EdgeInsets.only(left:20,right: 20,top: 20),
                 child: Text('Por favor tome fotos del lugar donde se esta relizando la encuesta.'),
               ),
 
@@ -93,11 +133,11 @@ class FichaPage extends StatelessWidget {
                       },
                       child: /*_.imagepath == null ?*/ Container(
                         height: 200,
-                        width: double.infinity,
+                        width: 800,
                         //color: Colors.black,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage('https://superwalter.com.ar/wp-content/uploads/2020/10/no-photo-available.png'),
+                            image: AssetImage('assets/images/no-image.png'),
                             fit: BoxFit.cover
                           )
                         ),
@@ -115,11 +155,11 @@ class FichaPage extends StatelessWidget {
                       },
                       child: /*_.imagepath == null ?*/ Container(
                         height: 200,
-                        width: double.infinity,
+                        width: 800,
                         //color: Colors.black,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage('https://superwalter.com.ar/wp-content/uploads/2020/10/no-photo-available.png'),
+                            image: AssetImage('assets/images/no-image.png'),
                             fit: BoxFit.cover
                           )
                         ),
@@ -128,7 +168,35 @@ class FichaPage extends StatelessWidget {
                   ),
               ),
 
-              SizedBox(height: 20,)
+              SizedBox(height: 20,),
+
+              Padding(
+                padding:  EdgeInsets.only(left: 40,right: 40),
+                child: Container(
+                  height: 35,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: MaterialButton(
+                    onPressed: (){
+                      print('Guardando');
+                      _.saveFicha();
+                    },
+                    child: Center(
+                      child: Text(
+                        'Guardar Ficha',
+                        style: TextStyle(
+                          color: Colors.white
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20,),
 
               
 
@@ -142,26 +210,3 @@ class FichaPage extends StatelessWidget {
 }
 
 
-
-class SelectEncuestado extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<FichaController>(
-      init: FichaController(),
-      id: 'encuestados',
-      builder:(_)=> Padding(
-        padding: EdgeInsets.only(left:20,right: 20),
-        child: DropDownField(
-          controller: _.encuestadoSelected,
-          hintStyle: TextStyle(fontSize: 14),
-          hintText: 'Seleccione al encuestado',
-          enabled: true,
-          items: _.encuestadolist,
-          onValueChanged: (valor){                  
-
-          },
-        ),
-      ),
-    );
-  }
-}

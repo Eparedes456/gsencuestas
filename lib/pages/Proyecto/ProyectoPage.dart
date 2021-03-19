@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class ProyectoPage extends StatelessWidget {
                           ]
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
                           child: CachedNetworkImage(
 
                             imageUrl: '${_.imagen}',
@@ -70,11 +71,7 @@ class ProyectoPage extends StatelessWidget {
                           )
                           
                           
-                          /*FadeInImage(
-                            image: NetworkImage('${_.imagen}'),
-                            placeholder: NetworkImage('https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif'),
-                            fit: BoxFit.cover,
-                          )*/ 
+                          
                           
                           
                         ),
@@ -86,15 +83,31 @@ class ProyectoPage extends StatelessWidget {
 
                           Padding(
                             padding:  EdgeInsets.symmetric(horizontal: 10.0,vertical: 40),
-                            child: IconButton(
-                              icon:  Platform.isAndroid ?  Icon(Icons.arrow_back) : Icon(Icons.arrow_back_ios),
-                              color: Colors.black,
-                              iconSize: 30,
-                              onPressed: (){
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4.8),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaY: 19.2,sigmaX: 19.2
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 40,
+                                  width: 40,
+                                  //color: Colors.white,
+                                  child: Center(
+                                    child: IconButton(
+                                      icon:  Platform.isAndroid ?  Icon(Icons.arrow_back) : Icon(Icons.arrow_back_ios),
+                                      color: Colors.white,
+                                      iconSize: 30,
+                                      onPressed: (){
 
-                                Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
 
-                              },
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           )
 
@@ -112,13 +125,22 @@ class ProyectoPage extends StatelessWidget {
                             
                             Padding(
                               padding:  EdgeInsets.only(left: 20,right: 20),
-                              child: Text(
-                                _.nombreProyecto,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20
+                              child: ClipRRect(
+                                
+                                borderRadius: BorderRadius.circular(4.8),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaY: 19.2,sigmaX: 19.2
+                                  ),
+                                  child: Text(
+                                    _.nombreProyecto,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -228,13 +250,7 @@ class ProyectoPage extends StatelessWidget {
 
                                   )
                                   
-                                  /*FadeInImage(
-                                    width: 110,
-                                    placeholder: AssetImage('assets/images/loading.gif'),
-                                    image: NetworkImage('${_.encuestas[index].logo}'),
-                                    fit: BoxFit.cover,
-                                  )*/
-                                  
+                                 
                                   
                                 ),
                               )

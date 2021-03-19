@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Profile/ProfileController.dart';
@@ -18,7 +19,7 @@ class ProfilePage extends StatelessWidget {
           centerTitle: true,
           leading: Container(),
         ),
-        body: SingleChildScrollView(
+        body: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,7 +40,7 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           
                           Text(
-                            'Haltham Mohamed',
+                            _.userName,
                             style: TextStyle(
                               color: Color.fromRGBO(0, 102, 84, 1),
                               fontWeight: FontWeight.bold,
@@ -98,7 +99,7 @@ class ProfilePage extends StatelessWidget {
                         Padding(
                           padding:  EdgeInsets.only(left: 5),
                           child: Text(
-                            'Encuestas respondidas',
+                            'Encuestas realizadas',
                             style: TextStyle(
                               color: Color.fromRGBO(67, 81, 99, 1),
                               fontSize: 13,
@@ -149,11 +150,13 @@ class ProfilePage extends StatelessWidget {
                   GestureDetector(
                     onTap: (){
 
-                      Navigator.pushAndRemoveUntil(
+                      /*Navigator.pushAndRemoveUntil(
                         context, 
                         MaterialPageRoute(builder: (BuildContext context) => LoginPage()), 
                         (route) => false
-                      );
+                      );*/
+
+                      _.logout();
 
                     },
                     child: Container(
@@ -192,13 +195,41 @@ class ProfilePage extends StatelessWidget {
 
                 ],
               ),
+              SizedBox(height: 20,),
+
+              Padding(
+                padding:  EdgeInsets.only(left: 20,right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    Text('Leyenda: '),
+
+                    CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.amber[600],
+                    ),
+
+                    Text('Pendiente'),
+                    
+
+                    CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.green,
+                    ),
+
+                    Text('Subido')
+                    
+                  ],
+                ),
+              ),
 
               SizedBox(height: 20,),
 
               Padding(
                 padding:  EdgeInsets.only(left: 20),
                 child: Text(
-                  'Encuestas ya respondidas',
+                  'Encuestas realizadas',
                   style: TextStyle(
                     color: Color.fromRGBO(67, 81, 99, 1),
                     fontSize: 16,
@@ -208,7 +239,111 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
 
-              Container(
+              Expanded(
+                child: ListView.builder(
+                  itemCount:  5,
+                  itemBuilder: (context,index){
+
+                    return Stack(
+                            children: [
+
+                              Container(
+                                margin: EdgeInsets.fromLTRB(40, 5, 20.0, 5),
+                                height: 170,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
+                                child: Padding(
+                                  padding:  EdgeInsets.fromLTRB(100,20,20,20),
+                                  child: ListView(
+                                    children: [
+
+
+                                      Column(
+                                        children: [
+
+                                          Row(
+                                            children: [
+
+                                              Expanded(
+                                                child: Text(
+                                                  'Nombre de la encuesta',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Poppins',
+                                                  ),
+                                                ),
+                                              ),
+
+                                              CircleAvatar(
+                                                radius: 10,
+                                                backgroundColor: Colors.green,
+                                              )
+                                            ],
+                                          ),
+
+
+                                          Text(
+                                            'eadable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for  will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
+                                            style: TextStyle(
+                                              color: Colors.grey[600]
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                            
+                                          ),
+
+                                          
+
+                                        ],
+                                      ),
+
+                                    ], 
+                                  ),
+                                ),
+                              ),
+
+                              Positioned(
+                                left: 20,
+                                top: 15,
+                                bottom: 15,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: CachedNetworkImage(
+
+                                    width: 110,
+                                    imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
+                                    placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
+                                    errorWidget: (context, url, error) => Center(
+
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+
+                                          Icon(Icons.error,color: Colors.red,),
+                                          SizedBox(height: 8,),
+                                          Text('Lo sentimos no pudimos cargar la imagen')
+                                        ],
+                                      )
+                                    ),
+                                    fit: BoxFit.cover,
+
+                                  )
+                                  
+                                 
+                                  
+                                ),
+                              )
+
+                            ],
+                          );
+
+                  },
+                ),
+              )
+
+              /*Container(
                   height: size.height,
                   child: ListView.builder(
                         physics: ScrollPhysics(),
@@ -277,7 +412,7 @@ class ProfilePage extends StatelessWidget {
 
                         }
                       ),
-                ),
+                ),*/
 
 
             ],

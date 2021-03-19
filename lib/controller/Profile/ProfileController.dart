@@ -1,6 +1,8 @@
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
+import 'package:gsencuesta/pages/Login/LoginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileController extends GetxController{
 
@@ -12,6 +14,7 @@ class ProfileController extends GetxController{
 
     var argument = Get.arguments;
     print('Dato recibido $argument');
+    this.loadData();
 
 
   }
@@ -21,6 +24,31 @@ class ProfileController extends GetxController{
   void onReady() {
     // TODO: implement onReady
     super.onReady();
+  }
+  String _userName = "";
+  String get userName => _userName;
+
+  loadData()async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    _userName = preferences.getString('nombreUser');
+
+    update();
+
+  }
+
+
+  logout()async{
+
+    SharedPreferences preferences = await  SharedPreferences.getInstance();
+
+    preferences.remove('token');
+    Get.offAll(
+      LoginPage()
+    );
+
+
   }
 
   
