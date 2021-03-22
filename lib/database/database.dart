@@ -226,6 +226,20 @@ class DBProvider{
           '''
         );
 
+        await db.execute(
+          '''
+          CREATE TABLE tracking(
+            idTracking INTEGER PRIMARY KEY AUTOINCREMENT,
+            idFicha TEXT,
+            latitud TEXT,
+            longitud TEXT,
+            estado TEXT
+
+          )
+
+          '''
+        );
+
         
 
       },

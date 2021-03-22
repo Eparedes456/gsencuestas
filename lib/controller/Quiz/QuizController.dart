@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
@@ -22,7 +24,17 @@ class QuizController extends GetxController{
     var listDataEncuesta = Get.arguments;
     idEncuesta = listDataEncuesta["idEncuesta"];
     _tituloEncuesta  = listDataEncuesta["tituloEncuesta"];
-    this.getPreguntas(idEncuesta.toString());   
+    this.getPreguntas(idEncuesta.toString());
+
+    
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(seconds: 120)).listen((Position posicion) { 
+
+      print(posicion.latitude);
+      print(posicion.longitude);
+
+    });
+    
+
   }
 
   @override
@@ -44,7 +56,11 @@ class QuizController extends GetxController{
 
   bool _isLoadingData = false;
 
-  bool get isLoadingData => _isLoadingData; 
+  bool get isLoadingData => _isLoadingData;
+
+  StreamSubscription<Position> _positionStream;
+
+
 
 
 
