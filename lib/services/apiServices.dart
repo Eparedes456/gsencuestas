@@ -312,6 +312,52 @@ class ApiServices {
 
   }
 
+
+  insertFicha(dynamic data)async{
+
+    SharedPreferences preferencia = await SharedPreferences.getInstance();
+
+    var token = preferencia.getString('token');
+
+    var response = await http.post(
+
+      base_url + 'ficha',
+      headers: {
+
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      },
+    );
+
+    if(response.statusCode == 200){
+
+
+      var decodedData = json.decode(response.body);
+      
+      return decodedData;
+
+
+    }else if(response.statusCode == 401){
+
+      return 1;
+
+    }else if( response.statusCode == 500){
+
+      return 2;
+
+    }else{
+
+      return 3;
+
+    }
+
+
+
+
+  }
+
   /* Buscar al encuestado por nombre */
 
   findEncuestado(String data)async{

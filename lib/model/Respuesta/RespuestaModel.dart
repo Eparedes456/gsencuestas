@@ -11,16 +11,17 @@ class RespuestaModel {
 
   
   int     id_respuesta;
-  int     id_pregunta;
+  int     idsOpcion;
   int     id_ficha;
   String  valor;
   int     estado;
-  String  updated_at;
+  String  createdAt;
+  String  updatedAt;
   
    
     RespuestaModel({
 
-      this.id_respuesta,this.id_pregunta,this.id_ficha,this.valor,this.estado,this.updated_at
+      this.id_respuesta,this.idsOpcion,this.id_ficha,this.valor,this.estado, this.createdAt ,this.updatedAt
 
     });
 
@@ -31,11 +32,12 @@ class RespuestaModel {
 
 
     id_respuesta            : json["id_respuesta"],
-    id_pregunta             : json['id_pregunta'],
+    idsOpcion               : json['idsOpcion'],
     id_ficha                : json['id_ficha'],
     valor                   : json['valor'],
     estado                  : json['estado'],
-    updated_at              : json['updated_at'], 
+    createdAt               : json['createdAt'],
+    updatedAt               : json['updatedAt'], 
            
 
   );
@@ -48,11 +50,12 @@ class RespuestaModel {
     return {
     
       'id_respuesta'             : id_respuesta,
-      'id_pregunta'              : id_pregunta,
+      'idsOpcion'                : idsOpcion,
       'id_ficha'                 : id_ficha,
       'valor'                    : valor,
       'estado'                   : estado,
-      'updated_at'               : updated_at,
+      'createdAt'                : createdAt,
+      'updatedAt'               : updatedAt,
      
 
     };

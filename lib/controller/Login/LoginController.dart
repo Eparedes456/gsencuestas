@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
@@ -83,34 +84,50 @@ class LoginController extends GetxController{
 
   checkInternet()async{
 
-    //final result = await Connectivity().checkConnectivity();
-    await loading('Comprobando conexión a internet',' Cargando');
 
-    var listener = DataConnectionChecker().onStatusChange.listen((status) async{
+    bool servicioEnabled;
 
-      switch (status){
-        case DataConnectionStatus.connected:
-          print('Data connection is available.');
-          Get.back();
-          
-         
+    servicioEnabled = await Geolocator.isLocationServiceEnabled();
 
-          /*loading('Descargando datos necesarios para el uso de la aplicación, esto puede tardar unos minutos, por favor espere..','Descargando');
-          Future.delayed(Duration(seconds: 8)).then((_) {
-            Get.back();
-            loading('Los datos se cargaron exitosamente', 'Success');
-          });*/
-          
-        break;
+    await loading('Comprobando requisitos de la aplicación',' Cargando');
 
-        case DataConnectionStatus.disconnected:
-        print('You are disconnected from the internet.');
-        //Get.back();
-        //loading('Lo sentimos usted no cuenta con servicio a internet, conectese a una red de internet para poder usar la aplicación.', 'Error');
-        break;
-      }
+    if( servicioEnabled == true ){
 
-    });
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print(position.latitude);
+      print(position.longitude);
+      Get.back();
+
+    }else{
+
+      Get.back();
+
+      Get.dialog(
+
+        AlertDialog(
+          title: Text('Notificación'),
+          content: Text('El gps esta desactivado, por favor habilite el gps..'),
+          actions: [
+
+            FlatButton.icon(
+
+              onPressed: (){
+                
+                Get.back();
+                checkInternet();
+
+              },
+              icon: Icon(Icons.location_city_rounded), 
+              label: Text('Activar GPS')
+
+            )
+
+          ],
+        )
+
+      );
+
+    }
 
   }
 

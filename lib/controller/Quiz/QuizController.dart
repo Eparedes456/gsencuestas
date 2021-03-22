@@ -235,8 +235,8 @@ class QuizController extends GetxController{
 
   /*  Obtener simple widget respuesta */
 
-  List<OpcionesModel> _pickOpcion = [];
-  List<OpcionesModel> get pickOpcion => _pickOpcion;
+  List<OpcionesModel> _pickOpcionSimple = [];
+  List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida){
 
@@ -302,24 +302,18 @@ class QuizController extends GetxController{
 
     //SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    /*Map sendData ={
+    Map sendData ={
+      'idEncuesta'      : idEncuesta,
+      'opcion_simple'   : _pickOpcionSimple,
+      'opcion_input'    : idEncuesta,
 
-      //'id_ficha'    : 1,
-      'id_usuario'    : preferences.getString('idUsuario'),
-      'id_encuesta'   : idEncuesta,
-      'latitud'       : _latitud,
-      'longitud'      : _longitud,
-      'fecha_inicio'  : '12/12/21',
-      'fecha_fin'     : '13/12/21',
-      'observacion'   :   
+    };
 
+    print(sendData);
 
-
-    };*/
-
-    Get.to(
+    /*Get.to(
       FichaPage()
-    );
+    );*/
 
 
 

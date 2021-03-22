@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-FichasModel opcionFromJson(String str){
+FichasModel fichasFromJson(String str){
 
   final jsonData = json.decode(str);
   return FichasModel.fromMap(jsonData);
 
 }
 
-String opcionToJson( FichasModel data ){
+String fichasToJson( FichasModel data ){
 
   final dyn = data.toMap();
 
@@ -29,12 +29,13 @@ class FichasModel {
   String  fecha_fin;
   String  observacion;
   int     estado;
-  String  updated_at; 
+  String  createdAt;
+  String  updatedAt; 
    
     FichasModel({
 
       this.id_ficha,this.id_encuesta,this.id_usuario,this.id_encuestado,this.latitud,this.longitud,
-      this.fecha_inicio,this.fecha_fin,this.estado,this.updated_at
+      this.fecha_inicio,this.fecha_fin,this.estado,this.createdAt ,this.updatedAt
 
     });
 
@@ -52,7 +53,8 @@ class FichasModel {
     fecha_inicio    : json['fecha_inicio'],
     fecha_fin       : json['fecha_fin'],
     estado          : json['estado'],
-    updated_at      : json['updated_at']       
+    createdAt       : json['createdAt'],
+    updatedAt       : json['updatedAt']       
 
   );
 
@@ -71,8 +73,9 @@ class FichasModel {
       'longitud'      : longitud,      
       'fecha_inicio'  : fecha_inicio,    
       'fecha_fin'     : fecha_fin,       
-      'estado'        : estado,  
-      'updated_at'    : updated_at
+      'estado'        : estado, 
+      'createdAt'     : createdAt, 
+      'updatedAt'     : updatedAt
 
 
     };
