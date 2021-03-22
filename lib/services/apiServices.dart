@@ -264,9 +264,9 @@ class ApiServices {
 
   }
 
-  /* Listar a todos las personas a encuestar */
+  /* Servicio a buscar a un encuestado por número de DNI */
 
-  getAllEncuestados()async{
+  getAllEncuestado(String nrDocumento)async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -335,7 +335,7 @@ class ApiServices {
 
 
       var decodedData = json.decode(response.body);
-      
+
       return decodedData;
 
 

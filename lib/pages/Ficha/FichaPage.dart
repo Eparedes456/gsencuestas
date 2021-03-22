@@ -182,7 +182,7 @@ class FichaPage extends StatelessWidget {
                   child: MaterialButton(
                     onPressed: (){
                       print('Guardando');
-                      _.saveFicha();
+                      //_.saveFicha();
                     },
                     child: Center(
                       child: Text(

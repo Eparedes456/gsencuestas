@@ -1,8 +1,11 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
@@ -144,20 +147,18 @@ class DBProvider{
 
           CREATE TABLE ficha(
 
-            id_ficha INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_encuesta INTEGER,
-            id_usuario  INTEGER,
-            id_encuestado INTEGER,
+            idFicha INTEGER PRIMARY KEY AUTOINCREMENT,
+            idEncuesta INTEGER,
+            idUsuario  INTEGER,
+            idEncuestado INTEGER,
             latiutd TEXT,
             longitud TEXT,
             fecha_inicio TEXT,
             fecha_fin TEXT,
             observacion TEXT,
-            estado INTEGER,
-            updated_at TEXT,
-            foreign key(id_encuesta) references encuesta(id_encuesta)
-
-
+            estado TEXT,
+            updated_at TEXT
+          
           )
 
           '''
@@ -458,6 +459,87 @@ class DBProvider{
     return listOpcionesxPregunta;
 
   }
+
+  /* insertar y creaciòn  de nueva ficha */
+
+  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio)async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    int idUsuario = int.parse(preferences.getString('idUsuario')); 
+
+    final db = await database;
+    
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String latitud = position.latitude.toString();
+    String longitud = position.longitude.toString(); 
+
+    var respuesta = await db.rawQuery(
+      
+      '''
+      INSERT INTO ficha(idFicha, idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,
+      fecha_fin, observacion, estado , updated_at) VALUES( 1,'$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'TRUE' , 'NO REGISTRA')
+
+      '''
+    );
+
+    return respuesta;
+
+
+  }
+
+  /* Traer todas las fichas insertadas */
+
+  getAllFichas()async{
+
+    final db = await database;
+    var response = await db.query('ficha');
+
+    List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
+
+    return listFichas;
+
+  }
+
+  /* Traer una ficha especifica */
+
+  oneFicha(String idFicha)async{
+
+    final db = await  database;
+    var response = await db.rawQuery(
+
+      '''
+
+      SELECT * FROM ficha WHERE  idFicha = $idFicha
+
+      '''
+
+    );
+
+    List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+
+    return fichaList;
+
+  }
+
+  /* Actualizar una lista el campo observación */
+
+  updateFicha(String idFicha,String observacion)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      
+      '''
+      UPDATE ficha SET observacion = $observacion WHERE idFicha = $idFicha
+
+      '''
+    );
+
+    return response;
+
+
+  }
+
 
 
 

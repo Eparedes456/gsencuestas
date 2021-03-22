@@ -97,7 +97,8 @@ class EncuestaPage extends StatelessWidget {
                           child: MaterialButton(
                             onPressed: (){
 
-                              _.navigateToQuiz();
+                              //_.navigateToQuiz();
+                              _.showModalSearch();
 
                             },
                             child: Text(

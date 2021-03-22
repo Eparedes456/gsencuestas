@@ -248,11 +248,44 @@ class QuizController extends GetxController{
       if(element.idPregunta == opcionEscogida.idPregunta){
 
         print(element);
-        _opcionesPreguntas[count].selected = false;
+
+        //_opcionesPreguntas[count].selected = false;
 
         if(element.idOpcion ==  opcionEscogida.idOpcion ){
 
-          _opcionesPreguntas[count].selected = true;
+          if(opcionEscogida.selected == true){
+
+            _pickOpcionSimple.removeWhere((element1) => element1.idOpcion == opcionEscogida.idOpcion);
+            _opcionesPreguntas[count].selected = false; 
+
+
+          }else{
+
+            _opcionesPreguntas[count].selected = true;
+
+            _pickOpcionSimple.add(
+
+              OpcionesModel(
+
+                idOpcion                  : _opcionesPreguntas[count].idOpcion,
+                idPreguntaGrupoOpcion     : _opcionesPreguntas[count].idPreguntaGrupoOpcion,
+                idPregunta                : _opcionesPreguntas[count].idPregunta,
+                valor                     : _opcionesPreguntas[count].valor,
+                label                     : _opcionesPreguntas[count].label,
+                orden                     : _opcionesPreguntas[count].orden,
+                estado                    : _opcionesPreguntas[count].estado,
+                createdAt                 : _opcionesPreguntas[count].createdAt,
+                updated_at                : _opcionesPreguntas[count].updated_at,
+                selected                  : _opcionesPreguntas[count].selected = true
+
+              )
+
+            );
+
+
+          }
+
+          
 
 
         }
@@ -263,7 +296,8 @@ class QuizController extends GetxController{
       count++;
 
     });
-
+    
+    print(_pickOpcionSimple);
 
     update(['simple']);
 
