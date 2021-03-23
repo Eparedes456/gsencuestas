@@ -3,6 +3,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
+import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 
 
 class MisEncuestasController extends GetxController{
@@ -24,6 +25,9 @@ class MisEncuestasController extends GetxController{
   List<FichasModel> get listFichasDb => _listFichasDb;
 
   List<EncuestaModel> _listDbEncuesta =[];
+
+  List<MisEncuestas> _listMisEncuestas =[];
+  List<MisEncuestas> get listMisEncuestas => _listMisEncuestas;
  
 
 
@@ -34,7 +38,14 @@ class MisEncuestasController extends GetxController{
     _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
 
     print(listFichasDb);
-    print(_listDbEncuesta);    
+    print(_listDbEncuesta);   
+
+    _listDbEncuesta.forEach((item){
+
+
+      
+    });
+
 
     update();
   }
