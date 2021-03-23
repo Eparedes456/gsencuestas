@@ -4,6 +4,8 @@ import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
+import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -170,20 +172,15 @@ class DBProvider{
           '''
           CREATE TABLE respuesta(
 
-            id_respuesta INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_pregunta INTEGER,
-            id_ficha INTEGER,
+            idRespuesta INTEGER PRIMARY KEY AUTOINCREMENT,
+            idPregunta INTEGER,
+            idFicha INTEGER,
+            idsOpcion TEXT,
             valor TEXT,
-            estado INTEGER,
-            updated_at TEXT,
-            foreign key(id_pregunta) references pregunta(id_pregunta)
-
-
+            estado TEXT         
           )
 
-
           '''
-          
 
         );
 
@@ -230,7 +227,7 @@ class DBProvider{
           '''
           CREATE TABLE tracking(
             idTracking INTEGER PRIMARY KEY AUTOINCREMENT,
-            idFicha TEXT,
+            idFicha INTEGER,
             latitud TEXT,
             longitud TEXT,
             estado TEXT
@@ -369,6 +366,23 @@ class DBProvider{
     return listEncuesta;
   }
 
+  getOneEncuesta(String idEncuesta)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM encuesta WHERE idEncuesta = '$idEncuesta'
+      '''
+    );
+
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+
+    return listEncuesta;
+
+  }
+
 
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
   consultEncuestaxProyecto(String idProyecto)async{
@@ -486,13 +500,14 @@ class DBProvider{
     
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     String latitud = position.latitude.toString();
-    String longitud = position.longitude.toString(); 
+    String longitud = position.longitude.toString();
+
 
     var respuesta = await db.rawQuery(
       
       '''
-      INSERT INTO ficha(idFicha, idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,
-      fecha_fin, observacion, estado , updated_at) VALUES( 1,'$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'TRUE' , 'NO REGISTRA')
+      INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,
+      fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'TRUE' , 'NO REGISTRA')
 
       '''
     );
@@ -554,7 +569,101 @@ class DBProvider{
 
   }
 
+  /* Consulta traer todos los trackings de las fichas */
+
+  getAllTrackings()async{
+
+    final db = await database;
+
+    var response = await db.query('tracking');
+
+    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => TrackingModel.fromMap(e)).toList() : [];
+
+    return trackingList;
+
+  }
+
+  /* Traer todos los registros de tracking de una encuesta especifica */
+
+  getAllTrackingOfOneSurvery(String idFicha)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM tracking WHERE idFicha = $idFicha
+      
+      '''
+    );
+
+    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+
+    return trackingList;
+
+  }
+
+  /* Consulta de insertar los trackings de las fichas  */
+
+  insertTracking(String idFicha, String latitud, String longitud, String estado)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      
+      INSERT INTO tracking(idFicha,latitud,longitud,estado) VALUES('$idFicha','$latitud','$longitud','$estado')
+      
+      '''
+    );
 
 
+  }
+
+
+  /* Insertar Respuesta  */
+
+  insertRespuesta(String idPregunta, String idFicha, String idsOpcion, String valor)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$valor','TRUE')
+      
+      '''
+    );
+
+  }
+
+  /* Traer todos las respuestas */
+
+  getAllRespuestas()async{
+
+    final db = await database;
+
+    var response = await db.query('respuesta');
+
+    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+
+    return listRespuesta;
+
+  }
+
+  /* Traer todas las respuesta de una ficha y una encuesta especiffica */
+  
+  getAllRespuestasxEncuesta(String idFicha, String idEncuesta)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM respuesta WHERE idFicha = $idFicha
+      
+      '''
+    );
+
+    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+
+    return listRespuesta;
+
+  }
 
 }

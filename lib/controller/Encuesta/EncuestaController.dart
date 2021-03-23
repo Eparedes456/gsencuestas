@@ -390,13 +390,15 @@ class EncuestaController extends GetxController{
     print(formattedDate);
     
 
-    //var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate);
+    var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate);
 
     //print(ficha);
 
-    var listDbLocal  =  await DBProvider.db.getAllFichas();
+    List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas();
 
     print(listDbLocal);
+
+     int idFicha = listDbLocal[0].idFicha;
 
     Get.to(
 
@@ -405,7 +407,8 @@ class EncuestaController extends GetxController{
 
         'idEncuesta'      : idEncuesta,
         'tituloEncuesta'  : titulo,
-        'idEncuestado'    : idEncuestado
+        'idEncuestado'    : idEncuestado,
+        'idFicha'         : idFicha.toString()
 
       }
       

@@ -6,8 +6,11 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
+import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,13 +27,22 @@ class QuizController extends GetxController{
     var listDataEncuesta = Get.arguments;
     idEncuesta = listDataEncuesta["idEncuesta"];
     _tituloEncuesta  = listDataEncuesta["tituloEncuesta"];
+    idFicha = listDataEncuesta["idFicha"];
+    idEncuestado = listDataEncuesta["idEncuestado"];
     this.getPreguntas(idEncuesta.toString());
 
     
-    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(seconds: 120)).listen((Position posicion) { 
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
 
       print(posicion.latitude);
       print(posicion.longitude);
+
+      await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(), posicion.longitude.toString(), 'TRUE');
+
+      List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackings();
+      
+      print(respuestaBd);
+
 
     });
     
@@ -53,6 +65,8 @@ class QuizController extends GetxController{
   String _tituloEncuesta = "";
   String get tituloEncuesta =>  _tituloEncuesta; 
   var idEncuesta;
+  var idEncuestado;
+  var idFicha;
 
   bool _isLoadingData = false;
 
@@ -254,10 +268,10 @@ class QuizController extends GetxController{
   List<OpcionesModel> _pickOpcionSimple = [];
   List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
 
-  capturarRespuestaSimple(OpcionesModel opcionEscogida){
+  capturarRespuestaSimple(OpcionesModel opcionEscogida)async{
 
     int count = 0;
-    _opcionesPreguntas.forEach((element) { 
+    _opcionesPreguntas.forEach((element)async { 
 
     
 
@@ -269,6 +283,8 @@ class QuizController extends GetxController{
 
         if(element.idOpcion ==  opcionEscogida.idOpcion ){
 
+          await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
+
           if(opcionEscogida.selected == true){
 
             _pickOpcionSimple.removeWhere((element1) => element1.idOpcion == opcionEscogida.idOpcion);
@@ -276,6 +292,7 @@ class QuizController extends GetxController{
 
 
           }else{
+
 
             _opcionesPreguntas[count].selected = true;
 
@@ -315,6 +332,8 @@ class QuizController extends GetxController{
     
     print(_pickOpcionSimple);
 
+     
+
     update(['simple']);
 
   }
@@ -352,10 +371,21 @@ class QuizController extends GetxController{
 
     //SharedPreferences preferences = await SharedPreferences.getInstance();
 
+    List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
+    
+
+    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackings();
+
+    print(listRespuestaDBlocal);
+    print(listtRACKING);
+
     Map sendData ={
       'idEncuesta'      : idEncuesta,
+      'idEncuestado'    : idEncuestado,
       'opcion_simple'   : _pickOpcionSimple,
       'opcion_input'    : idEncuesta,
+      'tracking'        : listtRACKING,
+      'respuestas'      : listRespuestaDBlocal
 
     };
 

@@ -1,62 +1,66 @@
 import 'dart:convert';
 
-List<RespuestaModel> respuestaFromJson(String str) =>
-    List<RespuestaModel>.from(json.decode(str).map((x) => RespuestaModel.fromJson(x)));
+RespuestaModel respuestaFromJson(String str){
 
-    String respuestaToJson(List<RespuestaModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+  final jsonData = json.decode(str);
+  return RespuestaModel.fromMap(jsonData);
+
+}
+
+String respuestaToJson( RespuestaModel data ){
+
+  final dyn = data.toMap();
+
+  return json.encode(dyn);
+
+}
 
 
 class RespuestaModel {
 
   
-  int     id_respuesta;
-  int     idsOpcion;
-  int     id_ficha;
+  int     idRespuesta;
+  int     idPregunta;
+  int     idFicha;
+  String  idsOpcion;
   String  valor;
-  int     estado;
-  String  createdAt;
-  String  updatedAt;
+  String   estado;
   
    
     RespuestaModel({
 
-      this.id_respuesta,this.idsOpcion,this.id_ficha,this.valor,this.estado, this.createdAt ,this.updatedAt
+      this.idRespuesta,this.idPregunta ,this.idFicha ,this.idsOpcion ,this.valor,this.estado
 
     });
 
 
      // El from json es para mostrare los datos de la base de datos local
 
-  factory RespuestaModel.fromJson(Map<String, dynamic> json) => RespuestaModel(
+  factory RespuestaModel.fromMap(Map<String, dynamic> json) => RespuestaModel(
 
 
-    id_respuesta            : json["id_respuesta"],
-    idsOpcion               : json['idsOpcion'],
-    id_ficha                : json['id_ficha'],
+    idRespuesta             : json["idRespuesta"],
+    idPregunta              : json["idPregunta"],
+    idFicha                 : json['idFicha'],
+    idsOpcion               : json['idsOpcion'].toString(),
     valor                   : json['valor'],
-    estado                  : json['estado'],
-    createdAt               : json['createdAt'],
-    updatedAt               : json['updatedAt'], 
-           
+    estado                  : json['estado'].toString(),
 
   );
 
 
   //  El toJson es para insertar los datos a la base de dato local
 
-  Map<String,dynamic> toJson(){
+  Map<String,dynamic> toMap(){
 
     return {
     
-      'id_respuesta'             : id_respuesta,
-      'idsOpcion'                : idsOpcion,
-      'id_ficha'                 : id_ficha,
-      'valor'                    : valor,
-      'estado'                   : estado,
-      'createdAt'                : createdAt,
-      'updatedAt'               : updatedAt,
-     
+      'idRespuesta'             : idRespuesta,
+      'idPregunta'              : idPregunta,
+      'idFicha'                 : idFicha,
+      'idsOpcion'               : idsOpcion,
+      'valor'                   : valor,
+      'estado'                  : estado,
 
     };
 

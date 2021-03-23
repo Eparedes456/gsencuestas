@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Tabs/TabsController.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/pages/Config/ConfigPage.dart';
+import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 import 'package:gsencuesta/pages/Perfil/ProfilePage.dart';
 import 'package:gsencuesta/pages/Principal/Principal.dart';
 import 'package:gsencuesta/pages/Report/ReportPage.dart';
@@ -22,7 +23,9 @@ class TabsPage extends StatelessWidget {
       PrincipalPage(),
       ReportPage(),
       ConfigPage(),
-      ProfilePage()
+      MisEncuestas(),
+      ProfilePage(),
+      
     ];
 
     return Scaffold(
@@ -58,6 +61,11 @@ class TabsPage extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.cogs),
               label: 'Config'
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.clipboard),
+              label: 'MisEncuestas'
             ),
 
             BottomNavigationBarItem(
