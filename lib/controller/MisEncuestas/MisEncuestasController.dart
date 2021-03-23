@@ -3,6 +3,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
+import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 
 
@@ -26,8 +27,8 @@ class MisEncuestasController extends GetxController{
 
   List<EncuestaModel> _listDbEncuesta =[];
 
-  List<MisEncuestas> _listMisEncuestas =[];
-  List<MisEncuestas> get listMisEncuestas => _listMisEncuestas;
+  List<MisEncuestasModel> _listMisEncuestas =[];
+  List<MisEncuestasModel> get listMisEncuestas => _listMisEncuestas;
  
 
 
@@ -35,7 +36,36 @@ class MisEncuestasController extends GetxController{
 
     _listFichasDb = await DBProvider.db.getAllFichas();
 
-    _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
+    _listFichasDb.forEach((element) async {
+
+      String idEncuesta = element.idEncuesta.toString();
+      String idFicha = element.idFicha.toString();
+
+      _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
+
+      _listDbEncuesta.forEach((element2) {
+
+        _listMisEncuestas.add(
+
+          MisEncuestasModel(
+            
+            idFicha         : idFicha,
+            idProyecto      : element2.idProyecto.toString(),
+            idEncuesta      : element2.idEncuesta.toString(),
+            nombreProyecto  : element2.titulo,
+            nombreEncuesta  : element2.titulo, 
+
+          )
+
+        );
+
+      });
+
+    });
+
+    
+
+    
 
     print(listFichasDb);
     print(_listDbEncuesta);   

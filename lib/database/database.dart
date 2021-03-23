@@ -507,7 +507,7 @@ class DBProvider{
       
       '''
       INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,
-      fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'TRUE' , 'NO REGISTRA')
+      fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')
 
       '''
     );
