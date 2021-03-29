@@ -34,7 +34,7 @@ class ApiServices {
 
       print('Respuesta de servidor exitosa!');
       print(response);
-      var decodedData = json.decode(response.body);
+      var decodedData = json.decode( utf8.decode(response.bodyBytes) );
 
       return decodedData;
 
@@ -82,7 +82,7 @@ class ApiServices {
 
       print('Respuesta de servidor exitosa!');
       //print(response.data);
-      var decodedData = json.decode(response.body);
+      var decodedData = json.decode( utf8.decode(response.bodyBytes));
 
       return decodedData;
 
@@ -127,7 +127,7 @@ class ApiServices {
 
       print('Respuesta de servidor exitosa!');
       //print(response.data);
-      var decodedData = json.decode(response.body);
+      var decodedData = json.decode( utf8.decode( response.bodyBytes) );
 
       return decodedData;
       
@@ -334,7 +334,7 @@ class ApiServices {
     if(response.statusCode == 200){
 
 
-      var decodedData = json.decode(response.body);
+      var decodedData = json.decode( utf8.decode(response.bodyBytes));
 
       return decodedData;
 
