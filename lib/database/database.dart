@@ -647,6 +647,21 @@ class DBProvider{
 
   }
 
+  eliminarUnaRespuesta(String idPregunta,String idFicha, String idsOpcion)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      
+      DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha AND idsOpcion = $idsOpcion
+
+      '''
+    );
+
+
+  }
+
   /* Traer todas las respuesta de una ficha y una encuesta especiffica */
   
   getAllRespuestasxEncuesta(String idFicha, String idEncuesta)async{

@@ -285,9 +285,14 @@ class QuizController extends GetxController{
 
           await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
 
+          List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestas();
+
+          print(listRespuestaDB);
+
           if(opcionEscogida.selected == true){
 
             _pickOpcionSimple.removeWhere((element1) => element1.idOpcion == opcionEscogida.idOpcion);
+            
             _opcionesPreguntas[count].selected = false; 
 
 
@@ -367,7 +372,41 @@ class QuizController extends GetxController{
 
   }
 
+  /* Obtener el dato de los texteditting controller */
+
+
+
+  List<InputTextfield> _controllerInput = [];
+
+  List<InputTextfield> get controllerInput => _controllerInput;
+
+
+
+
+
+
+  /* guardar la ficha */
+
   guardarFicha()async{
+
+    if( _controllerInput.length > 0 ){
+
+      print('hay la opciones de inserciòn texto, insertar en la base de datos');
+
+      _controllerInput.forEach((element) async{
+
+        await DBProvider.db.insertRespuesta(element.idPregunta, idFicha, '', element.controller.text);
+
+
+       });
+
+      
+      
+    }else{
+
+      print('no hay preguntas que sea n tipos inputables');
+
+    }
 
     //SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -382,10 +421,9 @@ class QuizController extends GetxController{
     Map sendData ={
       'idEncuesta'      : idEncuesta,
       'idEncuestado'    : idEncuestado,
-      'opcion_simple'   : _pickOpcionSimple,
-      'opcion_input'    : idEncuesta,
       'tracking'        : listtRACKING,
-      'respuestas'      : listRespuestaDBlocal
+      'respuestas'      : listRespuestaDBlocal,
+      'respuestas_input': _controllerInput
 
     };
 
@@ -402,4 +440,14 @@ class QuizController extends GetxController{
 
 
 
+
 }
+
+  class InputTextfield{
+
+    String idPregunta;
+    TextEditingController controller;
+
+    InputTextfield(this.idPregunta,this.controller);
+
+  }

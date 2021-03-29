@@ -53,7 +53,9 @@ class QuizPage extends StatelessWidget {
 
                         if(_.preguntas[index].tipo_pregunta == "INPUTABLE"){
 
-                          return TextFieldWidget(enunciadoPregunta,numPregunta.toString());
+                          
+
+                          return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
 
                         }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
@@ -121,7 +123,11 @@ class QuizPage extends StatelessWidget {
 }
 
 
-TextFieldWidget(String enunciado, String  numPregunta){
+TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
+
+    _.controllerInput.add(
+      InputTextfield( id_pregunta.toString(), TextEditingController() )
+    );
 
   return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),
@@ -150,10 +156,14 @@ TextFieldWidget(String enunciado, String  numPregunta){
               Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
                 child: TextField(
-                  //controller: ,
+                  
+                  controller: _.controllerInput[index].controller,
                   decoration: InputDecoration(
                     hintText: 'Ingrese su respuesta'
                   ),
+                  onSubmitted: (valor){
+
+                  },
                 ),
               
               ),
