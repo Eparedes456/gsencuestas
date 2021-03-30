@@ -88,7 +88,7 @@ class QuizPage extends StatelessWidget {
                   ),
                   child: MaterialButton(
                     child: Text(
-                      'Guardar',
+                      'Continuar',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700

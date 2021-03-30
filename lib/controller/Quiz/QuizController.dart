@@ -43,8 +43,12 @@ class QuizController extends GetxController{
       
       print(respuestaBd);
 
+      
 
     });
+
+    
+    
     
 
   }
@@ -419,22 +423,33 @@ class QuizController extends GetxController{
     print(listtRACKING);
 
     Map sendData ={
-      'idEncuesta'      : idEncuesta,
-      'idEncuestado'    : idEncuestado,
-      'tracking'        : listtRACKING,
-      'respuestas'      : listRespuestaDBlocal,
-      'respuestas_input': _controllerInput
+      'idEncuesta'        : idEncuesta,
+      'idEncuestado'      : idEncuestado,
+      'tracking'          : listtRACKING,
+      'respuestas'        : listRespuestaDBlocal,
+      'respuestas_input'  : _controllerInput,
+      'idFicha'           : idFicha
 
     };
 
     print(sendData);
 
-    /*Get.to(
-      FichaPage()
-    );*/
+    _positionStream.cancel();
+
+    Get.to(
+      FichaPage(),
+      arguments: 
+      sendData
+    );
 
 
 
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
   }
 
 

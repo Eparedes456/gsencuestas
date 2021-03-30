@@ -42,6 +42,12 @@ class MisEncuestasController extends GetxController{
       String idFicha = element.idFicha.toString();
 
       _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
+      
+      var idProyecto = _listDbEncuesta[0].idProyecto;
+
+      var otherData = await DBProvider.db.getOneProyecto(idProyecto);
+
+      var nombreProyecto  = otherData[0].nombre;
 
       _listDbEncuesta.forEach((element2) {
 
@@ -52,8 +58,10 @@ class MisEncuestasController extends GetxController{
             idFicha         : idFicha,
             idProyecto      : element2.idProyecto.toString(),
             idEncuesta      : element2.idEncuesta.toString(),
-            nombreProyecto  : element2.titulo,
-            nombreEncuesta  : element2.titulo, 
+            nombreProyecto  : nombreProyecto,
+            nombreEncuesta  : element2.titulo,
+            fechaInicio     : element.fecha_inicio,
+            estadoFicha     : element.estado  
 
           )
 
@@ -63,25 +71,73 @@ class MisEncuestasController extends GetxController{
 
     });
 
-    
+    /*print(listFichasDb);
+    print(_listDbEncuesta); */  
 
-    
-
-    print(listFichasDb);
-    print(_listDbEncuesta);   
-
-    _listDbEncuesta.forEach((item){
-
-
-      
-    });
+   //print(_listMisEncuestas);
 
 
     update();
   }
 
-  updateScreen()async{
+  updateScreen(String valor)async{
 
+    _listMisEncuestas = [];
+
+    if( valor == "P" ){
+
+      _listFichasDb = await DBProvider.db.fichasPendientes(valor);
+
+      print(_listFichasDb);
+
+      _listFichasDb.forEach((element) async {
+
+          String idEncuesta = element.idEncuesta.toString();
+          String idFicha = element.idFicha.toString();
+
+          _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
+          
+          var idProyecto = _listDbEncuesta[0].idProyecto;
+
+          var otherData = await DBProvider.db.getOneProyecto(idProyecto);
+
+          var nombreProyecto  = otherData[0].nombre;
+
+          _listDbEncuesta.forEach((element2) {
+
+            _listMisEncuestas.add(
+
+              MisEncuestasModel(
+                
+                idFicha         : idFicha,
+                idProyecto      : element2.idProyecto.toString(),
+                idEncuesta      : element2.idEncuesta.toString(),
+                nombreProyecto  : nombreProyecto,
+                nombreEncuesta  : element2.titulo,
+                fechaInicio     : element.fecha_inicio,
+                estadoFicha     : element.estado  
+
+              )
+
+            );
+
+          });
+
+      });
+
+
+
+      update();
+
+    }else if( valor == "F"){
+
+    }else{
+      
+      getAllFichas();
+
+    }
+
+     
 
 
 

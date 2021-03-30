@@ -20,7 +20,7 @@ class MisEncuestas extends StatelessWidget {
               onSelected: (value){
 
                 print(value);
-                _.updateScreen();
+                _.updateScreen(value);
 
               },
               itemBuilder: (BuildContext context){
@@ -64,7 +64,7 @@ class MisEncuestas extends StatelessWidget {
         ),
 
         body: ListView.builder(
-          itemCount: _.listFichasDb.length,
+          itemCount: _.listMisEncuestas.length,
           itemBuilder: (BuildContext context,index){
 
             return Column(
@@ -94,7 +94,7 @@ class MisEncuestas extends StatelessWidget {
                                           ),
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
-                                            child: CachedNetworkImage(
+                                            child: _.listMisEncuestas[index].imagen == "" ||  _.listMisEncuestas[index].imagen  == null ? Image(image: AssetImage('assets/images/encuesta.png'),fit: BoxFit.cover,) :CachedNetworkImage(
                                     
                                               imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
                                               placeholder: (context, url) => Image(
@@ -131,7 +131,7 @@ class MisEncuestas extends StatelessWidget {
 
                                                     Expanded(
                                                       child: Text(
-                                                        'Nombre del proyecto',
+                                                        '${_.listMisEncuestas[index].nombreProyecto}',
                                                         style: TextStyle(
                                                           fontWeight: FontWeight.bold,
                                                           fontFamily: 'Poppins',
@@ -143,12 +143,12 @@ class MisEncuestas extends StatelessWidget {
                                                       height: 25,
                                                       width: 90,
                                                       decoration: BoxDecoration(
-                                                        color: Colors.grey,
+                                                        color:   _.listMisEncuestas[index].estadoFicha == "F" ? Colors.redAccent :   _.listMisEncuestas[index].estadoFicha == "P" ? Colors.yellow[700]  : Colors.grey,
                                                         borderRadius: BorderRadius.circular(5)
                                                       ),
                                                       child: Center(
                                                         child: Text(
-                                                          'Sincronizado',
+                                                          _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
                                                           style: TextStyle(
                                                             color: Colors.white
                                                           ),
@@ -162,7 +162,7 @@ class MisEncuestas extends StatelessWidget {
                                               Padding(
                                                 padding:  EdgeInsets.only(left: 10,top: 8),
                                                 child: Text(
-                                                  'Nombre de la encuesta',
+                                                  '${_.listMisEncuestas[index].nombreEncuesta}',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.grey[600]
@@ -202,7 +202,10 @@ class MisEncuestas extends StatelessWidget {
                                                   Icon(Icons.calendar_today,size: 20,),
                                                   SizedBox(width: 8,),
 
-                                                  Text('11/12/2012')
+                                                  Text(
+
+                                                   '${_.listMisEncuestas[index].fechaInicio}'
+                                                  )
 
                                                 ],
                                             ),

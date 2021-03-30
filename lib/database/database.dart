@@ -237,6 +237,21 @@ class DBProvider{
           '''
         );
 
+        await db.execute(
+          '''
+          CREATE TABLE multimedia(
+            idMultimedia INTEGER PRIMARY KEY AUTOINCREMENT,
+            idFicha INTEGER,
+            tipo TEXT,
+            latitud TEXT,
+            longitud TEXT,
+            estado TEXT
+
+          )
+
+          '''
+        );
+
         
 
       },
@@ -336,6 +351,29 @@ class DBProvider{
     
 
   }
+
+  /* Consultar un proyecto */
+
+  getOneProyecto( String idProyecto)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      
+      '''
+      SELECT * FROM proyecto WHERE idProyecto = $idProyecto
+
+      '''
+    );
+
+    List<ProyectoModel> listProyectos = response.isNotEmpty ? 
+      response.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+
+    return listProyectos;
+
+
+  }
+
 
   /*Consulta de insertar las encuestas por proyecto */
   
@@ -502,6 +540,7 @@ class DBProvider{
     String latitud = position.latitude.toString();
     String longitud = position.longitude.toString();
 
+    print(" INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')");
 
     var respuesta = await db.rawQuery(
       
@@ -516,6 +555,10 @@ class DBProvider{
 
 
   }
+
+  
+
+
 
   /* Traer todas las fichas insertadas */
 
@@ -551,20 +594,45 @@ class DBProvider{
 
   }
 
-  /* Actualizar una lista el campo observación */
-
-  updateFicha(String idFicha,String observacion)async{
+  fichasPendientes(String valor)async {
 
     final db = await database;
+
+    var response =  await db.rawQuery(
+      '''
+      SELECT * FROM ficha WHERE estado = '$valor'
+      
+      '''
+    );
+
+    List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+
+    return fichaList;
+
+  }
+
+  /* Actualizar FICHA */
+
+  updateFicha(String idFicha,String observacion, String fechafinal)async{
+
+    final db = await database;
+
+    //print("  UPDATE ficha SET observacion = '$observacion', estado = 'F', fecha_fin = ''  WHERE idFicha = '$idFicha' ");
     var response = await db.rawQuery(
       
       '''
-      UPDATE ficha SET observacion = $observacion WHERE idFicha = $idFicha
+      UPDATE ficha SET observacion = '$observacion', estado = 'F', fecha_fin = '$fechafinal'  WHERE idFicha = '$idFicha'
 
       '''
     );
 
-    return response;
+    
+    var response1 = await db.query('ficha');
+
+    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+
+    print(listFichas);
+    //return response;
 
 
   }
@@ -680,5 +748,30 @@ class DBProvider{
     return listRespuesta;
 
   }
+
+
+  /* Insertar Respuesta  */
+
+  insertMultimedia(String idFicha, String tipo)async{
+
+    final db = await database;
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String latitud = position.latitude.toString();
+    String longitud = position.longitude.toString();
+
+    var response = await db.rawQuery(
+      '''
+      INSERT INTO multimedia(idFicha,tipo,latitud,longitud,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','TRUE')
+      
+      '''
+    );
+
+
+
+  }
+
+
+
+  
 
 }

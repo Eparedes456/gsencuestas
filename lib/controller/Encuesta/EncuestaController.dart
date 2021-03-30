@@ -385,7 +385,7 @@ class EncuestaController extends GetxController{
 
     
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('kk:mm:ss').format(now);
+    String formattedDate = DateFormat('yyyy-MM-dd hh:mm').format(now);
     
     print(formattedDate);
     

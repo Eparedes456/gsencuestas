@@ -25,66 +25,9 @@ class FichaPage extends StatelessWidget {
                 child: Text('Estamos a punto de terminar la ficha, requerimos los siguientes datos'),
               ),
 
-              Padding(
-                padding: EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 8),
-                child: Text('Encuestado'),
+              
 
-              ),
-
-              Padding(
-                padding:  EdgeInsets.only(left: 20,right: 20),
-                child: Container(
-
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: Row(
-                    children: [
-
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        iconSize: 18, 
-                        onPressed: (){
-
-                          print('Buscar');
-                          _.showModalSearch();
-
-                        }
-                      ),
-
-                      GestureDetector(
-                        onTap: (){
-
-                          print('Buscar');
-                          _.showModalSearch();
-
-                        },
-                        child: Text(
-                          'Busca por nombre o Nº de documento',
-                          style: TextStyle(
-                            fontSize: 13
-                          ),
-                        ),
-                      ),
-
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        iconSize: 18,
-                        onPressed: (){
-
-                          print('Eliminar busqueda');
-
-                        },
-                      )
-
-                    ],
-                  ),
-
-                ),
-              ),
+              
 
               SizedBox(height: 20,),
 
@@ -129,9 +72,9 @@ class FichaPage extends StatelessWidget {
                   child: Center(
                     child: GestureDetector(
                       onTap: (){
-                        //_.pickImage();
+                        _.pickImage();
                       },
-                      child: /*_.imagepath == null ?*/ Container(
+                      child: _.imagepath == null ? Container(
                         height: 200,
                         width: 800,
                         //color: Colors.black,
@@ -141,7 +84,11 @@ class FichaPage extends StatelessWidget {
                             fit: BoxFit.cover
                           )
                         ),
-                      ) 
+                      ):Container(
+                        height: 300,
+                        width: double.infinity,
+                        child: Image.file(_.imagepath,fit: BoxFit.contain,),
+                      ), 
                     ),
                   ),
               ),
@@ -151,9 +98,9 @@ class FichaPage extends StatelessWidget {
                   child: Center(
                     child: GestureDetector(
                       onTap: (){
-                        //_.pickImage();
+                        _.pickImage();
                       },
-                      child: /*_.imagepath == null ?*/ Container(
+                      child: _.imagepath == null ? Container(
                         height: 200,
                         width: 800,
                         //color: Colors.black,
@@ -163,7 +110,11 @@ class FichaPage extends StatelessWidget {
                             fit: BoxFit.cover
                           )
                         ),
-                      ) 
+                      ) : Container(
+                        height: 300,
+                        width: double.infinity,
+                        child: Image.file(_.imagepath,fit: BoxFit.contain,),
+                      ),
                     ),
                   ),
               ),
@@ -182,7 +133,7 @@ class FichaPage extends StatelessWidget {
                   child: MaterialButton(
                     onPressed: (){
                       print('Guardando');
-                      //_.saveFicha();
+                      _.saveFicha();
                     },
                     child: Center(
                       child: Text(
