@@ -84,6 +84,7 @@ class QuizController extends GetxController{
 
   getPreguntas(String idEncuesta)async{
 
+    _opcionesPreguntas = [];
     var connectionInternet = await DataConnectionChecker().connectionStatus;
 
     if(connectionInternet == DataConnectionStatus.connected ){
@@ -297,13 +298,20 @@ class QuizController extends GetxController{
 
             _pickOpcionSimple.removeWhere((element1) => element1.idOpcion == opcionEscogida.idOpcion);
             
-            _opcionesPreguntas[count].selected = false; 
+            opcionEscogida.selected = false; 
 
+            await DBProvider.db.eliminarUnaRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString() );
+
+            List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestas();
+
+            print(listRespuestaDB);
+
+            update(['simple']);
 
           }else{
 
 
-            _opcionesPreguntas[count].selected = true;
+            opcionEscogida.selected = true;
 
             _pickOpcionSimple.add(
 
@@ -324,6 +332,7 @@ class QuizController extends GetxController{
 
             );
 
+            update(['simple']);
 
           }
 
@@ -343,7 +352,7 @@ class QuizController extends GetxController{
 
      
 
-    update(['simple']);
+    
 
   }
 
@@ -441,6 +450,9 @@ class QuizController extends GetxController{
       arguments: 
       sendData
     );
+
+    _controllerInput = [];
+    _pickOpcionSimple = [];
 
 
 

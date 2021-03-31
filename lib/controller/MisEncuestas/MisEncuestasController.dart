@@ -71,13 +71,10 @@ class MisEncuestasController extends GetxController{
 
     });
 
-    /*print(listFichasDb);
-    print(_listDbEncuesta); */  
-
-   //print(_listMisEncuestas);
+    
 
 
-    update();
+    update(['misencuestas']);
   }
 
   updateScreen(String valor)async{
@@ -127,7 +124,7 @@ class MisEncuestasController extends GetxController{
 
 
 
-      update();
+      update(['misencuestas']);
 
     }else if( valor == "F"){
 
