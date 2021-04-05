@@ -56,7 +56,7 @@ class EncuestadoModel{
 
   factory EncuestadoModel.fromMap(Map<String, dynamic> json) => EncuestadoModel(
 
-    idEncuestado            : json["idEncuestado"],
+    idEncuestado            : json["idEncuestado"].toString(),
     documento               : json["documento"],
     nombre                  : json["nombre"],
     apellidoPaterno         : json['apellidoPaterno'],
@@ -68,13 +68,7 @@ class EncuestadoModel{
     email                   : json['email'],
     foto                    : json['foto'],
     estado                  : json['estado'],
-    tipoPersona             : json['tipoPersona'],
-    tipoDocumento           : json['tipoDocumento'],
-    representanteLegal      : json['representanteLegal'],
-    idUbigeo                : json['idUbigeo'],
-    observacion             : json['observacion'],
-    createdAt               : json['createdAt'] ,
-    updatedAt               : json['updatedAt'],             
+               
 
   );
 
@@ -97,14 +91,7 @@ class EncuestadoModel{
       'email'                       : email,
       'foto'                        : foto,
       'estado'                      : estado,
-      'tipoPersona'                 : tipoPersona,
-      'tipoDocumento'               : tipoDocumento,
-      'representanteLegal'          : representanteLegal,
-      'idUbigeo'                    : idUbigeo,
-      'observacion'                 : observacion,
-      'createdAt'                   : createdAt,
-      'updatedAt'                   : updatedAt,
-
+      
 
     };
 

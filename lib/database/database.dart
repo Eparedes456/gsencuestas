@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
+import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
@@ -266,6 +267,7 @@ class DBProvider{
             direccion TEXT,
             telefono TEXT,
             email TEXT,
+            foto TEXT,
             estado TEXT
 
           )
@@ -658,6 +660,25 @@ class DBProvider{
 
   }
 
+  /* Eliminar una ficha */
+
+
+  deleteOneFicha(String idFicha)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      DELETE FROM ficha WHERE idFicha = $idFicha
+
+      '''
+    );
+
+    return response;
+
+
+  }
+
   /* Consulta traer todos los trackings de las fichas */
 
   getAllTrackings()async{
@@ -684,7 +705,7 @@ class DBProvider{
       '''
     );
 
-    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => TrackingModel.fromMap(e)).toList() : [];
 
     return trackingList;
 
@@ -719,6 +740,26 @@ class DBProvider{
       
       '''
     );
+
+  }
+
+  /* Traer todos las respuestas de una ficha */
+
+  getAllRespuestasxFicha(String idFicha)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      
+      SELECT * FROM respuesta WHERE idFicha = '$idFicha'
+      
+      '''
+    );
+
+    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+
+    return listRespuesta;
 
   }
 
@@ -771,25 +812,7 @@ class DBProvider{
   }
 
 
-  /* Insertar Respuesta  */
-
-  insertMultimedia(String idFicha, String tipo)async{
-
-    final db = await database;
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    String latitud = position.latitude.toString();
-    String longitud = position.longitude.toString();
-
-    var response = await db.rawQuery(
-      '''
-      INSERT INTO multimedia(idFicha,tipo,latitud,longitud,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','TRUE')
-      
-      '''
-    );
-
-
-
-  }
+  
 
   /*Consulta insertar todos los encuestados */
 
@@ -814,12 +837,51 @@ class DBProvider{
     );
 
     List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty ? 
-      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+      respuesta.map((e) => EncuestadoModel.fromMap(e)).toList() :[];
 
     return listEncuestado;
 
   }
 
+
+  /* Traer todos los registros de multimedia de una ficha especifica */
+
+  getAllMultimediaxFicha(String idFicha)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM multimedia WHERE idFicha = $idFicha
+      
+      '''
+    );
+
+    List<MultimediaModel> multimediaList = response.isNotEmpty ? response.map((e) => MultimediaModel.fromMap(e)).toList() : [];
+
+    return multimediaList;
+
+  }
+
+  /*Consulta insertar todas las multimedias */
+
+  insertMultimedia(String idFicha, String tipo)async{
+
+    final db = await database;
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String latitud = position.latitude.toString();
+    String longitud = position.longitude.toString();
+
+    var response = await db.rawQuery(
+      '''
+      INSERT INTO multimedia(idFicha,tipo,latitud,longitud,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','TRUE')
+      
+      '''
+    );
+
+
+    return response;
+
+  }
   
 
 }

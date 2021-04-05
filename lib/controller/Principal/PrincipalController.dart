@@ -215,7 +215,7 @@ class PrincipalController extends GetxController{
               direccion       : element["direccion"],
               telefono        : element["telefono"],
               email           : element["email"],
-              estado          : element["estado"] ,
+              estado          : element["estado"].toString() ,
             )
           );
 

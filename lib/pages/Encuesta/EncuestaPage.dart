@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
@@ -66,7 +67,7 @@ class EncuestaPage extends StatelessWidget {
                 ),
 
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: ListView(
                     children: [
                       
@@ -113,18 +114,92 @@ class EncuestaPage extends StatelessWidget {
                           ),
 
                         ),
+                      ),
+
+                      Padding(
+                        
+                        padding: EdgeInsets.only(top: 20,left: 20),
+                        child: Text('Encuestas pendientes'),
+                      ),
+                      SizedBox(height: 12,),
+
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: 6,
+                        itemBuilder: (context,index){
+
+                          return Padding(
+                            padding:  EdgeInsets.only(bottom: 8),
+                            child: Padding(
+                              padding:  EdgeInsets.only(left: 20,right: 20),
+                              child: Card(
+                                child: GestureDetector(
+                                  child: Column(
+                                    
+                                    children: [
+                                      SizedBox(height: 12,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+
+                                          Container(
+                                              height: 80,
+                                              child: Image(
+                                                image: AssetImage('assets/images/survey-logo.png'),
+                                              ),
+                                          ),
+                                          
+
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 20,right: 20),
+                                              child: Column(
+                                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('Titulo de la encuesta'),
+                                                  Text('Fecha de inicio'),
+
+                                                  MaterialButton(
+                                                    height: 25,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(12)
+                                                    ),
+                                                    color: Colors.blue,
+                                                    onPressed: (){
+
+                                                    },
+                                                    child: Text('Retomar',style: TextStyle(color: Colors.white),),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 12,),
+                                    ],
+                                  ),
+                                )
+                              ),
+                            ),
+                          );
+
+                        },
                       )
 
                     ],
                   )
-                )
+                ),
+
+
 
 
               ],
             ),
 
             Padding(
-                          padding:  EdgeInsets.only(left: 20,right: 20),
+                          padding:  EdgeInsets.only(left: 20,right: 20,top: 10),
                           child: SafeArea(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

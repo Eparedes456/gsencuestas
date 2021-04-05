@@ -8,7 +8,7 @@ class MisEncuestas extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<MisEncuestasController>(
       init: MisEncuestasController(),
-      id: 'misencuestas',
+      //id: 'misencuestas',
       builder:(_)=> Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -64,7 +64,7 @@ class MisEncuestas extends StatelessWidget {
           ],
         ),
 
-        body: _.haydata == false ? Center(
+        body: _.haydata == false && _.isLoading == false ? Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,12 +85,14 @@ class MisEncuestas extends StatelessWidget {
 
             ],
           )
-        ):
+        ): _.haydata == true && _.isLoading == false ?
         
         
         ListView.builder(
           itemCount: _.listMisEncuestas.length,
           itemBuilder: (BuildContext context,index){
+
+            String idFicha = _.listMisEncuestas[index].idFicha;
 
             return Column(
                             children: [
@@ -100,7 +102,11 @@ class MisEncuestas extends StatelessWidget {
                               Padding(
                                 padding:  EdgeInsets.only(left: 10,right: 10),
                                 child: GestureDetector(
-                                  onTap: (){},
+                                  onTap: (){
+
+                                    _.navigateToDetail(idFicha);
+
+                                  },
                                   child: Container(
                                    
                                     width: double.infinity,
@@ -273,6 +279,8 @@ class MisEncuestas extends StatelessWidget {
                           );
 
           }
+        ): Center(
+          child: CircularProgressIndicator(),
         )
 
         

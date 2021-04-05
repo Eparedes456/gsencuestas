@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
+import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 
 
 class MisEncuestasController extends GetxController{
 
   @override
-  void onInit() {
+  void onInit() async{
     // TODO: implement onInit
     super.onInit();
-    this.getAllFichas();
+    await getAllFichas();
   }
 
   @override
@@ -38,12 +40,15 @@ class MisEncuestasController extends GetxController{
   bool _haydata = false;
   bool get haydata => _haydata;
 
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
 
   getAllFichas() async{
 
     _listFichasDb = await DBProvider.db.getAllFichas();
 
-    if(_listFichasDb.length > 0){
+    if(_listFichasDb.length > 0){  
 
       _listFichasDb.forEach((element) async {
 
@@ -51,8 +56,8 @@ class MisEncuestasController extends GetxController{
         String idFicha = element.idFicha.toString();
         String idEncuestado = element.idEncuestado.toString();
 
-        _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
-        //_listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
+        _listDbEncuesta = await DBProvider.db.getOneEncuesta(idEncuesta);
+        _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
         
         if(_listDbEncuesta.length > 0 ){
 
@@ -60,7 +65,7 @@ class MisEncuestasController extends GetxController{
           var idProyecto = _listDbEncuesta[0].idProyecto;
           var otherData = await DBProvider.db.getOneProyecto(idProyecto);
           var nombreProyecto  = otherData[0].nombre;
-          //var nombreEncuestado = _listEncuestado[0].nombre.toString() + _listEncuestado[0].apellidoPaterno.toString();
+          var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
 
           print(nombreProyecto);
           _listDbEncuesta.forEach((element2) {
@@ -72,7 +77,7 @@ class MisEncuestasController extends GetxController{
                 idFicha         : idFicha,
                 idProyecto      : element2.idProyecto.toString(),
                 idEncuesta      : element2.idEncuesta.toString(),
-                //nombreEncuestado: nombreEncuestado,
+                nombreEncuestado: nombreEncuestado,
                 nombreProyecto  : nombreProyecto,
                 nombreEncuesta  : element2.titulo,
                 fechaInicio     : element.fecha_inicio,
@@ -84,12 +89,18 @@ class MisEncuestasController extends GetxController{
 
           });
 
-          print(_listMisEncuestas.length);
-          _haydata = true;
-          update(['misencuestas']);
+          if(_listMisEncuestas.length > 0){
+
+            _haydata = true;
+            _isLoading = false;
+            update(['misencuestas']);
+
+          }
+          
 
         }else{
           _haydata = false;
+          _isLoading = false;
           update(['misencuestas']);
 
         }
@@ -97,7 +108,13 @@ class MisEncuestasController extends GetxController{
     
 
       });
-      
+
+
+    }else{
+
+      _haydata = false;
+      _isLoading = false;
+      update(['misencuestas']);
 
     }
 
@@ -108,27 +125,35 @@ class MisEncuestasController extends GetxController{
   updateScreen(String valor)async{
 
     _listMisEncuestas = [];
+    _listFichasDb = [];
+    _listEncuestado = [];
 
     if( valor == "P" ){
 
       _listFichasDb = await DBProvider.db.fichasPendientes(valor);
 
-      print(_listFichasDb);
+      //print(_listFichasDb);
 
-      _listFichasDb.forEach((element) async {
+      if(_listFichasDb.length > 0){
+
+        _listFichasDb.forEach((element) async {
 
           String idEncuesta = element.idEncuesta.toString();
           String idFicha = element.idFicha.toString();
+          String idEncuestado = element.idEncuestado.toString();
 
-          _listDbEncuesta = await DBProvider.db.getOneEncuesta( _listFichasDb[0].idEncuesta.toString() );
-          
-          var idProyecto = _listDbEncuesta[0].idProyecto;
+          _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
+          _listDbEncuesta = await DBProvider.db.getOneEncuesta( idEncuesta );
 
-          var otherData = await DBProvider.db.getOneProyecto(idProyecto);
+          var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
 
-          var nombreProyecto  = otherData[0].nombre;
+          _listDbEncuesta.forEach((element2) async{
 
-          _listDbEncuesta.forEach((element2) {
+            var idProyecto = element2.idProyecto;
+            var otherData = await DBProvider.db.getOneProyecto(idProyecto);
+            var nombreProyecto  = otherData[0].nombre;
+            
+
 
             _listMisEncuestas.add(
 
@@ -137,6 +162,7 @@ class MisEncuestasController extends GetxController{
                 idFicha         : idFicha,
                 idProyecto      : element2.idProyecto.toString(),
                 idEncuesta      : element2.idEncuesta.toString(),
+                nombreEncuestado: nombreEncuestado,
                 nombreProyecto  : nombreProyecto,
                 nombreEncuesta  : element2.titulo,
                 fechaInicio     : element.fecha_inicio,
@@ -147,24 +173,61 @@ class MisEncuestasController extends GetxController{
             );
 
           });
+          
+          
+          
 
-      });
+        });
+
+        update();
 
 
 
-      update(['misencuestas']);
+      }
+
+      
+
+
+
+      
 
     }else if( valor == "F"){
 
+
+
     }else{
       
-      getAllFichas();
+      await getAllFichas();
 
     }
 
      
 
 
+
+  }
+
+
+  navigateToDetail(String idFicha)async{
+
+    final result = await Get.to(
+
+      DetailMiEncuestaPage(),
+      arguments: idFicha
+
+    );
+
+    if(result == "SI" ){
+
+      _listFichasDb   = [];
+      _listDbEncuesta = [];
+      _listDbEncuesta = [];
+
+      await getAllFichas();
+      
+      print("Se elimino yt se volvio a recargar la pagina");
+
+    }
 
   }
 
