@@ -6,6 +6,7 @@ import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
@@ -29,6 +30,7 @@ class PrincipalController extends GetxController{
   List<EncuestaModel> _encuestas = [];
   List<PreguntaModel> _preguntas = [];
   List<OpcionesModel> _opcionesPreguntas = [];
+  List<EncuestadoModel> _encuestadosLista = [];
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -193,6 +195,38 @@ class PrincipalController extends GetxController{
       for (var i = 0; i < _usuarios.length ; i++) {
 
         await DBProvider.db.insertUsuarios(_usuarios[i]);  
+      }
+
+      var listEncuestados = await apiConexion.getAllEncuestado();
+
+      if( listEncuestados != 1 && listEncuestados != 2 && listEncuestados  != 3 ){
+
+        listEncuestados.forEach((element){
+
+          _encuestadosLista.add(
+            EncuestadoModel(
+              idEncuestado    : element["idEncuestado"].toString(),
+              documento       : element["documento"],
+              nombre          : element["nombre"],
+              apellidoPaterno : element["apellidoPaterno"],
+              apellidoMaterno : element["apellidoMaterno"],
+              sexo            : element["sexo"],
+              estadoCivil     : element["estadoCivil"],
+              direccion       : element["direccion"],
+              telefono        : element["telefono"],
+              email           : element["email"],
+              estado          : element["estado"] ,
+            )
+          );
+
+        });
+
+      }
+
+      for (var e = 0; e < _encuestadosLista.length ; e++) {
+
+        await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
+          
       }
 
       var listProyecto = await apiConexion.getProyectos();

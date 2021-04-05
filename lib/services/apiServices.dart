@@ -266,7 +266,7 @@ class ApiServices {
 
   /* Servicio a buscar a un encuestado por número de DNI */
 
-  getAllEncuestado(String nrDocumento)async{
+  getAllEncuestado()async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -311,6 +311,7 @@ class ApiServices {
 
 
   }
+  
 
 
   insertFicha(dynamic data)async{

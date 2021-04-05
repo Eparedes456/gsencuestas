@@ -256,11 +256,16 @@ class DBProvider{
         await db.execute(
           '''
           CREATE TABLE encuestado(
-            idMultimedia INTEGER PRIMARY KEY AUTOINCREMENT,
-            idFicha INTEGER,
-            tipo TEXT,
-            latitud TEXT,
-            longitud TEXT,
+            idEncuestado INTEGER PRIMARY KEY AUTOINCREMENT,
+            documento TEXT,
+            nombre TEXT,
+            apellidoPaterno TEXT,
+            apellidoMaterno TEXT,
+            sexo TEXT,
+            estadoCivil TEXT,
+            direccion TEXT,
+            telefono TEXT,
+            email TEXT,
             estado TEXT
 
           )
@@ -783,6 +788,16 @@ class DBProvider{
     );
 
 
+
+  }
+
+  /*Consulta insertar todos los encuestados */
+
+  insertEncuestados(EncuestadoModel nuevoEncuestado)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("encuestado", nuevoEncuestado.toMap());
+    return respuesta;
 
   }
 
