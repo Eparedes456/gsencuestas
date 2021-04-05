@@ -178,7 +178,7 @@ class ProyectoController extends GetxController{
     Get.to(
 
       EncuestaPage(),
-      arguments: encuestaPage
+      arguments: [encuestaPage,_nombreProyecto]
 
     );
 

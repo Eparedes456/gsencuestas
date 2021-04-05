@@ -25,11 +25,12 @@ class EncuestaController extends GetxController{
     super.onInit();
 
     var data = Get.arguments;
-    print(data);
+    _nombreProyecto = data[1];
+    print(data[0]);
 
    
 
-    loadData(data);
+    loadData(data[0]);
 
 
 
@@ -44,6 +45,9 @@ class EncuestaController extends GetxController{
 
   String _titulo = "";
   String get titulo => _titulo;
+  
+  String _nombreProyecto = "";
+  String get nombreProyecto => _nombreProyecto;
 
   String _descripcion = "";
   String get descripcion =>_descripcion;

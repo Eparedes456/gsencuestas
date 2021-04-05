@@ -14,7 +14,6 @@ import 'package:gsencuesta/services/apiServices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 
 
 class LoginController extends GetxController{
@@ -204,14 +203,8 @@ class LoginController extends GetxController{
 
   loginApi()async{
 
-    final cryptor = new PlatformStringCryptor();
-    final salt =  await cryptor.generateSalt();
-    final key = "jIkj0VOLhFpOJSpI7SibjA==:RZ03+kGZ/9Di3PT0a3xUDibD6gmb2RIhTVF+mQfZqy0=";
     
-    var contrEncriptada = await cryptor.encrypt(_password.text, key);
-
-    print('************************');
-    print(contrEncriptada);
+    
       
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var resultado = await apiConexion.ingresar(_username.text, _password.text);

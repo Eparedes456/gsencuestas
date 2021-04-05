@@ -1,4 +1,4 @@
-import 'package:dropdownfield/dropdownfield.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Ficha/FichaController.dart';
@@ -34,6 +34,20 @@ class FichaPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left:20,right: 20),
                 child: Text('Por favor tomese un selfie, como se muestra en la siguiente imagen.'),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left:20,right: 20,top: 12),
+                child: TextField(
+                  controller: _.controllerobservacion,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    labelText: 'Observación'
+                  ),
+                ),
               ),
 
               Padding(

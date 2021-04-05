@@ -132,13 +132,16 @@ class ProyectoPage extends StatelessWidget {
                                   filter: ImageFilter.blur(
                                     sigmaY: 19.2,sigmaX: 19.2
                                   ),
-                                  child: Text(
-                                    _.nombreProyecto,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20
+                                  child: Padding(
+                                    padding:  EdgeInsets.only(left: 8,right: 8),
+                                    child: Text(
+                                      _.nombreProyecto,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20
+                                      ),
                                     ),
                                   ),
                                 ),

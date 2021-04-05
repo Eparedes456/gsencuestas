@@ -150,7 +150,7 @@ class EncuestaPage extends StatelessWidget {
                                       ),
                                       child: Text(
                                         
-                                        _.titulo,
+                                        _.titulo + " - " + _.nombreProyecto,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontFamily: 'Poppins',

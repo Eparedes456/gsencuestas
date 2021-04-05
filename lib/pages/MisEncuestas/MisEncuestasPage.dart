@@ -64,7 +64,31 @@ class MisEncuestas extends StatelessWidget {
           ],
         ),
 
-        body: ListView.builder(
+        body: _.haydata == false ? Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Container(
+                height: 200,
+                child: Image(
+                  image: AssetImage('assets/images/noencuesta.png'),
+                ),
+              ),
+              SizedBox(height: 12,),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                child: Text('No se encontraron encuestas que realizastes.'),
+              )
+
+            ],
+          )
+        ):
+        
+        
+        ListView.builder(
           itemCount: _.listMisEncuestas.length,
           itemBuilder: (BuildContext context,index){
 
@@ -78,8 +102,7 @@ class MisEncuestas extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: (){},
                                   child: Container(
-                                    //margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    //height: 170,
+                                   
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -90,7 +113,7 @@ class MisEncuestas extends StatelessWidget {
                                           
                                           Container(
                                             height: 130,
-                                            width: 100,
+                                            width: 70,
                                             decoration: BoxDecoration(
                                               color: Colors.black,
                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
@@ -134,10 +157,11 @@ class MisEncuestas extends StatelessWidget {
 
                                                       Expanded(
                                                         child: Text(
-                                                          '${_.listMisEncuestas[index].nombreProyecto}',
+                                                          '${_.listMisEncuestas[index].nombreEncuestado}',
                                                           style: TextStyle(
                                                             fontWeight: FontWeight.bold,
                                                             fontFamily: 'Poppins',
+                                                            fontSize: 13
                                                           ),
                                                         ),
                                                       ),
@@ -153,7 +177,8 @@ class MisEncuestas extends StatelessWidget {
                                                           child: Text(
                                                             _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
                                                             style: TextStyle(
-                                                              color: Colors.white
+                                                              color: Colors.white,
+                                                              fontSize: 12
                                                             ),
                                                           ),
                                                         ),
@@ -167,7 +192,19 @@ class MisEncuestas extends StatelessWidget {
                                                   child: Text(
                                                     '${_.listMisEncuestas[index].nombreEncuesta}',
                                                     style: TextStyle(
-                                                      fontSize: 14,
+                                                      fontSize: 12,
+                                                      color: Colors.grey[600]
+                                                    ),
+                                                  ),
+                                                ),
+
+                                              
+                                                Padding(
+                                                  padding:  EdgeInsets.only(left: 10,top: 8),
+                                                  child: Text(
+                                                    '${_.listMisEncuestas[index].nombreProyecto}',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
                                                       color: Colors.grey[600]
                                                     ),
                                                   ),
@@ -183,13 +220,14 @@ class MisEncuestas extends StatelessWidget {
                                                       Text(
                                                         'Nª preguntas:',
                                                         style: TextStyle(
-                                                          color: Colors.grey[600]
+                                                          color: Colors.grey[600],
+                                                          fontSize: 12
                                                         ),
                                                       ),
 
                                                       SizedBox(width: 8,),
 
-                                                      Text('15')
+                                                      Text('15',style: TextStyle(fontSize: 12),)
 
                                                     ],
                                                   ),
@@ -202,12 +240,15 @@ class MisEncuestas extends StatelessWidget {
                                                   child: Row(
                                                   children: [
 
-                                                    Icon(Icons.calendar_today,size: 20,),
+                                                    Icon(Icons.calendar_today,size: 12,),
                                                     SizedBox(width: 8,),
 
                                                     Text(
 
-                                                     '${_.listMisEncuestas[index].fechaInicio}'
+                                                     '${_.listMisEncuestas[index].fechaInicio}',
+                                                     style: TextStyle(
+                                                       fontSize: 12
+                                                     ),
                                                     )
 
                                                   ],
@@ -222,151 +263,11 @@ class MisEncuestas extends StatelessWidget {
 
                                     ),
                                     
-                                    
-                                    /*Padding(
-                                      padding:  EdgeInsets.fromLTRB(100,20,20,20),
-                                      child: ListView(
-                                        children: [
-
-
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                               
-                                                children: [
-
-                                                  Text('Estado :'),
-                                                  
-                                                  Container(
-                                                    height: 30,
-                                                    width: 90,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey,
-                                                      borderRadius: BorderRadius.circular(10)
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Sincronizado',
-                                                        style: TextStyle(
-                                                          color: Colors.white
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-
-
-
-                                                ],
-                                              ),
-
-                                              SizedBox(height: 8,),
-
-                                              Row(
-                                                children: [
-
-                                                  Text(
-                                                      'Nombre del proyecto',
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'Poppins',
-                                                      ),
-                                                  ),
-                                                  
-
-                                                  
-                                                ],
-                                              ),
-
-                                              Text(
-                                                'Nombre de la encuesta',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.grey[600]
-                                                ),
-                                              ),
-
-                                              SizedBox(height: 8,),
-
-                                              Row(
-                                                children: [
-
-                                                  Text(
-                                                    'Nª preguntas:',
-                                                    style: TextStyle(
-                                                      color: Colors.grey[600]
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 8,),
-
-                                                  Text('15')
-
-                                                ],
-                                              ),
-
-                                              SizedBox(height: 8,),
-                                              
-                                              Row(
-                                                children: [
-
-                                                  Text(
-                                                    'Fecha de inicio:',
-                                                    style: TextStyle(
-                                                      color: Colors.grey[600]
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 8,),
-
-                                                  Text('11/12/2012')
-
-                                                ],
-                                              ),
-                                              
-
-                                            ],
-                                          ),
-
-                                        ], 
-                                      ),
-                                    ),*/
                                   ),
                                 ),
                               ),
 
-                              /*Positioned(
-                                left: 10,
-                                top: 30,
-                                bottom: 30,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: CachedNetworkImage(
-                                    //height: 80,
-                                    width: 90,
-                                    imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
-                                    placeholder: (context, url) => Image(
-                                      image: AssetImage('assets/images/loading.gif'),),
-                                    errorWidget: (context, url, error) => Center(
-
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-
-                                          Icon(Icons.error,color: Colors.red,),
-                                          SizedBox(height: 8,),
-                                          Text('Lo sentimos no pudimos cargar la imagen')
-                                        ],
-                                      )
-                                    ),
-                                    fit: BoxFit.cover,
-
-                                  )
-                                  
-                                 
-                                  
-                                ),
-                              )*/
+                              
 
                             ],
                           );

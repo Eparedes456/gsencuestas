@@ -22,6 +22,7 @@ class MisEncuestasModel{
   String idFicha;
   String idProyecto;
   String idEncuesta;
+  String nombreEncuestado;
   String nombreProyecto;
   String nombreEncuesta;
   String nroPreguntas;
@@ -31,7 +32,7 @@ class MisEncuestasModel{
 
   MisEncuestasModel({
 
-    this.idFicha, this.idProyecto, this.idEncuesta, this.nombreProyecto, this.nombreEncuesta, this.nroPreguntas,
+    this.idFicha, this.idProyecto, this.idEncuesta, this.nombreEncuestado ,this.nombreProyecto, this.nombreEncuesta, this.nroPreguntas,
     this.fechaInicio, this.imagen ,this.estadoFicha
 
   });
@@ -43,6 +44,7 @@ class MisEncuestasModel{
     idFicha             : json["idFicha"],
     idProyecto          : json["idProyecto"]  ,
     idEncuesta          : json["idEncuesta"],
+    nombreEncuestado    : json["nombreEncuestado"],
     nombreProyecto      : json['nombreProyecto'],
     nombreEncuesta      : json['nombreEncuesta'],
     nroPreguntas        : json['nroPreguntas'],
@@ -63,6 +65,7 @@ class MisEncuestasModel{
       'id_opcion'             : idFicha,
       'idPreguntaGrupoOpcion' : idProyecto,
       'idPregunta'            : idEncuesta,
+      'nombreEncuesta'        : nombreEncuesta,
       'valor'                 : nombreProyecto,
       'label'                 : nombreEncuesta,
       'orden'                 : nroPreguntas,

@@ -31,11 +31,6 @@ class FichaController extends GetxController{
   }
 
   
-
-
-
-
-
   ApiServices apicConexion = new ApiServices();
 
   TextEditingController _controllerObservacion = TextEditingController();

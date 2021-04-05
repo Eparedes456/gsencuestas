@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
@@ -240,6 +241,21 @@ class DBProvider{
         await db.execute(
           '''
           CREATE TABLE multimedia(
+            idMultimedia INTEGER PRIMARY KEY AUTOINCREMENT,
+            idFicha INTEGER,
+            tipo TEXT,
+            latitud TEXT,
+            longitud TEXT,
+            estado TEXT
+
+          )
+
+          '''
+        );
+
+        await db.execute(
+          '''
+          CREATE TABLE encuestado(
             idMultimedia INTEGER PRIMARY KEY AUTOINCREMENT,
             idFicha INTEGER,
             tipo TEXT,
@@ -770,7 +786,24 @@ class DBProvider{
 
   }
 
+  /* Obtener los encuestados */
 
+  getOneEncuestado(String idEncuestado)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM encuestado WHERE idEncuestado = '$idEncuestado'
+      '''
+    );
+
+    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty ? 
+      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+
+    return listEncuestado;
+
+  }
 
   
 
