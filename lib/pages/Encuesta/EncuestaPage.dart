@@ -116,17 +116,17 @@ class EncuestaPage extends StatelessWidget {
                         ),
                       ),
 
-                      Padding(
+                      _.encuestasPendientes == true? Padding(
                         
                         padding: EdgeInsets.only(top: 20,left: 20),
                         child: Text('Encuestas pendientes'),
-                      ),
-                      SizedBox(height: 12,),
+                      ):Container(),
+                      _.encuestasPendientes == true ? SizedBox(height: 12,) :Container() ,
 
-                      ListView.builder(
+                      _.encuestasPendientes == true ? ListView.builder(
                         shrinkWrap: true,
                         physics: ScrollPhysics(),
-                        itemCount: 6,
+                        itemCount: _.listFichas.length,
                         itemBuilder: (context,index){
 
                           return Padding(
@@ -186,7 +186,7 @@ class EncuestaPage extends StatelessWidget {
                           );
 
                         },
-                      )
+                      ): Container()
 
                     ],
                   )

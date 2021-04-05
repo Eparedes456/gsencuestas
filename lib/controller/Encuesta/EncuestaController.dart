@@ -67,9 +67,18 @@ class EncuestaController extends GetxController{
   List<PreguntaModel> _listPregunta = [];
   List<PreguntaModel> get listPregunta => _listPregunta;
 
+  List<FichasModel> _listFichas = [];
+  List<FichasModel> get listFichas => _listFichas;
+
+  List<EncuestaModel> _listEncuesta = [];
+  List<EncuestaModel> get listEncuesta => _listEncuesta;
+
   TextEditingController insertEncuestadoController = new TextEditingController();
 
   String idEncuestado;
+
+  bool _encuestasPendientes = false;
+  bool get encuestasPendientes => _encuestasPendientes; 
 
 
   loadData(EncuestaModel encuesta)async{
@@ -82,6 +91,23 @@ class EncuestaController extends GetxController{
     _idEncuesta     = encuesta.idEncuesta.toString();
 
     //loadingModal();
+  
+    _listFichas = await DBProvider.db.getAllFichas();
+
+    print(_listFichas.length);
+
+    if(_listFichas.length > 0){
+
+      _listFichas.forEach((element)async{
+
+        _listEncuesta = await DBProvider.db.getAllEncuestas();
+
+      });
+
+
+      _encuestasPendientes = true;
+
+    }
     
     await getPreguntas(encuesta.idEncuesta.toString());
 
