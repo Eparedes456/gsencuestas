@@ -39,6 +39,7 @@ dependencies:
   cached_network_image:
   dropdownfield:
   intl:
+  connectivity_plus:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
@@ -60,6 +61,10 @@ class PrincipalController extends GetxController{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var connectionInternet = await DataConnectionChecker().connectionStatus;
+
+    var conectivityResult = await Connectivity().checkConnectivity();
+    print(conectivityResult);
+    
     var flag1 = preferences.getString('primeraCarga');
 
     if(connectionInternet == DataConnectionStatus.connected ){
