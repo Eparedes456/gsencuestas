@@ -105,7 +105,9 @@ class FichaController extends GetxController{
     var tipo = "Foto";
     DateTime now = DateTime.now();
     print(now);
-    await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, now.toString());
+    var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, now.toString(),"F");
+
+    print(hola);
 
     await DBProvider.db.insertMultimedia(idFicha, tipo);
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -85,9 +86,11 @@ class QuizController extends GetxController{
   getPreguntas(String idEncuesta)async{
 
     _opcionesPreguntas = [];
-    var connectionInternet = await DataConnectionChecker().connectionStatus;
+    
+    //var connectionInternet = await DataConnectionChecker().connectionStatus;
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    if(connectionInternet == DataConnectionStatus.connected ){
+    if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       var response = await apiConexion.getPreguntasxEncuesta(idEncuesta);
 

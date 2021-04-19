@@ -42,7 +42,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
 
                       Container(
                         height: 130,
-                        width: 130,
+                        width: 110,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image(
@@ -270,7 +270,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                               children: [
 
                                 Expanded(child: Text('Nº de preguntas:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
-                                Expanded(child: Text('24'))
+                                Expanded(child: Text('${_.nroPreguntas}'))
                               ],
                             ),
 
@@ -280,15 +280,44 @@ class DetailMiEncuestaPage extends StatelessWidget {
                               children: [
 
                                 Expanded(child: Text('Descripción:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
-                                Expanded(child: Text('${_.descripcionEncuesta}'))
+                                Expanded(child: Padding(
+                                  padding:  EdgeInsets.only(right: 10),
+                                  child: Text('${_.descripcionEncuesta}'),
+                                ))
                               ],
                             ),
 
-                            //SizedBox(height: 8,),
-                            /*Padding(
-                              padding: EdgeInsets.only(left:10,right: 10),
-                              child: Text('${_.descripcionEncuesta}'),
-                            ),*/
+                            SizedBox(height: 8,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Expanded(child: Text('Ver encuesta:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(
+
+                                  child: Padding(
+                                    padding:  EdgeInsets.only(left: 10,right: 10),
+                                    child: MaterialButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      color: Colors.orange,
+                                      onPressed: (){},
+                                      child: Row(
+                                        children: [
+
+                                          Icon(FontAwesomeIcons.clipboard),
+                                          Text('Click aqui')
+                                        ],
+                                      ),
+                                    ),
+                                  )
+
+                                )
+                              ],
+                            ),
+
+                            
 
                             SizedBox(height: 20,),
 
@@ -325,6 +354,135 @@ class DetailMiEncuestaPage extends StatelessWidget {
 
               SizedBox(height: 20,),
 
+              Stack(
+                children: [
+
+                  
+
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
+                    child: Container(
+                      //height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey
+                        ),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Padding(
+                        padding:  EdgeInsets.only(left: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            SizedBox(height: 30,),
+                            
+
+                          
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Expanded(child: Text('latitud:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(child: Text('${_.latitud}'))
+                              ],
+                            ),
+
+                            SizedBox(height: 8,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Expanded(child: Text('Longitud:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(child: Text('${_.longitud}'))
+                              ],
+                            ),
+
+                            SizedBox(height: 8,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Expanded(child: Text('Ver recorrido:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(
+
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      print('mapas');
+                                    },
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(left: 10,right: 10),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(),
+                                          borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: Column(
+                                          children: [
+
+                                            SizedBox(height: 8,),
+                                            Row(
+                                              children: [
+
+                                                Image(
+                                                  height: 50,
+                                                  image: AssetImage('assets/images/googlemaps.png'),
+                                                ),
+
+                                                Text('Google Maps')
+
+                                              ],
+                                            ),
+                                            SizedBox(height: 8,),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+
+                                )
+                              ],
+                            ),
+
+                            
+
+                            SizedBox(height: 20,),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Container(
+                      height: 30,
+                      width: 200,
+                      
+                      decoration: BoxDecoration(
+                        color: Colors.green[900],
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Tracking',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+
+              SizedBox(height: 20,),
+
               _.estado == "P"? Center(
                 child: FlatButton.icon(
                         shape: RoundedRectangleBorder(
@@ -345,7 +503,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       
-                      FlatButton.icon(
+                      _.estado == "S" ? Container() : FlatButton.icon(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                         ),
@@ -376,31 +534,12 @@ class DetailMiEncuestaPage extends StatelessWidget {
                       ),
                       
 
-                      FlatButton.icon(
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        color: Colors.blue,
-                        onPressed: (){
-
-                          
-
-                        },
-                        icon: Icon(FontAwesomeIcons.mapMarked,color: Colors.white,size: 18,),
-                        label: Text('Ver tracking',style: TextStyle(color: Colors.white),)
-                      )
-
                     ],
                   ),
 
                 ),
-              
 
-              
-
-
-
+              SizedBox(height: 20,),
 
             ],
           ),

@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
+import 'package:intl/intl.dart';
 
 class DetalleFichaController extends GetxController{
 
@@ -24,8 +25,9 @@ class DetalleFichaController extends GetxController{
     // TODO: implement onInit
     super.onInit();
 
-    _idFicha = Get.arguments;
-
+    var data = Get.arguments;
+    _idFicha  = data[0];
+    _nroPreguntas = data[1];
     this.getDetailFicha(_idFicha);
 
   }
@@ -49,7 +51,8 @@ class DetalleFichaController extends GetxController{
   String get fechaInicio => _fechaInicio;
   String _fechaFin  = "";
   String get fechaFin => _fechaFin;
-
+  String _nroPreguntas = "";
+  String get nroPreguntas => _nroPreguntas;
 
 
   
@@ -72,8 +75,10 @@ class DetalleFichaController extends GetxController{
   String get direccion => _direccion;
 
   String idUsuario = "";
-  String latitud = "";
-  String longitud = "";
+  String _latitud = "";
+  String  get latitud => _latitud;
+  String _longitud = "";
+  String get longitud => _longitud;
   String observacion = "";
 
   /* Datos de la encuestay nombre del proyecto */
@@ -88,6 +93,10 @@ class DetalleFichaController extends GetxController{
   String _nombreProyecto = "";
   String get nombreProyecto => _nombreProyecto;
 
+  String fechaInicioSend;
+  String fechaFinSend;
+  String observacionFicha;
+
 
   getDetailFicha(idFicha)async{
 
@@ -96,13 +105,55 @@ class DetalleFichaController extends GetxController{
     print(_listFichasDb);
     _idFicha = _listFichasDb[0].idFicha.toString();
     _estado = _listFichasDb[0].estado;
-    _fechaInicio = _listFichasDb[0].fecha_inicio;
-    _fechaFin = _listFichasDb[0].fecha_fin;
+
+    final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
+    final format = DateFormat('dd-MM-yyyy');
+    final clockString = format.format(dateTime); 
+
+    _fechaInicio =  clockString;
+    fechaInicioSend = _listFichasDb[0].fecha_inicio;
+
+    dynamic dateTime2;
+
+    if( _listFichasDb[0].fecha_fin == "NO REGISTRA" ){
+
+      fechaFinSend = "2021-05-12";
+
+    }else{
+
+      dateTime2 = DateTime.parse(_listFichasDb[0].fecha_fin);
+      final format3 = DateFormat('yyyy-MM-dd');
+      fechaFinSend = format3.format(dateTime2);
+      final format2 = DateFormat('dd-MM-yyyy');
+      final clockString2 = format2.format(dateTime2); 
+
+      _fechaFin = clockString2;
+
+    }
+
+    
+
+    
+    
+
+
+    observacionFicha = _listFichasDb[0].observacion.toString();
+
+
+
+
     idUsuario = _listFichasDb[0].idUsuario.toString();
-    latitud = _listFichasDb[0].latitud.toString();
-    longitud = _listFichasDb[0].longitud.toString();
+    _latitud = _listFichasDb[0].latitud.toString();
+    _longitud = _listFichasDb[0].longitud.toString();
     var idEncuesta =  _listFichasDb[0].idEncuesta;
 
+    
+    
+
+    print(dateTime);
+
+    
+    print(clockString);
 
     String idEncuestado = _listFichasDb[0].idEncuestado.toString();
     listEncuestadoModel = await DBProvider.db.getOneEncuestado(idEncuestado);
@@ -228,8 +279,9 @@ class DetalleFichaController extends GetxController{
     List<MultimediaModel> listMultimedia       =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
 
 
-    Map sendFicha ={
-      //'encuestado'        :   listEncuestadoModel,
+
+    var sendFicha ={
+      /*'encuestado'        :   listEncuestadoModel,
       'fechaFin'          :   _fechaFin,
       'fechaInicio'       :   _fechaInicio,
       'idFicha'           :   _idFicha,
@@ -239,9 +291,98 @@ class DetalleFichaController extends GetxController{
       'observacion'       :   observacion,
       'multimedia'        :   listMultimedia,
       'respuesta'         :   listRespuestaDBlocal,  
-      //'tracking'          :   listTracking
+      'tracking'          :   listTracking*/
 
     };
+
+    sendFicha['idficha']      =  int.parse(_idFicha);
+    sendFicha['fechaFin']     = fechaFinSend;
+    sendFicha['fechaInicio']  = fechaInicioSend;
+    sendFicha['idUsuario']    = int.parse(idUsuario);
+    sendFicha["latitud"]      = latitud;
+    sendFicha["longitud"]     = longitud;
+    sendFicha["observacion"]  = observacionFicha;
+
+    var encuestado = {};
+    encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
+    sendFicha['encuestado']   = encuestado;
+
+    var respuesta ={};
+    List<Map> listRespuestaMap = new List();
+
+    var pregunta = {};
+    //pregunta["idPregunta"] = "14";
+
+    for (var i = 0; i < listRespuestaDBlocal.length; i++) {
+
+      bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
+      pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
+
+      respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
+      respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
+      respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
+      respuesta["estado"]       =   b; //listRespuestaDBlocal[i].estado;
+      respuesta["pregunta"]     =   pregunta;
+        
+      listRespuestaMap.add(
+        respuesta
+      );
+
+      sendFicha['respuesta']  = listRespuestaMap;
+      print(sendFicha);
+      respuesta ={};
+      pregunta = {};
+      //print('hola');
+    
+    }
+
+  
+
+    //sendFicha['respuesta']  = listRespuestaMap;
+
+
+
+    var tracking = {};
+    List<Map> listTrackingMap = new List();
+
+    for (var i = 0; i < listTracking.length; i++) {
+      bool b = listTracking[i].estado.toLowerCase() == 'true';
+
+      tracking["idTracking"]      =   listTracking[i].idTracking;
+      tracking["latitud"]         =   listTracking[i].latitud;
+      tracking["longitud"]        =   listTracking[i].longitud;
+      tracking["estado"]          =   b;   //listTracking[x].estado;
+        
+      listTrackingMap.add(
+        tracking
+      );
+
+      sendFicha['tracking']  = listTrackingMap;
+      tracking ={};
+      print('hola');
+    
+    }
+
+    var multimedia = {};
+    List<Map> listMultimediaMap = new List();
+
+    for (var z = 0; z < listMultimedia.length; z++) {
+
+      multimedia["idMultimedia"]  =   listMultimedia[z].idMultimedia;
+      multimedia["latitud"]    =   listMultimedia[z].latitud;
+      multimedia["longitud"]        =   listMultimedia[z].longitud;
+      
+      
+        
+      listTrackingMap.add(
+        tracking
+      );
+
+      sendFicha['multimedia']  = listMultimediaMap;
+      multimedia ={};
+      print('hola');
+    
+    }
 
     print(sendFicha);
 
@@ -249,7 +390,24 @@ class DetalleFichaController extends GetxController{
 
 
 
-    var respuesta = await apiConexion.sendFichaToServer(sendFicha);
+    var response  = await apiConexion.sendFichaToServer(sendFicha);
+
+    if( response != null || response != 1 || response  != 2 || response  !=3 ){
+
+      print('se inserto correctamente'); 
+      _estado = "S";
+
+      await DBProvider.db.updateFicha(idFicha, observacion, fechaFin,_estado);
+
+      
+      update();
+      
+
+    }else{
+
+      print('Algo ocurrio en el server');
+
+    }
 
 
 

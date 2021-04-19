@@ -6,6 +6,7 @@ import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
+import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 
@@ -13,10 +14,11 @@ import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 class MisEncuestasController extends GetxController{
 
   @override
-  void onInit() async{
+  void onInit() {
     // TODO: implement onInit
+    this.getAllFichas();
     super.onInit();
-    await getAllFichas();
+    
   }
 
   @override
@@ -35,7 +37,13 @@ class MisEncuestasController extends GetxController{
 
   List<EncuestadoModel> _listEncuestado = [];
   List<EncuestadoModel> get listEncuestado => _listEncuestado;
+
+  List<PreguntaModel> _listPreguntas = [];
+  List<PreguntaModel> get listPreguntas =>  _listPreguntas;
   
+
+  String _nroTotalPreguntas = "";
+  String get nroTotalPreguntas => _nroTotalPreguntas;
   
   bool _haydata = false;
   bool get haydata => _haydata;
@@ -50,15 +58,16 @@ class MisEncuestasController extends GetxController{
 
     if(_listFichasDb.length > 0){  
 
-      _listFichasDb.forEach((element) async {
+      for( var element in _listFichasDb ){
 
         String idEncuesta = element.idEncuesta.toString();
         String idFicha = element.idFicha.toString();
         String idEncuestado = element.idEncuestado.toString();
-
         _listDbEncuesta = await DBProvider.db.getOneEncuesta(idEncuesta);
         _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
-        
+        _listPreguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+        _nroTotalPreguntas = _listPreguntas.length.toString();
+
         if(_listDbEncuesta.length > 0 ){
 
           print('hay datos ');
@@ -66,9 +75,9 @@ class MisEncuestasController extends GetxController{
           var otherData = await DBProvider.db.getOneProyecto(idProyecto);
           var nombreProyecto  = otherData[0].nombre;
           var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
-
           print(nombreProyecto);
-          _listDbEncuesta.forEach((element2) {
+
+          for( var element2 in _listDbEncuesta){
 
             _listMisEncuestas.add(
 
@@ -87,34 +96,24 @@ class MisEncuestasController extends GetxController{
 
             );
 
-          });
-
-          if(_listMisEncuestas.length > 0){
-
-            _haydata = true;
-            _isLoading = false;
-            update(['misencuestas']);
-
           }
-          
-
-        }else{
-          _haydata = false;
-          _isLoading = false;
-          update(['misencuestas']);
 
         }
-        
-    
 
-      });
+      }
 
+      if(_listMisEncuestas.length > 0){
 
+        _haydata = true;
+        _isLoading = false;
+        update();
+
+      }
     }else{
 
       _haydata = false;
       _isLoading = false;
-      update(['misencuestas']);
+      update();
 
     }
 
@@ -127,8 +126,9 @@ class MisEncuestasController extends GetxController{
     _listMisEncuestas = [];
     _listFichasDb = [];
     _listEncuestado = [];
+    _listPreguntas = [];
 
-    if( valor == "P" ){
+    if( valor == "P" || valor == "F" || valor == "S" ){
 
       _listFichasDb = await DBProvider.db.fichasPendientes(valor);
 
@@ -136,7 +136,7 @@ class MisEncuestasController extends GetxController{
 
       if(_listFichasDb.length > 0){
 
-        _listFichasDb.forEach((element) async {
+        for( var element in _listFichasDb){
 
           String idEncuesta = element.idEncuesta.toString();
           String idFicha = element.idFicha.toString();
@@ -144,16 +144,15 @@ class MisEncuestasController extends GetxController{
 
           _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
           _listDbEncuesta = await DBProvider.db.getOneEncuesta( idEncuesta );
-
+          _listPreguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+          _nroTotalPreguntas = _listPreguntas.length.toString();
           var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
 
-          _listDbEncuesta.forEach((element2) async{
+          for(var element2 in _listDbEncuesta){
 
             var idProyecto = element2.idProyecto;
             var otherData = await DBProvider.db.getOneProyecto(idProyecto);
             var nombreProyecto  = otherData[0].nombre;
-            
-
 
             _listMisEncuestas.add(
 
@@ -172,38 +171,31 @@ class MisEncuestasController extends GetxController{
 
             );
 
-          });
-          
-          
-          
+          }
 
-        });
+        }
 
+
+        if(_listMisEncuestas.length > 0){
+
+          _haydata = true;
+          _isLoading = false;
+          update();
+
+        }
+
+      }else{
+
+        _haydata = false;
+        _isLoading = false;
         update();
 
-
-
       }
-
-      
-
-
-
-      
-
-    }else if( valor == "F"){
-
-
-
     }else{
       
       await getAllFichas();
 
     }
-
-     
-
-
 
   }
 
@@ -213,7 +205,7 @@ class MisEncuestasController extends GetxController{
     final result = await Get.to(
 
       DetailMiEncuestaPage(),
-      arguments: idFicha
+      arguments: [idFicha,_nroTotalPreguntas]
 
     );
 

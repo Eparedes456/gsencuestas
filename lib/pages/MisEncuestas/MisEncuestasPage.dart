@@ -93,6 +93,7 @@ class MisEncuestas extends StatelessWidget {
           itemBuilder: (BuildContext context,index){
 
             String idFicha = _.listMisEncuestas[index].idFicha;
+            print("Data :$idFicha ");
 
             return Column(
                             children: [
@@ -233,7 +234,7 @@ class MisEncuestas extends StatelessWidget {
 
                                                       SizedBox(width: 8,),
 
-                                                      Text('15',style: TextStyle(fontSize: 12),)
+                                                      Text('${_.nroTotalPreguntas}',style: TextStyle(fontSize: 12),)
 
                                                     ],
                                                   ),

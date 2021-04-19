@@ -588,11 +588,17 @@ class DBProvider{
   getAllFichas()async{
 
     final db = await database;
-    var response = await db.query('ficha');
+    //var response = await db.query('ficha');
+    var response = await db.rawQuery(
+      '''
+      SELECT MAX(idFicha) as id from ficha
 
-    List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
+      '''
+    );
+    print(response);
+    //List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
 
-    return listFichas;
+    //return listFichas;
 
   }
 
@@ -636,7 +642,7 @@ class DBProvider{
 
   /* Actualizar FICHA */
 
-  updateFicha(String idFicha,String observacion, String fechafinal)async{
+  updateFicha(String idFicha,String observacion, String fechafinal,String estado)async{
 
     final db = await database;
 
@@ -644,7 +650,7 @@ class DBProvider{
     var response = await db.rawQuery(
       
       '''
-      UPDATE ficha SET observacion = '$observacion', estado = 'F', fecha_fin = '$fechafinal'  WHERE idFicha = '$idFicha'
+      UPDATE ficha SET observacion = '$observacion', estado = '$estado', fecha_fin = '$fechafinal'  WHERE idFicha = '$idFicha'
 
       '''
     );

@@ -350,76 +350,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               )
 
-              /*Container(
-                  height: size.height,
-                  child: ListView.builder(
-                        physics: ScrollPhysics(),
-                        itemCount: 5,
-                        itemBuilder: (context,index){
-
-                          return Padding(
-                            padding:  EdgeInsets.only(left: 20,right: 20),
-                            child: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 12,),
-                                  Padding(
-                                    padding:  EdgeInsets.only(left: 10,right: 10),
-                                    child: Row(
-                                      children: [
-
-                                        Container(
-                                          height: 80,
-                                          width: 80,
-                                          //color: Colors.black,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage('https://vancouver.ca/images/cov/feature/corp-plan-landing.jpg')
-                                              ,fit: BoxFit.cover
-                                            )
-                                          ),
-                                        ),
-                                        SizedBox(width: 12,),
-
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-
-                                              Text(
-                                                'Titulo de la encuesta',
-                                                style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w700
-                                                ),
-                                              ),
-
-                                              Text(
-                                                'Titulo de la s aasasassadadf sdsasdfasdfasdfasdadsfsdfsdfdfsdf',
-                                                style: TextStyle(
-                                                  color: Colors.grey
-                                                ),
-                                                textAlign: TextAlign.justify,
-                                              )
-
-                                            ],
-                                          ),
-                                        )
-
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 12,),
-
-                                ],
-                              ),
-                            ),
-                          );
-
-                        }
-                      ),
-                ),*/
+              
 
 
             ],

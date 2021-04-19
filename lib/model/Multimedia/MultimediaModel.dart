@@ -42,7 +42,7 @@ class MultimediaModel{
   factory MultimediaModel.fromMap(Map<String, dynamic> json) => MultimediaModel(
 
     idMultimedia            : json["idMultimedia"].toString(),
-    idFicha                 : json["idFicha"],
+    idFicha                 : json["idFicha"].toString(),
     tipo                    : json["tipo"],
     latitud                 : json['latitud'],
     longitud                : json['longitud']  

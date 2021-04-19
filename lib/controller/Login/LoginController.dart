@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,8 +24,7 @@ class LoginController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-     /*subscription =
-        Connectivity().onConnectivityChanged.listen(checkInternet());*/
+    
     
     Future.delayed(Duration(milliseconds: 100)).then((_) {
       this.checkInternet();
@@ -116,7 +116,7 @@ class LoginController extends GetxController{
                 checkInternet();
 
               },
-              icon: Icon(Icons.location_city_rounded), 
+              icon: Icon(Icons.pin_drop), 
               label: Text('Activar GPS')
 
             )
@@ -134,11 +134,12 @@ class LoginController extends GetxController{
 
     loading('Verificando las credenciales',' Cargando');
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    var connectionInternet = await DataConnectionChecker().connectionStatus;
+    //var connectionInternet = await DataConnectionChecker().connectionStatus;
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    print(connectionInternet);
+    //comprint(connectionInternet);
     
-    if(connectionInternet == DataConnectionStatus.connected){
+    if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile    /*connectionInternet == DataConnectionStatus.connected*/ ){
 
       print('Estoy conectado a internet, consulto a la api');
       
@@ -157,12 +158,6 @@ class LoginController extends GetxController{
         print('Hacer el metodo en la base de datos para validar las credenciales');
 
         loading('Verificando las credenciales',' Cargando');
-
-        //var contrasena = _password.text;
-        //var contrEncriptada =  await FlutterBcrypt.hashPw(password: contrasena, salt: r'$2b$06$C6UzMDM.H6dfI/f/IKxGhu');  //DBCrypt().hashpw(contrasena, DBCrypt().gensalt());
-        print('************************');
-        //print(contrasena);
-        //print(contrEncriptada);
 
         List<UsuarioModel> response = await DBProvider.db.consultLogueo(_username.text, '');
 

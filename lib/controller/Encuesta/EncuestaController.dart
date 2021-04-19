@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
@@ -77,6 +78,11 @@ class EncuestaController extends GetxController{
 
   String idEncuestado;
 
+  String _nombreEncuesta = "";
+  String get nombreEncuesta => _nombreEncuesta;
+  String _fechaEncuestaInicio = "";
+  String get fechaEncuestaInicio => _fechaEncuestaInicio;
+
   bool _encuestasPendientes = false;
   bool get encuestasPendientes => _encuestasPendientes; 
 
@@ -98,12 +104,12 @@ class EncuestaController extends GetxController{
 
     if(_listFichas.length > 0){
 
-      _listFichas.forEach((element)async{
+      for( var element in _listFichas){
 
-        _listEncuesta = await DBProvider.db.getAllEncuestas();
+        _listEncuesta = await DBProvider.db.getOneEncuesta(element.idEncuesta.toString());
 
-      });
 
+      }
 
       _encuestasPendientes = true;
 
@@ -257,34 +263,44 @@ class EncuestaController extends GetxController{
 
     }else{
 
-      List response = await apiConexion.findEncuestado(insertEncuestadoController.text);
+      ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-      //print(response);       
+      if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
-      if(response == 2){
+        List response = await apiConexion.findEncuestado(insertEncuestadoController.text);
+        if(response == 2){
 
-        Get.back();
+          Get.back();
 
-        messageInfo('Error 500, error de servidor comuniquese con el encargado del sistema');
+          messageInfo('Error 500, error de servidor comuniquese con el encargado del sistema');
 
-      }else if( response != 2 && response != 1 && response != 3){
+        }else if( response != 2 && response != 1 && response != 3){
 
-        print(response);
-        
-       if( response.length > 0 ){
+          print(response);
+          
+          if( response.length > 0 ){
 
-        Get.back(); 
-        showEncuestadoModal(response);
+            Get.back(); 
+            showEncuestadoModal(response);
 
-       }else{
-        
-        Get.back();
-        messageInfo('El encuestado no se encuentra registrado');
+          }else{
+          
+          Get.back();
+          messageInfo('El encuestado no se encuentra registrado');
 
-       }
-        
+          }
+          
+
+        }
+
+
+      }else{
+
+        print("Busco al encuestado en la bd local");
 
       }
+
+      
 
     }
 
@@ -415,14 +431,14 @@ class EncuestaController extends GetxController{
 
     
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd hh:mm').format(now);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     
     print(formattedDate);
     
 
     var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate);
 
-    //print(ficha);
+    print(ficha);
 
     List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas();
 

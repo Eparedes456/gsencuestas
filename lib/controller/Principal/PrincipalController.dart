@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:easyping/easyping.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
@@ -60,16 +62,105 @@ class PrincipalController extends GetxController{
   validarCarga()async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    var connectionInternet = await DataConnectionChecker().connectionStatus;
+    //var connectionInternet = await DataConnectionChecker().connectionStatus;
 
-    var conectivityResult = await Connectivity().checkConnectivity();
-    print(conectivityResult);
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
     
     var flag1 = preferences.getString('primeraCarga');
 
-    if(connectionInternet == DataConnectionStatus.connected ){
+    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
+      print('hay conexion a internet');
       print('verifico en la tabla parametros para actualziar o no hacer nada');
+
+      if(flag1 == null){
+
+        insertUserDb();
+
+      }else{
+
+        var listProyecto = await apiConexion.getProyectos();
+
+        if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
+
+          listProyecto.forEach((item){
+
+            _proyectos.add(
+
+              ProyectoModel(
+                idProyecto: item["idProyecto"],
+                nombre: item["nombre"],
+                abreviatura: item["abreviatura"],
+                nombreResponsable: item["nombre_responsable"],
+                logo: item["logo"],
+                latitud: item["latitud"],
+                longitud: item["longitud"],
+                estado: item["estado"].toString(),
+                createdAt: item["createdAt"],
+                updatedAt: item["updatedAt"]
+
+              )
+
+            );
+          });
+
+          print(_proyectos.length);
+          
+          if(_proyectos.length > 0 ){
+
+            _isLoading = true;
+          }
+
+          
+
+        }else if( listProyecto == 1){
+
+          print('Error de servidor');
+
+        }else if(listProyecto == 2){
+
+          print(' eRROR DE TOKEN');
+
+        }else{
+
+          print('Error, no existe la pagina 404');
+
+        }
+
+
+
+
+      }
+
+
+    }else{
+
+      if(flag1 != null){
+
+        print('Consulto mi base de datos local');
+
+        _proyectos = await DBProvider.db.getAllProyectos();
+
+        print(_proyectos);
+
+
+        if(_proyectos.length > 0 ){
+
+          _isLoading = true;
+
+        }
+
+
+      }
+
+
+    }
+    
+    
+
+    /*if(connectionInternet == DataConnectionStatus.connected ){
+
+     
       
       if(flag1 == null){
 
@@ -152,7 +243,7 @@ class PrincipalController extends GetxController{
 
       }
 
-    }
+    }*/
 
     update();
 

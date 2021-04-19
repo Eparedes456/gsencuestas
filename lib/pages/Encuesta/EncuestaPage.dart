@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
+import 'package:intl/intl.dart';
 
 
 class EncuestaPage extends StatelessWidget {
@@ -71,7 +72,7 @@ class EncuestaPage extends StatelessWidget {
                   child: ListView(
                     children: [
                       
-                      SizedBox(height: 80,),
+                      SizedBox(height: 30,),
 
                       Padding(
                         padding: const EdgeInsets.only(left: 20,right: 20),
@@ -118,16 +119,45 @@ class EncuestaPage extends StatelessWidget {
 
                       _.encuestasPendientes == true? Padding(
                         
-                        padding: EdgeInsets.only(top: 20,left: 20),
-                        child: Text('Encuestas pendientes'),
+                        padding: EdgeInsets.only(top: 40,left: 20,right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Text('Encuestas pendientes'),
+
+                            Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.green[800],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "${_.listEncuesta.length}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700
+                                  ),
+                                ),
+                              ),
+                            )
+
+                          ],
+                        ),
                       ):Container(),
                       _.encuestasPendientes == true ? SizedBox(height: 12,) :Container() ,
 
                       _.encuestasPendientes == true ? ListView.builder(
                         shrinkWrap: true,
                         physics: ScrollPhysics(),
-                        itemCount: _.listFichas.length,
+                        itemCount: _.listEncuesta.length,
                         itemBuilder: (context,index){
+                          
+                          final dateTime = DateTime.parse(_.listEncuesta[index].fechaInicio);
+                          final format = DateFormat('dd-MM-yyyy');
+                          final clockString = format.format(dateTime); 
 
                           return Padding(
                             padding:  EdgeInsets.only(bottom: 8),
@@ -157,8 +187,9 @@ class EncuestaPage extends StatelessWidget {
                                               child: Column(
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('Titulo de la encuesta'),
-                                                  Text('Fecha de inicio'),
+                                                  Text('${_.listEncuesta[index].titulo}'),
+
+                                                  Text('Fecha Inicio : $clockString'),
 
                                                   MaterialButton(
                                                     height: 25,
@@ -245,7 +276,7 @@ class EncuestaPage extends StatelessWidget {
                   
 
             Positioned(
-              top: MediaQuery.of(context).size.height * (4/9) - 160,
+              top: MediaQuery.of(context).size.height * (4/9) - 150,
               left: 16,
               right: 16,
               child: Container(

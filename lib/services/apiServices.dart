@@ -411,10 +411,10 @@ class ApiServices {
     var token = preferences.getString('token');
 
     var sendData = json.encode(data);
-    print(sendData);
+        
 
-    /*var response = await http.post(
-      base_url + "ficha",
+   var response = await http.post(
+      base_url + "ficha/create_all",
       headers: {
 
         'Content-Type': 'application/json',
@@ -422,10 +422,10 @@ class ApiServices {
         'Authorization': 'Bearer $token'
 
       },
-      body: data
-    );*/
+      body: sendData
+    );
 
-    /*if(response.statusCode == 200){
+    if(response.statusCode == 200){
 
       var decodedData = json.decode(response.body);
 
@@ -443,7 +443,7 @@ class ApiServices {
 
       return 3;
 
-    }*/
+    }
 
 
 
