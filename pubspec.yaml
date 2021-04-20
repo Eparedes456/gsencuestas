@@ -41,6 +41,7 @@ dependencies:
   intl:
   connectivity_plus:
   easyping:
+  flutter_slidable:
 
 dev_dependencies:
   flutter_test:

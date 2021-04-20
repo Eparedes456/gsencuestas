@@ -12,6 +12,8 @@ import 'package:gsencuesta/pages/quiz/WidgetQuiz/TextFieldWidget.dart';
 class QuizPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<InputTextfield> _controllerInput = [];
+
     return GetBuilder<QuizController>(
       init: QuizController(),
       builder: (_)=> Scaffold(
@@ -50,12 +52,84 @@ class QuizPage extends StatelessWidget {
                         var enunciadoPregunta =   _.preguntas[index].enunciado;
                         var numPregunta = index + 1;
                         var id_pregunta = _.preguntas[index].id_pregunta;
+                        
 
-                        if(_.preguntas[index].tipo_pregunta == "INPUTABLE"){
+                        print(index); 
+
+                        if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 
                           
 
-                          return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
+    
+                            _controllerInput.add(
+                              InputTextfield( id_pregunta.toString(), TextEditingController() )
+                            );
+
+
+
+                          for (var i = 0; i < _controllerInput.length; i++) {
+
+                            _.guardarIput(_controllerInput);
+
+                            return Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: Container(
+                              width: double.infinity,
+                              child: Card(
+                                elevation: 5,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Padding(
+                                      padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                      child: Text(
+                                        '$numPregunta.- $enunciadoPregunta',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox( height: 20,),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10,right: 10),
+                                      child: TextField(
+                                        
+                                        controller: _controllerInput[i].controller,
+                                        decoration: InputDecoration(
+                                          hintText: 'Ingrese su respuesta'
+                                        ),
+                                        onSubmitted: (valor){
+
+                                        },
+                                      ),
+                                    
+                                    ),
+
+                                    SizedBox( height: 20,),
+
+
+
+                                  ],
+                                ),
+                              )
+                            ),
+                          );
+
+      
+                        }
+
+
+
+
+
+
+
+                          //return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
 
                         }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
@@ -125,11 +199,18 @@ class QuizPage extends StatelessWidget {
 
 TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
 
+    //List<InputTextfield> _controllerInput = [];
+
+    
     _.controllerInput.add(
       InputTextfield( id_pregunta.toString(), TextEditingController() )
     );
 
-  return Padding(
+    print(_.controllerInput.length);
+
+    for (var i = 0; i < _.controllerInput.length; i++) {
+
+      return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),
       child: Container(
         width: double.infinity,
@@ -157,7 +238,7 @@ TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int inde
                 padding: EdgeInsets.only(left: 10,right: 10),
                 child: TextField(
                   
-                  controller: _.controllerInput[index].controller,
+                  controller: _.controllerInput[i].controller,
                   decoration: InputDecoration(
                     hintText: 'Ingrese su respuesta'
                   ),
@@ -177,6 +258,58 @@ TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int inde
         )
       ),
     );
+
+      
+    }
+
+  /*return Padding(
+      padding: EdgeInsets.only(left: 10,right: 10),
+      child: Container(
+        width: double.infinity,
+        child: Card(
+          elevation: 5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Padding(
+                padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                child: Text(
+                  '$numPregunta.- $enunciado',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Poppins',
+                    fontSize: 16
+                  ),
+                ),
+              ),
+
+              SizedBox( height: 20,),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                child: TextField(
+                  
+                  controller: _controllerInput,
+                  decoration: InputDecoration(
+                    hintText: 'Ingrese su respuesta'
+                  ),
+                  onSubmitted: (valor){
+
+                  },
+                ),
+              
+              ),
+
+              SizedBox( height: 20,),
+
+
+
+            ],
+          ),
+        )
+      ),
+    );*/
 
 }
 

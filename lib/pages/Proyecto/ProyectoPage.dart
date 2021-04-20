@@ -52,7 +52,7 @@ class ProyectoPage extends StatelessWidget {
                           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
                           child: CachedNetworkImage(
 
-                            imageUrl: '${_.imagen}',
+                            imageUrl:  "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/proyecto/${_.idProyecto}",  //'${_.imagen}',
                             placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) => Center(
 
@@ -235,7 +235,7 @@ class ProyectoPage extends StatelessWidget {
                                   child: CachedNetworkImage(
 
                                     width: 110,
-                                    imageUrl: '${_.encuestas[index].logo}',
+                                    imageUrl: "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/encuesta/${_.encuestas[index].idEncuesta}",    //'${_.encuestas[index].logo}',
                                     placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
                                     errorWidget: (context, url, error) => Center(
 

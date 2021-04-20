@@ -155,7 +155,7 @@ class DBProvider{
             idEncuesta INTEGER,
             idUsuario  INTEGER,
             idEncuestado INTEGER,
-            latiutd TEXT,
+            latitud TEXT,
             longitud TEXT,
             fecha_inicio TEXT,
             fecha_fin TEXT,
@@ -551,7 +551,7 @@ class DBProvider{
 
   /* insertar y creaciòn  de nueva ficha */
 
-  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio)async{
+  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio, String latitud, String longitud)async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -559,22 +559,20 @@ class DBProvider{
 
     final db = await database;
     
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    String latitud = position.latitude.toString();
-    String longitud = position.longitude.toString();
+    
 
     print(" INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')");
 
-    var respuesta = await db.rawQuery(
+    return  await db.rawQuery(
       
       '''
-      INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,
+      INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latitud, longitud, fecha_inicio,
       fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')
 
       '''
     );
 
-    return respuesta;
+     //print(respuesta);
 
 
   }
@@ -588,17 +586,32 @@ class DBProvider{
   getAllFichas()async{
 
     final db = await database;
-    //var response = await db.query('ficha');
-    var response = await db.rawQuery(
+    var response = await db.query('ficha');
+    
+    print(response);
+    
+    List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
+
+   
+
+    return listFichas;
+
+  }
+
+  /* Traer la ultima ficha insertada */
+
+
+  getLastFicha()async{
+
+    final db = await database;
+    var response1 = await db.rawQuery(
       '''
-      SELECT MAX(idFicha) as id from ficha
+      SELECT MAX(idFicha) as idFicha from ficha
 
       '''
     );
-    print(response);
-    //List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
-
-    //return listFichas;
+    //print(response1);
+    return response1;
 
   }
 
@@ -827,6 +840,20 @@ class DBProvider{
     final db  = await database;
     var respuesta = await db.insert("encuestado", nuevoEncuestado.toMap());
     return respuesta;
+
+  }
+
+  /* Buscar al encuestado  */
+
+  searchEncuestado(String valor)async{
+
+    final db = await database;
+    var respuesta = await db.query("encuestado",where: 'documento = ?', whereArgs: [valor]);
+    
+
+    //List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
+
+    return respuesta.toList();
 
   }
 

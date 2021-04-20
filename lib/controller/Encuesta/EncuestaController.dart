@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
@@ -89,6 +90,7 @@ class EncuestaController extends GetxController{
 
   loadData(EncuestaModel encuesta)async{
 
+    _listFichas = [];
     _imagePortada   = encuesta.logo;
     _descripcion    = encuesta.descripcion;
     _titulo         = encuesta.titulo;
@@ -98,7 +100,7 @@ class EncuestaController extends GetxController{
 
     //loadingModal();
   
-    _listFichas = await DBProvider.db.getAllFichas();
+    _listFichas = await DBProvider.db.fichasPendientes("P");
 
     print(_listFichas.length);
 
@@ -112,6 +114,10 @@ class EncuestaController extends GetxController{
       }
 
       _encuestasPendientes = true;
+
+    }else{
+
+      _encuestasPendientes = false;
 
     }
     
@@ -164,6 +170,8 @@ class EncuestaController extends GetxController{
 
 
     });
+
+    print(_listPregunta.length);
     
 
   }
@@ -298,6 +306,20 @@ class EncuestaController extends GetxController{
 
         print("Busco al encuestado en la bd local");
 
+        List respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
+
+        if(respuesta.length > 0){
+
+          Get.back(); 
+          showEncuestadoModal(respuesta);
+
+        }else{
+          
+          Get.back();
+          messageInfo('El encuestado no se encuentra registrado');
+
+        }
+
       }
 
       
@@ -308,6 +330,7 @@ class EncuestaController extends GetxController{
 
   showEncuestadoModal(dynamic data){
 
+    
     var idEncuestado2    = data[0]["idEncuestado"];
     var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
 
@@ -434,18 +457,24 @@ class EncuestaController extends GetxController{
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     
     print(formattedDate);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String latitud = position.latitude.toString();
+    String longitud = position.longitude.toString();
     
 
-    var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate);
+    var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate,latitud,longitud);
 
-    print(ficha);
+    //print(ficha);
 
     List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas();
+    var getLastFichaid = await DBProvider.db.getLastFicha();
+    //print(getLastFichaid);
+    //print(listDbLocal);
 
-    print(listDbLocal);
+    
+    int idFicha = getLastFichaid[0]["idFicha"];
 
-     int idFicha = listDbLocal[0].idFicha;
-
+    print("Ultima ficha insertada " + idFicha.toString());
     Get.to(
 
       QuizPage(),

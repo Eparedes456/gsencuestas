@@ -19,7 +19,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class QuizController extends GetxController{
+class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   @override
   void onInit() {
@@ -135,15 +135,51 @@ class QuizController extends GetxController{
             )
           );
           print('hola');
-          var preguOpcion = item["preguntaGrupoOpcion"];
-          int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+          List preguOpcion = item["preguntaGrupoOpcion"];
+
+          if(preguOpcion.length > 0){
+
+            int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+            var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
+            var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+            print(idgrupoOpcion);
+
+            opciones.forEach((item2){
+
+            _opcionesPreguntas.add(
+
+              OpcionesModel(
+
+                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
+                idOpcion                : item2["idOpcion"],
+                idPregunta              : idPregunta,
+                valor                   : item2["valor"],
+                label                   : item2["label"], 
+                orden                   : item2["orden"],
+                estado                  : item2["estado"].toString(),
+                createdAt               : item2["createdAt"],
+                updated_at              : item2["updatedAt"],
+                selected                : false   
+
+              )
+
+            );
+
+          });
+
+
+
+          }
+
+
+          /*int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
           var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
           var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
-          print(idPreguOpcion);
+          print(idPreguOpcion);*/
           //print(idgrupoOpcion);
           //print(opciones);
 
-          opciones.forEach((item2){
+          /*opciones.forEach((item2){
 
             _opcionesPreguntas.add(
 
@@ -164,7 +200,7 @@ class QuizController extends GetxController{
 
             );
 
-          });
+          });*/
         });
 
         print(_opcionesPreguntas.length);
@@ -397,7 +433,11 @@ class QuizController extends GetxController{
   List<InputTextfield> get controllerInput => _controllerInput;
 
 
+  guardarIput(dataList){
 
+    _controllerInput = dataList;
+    
+  }
 
 
 

@@ -42,7 +42,7 @@ class EncuestaPage extends StatelessWidget {
                     child: ClipRRect(
                       //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
                       child: CachedNetworkImage(
-                        imageUrl: '${_.imagePortada}',
+                        imageUrl: "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/encuesta/${_.idEncuesta}" , //'${_.imagePortada}',
                         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                         errorWidget: (context, url, error) => Center(
 

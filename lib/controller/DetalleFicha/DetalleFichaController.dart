@@ -193,7 +193,7 @@ class DetalleFichaController extends GetxController{
             color: Colors.green,
             onPressed: (){
 
-              Get.back();
+              Get.back(result: "SI");
               deleteFicha();
               
 
@@ -224,7 +224,7 @@ class DetalleFichaController extends GetxController{
   deleteFicha()async{
 
     //dialogLoading("");
-    var response = await DBProvider.db.deleteOneFicha(_idFicha);
+   var response = await DBProvider.db.deleteOneFicha(_idFicha);
 
     List<FichasModel> respuesta = await DBProvider.db.oneFicha(idFicha);
 
@@ -281,17 +281,7 @@ class DetalleFichaController extends GetxController{
 
 
     var sendFicha ={
-      /*'encuestado'        :   listEncuestadoModel,
-      'fechaFin'          :   _fechaFin,
-      'fechaInicio'       :   _fechaInicio,
-      'idFicha'           :   _idFicha,
-      'idUsuario'         :   idUsuario,
-      'latitud'           :   latitud,
-      'longitud'          :   longitud,
-      'observacion'       :   observacion,
-      'multimedia'        :   listMultimedia,
-      'respuesta'         :   listRespuestaDBlocal,  
-      'tracking'          :   listTracking*/
+      
 
     };
 
@@ -397,7 +387,7 @@ class DetalleFichaController extends GetxController{
       print('se inserto correctamente'); 
       _estado = "S";
 
-      await DBProvider.db.updateFicha(idFicha, observacion, fechaFin,_estado);
+      await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado);
 
       
       update();

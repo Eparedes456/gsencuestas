@@ -484,19 +484,40 @@ class DetailMiEncuestaPage extends StatelessWidget {
               SizedBox(height: 20,),
 
               _.estado == "P"? Center(
-                child: FlatButton.icon(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    FlatButton.icon(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            color: Colors.green,
+                            onPressed: (){
+
+                              //_.sendDataToServer();
+
+                            },
+                            icon: Icon(FontAwesomeIcons.edit,color: Colors.white,size: 18,),
+                            label: Text('Retomar ficha',style: TextStyle(color: Colors.white),)
+                          ),
+
+                          FlatButton.icon(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Colors.green,
+                        color: Colors.redAccent,
                         onPressed: (){
 
-                          //_.sendDataToServer();
+                          _.modalDelete();
 
                         },
-                        icon: Icon(FontAwesomeIcons.edit,color: Colors.white,size: 18,),
-                        label: Text('Retomar ficha',style: TextStyle(color: Colors.white),)
+                        icon: Icon(FontAwesomeIcons.trash,color: Colors.white,size: 18,),
+                        label: Text('Eliminar',style: TextStyle(color: Colors.white),)
                       ),
+                  ],
+                ),
+
+                      
               )  :Center(
 
                   child: Row(
@@ -526,7 +547,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                         color: Colors.redAccent,
                         onPressed: (){
 
-                          _.modalDelete();
+                            _.modalDelete();
 
                         },
                         icon: Icon(FontAwesomeIcons.trash,color: Colors.white,size: 18,),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
@@ -214,12 +215,53 @@ class MisEncuestasController extends GetxController{
       _listFichasDb   = [];
       _listDbEncuesta = [];
       _listDbEncuesta = [];
+      _listMisEncuestas = [];
 
       await getAllFichas();
       
       print("Se elimino yt se volvio a recargar la pagina");
 
     }
+
+  }
+
+  modalDelete(){
+
+    Get.dialog(
+      AlertDialog(
+        title: Text('Notificación'),
+        content: Text('¿Esta seguro de querer eliminar esta ficha?'),
+        actions: [
+
+          FlatButton.icon(
+
+            color: Colors.green,
+            onPressed: (){
+
+              //Get.back(result: "SI");
+              //deleteFicha();
+              
+
+            },
+            icon: Icon(FontAwesomeIcons.check),
+            label: Text('Si')
+          ),
+
+          FlatButton.icon(
+            color: Colors.redAccent,
+            onPressed: (){
+
+              Get.back();
+
+            }, 
+            icon: Icon(FontAwesomeIcons.timesCircle),
+            label: Text('No')
+
+          )
+
+        ],
+      )
+    );
 
   }
 
