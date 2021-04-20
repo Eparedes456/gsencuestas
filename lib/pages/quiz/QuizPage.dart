@@ -12,7 +12,7 @@ import 'package:gsencuesta/pages/quiz/WidgetQuiz/TextFieldWidget.dart';
 class QuizPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<InputTextfield> _controllerInput = [];
+    //List<InputTextfield> _controllerInput = [];
 
     return GetBuilder<QuizController>(
       init: QuizController(),
@@ -61,7 +61,7 @@ class QuizPage extends StatelessWidget {
                           
 
     
-                            _controllerInput.add(
+                           /* _controllerInput.add(
                               InputTextfield( id_pregunta.toString(), TextEditingController() )
                             );
 
@@ -121,7 +121,7 @@ class QuizPage extends StatelessWidget {
                           );
 
       
-                        }
+                        }*/
 
 
 
@@ -129,7 +129,7 @@ class QuizPage extends StatelessWidget {
 
 
 
-                          //return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
+                          return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
 
                         }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
@@ -199,16 +199,18 @@ class QuizPage extends StatelessWidget {
 
 TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
 
-    //List<InputTextfield> _controllerInput = [];
+    List<InputTextfield> _controllerInput = [];
 
     
-    _.controllerInput.add(
+    _controllerInput.add(
       InputTextfield( id_pregunta.toString(), TextEditingController() )
     );
 
-    print(_.controllerInput.length);
+    print(_controllerInput.length);
 
-    for (var i = 0; i < _.controllerInput.length; i++) {
+    for (var i = 0; i < _controllerInput.length; i++) {
+
+      _.guardarIput(_controllerInput);
 
       return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),
