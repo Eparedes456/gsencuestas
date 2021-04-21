@@ -542,10 +542,10 @@ class DBProvider{
       '''
     );
 
-    List<OpcionesModel> listOpcionesxPregunta = respuesta.isNotEmpty ? 
-      respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];
+    /*List<OpcionesModel> listOpcionesxPregunta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];*/
 
-    return listOpcionesxPregunta;
+    return respuesta;
 
   }
 
@@ -586,8 +586,12 @@ class DBProvider{
   getAllFichas()async{
 
     final db = await database;
-    var response = await db.query('ficha');
-    
+    //var response = await db.query('ficha',orderBy: 'DESC',);
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM ficha ORDER BY idFicha DESC
+      '''
+    );
     print(response);
     
     List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
@@ -804,6 +808,21 @@ class DBProvider{
       '''
       
       DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha AND idsOpcion = $idsOpcion
+
+      '''
+    );
+
+
+  }
+
+  eliminarRespuestasxFicha(String idPregunta,String idFicha)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      
+      DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha 
 
       '''
     );

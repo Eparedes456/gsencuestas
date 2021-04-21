@@ -108,32 +108,42 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           _preguntas.add(
             PreguntaModel(
 
-              id_pregunta       : item["idPregunta"],
-              id_bloque         : item["id_bloque"],
-              idEncuesta       : item["id_encuesta"],
-              enunciado         : item["enunciado"],
-              tipo_pregunta     : item["tipo_pregunta"],
-              apariencia        : item["apariencia"],
-              requerido         : item["requerido"].toString(),
-              requerido_msj     : item["requerido_msj"],
-              readonly          : item["readonly"].toString(),
-              defecto           : item["defecto"],
-              calculation       : item["calculation"],
-              restriccion       : item["restriccion"],
-              restriccion_msj   : item["restriccion_msj"],
-              relevant          : item["relevant"],
-              choice_filter     : item["choice_filter"], 
-              bind_name         : item["bind_name"],
-              bind_type         : item["bind_type"],
-              bind_field_length : item["bind_field_length"],
+              id_pregunta             : item["idPregunta"],
+              id_bloque               : item["id_bloque"],
+              idEncuesta              : item["id_encuesta"],
+              enunciado               : item["enunciado"],
+              tipo_pregunta           : item["tipo_pregunta"],
+              apariencia              : item["apariencia"],
+              requerido               : item["requerido"].toString(),
+              requerido_msj           : item["requerido_msj"],
+              readonly                : item["readonly"].toString(),
+              defecto                 : item["defecto"],
+              calculation             : item["calculation"],
+              restriccion             : item["restriccion"],
+              restriccion_msj         : item["restriccion_msj"],
+              relevant                : item["relevant"],
+              choice_filter           : item["choice_filter"], 
+              bind_name               : item["bind_name"],
+              bind_type               : item["bind_type"],
+              bind_field_length       : item["bind_field_length"],
               bind_field_placeholder  : item["bind_field_placeholder"],
-              orden             : item["orden"],
-              estado            : item["estado"].toString(),
-              updated_at        : item["createdAt"],
-              created_at        : item["updatedAt"]
+              orden                   : item["orden"],
+              estado                  : item["estado"].toString(),
+              updated_at              : item["createdAt"],
+              created_at              : item["updatedAt"]
 
             )
           );
+
+          /*if( item["tipo_pregunta"] == "IMPUTABLE" ){
+
+            _controllerInput.add(
+              InputTextfield( item["idPregunta"].toString(), TextEditingController() )
+            );
+            
+          }*/
+
+
           print('hola');
           List preguOpcion = item["preguntaGrupoOpcion"];
 
@@ -172,35 +182,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           }
 
 
-          /*int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-          var idgrupoOpcion = preguOpcion[0]["grupoOpcion"]["idGrupoOpcion"];
-          var opciones = preguOpcion[0]["grupoOpcion"]["opcion"];
-          print(idPreguOpcion);*/
-          //print(idgrupoOpcion);
-          //print(opciones);
-
-          /*opciones.forEach((item2){
-
-            _opcionesPreguntas.add(
-
-              OpcionesModel(
-
-                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
-                idOpcion               : item2["idOpcion"],
-                idPregunta              : idPregunta,
-                valor                   : item2["valor"],
-                label                   : item2["label"], 
-                orden                   : item2["orden"],
-                estado                  : item2["estado"].toString(),
-                createdAt               : item2["createdAt"],
-                updated_at              : item2["updatedAt"],
-                selected                : false   
-
-              )
-
-            );
-
-          });*/
         });
 
         print(_opcionesPreguntas.length);
@@ -228,12 +209,42 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
       _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
       print(_preguntas);
 
+      var allOpciones = await DBProvider.db.getAllOpciones();
+
+      print(allOpciones);
+
       for (var i = 0; i < _preguntas.length; i++) {
 
         print(_preguntas[i].id_pregunta);
         var idPregunta = _preguntas[i].id_pregunta;
 
-        _opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+        //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+
+        var opciones = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+
+        opciones.forEach((element){
+
+          _opcionesPreguntas.add(
+
+            OpcionesModel(
+
+                idPreguntaGrupoOpcion   : element["idPreguntaGrupoOpcion"],
+                idOpcion                : element["id_opcion"],
+                idPregunta              : idPregunta,
+                valor                   : element["valor"],
+                label                   : element["label"], 
+                orden                   : element["orden"],
+                estado                  : element["estado"].toString(),
+                createdAt               : element["createdAt"],
+                updated_at              : element["updatedAt"],
+                selected                : false   
+
+              )
+
+          );
+
+        });
+
 
         
       }
@@ -321,15 +332,18 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       if(element.idPregunta == opcionEscogida.idPregunta){
 
-        print(element);
+        //print(element);
 
-        //_opcionesPreguntas[count].selected = false;
+        _opcionesPreguntas[count].selected = false;
+        await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
 
         if(element.idOpcion ==  opcionEscogida.idOpcion ){
 
+          
+
           await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
 
-          List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestas();
+          List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
           print(listRespuestaDB);
 
@@ -341,7 +355,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
             await DBProvider.db.eliminarUnaRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString() );
 
-            List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestas();
+            List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
             print(listRespuestaDB);
 
@@ -365,7 +379,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                 estado                    : _opcionesPreguntas[count].estado,
                 createdAt                 : _opcionesPreguntas[count].createdAt,
                 updated_at                : _opcionesPreguntas[count].updated_at,
-                selected                  : _opcionesPreguntas[count].selected = true
+                selected                  : true
 
               )
 
@@ -449,6 +463,11 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       print('hay la opciones de inserciòn texto, insertar en la base de datos');
 
+     
+      _controllerInput.removeWhere((item) => item.controller.text == "");
+
+      //print(_controllerInput);
+
       _controllerInput.forEach((element) async{
 
         await DBProvider.db.insertRespuesta(element.idPregunta, idFicha, '', element.controller.text);
@@ -484,7 +503,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     };
 
-    print(sendData);
+    //print(sendData);
 
     _positionStream.cancel();
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -97,6 +98,8 @@ class DetalleFichaController extends GetxController{
   String fechaFinSend;
   String observacionFicha;
 
+  int idEncuestaSend = 0;
+
 
   getDetailFicha(idFicha)async{
 
@@ -105,6 +108,7 @@ class DetalleFichaController extends GetxController{
     print(_listFichasDb);
     _idFicha = _listFichasDb[0].idFicha.toString();
     _estado = _listFichasDb[0].estado;
+    idEncuestaSend = _listFichasDb[0].idEncuesta;
 
     final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
     final format = DateFormat('dd-MM-yyyy');
@@ -292,6 +296,7 @@ class DetalleFichaController extends GetxController{
     sendFicha["latitud"]      = latitud;
     sendFicha["longitud"]     = longitud;
     sendFicha["observacion"]  = observacionFicha;
+    sendFicha["idEncuesta"]   = idEncuestaSend;
 
     var encuestado = {};
     encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
@@ -364,9 +369,9 @@ class DetalleFichaController extends GetxController{
       
       
         
-      listTrackingMap.add(
+      /*listTrackingMap.add(
         tracking
-      );
+      );*/
 
       sendFicha['multimedia']  = listMultimediaMap;
       multimedia ={};
@@ -378,27 +383,79 @@ class DetalleFichaController extends GetxController{
 
     //String body = jsonEncode(sendFicha);
 
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
+    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
-    var response  = await apiConexion.sendFichaToServer(sendFicha);
+      showModal("",true,'Sincronizando datos..');
 
-    if( response != null || response != 1 || response  != 2 || response  !=3 ){
+      var response  = await apiConexion.sendFichaToServer(sendFicha);
 
-      print('se inserto correctamente'); 
-      _estado = "S";
+      if( response != null || response != 1 || response  != 2 || response  !=3 ){
 
-      await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado);
+        print('se inserto correctamente'); 
+        _estado = "S";
 
-      
-      update();
-      
+        await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado);
+
+        Get.back();
+
+        update();
+        
+
+      }else{
+
+        print('Algo ocurrio en el server');
+
+        showModal("No se pudo sincronizar los datos.",false,"Error inesperado");
+
+      }
+
 
     }else{
 
-      print('Algo ocurrio en el server');
+      Get.dialog(
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)
+          ),
+          title: Text('Notificación'),
+          content: Text('Usted no cuenta con conexión a internet, vuelva intentarlo más tarde'),
+        )
+      );
 
     }
 
+
+    
+
+
+
+  }
+
+  showModal(String mensaje, bool loading, String titulo){
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+        title: Text(titulo),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            loading == true ? 
+            CircularProgressIndicator() : Container(),
+
+            SizedBox(height: 8,),
+
+            mensaje == "" || mensaje == null ? Container(): Text(mensaje)
+
+          ],
+        ),
+      )
+    );
 
 
   }

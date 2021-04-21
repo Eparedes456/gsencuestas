@@ -131,47 +131,63 @@ class EncuestaController extends GetxController{
 
   getPreguntas(String idEncuesta)async{
 
-    var resultado = await apiConexion.getPreguntasxEncuesta(idEncuesta);  
-    var  preguntas = resultado["pregunta"];
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+
+    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+
+      var resultado = await apiConexion.getPreguntasxEncuesta(idEncuesta);  
+      var  preguntas = resultado["pregunta"];
+
+      preguntas.forEach((item){
+
+        _listPregunta.add(
+
+          PreguntaModel(
+
+            id_pregunta       : item["idPregunta"],
+            id_bloque         : item["id_bloque"],
+            idEncuesta       : item["id_encuesta"],
+            enunciado         : item["enunciado"],
+            tipo_pregunta     : item["tipo_pregunta"],
+            apariencia        : item["apariencia"],
+            requerido         : item["requerido"].toString(),
+            requerido_msj     : item["requerido_msj"],
+            readonly          : item["readonly"].toString(),
+            defecto           : item["defecto"],
+            calculation       : item["calculation"],
+            restriccion       : item["restriccion"],
+            restriccion_msj   : item["restriccion_msj"],
+            relevant          : item["relevant"],
+            choice_filter     : item["choice_filter"], 
+            bind_name         : item["bind_name"],
+            bind_type         : item["bind_type"],
+            bind_field_length : item["bind_field_length"],
+            bind_field_placeholder  : item["bind_field_placeholder"],
+            orden             : item["orden"],
+            estado            : item["estado"].toString(),
+            updated_at        : item["createdAt"],
+            created_at        : item["updatedAt"]
+
+          )
+
+        );
+
+
+      });
+
+    }else{
+
+      print("consulto bd local");
+
+       _listPregunta = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+       
+       print(_listPregunta.length);
+
+    }
+
     
-    preguntas.forEach((item){
 
-      _listPregunta.add(
-
-        PreguntaModel(
-
-          id_pregunta       : item["idPregunta"],
-          id_bloque         : item["id_bloque"],
-          idEncuesta       : item["id_encuesta"],
-          enunciado         : item["enunciado"],
-          tipo_pregunta     : item["tipo_pregunta"],
-          apariencia        : item["apariencia"],
-          requerido         : item["requerido"].toString(),
-          requerido_msj     : item["requerido_msj"],
-          readonly          : item["readonly"].toString(),
-          defecto           : item["defecto"],
-          calculation       : item["calculation"],
-          restriccion       : item["restriccion"],
-          restriccion_msj   : item["restriccion_msj"],
-          relevant          : item["relevant"],
-          choice_filter     : item["choice_filter"], 
-          bind_name         : item["bind_name"],
-          bind_type         : item["bind_type"],
-          bind_field_length : item["bind_field_length"],
-          bind_field_placeholder  : item["bind_field_placeholder"],
-          orden             : item["orden"],
-          estado            : item["estado"].toString(),
-          updated_at        : item["createdAt"],
-          created_at        : item["updatedAt"]
-
-        )
-
-      );
-
-
-    });
-
-    print(_listPregunta.length);
+    //print(_listPregunta.length);
     
 
   }

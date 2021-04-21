@@ -237,7 +237,12 @@ class ProyectoPage extends StatelessWidget {
                                     width: 110,
                                     imageUrl: "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/encuesta/${_.encuestas[index].idEncuesta}",    //'${_.encuestas[index].logo}',
                                     placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
-                                    errorWidget: (context, url, error) => Center(
+                                    errorWidget: (context, url, error) => Image(
+                                      image: AssetImage('assets/images/noimage2.png'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    
+                                    /*Center(
 
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -248,7 +253,7 @@ class ProyectoPage extends StatelessWidget {
                                           Text('Lo sentimos no pudimos cargar la imagen')
                                         ],
                                       )
-                                    ),
+                                    ),*/
                                     fit: BoxFit.cover,
 
                                   )

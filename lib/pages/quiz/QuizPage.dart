@@ -40,6 +40,106 @@ class QuizPage extends StatelessWidget {
                 ),
 
                 SizedBox(height: 30,),
+
+                /*Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+
+                        for (var i = 0; i < _.preguntas.length; i++)...{
+
+                          //var enunciadoPregunta =   _.preguntas[index].enunciado;
+                          //var numPregunta = index + 1;
+                          //var id_pregunta = _.preguntas[index].id_pregunta;
+
+                          if( _.preguntas[i].tipo_pregunta == "IMPUTABLE" )...{
+
+                              _.controllerInput.add(
+                                InputTextfield( item["idPregunta"].toString(), TextEditingController() )
+                              ),
+
+                            /*TextFieldPage(id_pregunta: _.preguntas[i].id_pregunta,numPregunta: (i+1).toString(),enunciado: _.preguntas[i].enunciado,)*/
+
+                              
+
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10,right: 10),
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: Card(
+                                      elevation: 5,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+
+                                          Padding(
+                                            padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                            child: Text(
+                                              '${(i+1).toString()}.- ${_.preguntas[i].enunciado}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 16
+                                              ),
+                                            ),
+                                          ),
+
+                                          SizedBox( height: 20,),
+
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 10,right: 10),
+                                            child: TextField(
+                                              
+                                              //controller: _.controllerInput[x].controller,
+                                              onChanged: (value){
+                                                
+                                              },
+                                              decoration: InputDecoration(
+                                                hintText: 'Ingrese su respuesta'
+                                              ),
+                                              onSubmitted: (valor){
+
+                                              },
+                                            ),
+                                          
+                                          ),
+
+                                          SizedBox( height: 20,),
+
+
+
+                                        ],
+                                      ),
+                                    )
+                                  ),
+                                )
+                                
+                            
+
+                            
+
+
+
+
+
+
+
+                          }else if( _.preguntas[i].tipo_pregunta == "SIMPLE" )...{
+
+                            SelectSimpleWidget(_.preguntas[i].enunciado,_.preguntas[i].id_pregunta,_,context,(i+1).toString()),
+
+                          }
+
+
+
+                        }
+                          
+                        
+
+                      ],
+                    ),
+                  )
+                ),*/
                 
                 Expanded(
                   //height: MediaQuery.of(context).size.height,
@@ -52,25 +152,15 @@ class QuizPage extends StatelessWidget {
                         var enunciadoPregunta =   _.preguntas[index].enunciado;
                         var numPregunta = index + 1;
                         var id_pregunta = _.preguntas[index].id_pregunta;
-                        
+                        _.controllerInput.add(
+                              InputTextfield( id_pregunta.toString(), TextEditingController() )
+                        );
 
-                        print(index); 
+                        //print(index); 
 
                         if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 
                           
-
-    
-                           /* _controllerInput.add(
-                              InputTextfield( id_pregunta.toString(), TextEditingController() )
-                            );
-
-
-
-                          for (var i = 0; i < _controllerInput.length; i++) {
-
-                            _.guardarIput(_controllerInput);
-
                             return Padding(
                             padding: EdgeInsets.only(left: 10,right: 10),
                             child: Container(
@@ -99,7 +189,7 @@ class QuizPage extends StatelessWidget {
                                       padding: EdgeInsets.only(left: 10,right: 10),
                                       child: TextField(
                                         
-                                        controller: _controllerInput[i].controller,
+                                        controller: _.controllerInput[index].controller,
                                         decoration: InputDecoration(
                                           hintText: 'Ingrese su respuesta'
                                         ),
@@ -121,16 +211,6 @@ class QuizPage extends StatelessWidget {
                           );
 
       
-                        }*/
-
-
-
-
-
-
-
-                          return TextFieldWidget(enunciadoPregunta,numPregunta.toString(),_, index,id_pregunta);
-
                         }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
                           return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
@@ -197,20 +277,20 @@ class QuizPage extends StatelessWidget {
 }
 
 
-TextFieldWidget(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
+TextFieldWidget1(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
 
-    List<InputTextfield> _controllerInput = [];
+    //List<InputTextfield> _controllerInput = [];
 
     
-    _controllerInput.add(
+    /*_controllerInput.add(
       InputTextfield( id_pregunta.toString(), TextEditingController() )
-    );
+    );*/
 
-    print(_controllerInput.length);
+    print(_.controllerInput.length);
 
-    for (var i = 0; i < _controllerInput.length; i++) {
+    for (var i = 0; i < _.controllerInput.length; i++) {
 
-      _.guardarIput(_controllerInput);
+      //_.guardarIput(_controllerInput);
 
       return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),

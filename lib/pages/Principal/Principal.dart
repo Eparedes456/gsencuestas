@@ -167,36 +167,51 @@ buildCard(PrincipalController _ , BuildContext context, Color color, String titu
           child: Stack(
             children: [
 
-              Container(
-                width: double.infinity,
-                height: 218.4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9.6),
-                  //color: Colors.black87,
-                ),
-                child: ClipRRect(
-                  borderRadius:  BorderRadius.circular(9.6),
-                  child: CachedNetworkImage(
-                    
-                    imageUrl:  "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/proyecto/$idProyecto", //"$imageUrl",
-                    
-                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => Center(
+              TweenAnimationBuilder(
+                tween: Tween(begin: 1.0,end: 0.0),
+                curve: Curves.bounceOut,
+                duration: Duration(seconds: 1),
+                child: Container(
+                  width: double.infinity,
+                  height: 218.4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9.6),
+                    //color: Colors.black87,
+                  ),
+                  child: ClipRRect(
+                    borderRadius:  BorderRadius.circular(9.6),
+                    child: CachedNetworkImage(
+                      
+                      imageUrl:  "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/proyecto/$idProyecto", //"$imageUrl",
+                      
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Center(
 
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
 
-                          Icon(Icons.error,color: Colors.red,),
-                          SizedBox(height: 8,),
-                          Text('Lo sentimos no pudimos cargar la imagen')
-                        ],
-                      )
+                            Icon(Icons.error,color: Colors.red,),
+                            SizedBox(height: 8,),
+                            Text('Lo sentimos no pudimos cargar la imagen')
+                          ],
+                        )
+                      ),
+                      fit: BoxFit.cover,
+
                     ),
-                    fit: BoxFit.cover,
-
                   ),
                 ),
+
+                builder: (context,value,child){
+
+                  return Transform.translate(
+                    offset: Offset(value*50,0.0),
+                    child: child,
+                  );
+
+                },
+
               ),
 
               Positioned(

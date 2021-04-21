@@ -408,6 +408,7 @@ class PrincipalController extends GetxController{
       var lissencuesta =  await DBProvider.db.getAllEncuestas();
 
       List listPreguntas = [];
+     
 
       for (var n = 0; n < _encuestas.length; n++) {
 
@@ -448,32 +449,39 @@ class PrincipalController extends GetxController{
 
             );
 
-            var preguOpcion = item["preguntaGrupoOpcion"];
-            int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-            var listOpciones =  preguOpcion[0]["grupoOpcion"]["opcion"];
+            List preguOpcion = item["preguntaGrupoOpcion"];
 
-            print(listOpciones);
+            if(preguOpcion.length > 0){
 
-            listOpciones.forEach((item2){
+              int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
+              var listOpciones =  preguOpcion[0]["grupoOpcion"]["opcion"];
 
-              _opcionesPreguntas.add(
+              listOpciones.forEach((item2){
 
-                OpcionesModel(
+                _opcionesPreguntas.add(
 
-                  idOpcion                : item2["idOpcion"],
-                  idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
-                  idPregunta              : idPregunta,
-                  valor                   : item2["valor"],
-                  label                   : item2["label"], 
-                  orden                   : item2["orden"],
-                  estado                  : item2["estado"].toString(),
-                  createdAt               : item2["createdAt"],
-                  updated_at              : item2["updatedAt"], 
-                )
+                  OpcionesModel(
 
-              );
+                    idOpcion                : item2["idOpcion"],
+                    idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
+                    idPregunta              : idPregunta,
+                    valor                   : item2["valor"],
+                    label                   : item2["label"], 
+                    orden                   : item2["orden"],
+                    estado                  : item2["estado"].toString(),
+                    createdAt               : item2["createdAt"],
+                    updated_at              : item2["updatedAt"], 
+                  )
 
-            });
+                );
+
+              });
+
+
+            }
+
+            //print(listOpciones);
+
 
         });
         

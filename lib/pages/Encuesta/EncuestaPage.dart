@@ -44,7 +44,12 @@ class EncuestaPage extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/encuesta/${_.idEncuesta}" , //'${_.imagePortada}',
                         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => Center(
+                        errorWidget: (context, url, error) => Image(
+                          image: AssetImage('assets/images/noimage2.png'),
+                          fit: BoxFit.cover,
+                        ),
+                        
+                        /*Center(
 
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +60,7 @@ class EncuestaPage extends StatelessWidget {
                               Text('Lo sentimos no pudimos cargar la imagen')
                             ],
                           )
-                        ),
+                        ),*/
                         fit: BoxFit.cover,
                       )
                       

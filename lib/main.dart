@@ -50,9 +50,10 @@ class _MyAppState extends State<MyApp> {
         
         primaryColor: Color.fromRGBO(0, 102, 84, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        
+        fontFamily: 'Poppins',
         textTheme: TextTheme(
-          headline6: TextStyle(fontSize: 16,fontWeight: FontWeight.bold) 
+          headline6: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+           
         ) 
 
       ),

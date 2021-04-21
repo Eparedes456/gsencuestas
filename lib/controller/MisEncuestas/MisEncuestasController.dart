@@ -265,4 +265,22 @@ class MisEncuestasController extends GetxController{
 
   }
 
+  refreshPage()async{
+
+
+    _listMisEncuestas = [];
+    _isLoading = true;
+    _haydata = false; 
+
+    await getAllFichas();
+
+
+
+
+    update();
+
+
+  }
+
+
 }
