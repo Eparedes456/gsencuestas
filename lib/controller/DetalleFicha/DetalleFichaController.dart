@@ -372,15 +372,16 @@ class DetalleFichaController extends GetxController{
 
     for (var z = 0; z < listMultimedia.length; z++) {
 
-      multimedia["idMultimedia"]  =   listMultimedia[z].idMultimedia;
-      multimedia["latitud"]    =   listMultimedia[z].latitud;
+      multimedia["idMultimedia"]    =   listMultimedia[z].idMultimedia;
+      multimedia["latitud"]         =   listMultimedia[z].latitud;
       multimedia["longitud"]        =   listMultimedia[z].longitud;
+      multimedia["url"]             =   listMultimedia[z].tipo;
       
       
         
-      /*listTrackingMap.add(
-        tracking
-      );*/
+      listMultimediaMap.add(
+        multimedia
+      );
 
       sendFicha['multimedia']  = listMultimediaMap;
       multimedia ={};

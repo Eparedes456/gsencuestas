@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
+import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:get/get.dart';
@@ -38,24 +40,105 @@ class FichaController extends GetxController{
 
   String idFicha;
 
+  List<MultimediaModel> _listMultimedia = [];
+  List<MultimediaModel> get listMultimedia => _listMultimedia;
   
 
   File _imagePath;
   File get imagepath => _imagePath;
   
 
-  
+  showModalImage()async{
+    Get.dialog(
+      
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20)
+        ),
+        title: Text('Esocge una de las opciones'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            ListTile(
+              leading: Icon(Icons.photo_camera),
+              title: Text('Usar camara'),
+              onTap: (){
+                Get.back();
+                pickImage("CAMARA");
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.collections),
+              title: Text('Abrir galeria'),
+              onTap: (){
+                Get.back();
+                pickImage("GALERIA");
+              },
+            ),
+
+
+          ],
+        ),
+      )
+    );
+  }
 
   
+
+
   
 
-  pickImage()async{
+  pickImage(String valor)async{
 
     final ImagePicker image = ImagePicker();
+    if(valor == "CAMARA"){
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+
+      String photoBase64 = "";
+      File image1;
+
+      image1 = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(image1.readAsBytesSync());
+
+      print(photoBase64);
+
+      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64);
+      _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
+
+      print(_listMultimedia);
+      update();
+
+    }else{
+
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 480,maxWidth: 640);
+      String photoBase64 = "";
+      File image1;
+
+      image1 = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(image1.readAsBytesSync());
+
+      print(photoBase64);
+
+      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64);
+      _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
+
+      print(_listMultimedia);
+      update();
+
+    }
+
+    
+
+
+
+    /*final ImagePicker image = ImagePicker();
     PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 480,maxWidth: 640);
     _imagePath = File(imageCapturada.path);
     print(_imagePath);
-    update();  
+    update();  */
 
   }
 

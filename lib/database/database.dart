@@ -919,6 +919,7 @@ class DBProvider{
 
   getAllMultimediaxFicha(String idFicha)async{
 
+    print(idFicha);
     final db = await database;
     var response = await db.rawQuery(
       '''
