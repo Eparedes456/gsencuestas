@@ -39,7 +39,7 @@ class DBProvider{
 
     return await openDatabase(
 
-      join(await getDatabasesPath(),'gsencuesta.db'),
+      join(await getDatabasesPath(),'gsencuesta2.db'),
       onCreate: (db,version)async{
         
         await db.execute(
@@ -278,7 +278,7 @@ class DBProvider{
         
 
       },
-      version: 4
+      version: 5
 
     ); 
 
@@ -441,6 +441,25 @@ class DBProvider{
       respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
 
     return listEncuesta;
+    
+
+  }
+
+  getOnesEncuesta(String idEncuesta)async{
+
+    final db = await database;
+
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM encuesta WHERE idEncuesta = '$idEncuesta'
+      '''
+    );
+
+    /*List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
+      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];*/
+
+    //return listEncuesta;
+    return respuesta;
 
   }
 
@@ -561,7 +580,7 @@ class DBProvider{
     
     
 
-    print(" INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latiutd, longitud, fecha_inicio,fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')");
+    //print(" INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latitud, longitud, fecha_inicio,fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')");
 
     return  await db.rawQuery(
       

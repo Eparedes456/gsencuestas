@@ -15,6 +15,7 @@ import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
@@ -273,6 +274,12 @@ class DetalleFichaController extends GetxController{
 
   }
 
+  navigateToRetomarEncuesta(){
+
+    Get.to(RetomarEncuestaPage());
+
+  }
+
 
   sendDataToServer()async{
 
@@ -296,7 +303,9 @@ class DetalleFichaController extends GetxController{
     sendFicha["latitud"]      = latitud;
     sendFicha["longitud"]     = longitud;
     sendFicha["observacion"]  = observacionFicha;
-    sendFicha["idEncuesta"]   = idEncuestaSend;
+    var encuesta = {};
+    encuesta["idEncuesta"]   = idEncuestaSend;
+    sendFicha['encuesta'] = encuesta;
 
     var encuestado = {};
     encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;

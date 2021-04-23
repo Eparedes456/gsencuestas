@@ -6,6 +6,7 @@ import 'package:gsencuesta/pages/quiz/WidgetQuiz/ImageWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/MultipleSelectWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/TextFieldWidget.dart';
+import 'dart:io' show Platform;
 
 
 
@@ -21,6 +22,14 @@ class QuizPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(_.tituloEncuesta),
           centerTitle: true,
+          leading: IconButton(
+            icon:  Platform.isAndroid ? Icon(Icons.arrow_back) : Icon(Icons.arrow_back_ios),
+            onPressed: (){
+
+              _.pauseQuiz();
+
+            },
+          ),
         ),
 
         body:  _.isLoadingData == true?  Container(

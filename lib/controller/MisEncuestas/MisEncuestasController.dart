@@ -10,6 +10,7 @@ import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
+import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 
 
 class MisEncuestasController extends GetxController{
@@ -17,8 +18,9 @@ class MisEncuestasController extends GetxController{
   @override
   void onInit() {
     // TODO: implement onInit
-    this.getAllFichas();
+    
     super.onInit();
+    this.getAllFichas();
     
   }
 
@@ -64,6 +66,8 @@ class MisEncuestasController extends GetxController{
         String idEncuesta = element.idEncuesta.toString();
         String idFicha = element.idFicha.toString();
         String idEncuestado = element.idEncuestado.toString();
+        var listEncuestas = await DBProvider.db.getAllEncuestas();
+        print(listMisEncuestas);
         _listDbEncuesta = await DBProvider.db.getOneEncuesta(idEncuesta);
         _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
         _listPreguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
@@ -225,7 +229,7 @@ class MisEncuestasController extends GetxController{
 
   }
 
-  modalDelete(){
+  modalDelete(String idFicha){
 
     Get.dialog(
       AlertDialog(
@@ -239,7 +243,7 @@ class MisEncuestasController extends GetxController{
             onPressed: (){
 
               //Get.back(result: "SI");
-              //deleteFicha();
+              deleteFicha(idFicha);
               
 
             },
@@ -265,6 +269,23 @@ class MisEncuestasController extends GetxController{
 
   }
 
+  deleteFicha(String id)async{
+
+    var response = await DBProvider.db.deleteOneFicha(id);
+    List<FichasModel> respuesta = await DBProvider.db.oneFicha(id);
+    if(respuesta.length ==  0){
+
+      print('se elimino el registro');
+      Get.back();
+
+      await refreshPage();
+      
+    }
+
+
+
+  }
+
   refreshPage()async{
 
 
@@ -279,6 +300,27 @@ class MisEncuestasController extends GetxController{
 
     update();
 
+
+  }
+
+  navigateToRetomarEncuesta(String idFicha, String idEncuesta, String tituloEncuesta){
+
+    print(idFicha);
+    print(idEncuesta);
+    print(tituloEncuesta);
+
+
+
+    Get.to(
+      RetomarEncuestaPage(),
+      arguments: {
+
+        'idFicha'         :   idFicha,
+        'idEncuesta'      :   idEncuesta,
+        'tituloEncuesta'  :   tituloEncuesta
+
+      }
+    );
 
   }
 

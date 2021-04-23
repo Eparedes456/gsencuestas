@@ -137,10 +137,23 @@ class MisEncuestas extends StatelessWidget {
                                       icon: Icons.delete,
                                       onTap: (){
 
-                                        _.modalDelete();
+                                        _.modalDelete(_.listMisEncuestas[index].idFicha);
 
                                       }
-                                    ): null
+                                    ): null,
+
+                                    _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
+                                      iconWidget: Icon(Icons.edit,color: Colors.white,),
+                                      foregroundColor: Colors.white,
+                                      caption: 'Retomar',
+                                      color: Colors.yellow[800],
+                                      onTap: (){
+
+                                        _.navigateToRetomarEncuesta(_.listMisEncuestas[index].idFicha.toString(), _.listMisEncuestas[index].idEncuesta, _.listMisEncuestas[index].nombreEncuesta ) ;
+
+                                      },
+                                      //icon: Icons.edit,
+                                    ) : null
 
                                   ],
                                   child: Padding(

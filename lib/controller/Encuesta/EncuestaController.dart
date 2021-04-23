@@ -108,7 +108,31 @@ class EncuestaController extends GetxController{
 
       for( var element in _listFichas){
 
-        _listEncuesta = await DBProvider.db.getOneEncuesta(element.idEncuesta.toString());
+        var listdata = await DBProvider.db.getOnesEncuesta(element.idEncuesta.toString());
+
+        listdata.forEach((item){
+
+          _listEncuesta.add(
+            EncuestaModel(
+              idEncuesta    : item["idEncuesta"],
+              idProyecto    : item["idProyecto"],
+              titulo        : item["titulo"],
+              descripcion   : item["descripcion"],
+              url_guia      : item["url_guia"],
+              expira        : item["expira"],
+              fechaInicio   : item["fechaInicio"],
+              fechaFin      : item["fechaFin"],
+              logo          : item["logo"],
+              dinamico      : item["dinamico"],
+              esquema       : item["esquema"],
+              estado        : item["estado"],
+              createdAt     : item["createdAt"],
+              updatedAt     : item["updatedAt"],
+
+            )
+          );
+
+        });
 
 
       }
@@ -491,7 +515,8 @@ class EncuestaController extends GetxController{
     int idFicha = getLastFichaid[0]["idFicha"];
 
     print("Ultima ficha insertada " + idFicha.toString());
-    Get.to(
+
+    var result = await Get.to(
 
       QuizPage(),
       arguments: {
@@ -506,6 +531,73 @@ class EncuestaController extends GetxController{
       
 
     );
+
+    if(result == "SI"){
+
+      print('Actualizar la vista mostrando las encuestas pendientes');
+      Get.back();
+      Get.back();
+      _listEncuesta = [];
+      _encuestasPendientes = false;
+      update();
+      await pendientesEncuestas();
+
+
+    }
+
+
+  }
+
+
+  pendientesEncuestas()async{
+
+    _listFichas = [];
+    _listFichas = await DBProvider.db.fichasPendientes("P");
+    print(_listFichas.length);
+    if(_listFichas.length > 0){
+
+      for( var element in _listFichas){
+
+        var listdata = await DBProvider.db.getOnesEncuesta(element.idEncuesta.toString());
+
+        listdata.forEach((item){
+
+          _listEncuesta.add(
+            EncuestaModel(
+              idEncuesta    : item["idEncuesta"],
+              idProyecto    : item["idProyecto"],
+              titulo        : item["titulo"],
+              descripcion   : item["descripcion"],
+              url_guia      : item["url_guia"],
+              expira        : item["expira"],
+              fechaInicio   : item["fechaInicio"],
+              fechaFin      : item["fechaFin"],
+              logo          : item["logo"],
+              dinamico      : item["dinamico"],
+              esquema       : item["esquema"],
+              estado        : item["estado"],
+              createdAt     : item["createdAt"],
+              updatedAt     : item["updatedAt"],
+
+            )
+          );
+
+        });
+
+
+
+      }
+
+      _encuestasPendientes = true;
+
+    }else{
+
+      _encuestasPendientes = false;
+
+    }
+
+    update();
+
 
   }
 

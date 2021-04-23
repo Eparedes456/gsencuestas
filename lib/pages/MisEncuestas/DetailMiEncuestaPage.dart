@@ -495,6 +495,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             onPressed: (){
 
                               //_.sendDataToServer();
+                              _.navigateToRetomarEncuesta();
 
                             },
                             icon: Icon(FontAwesomeIcons.edit,color: Colors.white,size: 18,),

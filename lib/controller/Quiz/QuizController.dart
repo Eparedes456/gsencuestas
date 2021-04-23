@@ -520,6 +520,80 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   }
 
+
+    pauseQuiz()async{
+
+      Get.dialog(
+        AlertDialog(  
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)
+          ),
+          title: Text('Notificación'),
+          content: Text('¿Está seguro de abandonar la encuesta?'),
+          actions: [
+
+            Container(
+              height: 40,
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                color: Color.fromRGBO(0, 102, 84, 1),
+                onPressed: (){
+                  
+                  Get.back();
+                  _positionStream.cancel();
+                  Get.back(
+                    result: "SI"
+                  );
+
+                },
+                child: Text('Si'),
+              ),
+            ),
+
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                ),
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: MaterialButton(
+                onPressed: (){
+                  Get.back();
+                },
+                child: Text('Continuar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+              ),
+            )
+
+          ],
+
+        )
+
+      );
+
+
+    }
+
+
+
+    showModal(){
+
+      Get.dialog(
+        AlertDialog(  
+
+          title: Text('Notificación'),
+          content: Text('¿Está seguro de abandonar la encuesta?'),
+
+        )
+
+      );
+
+    }
+
+
   @override
   void onClose() {
     // TODO: implement onClose
