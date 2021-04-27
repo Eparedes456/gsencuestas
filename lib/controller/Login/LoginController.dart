@@ -83,6 +83,7 @@ class LoginController extends GetxController{
 
   checkInternet()async{
 
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 
     bool servicioEnabled;
 
@@ -95,7 +96,22 @@ class LoginController extends GetxController{
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       print(position.latitude);
       print(position.longitude);
-      Get.back();
+
+      var usuario = preferences.getString('nombreUser');
+      var idUsuario = preferences.getString("idUsuario");
+
+      if(usuario == null && idUsuario == null || usuario == "" && idUsuario == ""){
+
+        Get.back();
+
+      }else{
+
+        Get.offAll(TabsPage());
+
+      }
+
+
+      
 
     }else{
 
@@ -170,7 +186,7 @@ class LoginController extends GetxController{
 
           preferences.setString('idUsuario', idUsuario.toString());
           preferences.setString('nombreUser', nombreUser);
-          Get.to(TabsPage());
+          Get.offAll(TabsPage());
 
 
         }else{

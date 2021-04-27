@@ -112,7 +112,9 @@ class FichaController extends GetxController{
 
     }else{
 
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 480,maxWidth: 640);
+      //maxHeight: 480,maxWidth: 640
+      //
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50);
       String photoBase64 = "";
       File image1;
 
@@ -185,14 +187,12 @@ class FichaController extends GetxController{
 
   saveFicha()async{
     
-    var tipo = "Foto";
+    
     DateTime now = DateTime.now();
     print(now);
     var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, now.toString(),"F");
 
     print(hola);
-
-    await DBProvider.db.insertMultimedia(idFicha, tipo);
 
     Get.offAll(
 

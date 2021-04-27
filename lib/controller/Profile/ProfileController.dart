@@ -54,7 +54,8 @@ class ProfileController extends GetxController{
 
     SharedPreferences preferences = await  SharedPreferences.getInstance();
 
-    preferences.remove('token');
+    preferences.clear();
+
     Get.offAll(
       LoginPage()
     );
