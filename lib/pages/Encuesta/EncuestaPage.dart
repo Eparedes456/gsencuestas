@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
@@ -168,95 +169,143 @@ class EncuestaPage extends StatelessWidget {
                             padding:  EdgeInsets.only(bottom: 8),
                             child: Padding(
                               padding:  EdgeInsets.only(left: 20,right: 20),
-                              child: Card(
-                                child: GestureDetector(
-                                  child: Column(
-                                    
-                                    children: [
-                                      SizedBox(height: 12,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
+                              child: Slidable(
+                                actionPane: SlidableDrawerActionPane(),
+                                actionExtentRatio: 0.25,
+                                actions: [
+                                  
+                                  IconSlideAction(
+                                    caption: 'Eliminar',
+                                    color: Colors.redAccent,
+                                    icon: Icons.delete,
+                                    onTap: (){
+                                      //_.modalDelete(_.encuestasPendientes[index].idFicha);
+                                    }
+                                  ),
 
-                                          Padding(
-                                            padding:  EdgeInsets.only(left: 20),
-                                            child: Container(
-                                              height: 60,
-                                              width: 60,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius: BorderRadius.circular(10)
-                                              ),
-                                              child: Center(
-                                                child: Icon(Icons.content_paste,size: 30,color: Colors.white),
-                                              ),
-                                                
-                                                /*Image(
-                                                  image: AssetImage('assets/images/survey-logo.png'),
-                                                ),*/
-                                            ),
-                                          ),
-                                          
+                                  
 
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(left: 10,right: 20),
-                                              child: Column(
-                                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text('${_.listEncuesta[index].titulo}',style: TextStyle(fontSize: 12),),
+
+
+                                ],
+
+                                secondaryActions: [
+
+                                  IconSlideAction(
+                                      iconWidget: Icon(Icons.edit,color: Colors.white,),
+                                      foregroundColor: Colors.white,
+                                      caption: 'Retomar',
+                                      color: Colors.yellow[800],
+                                      onTap: (){
+
+                                        //_.navigateToRetomarEncuesta(_.listMisEncuestas[index].idFicha.toString(), _.listMisEncuestas[index].idEncuesta, _.listMisEncuestas[index].nombreEncuesta ) ;
+
+                                      },
+                                      //icon: Icons.edit,
+                                  ),
+
+                                  IconSlideAction(
+                                    caption: 'Detalle',
+                                    color: Colors.blueAccent,
+                                    icon: FontAwesomeIcons.eye,
+                                    onTap: (){
+                                      //_.navigateToDetail(idFicha);
+                                        
+                                    }
+                                  ) 
+
+                                ],
+
+                                child: Card(
+                                  child: GestureDetector(
+                                    child: Column(
+                                      
+                                      children: [
+                                        SizedBox(height: 12,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+
+                                            Padding(
+                                              padding:  EdgeInsets.only(left: 20),
+                                              child: Container(
+                                                height: 60,
+                                                width: 60,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                  borderRadius: BorderRadius.circular(10)
+                                                ),
+                                                child: Center(
+                                                  child: Icon(Icons.content_paste,size: 30,color: Colors.white),
+                                                ),
                                                   
-                                                  Row(
-                                                    children: [
-                                                      Icon(Icons.account_circle,size: 13,),
-                                                      SizedBox(width: 5,),
-                                                      Text('Encuestado: $clockString',style: TextStyle(fontSize: 11),),
-                                                    ],
-                                                  ),
-                                                
-                                                  Row(
-                                                    children: [
-                                                      Icon(Icons.calendar_today,size: 13,),
-                                                      SizedBox(width: 5,),
-                                                      Text('Fecha: $clockString',style: TextStyle(fontSize: 11),),
-                                                    ],
-                                                  ),
+                                                  /*Image(
+                                                    image: AssetImage('assets/images/survey-logo.png'),
+                                                  ),*/
+                                              ),
+                                            ),
+                                            
 
-                                                  /*MaterialButton(
-                                                    height: 40,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(12)
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 10,right: 20),
+                                                child: Column(
+                                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('${_.listEncuesta[index].titulo}',style: TextStyle(fontSize: 12),),
+                                                    
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.account_circle,size: 13,),
+                                                        SizedBox(width: 5,),
+                                                        Text('Encuestado: $clockString',style: TextStyle(fontSize: 11),),
+                                                      ],
                                                     ),
-                                                    color: Colors.blue,
-                                                    onPressed: (){
-                                                      
-                                                      _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha,_.listEncuesta[index].titulo, _.listEncuesta[index].idEncuesta.toString());
+                                                  
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.calendar_today,size: 13,),
+                                                        SizedBox(width: 5,),
+                                                        Text('Fecha: $clockString',style: TextStyle(fontSize: 11),),
+                                                      ],
+                                                    ),
 
-                                                    },
-                                                    child: Center(
-                                                      child: Padding(
-                                                        padding:  EdgeInsets.only(left: 10,right: 10),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                          children: [
-                                                            Icon(Icons.edit,color: Colors.white,),
-                                                            //SizedBox(width: 10,),
-                                                            Text('Retomar',style: TextStyle(color: Colors.white),),
-                                                          ],
+                                                    /*MaterialButton(
+                                                      height: 40,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12)
+                                                      ),
+                                                      color: Colors.blue,
+                                                      onPressed: (){
+                                                        
+                                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha,_.listEncuesta[index].titulo, _.listEncuesta[index].idEncuesta.toString());
+
+                                                      },
+                                                      child: Center(
+                                                        child: Padding(
+                                                          padding:  EdgeInsets.only(left: 10,right: 10),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                            children: [
+                                                              Icon(Icons.edit,color: Colors.white,),
+                                                              //SizedBox(width: 10,),
+                                                              Text('Retomar',style: TextStyle(color: Colors.white),),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  )*/
-                                                ],
+                                                    )*/
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 12,),
-                                    ],
-                                  ),
-                                )
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(height: 12,),
+                                      ],
+                                    ),
+                                  )
+                                ),
                               ),
                             ),
                           );

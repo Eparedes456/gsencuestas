@@ -57,7 +57,7 @@ class FichaPage extends StatelessWidget {
                   height: 45,
                   width: double.infinity,
                   child: MaterialButton(
-                    color: Colors.grey,
+                    color: Colors.grey[350],
                     onPressed: (){
                       _.showModalImage();
                     },
@@ -185,7 +185,7 @@ class FichaPage extends StatelessWidget {
               Padding(
                 padding:  EdgeInsets.only(left: 40,right: 40),
                 child: Container(
-                  height: 35,
+                  height: 45,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.green,
