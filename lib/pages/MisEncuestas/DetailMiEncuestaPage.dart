@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/DetalleFicha/DetalleFichaController.dart';
+import 'dart:io' show Platform;
 
 
 class DetailMiEncuestaPage extends StatelessWidget {
@@ -14,7 +16,26 @@ class DetailMiEncuestaPage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Detalle Ficha'),
+          leading: IconButton(
+            icon: Platform.isAndroid ? Icon(Icons.arrow_back) : Icon(Icons.arrow_back_ios),
+            onPressed: (){
+
+              if( _.estado != "F" &&  _.estado != "P" ){
+
+                Get.back(
+                  result: "SI"
+                );
+
+              }else{
+
+                Get.back();
+
+              }
+
+            },
+          ),
         ),
+        
 
         body: SingleChildScrollView(
           child: Column(
@@ -412,12 +433,9 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                       print('mapas');
                                     },
                                     child: Padding(
-                                      padding:  EdgeInsets.only(left: 10,right: 10),
+                                      padding:  EdgeInsets.only(left: 0,right: 0),
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(),
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
+                                        
                                         child: Column(
                                           children: [
 

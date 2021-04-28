@@ -849,6 +849,35 @@ class DBProvider{
 
   }
 
+  actualizarRespuestaxFicha(String idPregunta,String idFicha,String valor)async{
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      UPDATE respuesta SET valor = $valor WHERE idPregunta = $idPregunta AND idFicha = $idFicha
+      '''
+    );
+
+    return 1;
+
+  }
+
+  unaRespuestaFicha(String idFicha, String idPregunta)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM respuesta WHERE idFicha = $idFicha AND idPregunta = $idPregunta 
+      
+      '''
+    );
+
+    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+
+    return listRespuesta;
+
+  }
+
   /* Traer todas las respuesta de una ficha y una encuesta especiffica */
   
   getAllRespuestasxEncuesta(String idFicha, String idEncuesta)async{

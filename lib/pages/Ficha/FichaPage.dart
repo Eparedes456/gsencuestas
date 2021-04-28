@@ -77,7 +77,7 @@ class FichaPage extends StatelessWidget {
 
               SizedBox(height: 10,),
 
-              Container(
+              _.listMultimedia.length > 0 ?Container(
                 height: 300,
                 child: ListView.builder(
                   itemCount: _.listMultimedia.length,
@@ -143,7 +143,7 @@ class FichaPage extends StatelessWidget {
 
                   }
                 ),
-              ),
+              ):Container(),
 
               
 

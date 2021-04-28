@@ -8,6 +8,7 @@ import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
@@ -30,13 +31,8 @@ class EncuestaController extends GetxController{
     _nombreProyecto = data[1];
     print(data[0]);
 
-   
-
     loadData(data[0]);
 
-
-
-    
 
   }
 
@@ -65,6 +61,8 @@ class EncuestaController extends GetxController{
 
   String _idEncuesta = "";
   String get idEncuesta => _idEncuesta;
+
+  
 
   List<PreguntaModel> _listPregunta = [];
   List<PreguntaModel> get listPregunta => _listPregunta;
@@ -128,6 +126,7 @@ class EncuestaController extends GetxController{
               estado        : item["estado"],
               createdAt     : item["createdAt"],
               updatedAt     : item["updatedAt"],
+              idFicha       : element.idFicha.toString() 
 
             )
           );
@@ -406,7 +405,7 @@ class EncuestaController extends GetxController{
     Get.dialog(
 
       AlertDialog(
-        title: Text('Notificacón'),
+        title: Text('Notificación'),
         content: Text('¿Esta seguro que desea continuar?'),
         actions: [
 
@@ -417,8 +416,8 @@ class EncuestaController extends GetxController{
               navigateToQuiz(id);
 
             },
-
-            child: Text('Iniciar'),
+            color: Colors.green,
+            child: Text('Empezar'),
 
 
           ),
@@ -430,8 +429,8 @@ class EncuestaController extends GetxController{
               Get.back();
 
             },
-
-            child: Text('Cancelar'),
+            color: Colors.grey,
+            child: Text('Cancelar',style: TextStyle(color: Colors.white),),
 
 
           ),
@@ -494,24 +493,27 @@ class EncuestaController extends GetxController{
 
     
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+    String formatDate = DateFormat('yyyy-MM-dd').format(now);
+    String hourFormat = DateFormat('HH:mm:ss').format(now);
     
-    print(formattedDate);
+    String formattedDate = formatDate + "T" + hourFormat + ".0Z";
+
+    //print(formatDate + "T" + hourFormat + ".0Z");
+    
+    
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     String latitud = position.latitude.toString();
     String longitud = position.longitude.toString();
     
+    
 
+
+    
     var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate,latitud,longitud);
-
-    //print(ficha);
 
     List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas();
     var getLastFichaid = await DBProvider.db.getLastFicha();
-    //print(getLastFichaid);
-    //print(listDbLocal);
-
-    
+   
     int idFicha = getLastFichaid[0]["idFicha"];
 
     print("Ultima ficha insertada " + idFicha.toString());
@@ -544,6 +546,7 @@ class EncuestaController extends GetxController{
 
 
     }
+    
 
 
   }
@@ -578,7 +581,7 @@ class EncuestaController extends GetxController{
               estado        : item["estado"],
               createdAt     : item["createdAt"],
               updatedAt     : item["updatedAt"],
-
+              idFicha       : element.idFicha.toString() 
             )
           );
 
@@ -601,6 +604,25 @@ class EncuestaController extends GetxController{
 
   }
 
+  navigateToRetomarEncuesta(String idFicha,String encuestaName, String  idEncuesta)async{
+
+    var data = {
+      'idFicha'         : idFicha,
+      'nombreEncuesta'  : encuestaName,
+      'idEncuesta'      : idEncuesta
+    };
+
+    print(data);
+     Get.to(
+      RetomarEncuestaPage(),
+      arguments: data
+    
+    );
+
+
+
+  }
+
 
 
   @override
@@ -614,6 +636,7 @@ class EncuestaController extends GetxController{
     // TODO: implement dispose
     super.dispose();
   }
+
 
 
 }

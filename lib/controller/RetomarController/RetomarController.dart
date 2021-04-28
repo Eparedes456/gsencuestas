@@ -5,10 +5,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
+import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 
 class RetommarController extends GetxController{
 
@@ -16,12 +19,12 @@ class RetommarController extends GetxController{
   void onInit()async{
     // TODO: implement onInit
     super.onInit();
-    var data = Get.arguments;
-
-    _titulo = data["tituloEncuesta"];
+    Map data = Get.arguments;
+    print(data["nombreEncuesta"]);
+    _titulo = data["nombreEncuesta"];
     await onloadData(data);
 
-    /*_positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
 
       print(posicion.latitude);
       print(posicion.longitude);
@@ -34,7 +37,7 @@ class RetommarController extends GetxController{
 
       
 
-    });*/
+    });
      
   }
 
@@ -59,15 +62,20 @@ class RetommarController extends GetxController{
   List<InputTextfield> get controllerInput => _controllerInput;
 
   bool get isLoadingData => _isLoadingData;
-  
+  List<RespuestaModel> respuestas = [];
+  String idFicha = "";
+  String idEncuesta = "";
+  String idEncuestado = "";
 
-  onloadData(dynamic datos)async{
+  onloadData(Map datos)async{
 
     _opcionesPreguntas = [];
-    String idEncuesta = datos["idEncuesta"];
-    String idFicha = datos["idFicha"];
-
-    List<RespuestaModel> respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+    idEncuesta = datos["idEncuesta"];
+    idFicha = datos["idFicha"];
+    List <FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
+    print(ficha);
+    idEncuestado = ficha[0].idEncuestado.toString();
+    respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
 
     print(respuestas);
 
@@ -111,15 +119,24 @@ class RetommarController extends GetxController{
         });
     }
 
+
+    
+
     for (var x = 0; x < respuestas.length; x++) {
 
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
 
-        if( int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion ){
+        if( respuestas[x].idsOpcion == ""){
 
-          print('pintar de verde');
+        }else{
 
-          _opcionesPreguntas[z].selected = true;
+          if( int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion ){
+
+            print('pintar de verde');
+
+            _opcionesPreguntas[z].selected = true;
+
+          }
 
         }
         
@@ -127,12 +144,132 @@ class RetommarController extends GetxController{
       
     }
 
+    
     print(_opcionesPreguntas.length);
     //update('simple');
     _isLoadingData = true;
     update();
+    
+    Future.delayed(Duration(seconds: 1),()async{
+      await inptuData();
+    });
 
   }
+
+  inptuData()async{
+
+    for (var i = 0; i < respuestas.length; i++) {
+      print(respuestas.length);
+
+      for (var j = 0; j < controllerInput.length; j++) {
+
+        if( respuestas[i].idsOpcion == "" ){
+
+          if(respuestas[i].idPregunta.toString() == controllerInput[j].idPregunta){
+
+            controllerInput[j].controller.text = respuestas[i].valor;
+
+          }
+
+        }
+        
+      }
+
+      
+      
+    }
+
+    //print( "Cantidad de preguntas tipo input" + controllerInput.length.toString());
+
+    update();
+
+  }
+
+  guardarFicha()async{
+
+    //List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
+    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
+
+    respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+
+
+    print(respuestas);
+    print(listtRACKING);
+
+    Map sendData ={
+
+      'idEncuesta'        : idEncuesta,
+      'idEncuestado'      : idEncuestado,
+      'tracking'          : listtRACKING,
+      'respuestas'        : respuestas,
+      'idFicha'           : idFicha
+
+    };
+    print(sendData);
+    _positionStream.cancel();
+    Get.to(
+      FichaPage(),
+      arguments: 
+      sendData
+    );
+
+  }
+
+  pauseQuiz()async{
+
+      Get.dialog(
+        AlertDialog(  
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)
+          ),
+          title: Text('Notificación'),
+          content: Text('¿Está seguro de abandonar la encuesta?'),
+          actions: [
+
+            Container(
+              height: 40,
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                color: Color.fromRGBO(0, 102, 84, 1),
+                onPressed: (){
+                  _positionStream.cancel();
+                  Get.back();
+                  
+                  Get.back(
+                    result: "SI"
+                  );
+
+                },
+                child: Text('Si'),
+              ),
+            ),
+
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                ),
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: MaterialButton(
+                onPressed: (){
+                  Get.back();
+                },
+                child: Text('Continuar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+              ),
+            )
+
+          ],
+
+        )
+
+      );
+
+
+    }
 
 
 

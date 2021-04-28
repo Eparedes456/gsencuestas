@@ -1,15 +1,19 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
+import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class FichaController extends GetxController{
 
@@ -23,6 +27,22 @@ class FichaController extends GetxController{
 
     idFicha = listData["idFicha"];
     print(idFicha);
+
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
+
+      print(posicion.latitude);
+      print(posicion.longitude);
+
+      await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(), posicion.longitude.toString(), 'TRUE');
+
+      List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackings();
+      
+      print(respuestaBd);
+
+      
+
+    });
+
 
   }
 
@@ -42,6 +62,7 @@ class FichaController extends GetxController{
 
   List<MultimediaModel> _listMultimedia = [];
   List<MultimediaModel> get listMultimedia => _listMultimedia;
+  StreamSubscription<Position> _positionStream;
   
 
   File _imagePath;
@@ -189,11 +210,16 @@ class FichaController extends GetxController{
     
     
     DateTime now = DateTime.now();
-    print(now);
-    var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, now.toString(),"F");
+    String formatDate = DateFormat('yyyy-MM-dd').format(now);
+    String hourFormat = DateFormat('HH:mm:ss').format(now);
+
+    String formattedDate = formatDate + "T" + hourFormat + ".0Z";
+
+    var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, formattedDate,"F");
 
     print(hola);
-
+    _positionStream.cancel();
+    
     Get.offAll(
 
       TabsPage()

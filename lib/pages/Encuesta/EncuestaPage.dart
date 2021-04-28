@@ -109,7 +109,7 @@ class EncuestaPage extends StatelessWidget {
 
                             },
                             child: Text(
-                              'Empezar',
+                              'Iniciar Encuesta',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Poppins',
@@ -129,14 +129,14 @@ class EncuestaPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
-                            Text('Encuestas pendientes'),
+                            Text('Encuestas pendientes',style: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),),
 
                             Container(
                               height: 30,
                               width: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color: Colors.green[800],
+                                color: Color.fromRGBO(0, 102, 84, 1),
                               ),
                               child: Center(
                                 child: Text(
@@ -178,35 +178,75 @@ class EncuestaPage extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
 
-                                          Container(
-                                              height: 80,
-                                              child: Image(
-                                                image: AssetImage('assets/images/survey-logo.png'),
+                                          Padding(
+                                            padding:  EdgeInsets.only(left: 20),
+                                            child: Container(
+                                              height: 60,
+                                              width: 60,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: BorderRadius.circular(10)
                                               ),
+                                              child: Center(
+                                                child: Icon(Icons.content_paste,size: 30,color: Colors.white),
+                                              ),
+                                                
+                                                /*Image(
+                                                  image: AssetImage('assets/images/survey-logo.png'),
+                                                ),*/
+                                            ),
                                           ),
                                           
 
                                           Expanded(
                                             child: Padding(
-                                              padding: const EdgeInsets.only(left: 20,right: 20),
+                                              padding: const EdgeInsets.only(left: 10,right: 20),
                                               child: Column(
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('${_.listEncuesta[index].titulo}'),
+                                                  Text('${_.listEncuesta[index].titulo}',style: TextStyle(fontSize: 12),),
+                                                  
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.account_circle,size: 13,),
+                                                      SizedBox(width: 5,),
+                                                      Text('Encuestado: $clockString',style: TextStyle(fontSize: 11),),
+                                                    ],
+                                                  ),
+                                                
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.calendar_today,size: 13,),
+                                                      SizedBox(width: 5,),
+                                                      Text('Fecha: $clockString',style: TextStyle(fontSize: 11),),
+                                                    ],
+                                                  ),
 
-                                                  Text('Fecha Inicio : $clockString'),
-
-                                                  MaterialButton(
-                                                    height: 25,
+                                                  /*MaterialButton(
+                                                    height: 40,
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius: BorderRadius.circular(12)
                                                     ),
                                                     color: Colors.blue,
                                                     onPressed: (){
+                                                      
+                                                      _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha,_.listEncuesta[index].titulo, _.listEncuesta[index].idEncuesta.toString());
 
                                                     },
-                                                    child: Text('Retomar',style: TextStyle(color: Colors.white),),
-                                                  )
+                                                    child: Center(
+                                                      child: Padding(
+                                                        padding:  EdgeInsets.only(left: 10,right: 10),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                          children: [
+                                                            Icon(Icons.edit,color: Colors.white,),
+                                                            //SizedBox(width: 10,),
+                                                            Text('Retomar',style: TextStyle(color: Colors.white),),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )*/
                                                 ],
                                               ),
                                             ),

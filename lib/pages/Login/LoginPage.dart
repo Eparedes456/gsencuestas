@@ -45,61 +45,34 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
 
-                SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                Center(
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
 
-                      Logo(),
+                        Logo(),
 
-                      Padding(
-                        padding:  EdgeInsets.only(left: 10,right: 10),
-                        child: Text(
-                          'GsEncuestas',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 30
-                          ),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 10,right: 10),
+                          child: Center(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 250,
+                              child: Image(
+                                image: AssetImage('assets/images/survey-logo.png'),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          )
                         ),
-                      ),
-
-                      Formulario(),
-                      SizedBox(height: 30,),
-
-                      Padding(
-                        padding: EdgeInsets.only(top: 0),
-                        child: Text(
-                          'Aún no cuenta con un usuario?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Poppins'
-                          ),
-                        )
-                      ),
-                      SizedBox(height: 10,),
-
-                      GestureDetector(
-                        onTap: (){
-
-                          _.navigateToRegisterUser();
-
-                        },
-                        child: Text(
-                          'Registrarme',
-                          style: TextStyle(
-                            color: Color.fromRGBO(10, 143, 119, 1),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                            fontSize: 18
-                          ),
-                        ),
-                      )
-
-                    ],
-                  )
+                        SizedBox(height: 30,),
+                        Formulario(),
+                        SizedBox(height: 10,),
+                      ],
+                    )
+                  ),
                 )
 
               ],

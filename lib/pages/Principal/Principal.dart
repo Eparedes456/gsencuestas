@@ -47,7 +47,7 @@ class PrincipalPage extends StatelessWidget {
                       Center(
                         child: Container(
                           
-                          height: 40,
+                          width: 280,
                           child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
                         ),
                       ),
@@ -55,7 +55,7 @@ class PrincipalPage extends StatelessWidget {
                       Padding(
                         padding:  EdgeInsets.only(left: 20,top: 20),
                         child: Text(
-                          'Busca las encuesta que tenemos para ti',
+                          'Busca los proyectos que tienes asignados',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -64,7 +64,7 @@ class PrincipalPage extends StatelessWidget {
                         ),
                       ),
 
-                      SizedBox(height: 20,),
+                      SizedBox(height: 10,),
 
                       Padding(
                         padding:  EdgeInsets.only(left: 20,right: 20),

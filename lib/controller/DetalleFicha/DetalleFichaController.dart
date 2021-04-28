@@ -275,8 +275,17 @@ class DetalleFichaController extends GetxController{
   }
 
   navigateToRetomarEncuesta(){
+    
+    var data = {
+      'idFicha'         : idFicha,
+      'nombreEncuesta'  : nombreEncuesta,
+      'idEncuesta'      : idEncuestaSend.toString()
+    };
 
-    Get.to(RetomarEncuestaPage());
+    Get.to(RetomarEncuestaPage(),
+      arguments: data
+    
+    );
 
   }
 
@@ -285,9 +294,9 @@ class DetalleFichaController extends GetxController{
 
   
 
-    List<RespuestaModel> listRespuestaDBlocal =  await DBProvider.db.getAllRespuestasxFicha(_idFicha);
-    List<TrackingModel>   listTracking         =  await DBProvider.db.getAllTrackingOfOneSurvery(_idFicha);
-    List<MultimediaModel> listMultimedia       =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
+    List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(_idFicha);
+    List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(_idFicha);
+    List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
 
 
 

@@ -34,12 +34,14 @@ class EncuestaModel{
   String estado;
   String createdAt;
   String updatedAt;
+  String idFicha = "";
+  
   
 
   EncuestaModel(
       {
         this.idEncuesta,this.idProyecto,this.titulo,this.descripcion,this.url_guia,this.expira,this.fechaInicio,this.fechaFin,this.logo,
-        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,
+        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,this.idFicha
         
       }
   );

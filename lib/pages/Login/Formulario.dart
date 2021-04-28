@@ -11,7 +11,7 @@ class Formulario extends StatelessWidget {
       init: LoginController(),
       builder: (_) => Container(
 
-        height: MediaQuery.of(context).size.height * 0.48,
+        //height: MediaQuery.of(context).size.height * 0.48,
         width: MediaQuery.of(context).size.width * 0.90,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -27,13 +27,28 @@ class Formulario extends StatelessWidget {
           ]
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.only(left: 20,right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
 
               Padding(
-                padding:  EdgeInsets.only(top: 0),
+                        padding:  EdgeInsets.only(left: 10,right: 10,top: 30),
+                        child: Center(
+                          child: Container(
+                            alignment: Alignment.center,
+                            
+                            width: 250,
+                            child: Image(
+                              image: AssetImage('assets/images/logo_gsencuestas.png'),
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        )
+                      ),
+
+              /*Padding(
+                padding:  EdgeInsets.only(top: 10),
                 child: Text(
                   'Ingrese sus datos',
                   style: TextStyle(
@@ -42,7 +57,7 @@ class Formulario extends StatelessWidget {
                     fontSize: 20
                   ),
                 ),
-              ),
+              ),*/
 
               SizedBox(height: 20,),
               
@@ -90,7 +105,8 @@ class Formulario extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+              SizedBox(height: 40,),
 
             ],
           ),

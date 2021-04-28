@@ -87,11 +87,11 @@ class MisEncuestas extends StatelessWidget {
                   image: AssetImage('assets/images/noencuesta.png'),
                 ),
               ),
-              SizedBox(height: 12,),
+              SizedBox(height: 20,),
 
               Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
-                child: Text('No se encontraron encuestas que realizastes.'),
+                child: Text('No se encontraron encuestas.'),
               )
 
             ],

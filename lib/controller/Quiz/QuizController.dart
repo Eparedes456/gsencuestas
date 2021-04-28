@@ -447,10 +447,36 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
   List<InputTextfield> get controllerInput => _controllerInput;
 
 
-  guardarIput(dataList){
+  guardarInput(String idPregunta,String valor)async{
 
-    _controllerInput = dataList;
-    
+    print(idPregunta);
+    print(idFicha);
+    print(valor);
+
+    List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,idPregunta);
+
+    if(respuesta.length > 0){
+
+      if(respuesta[0].valor != "" ){
+
+        print("si existe la respuesta, modificar en la bd");
+
+        await DBProvider.db.actualizarRespuestaxFicha(idPregunta,idFicha,valor);
+
+      }
+
+    }
+
+    else{
+
+      await DBProvider.db.insertRespuesta(idPregunta.toString(), idFicha.toString(), "",valor);
+
+
+    }
+   
+    //await DBProvider.db.actualizarRespuestaxFicha();
+
+
   }
 
 
@@ -459,7 +485,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   guardarFicha()async{
 
-    if( _controllerInput.length > 0 ){
+    /*if( _controllerInput.length > 0 ){
 
       print('hay la opciones de inserciòn texto, insertar en la base de datos');
 
@@ -481,14 +507,13 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       print('no hay preguntas que sea n tipos inputables');
 
-    }
+    }*/
 
     //SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
+    List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
     
-
-    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackings();
+    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
 
     print(listRespuestaDBlocal);
     print(listtRACKING);
@@ -498,12 +523,11 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
       'idEncuestado'      : idEncuestado,
       'tracking'          : listtRACKING,
       'respuestas'        : listRespuestaDBlocal,
-      'respuestas_input'  : _controllerInput,
       'idFicha'           : idFicha
 
     };
 
-    //print(sendData);
+    print(sendData);
 
     _positionStream.cancel();
 
@@ -540,9 +564,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                 ),
                 color: Color.fromRGBO(0, 102, 84, 1),
                 onPressed: (){
-                  
-                  Get.back();
                   _positionStream.cancel();
+                  Get.back();
+                  
                   Get.back(
                     result: "SI"
                   );

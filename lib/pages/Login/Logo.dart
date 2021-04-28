@@ -10,23 +10,16 @@ class Logo extends StatelessWidget {
       children: [
 
         Padding(
-          padding:  EdgeInsets.only(top: 0),
+          padding:  EdgeInsets.only(top: 20),
           child: Center(
             child: Container(
               alignment: Alignment.center,
-              height: 180,
-              width: 200,
-              //color: Colors.indigo,
-              /*decoration: BoxDecoration(
-                color: Colors.indigo,
-                image: DecorationImage(
-                  image: NetworkImage('https://img.icons8.com/clouds/2x/survey.png'),
-                  fit: BoxFit.cover
-                )
-              ),*/
+              //height: 160,
+              width: 280,
+              
               child: Image(
-                image: AssetImage('assets/images/survey-logo.png'),
-                fit: BoxFit.contain,
+                image: AssetImage('assets/images/splash.png'),
+                fit: BoxFit.cover,
               ),
 
             ),
