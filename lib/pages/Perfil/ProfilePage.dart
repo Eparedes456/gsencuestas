@@ -205,37 +205,6 @@ class ProfilePage extends StatelessWidget {
                 ),
                 SizedBox(height: 20,),
 
-                Padding(
-                  padding:  EdgeInsets.only(left: 20,right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Text('Leyenda: '),
-
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.amber[600],
-                      ),
-
-                      Text('Pendiente'),
-                      
-
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.green,
-                      ),
-
-                      Text('Subido')
-                      
-                    ],
-                  ),
-                ),
-
-                
-
-                
-
 
               ],
             ),

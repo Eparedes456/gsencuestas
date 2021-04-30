@@ -138,7 +138,11 @@ class LoginController extends GetxController{
             )
 
           ],
-        )
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)
+          ),
+        ),
+        
 
       );
 

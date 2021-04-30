@@ -58,7 +58,7 @@ class Opciones extends StatelessWidget {
 
                               
 
-                              //_.capturarRespuestaSimple(_.opcionesPreguntas[index]);
+                              _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
 
                             },
                             child: Container(
@@ -77,11 +77,14 @@ class Opciones extends StatelessWidget {
                                     
                                     Expanded(
                                       child: Text(
-                                        _.opcionesPreguntas[index].label
+                                        _.opcionesPreguntas[index].label,
+                                        style: TextStyle(
+                                          color:  _.opcionesPreguntas[index].selected == true ?  Colors.white :Colors.black
+                                        ),
                                       )
                                     ),
 
-                                    Icon(Icons.check_circle_outline)
+                                    Icon(Icons.check_circle_outline,color:  _.opcionesPreguntas[index].selected == true ? Colors.white : Colors.black,)
                                     
 
 

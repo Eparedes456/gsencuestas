@@ -13,6 +13,10 @@
         android:name=".Application"
         android:label="gsencuesta"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB1VEU-5uWFBH1NkfbnoA3Ttq68JFl-HHI"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

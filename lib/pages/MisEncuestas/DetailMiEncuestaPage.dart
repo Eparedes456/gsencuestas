@@ -5,6 +5,8 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/DetalleFicha/DetalleFichaController.dart';
 import 'dart:io' show Platform;
 
+import 'package:gsencuesta/pages/Maps/GoogleMaps.dart';
+
 
 class DetailMiEncuestaPage extends StatelessWidget {
   @override
@@ -430,7 +432,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
 
                                   child: GestureDetector(
                                     onTap: (){
-                                      print('mapas');
+                                      _.navigateToMaps();
                                     },
                                     child: Padding(
                                       padding:  EdgeInsets.only(left: 0,right: 0),

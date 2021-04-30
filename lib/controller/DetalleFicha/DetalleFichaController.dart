@@ -15,10 +15,15 @@ import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/pages/Maps/GoogleMaps.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
+
+import '../../database/database.dart';
+import '../../model/Tracking/TrackingModal.dart';
+import '../../model/Tracking/TrackingModal.dart';
 
 class DetalleFichaController extends GetxController{
 
@@ -56,7 +61,8 @@ class DetalleFichaController extends GetxController{
   String _nroPreguntas = "";
   String get nroPreguntas => _nroPreguntas;
 
-
+  List<TrackingModel> _listTracking = [];
+  List<TrackingModel> get listTracking => _listTracking;
   
 
   /* Datos del encuestado */
@@ -225,6 +231,18 @@ class DetalleFichaController extends GetxController{
 
   }
 
+  navigateToMaps()async{
+
+    _listTracking = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
+
+    print(_listTracking);
+
+    Get.to(
+      GoogleMaps(),
+      arguments: _listTracking 
+    );
+
+  }
 
   deleteFicha()async{
 
@@ -348,12 +366,6 @@ class DetalleFichaController extends GetxController{
       //print('hola');
     
     }
-
-  
-
-    //sendFicha['respuesta']  = listRespuestaMap;
-
-
 
     var tracking = {};
     List<Map> listTrackingMap = new List();

@@ -21,7 +21,6 @@ class TabsPage extends StatelessWidget {
     final List<Widget> bodyContent = [
 
       PrincipalPage(),
-      ReportPage(),
       ConfigPage(),
       MisEncuestas(),
       ProfilePage(),
@@ -48,15 +47,12 @@ class TabsPage extends StatelessWidget {
           items: [
 
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.clipboard),
+              icon: Icon(FontAwesomeIcons.clone),
               label: 'Proyectos',
               
             ),
 
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.chartBar),
-              label: 'Reporte'
-            ),
+            
 
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.cogs),

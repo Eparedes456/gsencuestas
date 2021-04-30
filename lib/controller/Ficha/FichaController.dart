@@ -229,6 +229,15 @@ class FichaController extends GetxController{
 
   }
 
+  cannotBack(){
 
+    Get.dialog(
+      AlertDialog(
+        title: Text('Notificación'),
+        content: Text('Por favor debe finalizar la encuesta, presione guardar ficha.'),
+      )
+    );
+
+  }
 
 }

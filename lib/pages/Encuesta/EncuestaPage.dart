@@ -179,7 +179,7 @@ class EncuestaPage extends StatelessWidget {
                                     color: Colors.redAccent,
                                     icon: Icons.delete,
                                     onTap: (){
-                                      //_.modalDelete(_.encuestasPendientes[index].idFicha);
+                                      _.modalDelete(_.listEncuesta[index].idFicha);
                                     }
                                   ),
 
@@ -198,25 +198,28 @@ class EncuestaPage extends StatelessWidget {
                                       color: Colors.yellow[800],
                                       onTap: (){
 
-                                        //_.navigateToRetomarEncuesta(_.listMisEncuestas[index].idFicha.toString(), _.listMisEncuestas[index].idEncuesta, _.listMisEncuestas[index].nombreEncuesta ) ;
+                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha.toString(), _.listEncuesta[index].idEncuesta.toString(), _.listEncuesta[index].titulo ) ;
 
                                       },
                                       //icon: Icons.edit,
                                   ),
 
+                                  /*
                                   IconSlideAction(
                                     caption: 'Detalle',
-                                    color: Colors.blueAccent,
+                                    foregroundColor: Colors.white,
+                                    color: Color.fromRGBO(20, 183, 201, 1),   //20, 183, 201 mas oscuro   108, 230, 244 => claro
                                     icon: FontAwesomeIcons.eye,
                                     onTap: (){
-                                      //_.navigateToDetail(idFicha);
+                                     
                                         
                                     }
-                                  ) 
+                                  ) */
 
                                 ],
 
                                 child: Card(
+                                  elevation: 5,
                                   child: GestureDetector(
                                     child: Column(
                                       

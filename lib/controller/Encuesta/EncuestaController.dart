@@ -8,6 +8,7 @@ import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
@@ -62,6 +63,8 @@ class EncuestaController extends GetxController{
   String _idEncuesta = "";
   String get idEncuesta => _idEncuesta;
 
+  String _nroTotalPreguntas = "";
+  String get nroTotalPreguntas => _nroTotalPreguntas;
   
 
   List<PreguntaModel> _listPregunta = [];
@@ -198,13 +201,16 @@ class EncuestaController extends GetxController{
 
       });
 
+      
+
     }else{
 
       print("consulto bd local");
 
-       _listPregunta = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+      _listPregunta = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
        
-       print(_listPregunta.length);
+      print(_listPregunta.length);
+      
 
     }
 
@@ -267,7 +273,7 @@ class EncuestaController extends GetxController{
             SizedBox(height: 12,),
 
             FlatButton.icon(
-              color: Colors.green,
+              color: Color.fromRGBO(0, 102, 84, 1),
               onPressed: (){
 
                 searchEncuestado();
@@ -391,7 +397,10 @@ class EncuestaController extends GetxController{
             confirmationModal(idEncuestado);
           },
 
-        )
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
 
       )
 
@@ -409,20 +418,50 @@ class EncuestaController extends GetxController{
         content: Text('¿Esta seguro que desea continuar?'),
         actions: [
 
-          FlatButton(
+          Container(
+            height: 40,
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
+              color: Color.fromRGBO(0, 102, 84, 1),
+              onPressed: (){
+                navigateToQuiz(id);
+              },
+              child: Text('Empezar'),
+              ),
+          ),
+
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromRGBO(0, 102, 84, 1),
+              ),
+              borderRadius: BorderRadius.circular(10)
+            ),
+            child: MaterialButton(
+              onPressed: (){
+                Get.back();
+              },
+              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+            ),
+          )
+
+          /*FlatButton(
 
             onPressed: (){
 
               navigateToQuiz(id);
 
             },
-            color: Colors.green,
+            color: Color.fromRGBO(0, 102, 84, 1),
             child: Text('Empezar'),
 
 
-          ),
+          ),*/
 
-          FlatButton(
+         /*FlatButton(
 
             onPressed: (){
 
@@ -433,7 +472,7 @@ class EncuestaController extends GetxController{
             child: Text('Cancelar',style: TextStyle(color: Colors.white),),
 
 
-          ),
+          ),*/
 
         ],
         shape: RoundedRectangleBorder(
@@ -477,6 +516,9 @@ class EncuestaController extends GetxController{
             Text(message)
 
           ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
         ),
 
       )
@@ -604,7 +646,7 @@ class EncuestaController extends GetxController{
 
   }
 
-  navigateToRetomarEncuesta(String idFicha,String encuestaName, String  idEncuesta)async{
+  navigateToRetomarEncuesta(String idFicha, String  idEncuesta, String encuestaName)async{
 
     var data = {
       'idFicha'         : idFicha,
@@ -622,6 +664,83 @@ class EncuestaController extends GetxController{
 
 
   }
+
+  modalDelete(String idFicha){
+
+    Get.dialog(
+      AlertDialog(
+        title: Text('Notificación'),
+        content: Text('¿Está seguro de eliminar esta ficha?'),
+        actions: [
+
+          Container(
+            height: 40,
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
+              color: Color.fromRGBO(0, 102, 84, 1),
+              onPressed: (){
+                deleteFicha(idFicha);
+              },
+              child: Text('Si'),
+              ),
+          ),
+          
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromRGBO(0, 102, 84, 1),
+              ),
+              borderRadius: BorderRadius.circular(10)
+            ),
+            child: MaterialButton(
+              onPressed: (){
+                Get.back();
+              },
+              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+            ),
+          )
+
+          
+
+        ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+      ),
+      
+    );
+
+  }
+
+  deleteFicha(String id)async{
+
+    var response = await DBProvider.db.deleteOneFicha(id);
+    List<FichasModel> respuesta = await DBProvider.db.oneFicha(id);
+    if(respuesta.length ==  0){
+
+      print('se elimino el registro');
+      Get.back();
+
+      await refreshPage();
+      
+    }
+  }
+
+  refreshPage()async{
+
+
+    _listEncuesta = [];
+    _encuestasPendientes = false;
+    
+    await pendientesEncuestas();
+
+    update();
+
+  }
+
 
 
 

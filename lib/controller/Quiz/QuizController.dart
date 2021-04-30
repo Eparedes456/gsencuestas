@@ -324,88 +324,28 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
   List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida)async{
-
-    int count = 0;
-    _opcionesPreguntas.forEach((element)async { 
-
     
+    print(opcionEscogida.idOpcion);
 
-      if(element.idPregunta == opcionEscogida.idPregunta){
+    opcionesPreguntas.forEach((element) async{ 
 
-        //print(element);
+      element.selected = false;
+      await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
 
-        _opcionesPreguntas[count].selected = false;
-        await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+      
+      if(element.idOpcion == opcionEscogida.idOpcion){
 
-        if(element.idOpcion ==  opcionEscogida.idOpcion ){
-
-          
-
-          await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
-
-          List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-          print(listRespuestaDB);
-
-          if(opcionEscogida.selected == true){
-
-            _pickOpcionSimple.removeWhere((element1) => element1.idOpcion == opcionEscogida.idOpcion);
-            
-            opcionEscogida.selected = false; 
-
-            await DBProvider.db.eliminarUnaRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString() );
-
-            List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-            print(listRespuestaDB);
-
-            update(['simple']);
-
-          }else{
-
-
-            opcionEscogida.selected = true;
-
-            _pickOpcionSimple.add(
-
-              OpcionesModel(
-
-                idOpcion                  : _opcionesPreguntas[count].idOpcion,
-                idPreguntaGrupoOpcion     : _opcionesPreguntas[count].idPreguntaGrupoOpcion,
-                idPregunta                : _opcionesPreguntas[count].idPregunta,
-                valor                     : _opcionesPreguntas[count].valor,
-                label                     : _opcionesPreguntas[count].label,
-                orden                     : _opcionesPreguntas[count].orden,
-                estado                    : _opcionesPreguntas[count].estado,
-                createdAt                 : _opcionesPreguntas[count].createdAt,
-                updated_at                : _opcionesPreguntas[count].updated_at,
-                selected                  : true
-
-              )
-
-            );
-
-            update(['simple']);
-
-          }
-
-          
-
-
-        }
-
-
+        element.selected = true;
+        await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
+      
       }
 
-      count++;
-
     });
-    
-    print(_pickOpcionSimple);
 
-     
+    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+    print(listRespuestaDB);
 
-    
+    update(['simple']);
 
   }
 
@@ -485,31 +425,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   guardarFicha()async{
 
-    /*if( _controllerInput.length > 0 ){
+    
 
-      print('hay la opciones de inserciòn texto, insertar en la base de datos');
-
-     
-      _controllerInput.removeWhere((item) => item.controller.text == "");
-
-      //print(_controllerInput);
-
-      _controllerInput.forEach((element) async{
-
-        await DBProvider.db.insertRespuesta(element.idPregunta, idFicha, '', element.controller.text);
-
-
-       });
-
-      
-      
-    }else{
-
-      print('no hay preguntas que sea n tipos inputables');
-
-    }*/
-
-    //SharedPreferences preferences = await SharedPreferences.getInstance();
 
     List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
     
@@ -602,20 +519,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     }
 
 
-
-    showModal(){
-
-      Get.dialog(
-        AlertDialog(  
-
-          title: Text('Notificación'),
-          content: Text('¿Está seguro de abandonar la encuesta?'),
-
-        )
-
-      );
-
-    }
 
 
   @override

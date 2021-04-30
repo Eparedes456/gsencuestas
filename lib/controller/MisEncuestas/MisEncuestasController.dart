@@ -234,37 +234,47 @@ class MisEncuestasController extends GetxController{
     Get.dialog(
       AlertDialog(
         title: Text('Notificación'),
-        content: Text('¿Esta seguro de querer eliminar esta ficha?'),
+        content: Text('¿Está seguro de eliminar esta ficha?'),
         actions: [
 
-          FlatButton.icon(
-
-            color: Colors.green,
-            onPressed: (){
-
-              //Get.back(result: "SI");
-              deleteFicha(idFicha);
-              
-
-            },
-            icon: Icon(FontAwesomeIcons.check),
-            label: Text('Si')
+          Container(
+            height: 40,
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
+              color: Color.fromRGBO(0, 102, 84, 1),
+              onPressed: (){
+                deleteFicha(idFicha);
+              },
+              child: Text('Si'),
+              ),
           ),
-
-          FlatButton.icon(
-            color: Colors.redAccent,
-            onPressed: (){
-
-              Get.back();
-
-            }, 
-            icon: Icon(FontAwesomeIcons.timesCircle),
-            label: Text('No')
-
+          
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromRGBO(0, 102, 84, 1),
+              ),
+              borderRadius: BorderRadius.circular(10)
+            ),
+            child: MaterialButton(
+              onPressed: (){
+                Get.back();
+              },
+              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+            ),
           )
 
+          
+
         ],
-      )
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+      ),
+      
     );
 
   }

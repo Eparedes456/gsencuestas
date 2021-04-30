@@ -156,6 +156,33 @@ class RetommarController extends GetxController{
 
   }
 
+  capturarRespuestaSimple(OpcionesModel opcionEscogida)async{
+    
+    print(opcionEscogida.idOpcion);
+
+    opcionesPreguntas.forEach((element) async{ 
+
+      element.selected = false;
+      await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+
+      
+      if(element.idOpcion == opcionEscogida.idOpcion){
+
+        element.selected = true;
+        await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
+      
+      }
+
+    });
+
+    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+    print(listRespuestaDB);
+
+    update(['simple']);
+
+  }
+
+
   inptuData()async{
 
     for (var i = 0; i < respuestas.length; i++) {
@@ -270,6 +297,9 @@ class RetommarController extends GetxController{
 
 
     }
+
+
+
 
 
 

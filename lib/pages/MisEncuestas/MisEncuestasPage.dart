@@ -118,19 +118,6 @@ class MisEncuestas extends StatelessWidget {
                                   actionExtentRatio: 0.25,
                                   actions: [
                                     
-                                    IconSlideAction(
-                                      caption: 'Detalle',
-                                      color: Colors.blueAccent,
-                                      icon: FontAwesomeIcons.eye,
-                                      onTap: (){
-                                        _.navigateToDetail(idFicha);
-                                        
-                                      }
-                                    )
-
-                                  ],
-                                  secondaryActions: [
-
                                     _.listMisEncuestas[index].estadoFicha == "F" || _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
                                       caption: 'Eliminar',
                                       color: Colors.redAccent,
@@ -141,7 +128,10 @@ class MisEncuestas extends StatelessWidget {
 
                                       }
                                     ): null,
+                                    
 
+                                  ],
+                                  secondaryActions: [
                                     _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
                                       iconWidget: Icon(Icons.edit,color: Colors.white,),
                                       foregroundColor: Colors.white,
@@ -153,7 +143,18 @@ class MisEncuestas extends StatelessWidget {
 
                                       },
                                       //icon: Icons.edit,
-                                    ) : null
+                                    ) : null,
+
+                                    IconSlideAction(
+                                      caption: 'Detalle',
+                                      foregroundColor: Colors.white,
+                                      color: Color.fromRGBO(20, 183, 201, 1),   //20, 183, 201 mas oscuro   108, 230, 244 => claro
+                                      icon: FontAwesomeIcons.eye,
+                                      onTap: (){
+                                        _.navigateToDetail(idFicha);
+                                        
+                                      }
+                                    ),
 
                                   ],
                                   child: Padding(
@@ -174,35 +175,45 @@ class MisEncuestas extends StatelessWidget {
                                         child:Row(
                                             children: [
                                               
-                                              Container(
-                                                height: 130,
-                                                width: 70,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
-                                                  child: _.listMisEncuestas[index].imagen == "" ||  _.listMisEncuestas[index].imagen  == null ? Image(image: AssetImage('assets/images/encuesta.png'),fit: BoxFit.cover,) :CachedNetworkImage(
-                                          
-                                                    imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
-                                                    placeholder: (context, url) => Image(
-                                                    image: AssetImage('assets/images/loading.gif'),),
-                                                    errorWidget: (context, url, error) => Center(
-
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-
-                                                          Icon(Icons.error,color: Colors.red,),
-                                                          SizedBox(height: 8,),
-                                                          Text('Lo sentimos no pudimos cargar la imagen')
-                                                        ],
-                                                      )
-                                                    ),
-                                                    fit: BoxFit.cover,
-
+                                              Padding(
+                                                padding:  EdgeInsets.only(left: 5),
+                                                child: Container(
+                                                  height: 130,
+                                                  width: 70,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey,
+                                                    borderRadius: BorderRadius.circular(10)
+                                                    //borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
                                                   ),
+                                                  child: Center(
+                                                    child: Icon(Icons.content_paste,size: 30,color: Colors.white),
+                                                  ),
+                                                  
+                                                  
+                                                  
+                                                  /*ClipRRect(
+                                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
+                                                    child: _.listMisEncuestas[index].imagen == "" ||  _.listMisEncuestas[index].imagen  == null ? Image(image: AssetImage('assets/images/encuesta.png'),fit: BoxFit.cover,) :CachedNetworkImage(
+                                          
+                                                      imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
+                                                      placeholder: (context, url) => Image(
+                                                      image: AssetImage('assets/images/loading.gif'),),
+                                                      errorWidget: (context, url, error) => Center(
+
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+
+                                                            Icon(Icons.error,color: Colors.red,),
+                                                            SizedBox(height: 8,),
+                                                            Text('Lo sentimos no pudimos cargar la imagen')
+                                                          ],
+                                                        )
+                                                      ),
+                                                      fit: BoxFit.cover,
+
+                                                    ),
+                                                  ),*/
                                                 ),
                                               ),
 
@@ -212,7 +223,7 @@ class MisEncuestas extends StatelessWidget {
                                                   children: [
 
                                                     Padding(
-                                                      padding:  EdgeInsets.only(left: 10,right: 10),
+                                                      padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
                                                       child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     
@@ -220,7 +231,7 @@ class MisEncuestas extends StatelessWidget {
 
                                                           Expanded(
                                                             child: Text(
-                                                              '${_.listMisEncuestas[index].nombreEncuestado}',
+                                                              '${_.listMisEncuestas[index].nombreEncuesta}',
                                                               style: TextStyle(
                                                                 fontWeight: FontWeight.bold,
                                                                 fontFamily: 'Poppins',
@@ -228,6 +239,7 @@ class MisEncuestas extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
+                                                          SizedBox(width: 5,),
                                                           
                                                           Container(
                                                             height: 25,
@@ -250,20 +262,11 @@ class MisEncuestas extends StatelessWidget {
                                                       ),
                                                     ),
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10,top: 8),
-                                                      child: Text(
-                                                        '${_.listMisEncuestas[index].nombreEncuesta}',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.grey[600]
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    
 
                                                   
                                                     Padding(
-                                                      padding:  EdgeInsets.only(left: 10,top: 8),
+                                                      padding:  EdgeInsets.only(left: 10,top: 0),
                                                       child: Text(
                                                         '${_.listMisEncuestas[index].nombreProyecto}',
                                                         style: TextStyle(
@@ -273,7 +276,7 @@ class MisEncuestas extends StatelessWidget {
                                                       ),
                                                     ),
 
-                                                    SizedBox(height: 8,),
+                                                    
 
                                                     Padding(
                                                       padding:  EdgeInsets.only(left: 10),
@@ -296,10 +299,29 @@ class MisEncuestas extends StatelessWidget {
                                                       ),
                                                     ),
 
-                                                    SizedBox(height: 8,),
-
                                                     Padding(
                                                       padding:  EdgeInsets.only(left: 10),
+                                                      child: Row(
+                                                      children: [
+
+                                                        Icon(Icons.account_circle,size: 12,),
+                                                        SizedBox(width: 8,),
+
+                                                        Text(
+
+                                                         '${_.listMisEncuestas[index].nombreEncuestado}',
+                                                         style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:Colors.grey[600]
+                                                         ),
+                                                        )
+
+                                                      ],
+                                                  ),
+                                                    ),
+
+                                                    Padding(
+                                                      padding:  EdgeInsets.only(left: 10,bottom: 10),
                                                       child: Row(
                                                       children: [
 
@@ -310,7 +332,8 @@ class MisEncuestas extends StatelessWidget {
 
                                                          '${_.listMisEncuestas[index].fechaInicio}',
                                                          style: TextStyle(
-                                                           fontSize: 12
+                                                           fontSize: 12,
+                                                           color: Colors.grey[600]
                                                          ),
                                                         )
 
