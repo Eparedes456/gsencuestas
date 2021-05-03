@@ -41,8 +41,6 @@ class DBProvider{
 
       join(await getDatabasesPath(),'gsencuesta2.db'),
 
-      
-
       onCreate: (db,version)async{
         
         await db.execute(
@@ -281,7 +279,7 @@ class DBProvider{
         
 
       },
-      version: 5
+      version: 6
 
     ); 
 

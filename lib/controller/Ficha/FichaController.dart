@@ -219,12 +219,32 @@ class FichaController extends GetxController{
 
     print(hola);
     _positionStream.cancel();
-    
-    Get.offAll(
 
-      TabsPage()
-
+    Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  //title: Text('Notificación'),
+                  content:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
+                      SizedBox(height: 8,),
+                      Text('Los datos se guardaron exitosamente.',textAlign: TextAlign.justify,),
+                    ],
+                  ),
+                ),
+                barrierDismissible: false
     );
+
+    Future.delayed(Duration(seconds: 2),(){
+
+      Get.offAll( TabsPage());
+                
+    });
+    
+    
 
 
   }

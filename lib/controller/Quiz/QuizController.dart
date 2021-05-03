@@ -425,8 +425,28 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   guardarFicha()async{
 
-    
+    if(controllerInput.length > 0){
 
+      for (var i = 0; i < controllerInput.length; i++) {
+
+        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
+
+          controllerInput.removeWhere((item) => item.controller.text == "");
+
+        }
+        
+      }
+
+    }
+
+    print(controllerInput.length);
+
+    for (var i = 0; i < controllerInput.length; i++) {
+
+      await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+
+      
+    }
 
     List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
     
@@ -457,12 +477,14 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     _controllerInput = [];
     _pickOpcionSimple = [];
 
-
+    
 
   }
 
 
     pauseQuiz()async{
+
+      
 
       Get.dialog(
         AlertDialog(  
@@ -480,10 +502,10 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                   borderRadius: BorderRadius.circular(10)
                 ),
                 color: Color.fromRGBO(0, 102, 84, 1),
-                onPressed: (){
+                onPressed: ()async{
                   _positionStream.cancel();
                   Get.back();
-                  
+                  await guardarinputBack();
                   Get.back(
                     result: "SI"
                   );
@@ -515,6 +537,52 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       );
 
+
+    }
+
+
+    guardarinputBack()async{
+
+      if(controllerInput.length > 0){
+
+        for (var i = 0; i < controllerInput.length; i++) {
+
+          if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
+
+            controllerInput.removeWhere((item) => item.controller.text == "");
+
+          }
+          
+        }
+
+      }
+      for (var i = 0; i < controllerInput.length; i++) {
+
+        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
+
+        if(respuesta.length > 0 ){
+
+          if(respuesta[0].valor != ""){
+
+            print('Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[i].idPregunta,idFicha,controllerInput[i].controller.text);
+
+
+          }
+
+        }else{
+
+          await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+
+        }
+
+        
+
+
+        //
+
+
+      }
 
     }
 

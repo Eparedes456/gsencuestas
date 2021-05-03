@@ -208,11 +208,14 @@ class QuizPage extends StatelessWidget {
                                           decoration: InputDecoration(
                                             hintText: 'Ingrese su respuesta'
                                           ),
-                                          onSubmitted: (valor){
+                                          /*onSubmitted: (valor){
                                             
                                             _.guardarInput (_.preguntas[index].id_pregunta.toString() ,valor);
 
-                                          },
+                                          },*/
+                                          /*onChanged: (valor){
+                                            _.guardarInput (_.preguntas[index].id_pregunta.toString() ,valor);
+                                          },*/
                                         ),
                                       
                                       ),

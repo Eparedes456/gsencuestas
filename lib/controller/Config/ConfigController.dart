@@ -144,11 +144,13 @@ class ConfigController extends GetxController{
     if(data.length > 0){
 
       int contador = 0;
-      for (var x = 0; x < data.length; x++) {
+      
+      if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+        modal(true);
 
-        if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+        for (var x = 0; x < data.length; x++) {
 
-          modal(true);
+          
           var response  = await apiConexion.sendFichaToServer(data[x]);
 
           if( response != null || response != 1 || response  != 2 || response  !=3 ){
@@ -205,7 +207,11 @@ class ConfigController extends GetxController{
 
           }
 
-        }else{
+        
+        
+      }
+      //aca el else
+      }else{
 
           Get.dialog(
             AlertDialog(
@@ -218,8 +224,13 @@ class ConfigController extends GetxController{
           );
 
         }
-        
-      }
+
+      
+
+
+
+
+
 
 
 
