@@ -40,6 +40,9 @@ class DBProvider{
     return await openDatabase(
 
       join(await getDatabasesPath(),'gsencuesta2.db'),
+
+      
+
       onCreate: (db,version)async{
         
         await db.execute(

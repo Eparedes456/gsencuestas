@@ -29,19 +29,7 @@ class LoginPage extends StatelessWidget {
                   clipper: CustomClip(),
                   child: Container(
                     height: MediaQuery.of(context).size.height *0.6,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-
-                          Color.fromRGBO(10, 143, 119, 1),
-                          Color.fromRGBO(25, 189, 159, 1),
-                          Color.fromRGBO(0, 102, 84, 1)
-
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter
-                      )
-                    ),
+                    color: Color.fromRGBO(0, 102, 84, 1),
                   ),
                 ),
 

@@ -195,7 +195,7 @@ class FichaPage extends StatelessWidget {
                     height: 45,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: Color.fromRGBO(0, 102, 84, 1),
                       borderRadius: BorderRadius.circular(15)
                     ),
                     child: MaterialButton(

@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
+import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
@@ -73,8 +75,8 @@ class EncuestaController extends GetxController{
   List<FichasModel> _listFichas = [];
   List<FichasModel> get listFichas => _listFichas;
 
-  List<EncuestaModel> _listEncuesta = [];
-  List<EncuestaModel> get listEncuesta => _listEncuesta;
+  List<MisEncuestasModel> _listEncuesta = [];
+  List<MisEncuestasModel> get listEncuesta => _listEncuesta;
 
   TextEditingController insertEncuestadoController = new TextEditingController();
 
@@ -110,26 +112,19 @@ class EncuestaController extends GetxController{
       for( var element in _listFichas){
 
         var listdata = await DBProvider.db.getOnesEncuesta(element.idEncuesta.toString());
-
+        var idEncuestado3 = element.idEncuestado.toString();
+        List<EncuestadoModel> _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado3);
+        var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
         listdata.forEach((item){
 
           _listEncuesta.add(
-            EncuestaModel(
-              idEncuesta    : item["idEncuesta"],
-              idProyecto    : item["idProyecto"],
-              titulo        : item["titulo"],
-              descripcion   : item["descripcion"],
-              url_guia      : item["url_guia"],
-              expira        : item["expira"],
-              fechaInicio   : item["fechaInicio"],
-              fechaFin      : item["fechaFin"],
-              logo          : item["logo"],
-              dinamico      : item["dinamico"],
-              esquema       : item["esquema"],
-              estado        : item["estado"],
-              createdAt     : item["createdAt"],
-              updatedAt     : item["updatedAt"],
-              idFicha       : element.idFicha.toString() 
+            MisEncuestasModel(
+              idEncuesta        : item["idEncuesta"].toString(),
+              idProyecto        : item["idProyecto"].toString(),
+              nombreEncuestado  : nombreEncuestado,
+              nombreEncuesta    : item["titulo"],
+              fechaInicio       : item["fechaInicio"],
+              idFicha           : element.idFicha.toString() 
 
             )
           );
@@ -604,26 +599,21 @@ class EncuestaController extends GetxController{
       for( var element in _listFichas){
 
         var listdata = await DBProvider.db.getOnesEncuesta(element.idEncuesta.toString());
+        var idEncuestado3 = element.idEncuestado.toString();
+        List<EncuestadoModel> _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado3);
+        var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
 
         listdata.forEach((item){
 
           _listEncuesta.add(
-            EncuestaModel(
-              idEncuesta    : item["idEncuesta"],
-              idProyecto    : item["idProyecto"],
-              titulo        : item["titulo"],
-              descripcion   : item["descripcion"],
-              url_guia      : item["url_guia"],
-              expira        : item["expira"],
-              fechaInicio   : item["fechaInicio"],
-              fechaFin      : item["fechaFin"],
-              logo          : item["logo"],
-              dinamico      : item["dinamico"],
-              esquema       : item["esquema"],
-              estado        : item["estado"],
-              createdAt     : item["createdAt"],
-              updatedAt     : item["updatedAt"],
-              idFicha       : element.idFicha.toString() 
+            MisEncuestasModel(
+              idEncuesta        : item["idEncuesta"].toString(),
+              idProyecto        : item["idProyecto"].toString(),
+              nombreEncuestado  : nombreEncuestado,
+              nombreEncuesta    : item["titulo"],
+              fechaInicio       : item["fechaInicio"],
+              idFicha           : element.idFicha.toString() 
+
             )
           );
 

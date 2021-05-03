@@ -54,7 +54,10 @@ class ProfileController extends GetxController{
 
     SharedPreferences preferences = await  SharedPreferences.getInstance();
 
-    preferences.clear();
+    //preferences.clear();
+    preferences.remove('nombreUser');
+    preferences.remove('idUsuario');
+
 
     Get.offAll(
       LoginPage()

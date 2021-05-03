@@ -26,18 +26,7 @@ class PrincipalPage extends StatelessWidget {
               Container(  
                   height: size.height*0.3,
                   width: double.infinity,
-                  //color: Color.fromRGBO(0, 102, 84, 1),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-
-                        Color.fromRGBO(10, 143, 119, 1),
-                        Color.fromRGBO(25, 189, 159, 1),
-                        Color.fromRGBO(0, 102, 84, 1)
-
-                      ]
-                    )
-                  ),
+                  color: Color.fromRGBO(0, 102, 84, 1),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,14 +41,16 @@ class PrincipalPage extends StatelessWidget {
                         ),
                       ),
 
-                      Padding(
-                        padding:  EdgeInsets.only(left: 20,top: 20),
-                        child: Text(
-                          'Busca los proyectos que tienes asignados',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Poppins'
+                      Center(
+                        child: Padding(
+                          padding:  EdgeInsets.only(left: 10,top: 20,right: 10),
+                          child: Text(
+                            'Busca los proyectos que tienes asignados',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Poppins'
+                            ),
                           ),
                         ),
                       ),
@@ -94,7 +85,7 @@ class PrincipalPage extends StatelessWidget {
                     ],
                   ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 10,),
 
               _.isLoading == false?  Expanded(
                  

@@ -153,6 +153,10 @@ class ConfigController extends GetxController{
 
           if( response != null || response != 1 || response  != 2 || response  !=3 ){
 
+            var _estado = "S";
+
+            
+            await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado);
             contador++;
             if(contador == data.length){
 
@@ -163,10 +167,25 @@ class ConfigController extends GetxController{
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)
                   ),
-                  title: Text('Notificación'),
-                  content: Text('Los datos se subieron exitosamente.'),
-                )
+                  //title: Text('Notificación'),
+                  content:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
+                      SizedBox(height: 8,),
+                      Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
+                    ],
+                  ),
+                ),
+                barrierDismissible: false
               );
+               Future.delayed(Duration(seconds: 2),(){
+
+                _cantidadFinalizadas = "0";
+
+                Get.back();
+                update();
+              });
               
             }
 

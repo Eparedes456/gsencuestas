@@ -247,15 +247,7 @@ class QuizPage extends StatelessWidget {
                     width: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      gradient: LinearGradient(
-                        colors: [
-
-                          Color.fromRGBO(10, 143, 119, 1),
-                          Color.fromRGBO(25, 189, 159, 1),
-                          Color.fromRGBO(0, 102, 84, 1)
-
-                        ]
-                      )
+                      color: Color.fromRGBO(0, 102, 84, 1),
                     ),
                     child: MaterialButton(
                       child: Text(

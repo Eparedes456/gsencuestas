@@ -11,8 +11,8 @@
 
     <application
         android:name=".Application"
-        android:label="gsencuesta"
-        android:icon="@mipmap/ic_launcher">
+        android:label="GSEncuesta"
+        android:icon="@mipmap/launcher_icon">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyB1VEU-5uWFBH1NkfbnoA3Ttq68JFl-HHI"/>

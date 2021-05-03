@@ -198,7 +198,7 @@ class EncuestaPage extends StatelessWidget {
                                       color: Colors.yellow[800],
                                       onTap: (){
 
-                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha.toString(), _.listEncuesta[index].idEncuesta.toString(), _.listEncuesta[index].titulo ) ;
+                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha.toString(), _.listEncuesta[index].idEncuesta.toString(), _.listEncuesta[index].nombreEncuesta ) ;
 
                                       },
                                       //icon: Icons.edit,
@@ -255,13 +255,13 @@ class EncuestaPage extends StatelessWidget {
                                                 child: Column(
                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text('${_.listEncuesta[index].titulo}',style: TextStyle(fontSize: 12),),
+                                                    Text('${_.listEncuesta[index].nombreEncuesta}',style: TextStyle(fontSize: 12),),
                                                     
                                                     Row(
                                                       children: [
                                                         Icon(Icons.account_circle,size: 13,),
                                                         SizedBox(width: 5,),
-                                                        Text('Encuestado: $clockString',style: TextStyle(fontSize: 11),),
+                                                        Text('Encuestado: ${_.listEncuesta[index].nombreEncuestado}',style: TextStyle(fontSize: 11),),
                                                       ],
                                                     ),
                                                   

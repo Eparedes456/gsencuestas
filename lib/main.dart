@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       navigatorKey: navigatorKey,
-      title: 'Flutter Demo',
+      title: 'GSEncuesta',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         
