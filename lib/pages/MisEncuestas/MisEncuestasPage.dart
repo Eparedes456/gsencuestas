@@ -241,19 +241,22 @@ class MisEncuestas extends StatelessWidget {
                                                           ),
                                                           SizedBox(width: 5,),
                                                           
-                                                          Container(
-                                                            height: 25,
-                                                            width: 90,
-                                                            decoration: BoxDecoration(
-                                                              color:   _.listMisEncuestas[index].estadoFicha == "F" ? Colors.redAccent :   _.listMisEncuestas[index].estadoFicha == "P" ? Colors.yellow[700]  : Colors.grey,
-                                                              borderRadius: BorderRadius.circular(5)
-                                                            ),
-                                                            child: Center(
-                                                              child: Text(
-                                                                _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
-                                                                style: TextStyle(
-                                                                  color: Colors.white,
-                                                                  fontSize: 12
+                                                          Padding(
+                                                            padding:  EdgeInsets.only(bottom: 6),
+                                                            child: Container(
+                                                              height: 25,
+                                                              width: 90,
+                                                              decoration: BoxDecoration(
+                                                                color:   _.listMisEncuestas[index].estadoFicha == "F" ? Colors.redAccent :   _.listMisEncuestas[index].estadoFicha == "P" ? Colors.yellow[700]  : Colors.grey,
+                                                                borderRadius: BorderRadius.circular(5)
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
+                                                                  style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontSize: 12
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),

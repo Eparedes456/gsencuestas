@@ -19,8 +19,8 @@ class ConfigPage extends StatelessWidget {
           child: Column(
             children: [
 
-              buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
-              buildCard('Subir data',FontAwesomeIcons.cloudUploadAlt,true,_),
+              //buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
+              buildCard('Subir encuestas',FontAwesomeIcons.cloudUploadAlt,true,_),
               //buildCard('Cambiar rango Gps',FontAwesomeIcons.locationArrow)
 
             ],
@@ -61,7 +61,15 @@ buildCard(String contenido,IconData icon, bool upload,ConfigController _){
 
             if(upload){
 
-              _.modal(false);
+              if(_.cantidadFinalizadas == "" || _.cantidadFinalizadas == "0"){
+
+                _.modal(false,false);
+
+              }else{
+                _.modal(false,true);
+
+              }
+              
 
             }else{
 

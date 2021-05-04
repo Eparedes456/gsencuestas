@@ -92,6 +92,12 @@ class RetommarController extends GetxController{
         var idPregunta = _preguntas[i].id_pregunta;
 
         //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+        controllerInput.add(
+          InputTextfield(
+            preguntas[i].id_pregunta.toString(),
+            TextEditingController()
+          )
+        );
 
         var opciones = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
@@ -215,30 +221,152 @@ class RetommarController extends GetxController{
   guardarFicha()async{
 
     //List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
-    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
 
-    respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+    if(controllerInput.length > 0){
+
+      for (var i = 0; i < controllerInput.length; i++) {
+
+        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
+
+          controllerInput.removeWhere((item) => item.controller.text == "");
+
+        }
+        
+      }
+
+    }
+    print(controllerInput.length);
+    bool formValidado = true;
+
+    for (var z = 0; z < _preguntas.length; z++) {
+
+      if(_preguntas[z].requerido == "true" || _preguntas[z].requerido == true){
+
+        var numPregunta = z + 1;
+        if(_preguntas[z].tipo_pregunta =="IMPUTABLE"){
+          
+          for (var x = 0; x <= controllerInput.length ; x++) {
+            //Si devuelve -1 es por que no existe el valor que se requier encontrar
+            if( controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1 ){
+
+              formValidado = false;
+              print('La pregunta número $numPregunta es requerida');
+
+              _controllerInput = [];
+              _preguntas.forEach((element) { 
+
+                _controllerInput.add(
+                  InputTextfield(
+                    element.id_pregunta.toString(),
+                    TextEditingController()
+                  )
+                );
+
+              });
+              print(controllerInput.length);
+
+              update();
+
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  title: Text('Notificación'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
+                      SizedBox(height: 12,),
+                      Text('Las preguntas con asterisco son requeridas'),
+                    ],
+                  ),
+                )
+              );
+
+              return;
+
+            }
+          
+          }
+
+        }else{
+
+          List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,_preguntas[z].id_pregunta.toString());
+
+          if(respuesta.length == 0){
+           
+            print("La pregunta número $numPregunta es requerido");
+            formValidado = false;
+            Get.dialog(
+              AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
+                ),
+                title: Text('Notificación'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
+                    SizedBox(height: 12,),
+                    Text('Las preguntas con asterisco son requeridas'),
+                  ],
+                ),
+              )
+            );
+
+            return;
+
+          } 
+
+        }
+
+        /*
+
+        if(respuesta.length == 0){
+          var numPregunta = z + 1;
+          print("La pregunta número $numPregunta es requerido");
+
+        }  */      
+
+      }
+
+      
+    }
+
+    if(formValidado == true){
+
+      await guardarinputBack();
+
+      List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
+
+      respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
 
 
-    print(respuestas);
-    print(listtRACKING);
+      print(respuestas);
+      print(listtRACKING);
 
-    Map sendData ={
+      Map sendData ={
 
-      'idEncuesta'        : idEncuesta,
-      'idEncuestado'      : idEncuestado,
-      'tracking'          : listtRACKING,
-      'respuestas'        : respuestas,
-      'idFicha'           : idFicha
+        'idEncuesta'        : idEncuesta,
+        'idEncuestado'      : idEncuestado,
+        'tracking'          : listtRACKING,
+        'respuestas'        : respuestas,
+        'idFicha'           : idFicha
 
-    };
-    print(sendData);
-    _positionStream.cancel();
-    Get.to(
-      FichaPage(),
-      arguments: 
-      sendData
-    );
+      };
+      print(sendData);
+      _positionStream.cancel();
+      Get.to(
+        FichaPage(),
+        arguments: 
+        sendData
+      );
+
+    }
+
+
+    
 
   }
 
@@ -263,7 +391,7 @@ class RetommarController extends GetxController{
                 onPressed: (){
                   _positionStream.cancel();
                   Get.back();
-                  
+                  guardarinputBack();
                   Get.back(
                     result: "SI"
                   );
@@ -298,7 +426,32 @@ class RetommarController extends GetxController{
 
     }
 
+  guardarinputBack()async{
 
+      
+      for (var i = 0; i < controllerInput.length; i++) {
+
+        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
+
+        if(respuesta.length > 0 ){
+
+          if(respuesta[0].valor != ""){
+
+            print('Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[i].idPregunta,idFicha,controllerInput[i].controller.text);
+
+
+          }
+
+        }else{
+
+          await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+
+        }
+
+      }
+
+  }
 
 
 

@@ -101,6 +101,7 @@ class PrincipalPage extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                     shrinkWrap: true,
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                     physics: ScrollPhysics(),
                     itemCount: _.proyectos.length,
                     itemBuilder: (BuildContext context, index){

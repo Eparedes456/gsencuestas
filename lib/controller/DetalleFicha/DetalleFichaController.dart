@@ -18,6 +18,7 @@ import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Maps/GoogleMaps.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
+import 'package:gsencuesta/pages/VerEncuesta/VerEncuestaPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
 
@@ -301,6 +302,20 @@ class DetalleFichaController extends GetxController{
     };
 
     Get.to(RetomarEncuestaPage(),
+      arguments: data
+    
+    );
+
+  }
+
+  navigateToVer(){
+    var data = {
+      'idFicha'         : idFicha,
+      'nombreEncuesta'  : nombreEncuesta,
+      'idEncuesta'      : idEncuestaSend.toString()
+    };
+
+    Get.to(VerEncuestaPage(),
       arguments: data
     
     );

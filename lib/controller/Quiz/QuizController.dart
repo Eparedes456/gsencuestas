@@ -135,6 +135,12 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
             )
           );
 
+          controllerInput.add(
+            InputTextfield(
+              item["idPregunta"].toString(),
+              TextEditingController()
+            )
+          );
           /*if( item["tipo_pregunta"] == "IMPUTABLE" ){
 
             _controllerInput.add(
@@ -208,6 +214,17 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
       print(_preguntas);
+
+      preguntas.forEach((element) { 
+
+        controllerInput.add(
+          InputTextfield(
+            element.id_pregunta.toString(),
+            TextEditingController()
+          )
+        );
+
+      });
 
       var allOpciones = await DBProvider.db.getAllOpciones();
 
@@ -441,16 +458,151 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     print(controllerInput.length);
 
-    for (var i = 0; i < controllerInput.length; i++) {
+    bool formValidado = true;
 
-      await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+    for (var z = 0; z < _preguntas.length; z++) {
+
+      if(_preguntas[z].requerido == "true" || _preguntas[z].requerido == true){
+
+        var numPregunta = z + 1;
+        if(_preguntas[z].tipo_pregunta =="IMPUTABLE"){
+          
+          for (var x = 0; x <= controllerInput.length ; x++) {
+            //Si devuelve -1 es por que no existe el valor que se requier encontrar
+            if( controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1 ){
+
+              formValidado = false;
+              print('La pregunta número $numPregunta es requerida');
+
+              _controllerInput = [];
+              _preguntas.forEach((element) { 
+
+                _controllerInput.add(
+                  InputTextfield(
+                    element.id_pregunta.toString(),
+                    TextEditingController()
+                  )
+                );
+
+              });
+              print(controllerInput.length);
+
+              update();
+
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  title: Text('Notificación'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
+                      SizedBox(height: 12,),
+                      Text('Las preguntas con asterisco son requeridas'),
+                    ],
+                  ),
+                )
+              );
+
+              return;
+
+            }
+          
+          }
+
+        }else{
+
+          List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,_preguntas[z].id_pregunta.toString());
+
+          if(respuesta.length == 0){
+           
+            print("La pregunta número $numPregunta es requerido");
+            formValidado = false;
+            Get.dialog(
+              AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
+                ),
+                title: Text('Notificación'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
+                    SizedBox(height: 12,),
+                    Text('Las preguntas con asterisco son requeridas'),
+                  ],
+                ),
+              )
+            );
+
+            return;
+
+          } 
+
+        }
+
+        /*
+
+        if(respuesta.length == 0){
+          var numPregunta = z + 1;
+          print("La pregunta número $numPregunta es requerido");
+
+        }  */      
+
+      }
 
       
     }
 
-    List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+    if(formValidado == true){
+
+      for (var i = 0; i < controllerInput.length; i++) {
+
+        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
+
+        if(respuesta.length > 0 ){
+
+          if(respuesta[0].valor != ""){
+
+            print('Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[i].idPregunta,idFicha,controllerInput[i].controller.text);
+          }
+        }else{
+          await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+        }
+
+      }
+
+      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+      List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
+      Map sendData ={
+        'idEncuesta'        : idEncuesta,
+        'idEncuestado'      : idEncuestado,
+        'tracking'          : listtRACKING,
+        'respuestas'        : listRespuestaDBlocal,
+        'idFicha'           : idFicha
+      };
+
+      _positionStream.cancel();
+      
+      Get.to(
+        FichaPage(),
+        arguments: 
+        sendData
+      );
+
+      _controllerInput = [];
+      _pickOpcionSimple = [];
+
+    }
+
+    /*print(controllerInput.length);
+
     
-    List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
+
+    
 
     print(listRespuestaDBlocal);
     print(listtRACKING);
@@ -464,10 +616,10 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     };
 
-    print(sendData);
+    print(sendData);*/
 
-    _positionStream.cancel();
-
+    
+    /*
     Get.to(
       FichaPage(),
       arguments: 
@@ -477,7 +629,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     _controllerInput = [];
     _pickOpcionSimple = [];
 
-    
+    */
 
   }
 
@@ -575,12 +727,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
 
         }
-
-        
-
-
-        //
-
 
       }
 

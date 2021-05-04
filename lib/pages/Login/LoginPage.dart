@@ -28,7 +28,7 @@ class LoginPage extends StatelessWidget {
                 ClipPath(
                   clipper: CustomClip(),
                   child: Container(
-                    height: MediaQuery.of(context).size.height *0.6,
+                    height: MediaQuery.of(context).size.height *0.55,
                     color: Color.fromRGBO(0, 102, 84, 1),
                   ),
                 ),
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                             ),
                           )
                         ),
-                        SizedBox(height: 30,),
+                        SizedBox(height: 5,),
                         Formulario(),
                         SizedBox(height: 10,),
                       ],

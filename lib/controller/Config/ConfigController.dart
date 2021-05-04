@@ -146,7 +146,7 @@ class ConfigController extends GetxController{
       int contador = 0;
       
       if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
-        modal(true);
+        modal(true,false);
 
         for (var x = 0; x < data.length; x++) {
 
@@ -238,17 +238,17 @@ class ConfigController extends GetxController{
 
   }
 
-  modal(bool isLoading){
+  modal(bool isLoading,bool hayFinalizadas){
     Get.dialog(
       AlertDialog(
         title:  isLoading ? Text('Sincronizando los datos') : Text('Notificación'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            isLoading ? CircularProgressIndicator() : Text('¿Desea subir las $_cantidadFinalizadas fichas finalizadas?')
+            isLoading ? CircularProgressIndicator() :  hayFinalizadas ? Text('¿Desea subir las $_cantidadFinalizadas fichas finalizadas?') : Text('No tiene encuestas que sincronizar.')
           ],
         ),
-        actions: isLoading ? [] : [
+        actions: isLoading ? [] : hayFinalizadas ? [
 
           Container(
             height: 40,
@@ -280,7 +280,7 @@ class ConfigController extends GetxController{
             ),
           )
 
-        ],
+        ]: [],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         ),

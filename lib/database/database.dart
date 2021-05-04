@@ -279,7 +279,7 @@ class DBProvider{
         
 
       },
-      version: 6
+      version: 7
 
     ); 
 

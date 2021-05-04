@@ -224,17 +224,20 @@ class DetailMiEncuestaPage extends StatelessWidget {
                       
                       decoration: BoxDecoration(
                         color: Colors.green[900],
-                        borderRadius: BorderRadius.circular(20)
+                        borderRadius: BorderRadius.circular(10)
                       ),
-                      child: Center(
-                        child: Text(
-                          'DATOS DEL ENCUESTADO',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
+                      
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8,top: 4),
+                          child: Text(
+                            'DATOS DEL ENCUESTADO',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
-                      ),
+                      
                     ),
                   )
 
@@ -262,7 +265,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)
                       ),
                       child: Padding(
-                        padding:  EdgeInsets.only(left: 8),
+                        padding:  EdgeInsets.only(left: 8,right: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -300,12 +303,16 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             SizedBox(height: 8,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
                                 Expanded(child: Text('Descripción:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
                                 Expanded(child: Padding(
                                   padding:  EdgeInsets.only(right: 10),
-                                  child: Text('${_.descripcionEncuesta}'),
+                                  child: Container(
+                                    height: 100,
+                                    child: Text('${_.descripcionEncuesta}',textAlign: TextAlign.justify,)
+                                  ),
                                 ))
                               ],
                             ),
@@ -315,22 +322,31 @@ class DetailMiEncuestaPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
 
-                                Expanded(child: Text('Ver encuesta:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(child: Text('Ver encuesta realizada:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
                                 Expanded(
 
                                   child: Padding(
                                     padding:  EdgeInsets.only(left: 10,right: 10),
                                     child: MaterialButton(
+                                      height:  30,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10)
                                       ),
                                       color: Colors.orange,
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        _.navigateToVer();
+                                      },
                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
 
-                                          Icon(FontAwesomeIcons.clipboard),
-                                          Text('Click aqui')
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom: 3.5),
+                                            child: Icon(FontAwesomeIcons.clipboard,size: 15,),
+                                          ),
+                                          SizedBox(width: 15,),
+                                          Text('Click aqui',style: TextStyle(fontSize: 13),)
                                         ],
                                       ),
                                     ),
@@ -358,17 +374,20 @@ class DetailMiEncuestaPage extends StatelessWidget {
                       
                       decoration: BoxDecoration(
                         color: Colors.green[900],
-                        borderRadius: BorderRadius.circular(20)
+                        borderRadius: BorderRadius.circular(10)
                       ),
-                      child: Center(
-                        child: Text(
-                          'DATOS DE LA ENCUESTA',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
+                      
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8,top: 4),
+                          child: Text(
+                            'DATOS DE LA ENCUESTA',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
-                      ),
+                      
                     ),
                   )
 
@@ -484,17 +503,20 @@ class DetailMiEncuestaPage extends StatelessWidget {
                       
                       decoration: BoxDecoration(
                         color: Colors.green[900],
-                        borderRadius: BorderRadius.circular(20)
+                        borderRadius: BorderRadius.circular(10)
                       ),
-                      child: Center(
-                        child: Text(
-                          'Tracking',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
+                      
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8,top: 4),
+                          child: Text(
+                            'TRACKING',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
-                      ),
+                      
                     ),
                   )
 

@@ -78,7 +78,7 @@ class EncuestaPage extends StatelessWidget {
                   child: ListView(
                     children: [
                       
-                      SizedBox(height: 30,),
+                      SizedBox(height: 40,),
 
                       Padding(
                         padding: const EdgeInsets.only(left: 20,right: 20),
@@ -373,7 +373,7 @@ class EncuestaPage extends StatelessWidget {
                   
 
             Positioned(
-              top: MediaQuery.of(context).size.height * (4/9) - 150,
+              top: MediaQuery.of(context).size.height * (4.35/9) - 150,
               left: 16,
               right: 16,
               child: Container(

@@ -55,107 +55,6 @@ class QuizPage extends StatelessWidget {
                   ),
 
                   SizedBox(height: 30,),
-
-                  /*Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-
-                          for (var i = 0; i < _.preguntas.length; i++)...{
-
-                            //var enunciadoPregunta =   _.preguntas[index].enunciado;
-                            //var numPregunta = index + 1;
-                            //var id_pregunta = _.preguntas[index].id_pregunta;
-
-                            if( _.preguntas[i].tipo_pregunta == "IMPUTABLE" )...{
-
-                                _.controllerInput.add(
-                                  InputTextfield( item["idPregunta"].toString(), TextEditingController() )
-                                ),
-
-                              /*TextFieldPage(id_pregunta: _.preguntas[i].id_pregunta,numPregunta: (i+1).toString(),enunciado: _.preguntas[i].enunciado,)*/
-
-                                
-
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10,right: 10),
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: Card(
-                                        elevation: 5,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-
-                                            Padding(
-                                              padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
-                                              child: Text(
-                                                '${(i+1).toString()}.- ${_.preguntas[i].enunciado}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 16
-                                                ),
-                                              ),
-                                            ),
-
-                                            SizedBox( height: 20,),
-
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 10,right: 10),
-                                              child: TextField(
-                                                
-                                                //controller: _.controllerInput[x].controller,
-                                                onChanged: (value){
-                                                  
-                                                },
-                                                decoration: InputDecoration(
-                                                  hintText: 'Ingrese su respuesta'
-                                                ),
-                                                onSubmitted: (valor){
-
-                                                },
-                                              ),
-                                            
-                                            ),
-
-                                            SizedBox( height: 20,),
-
-
-
-                                          ],
-                                        ),
-                                      )
-                                    ),
-                                  )
-                                  
-                              
-
-                              
-
-
-
-
-
-
-
-                            }else if( _.preguntas[i].tipo_pregunta == "SIMPLE" )...{
-
-                              SelectSimpleWidget(_.preguntas[i].enunciado,_.preguntas[i].id_pregunta,_,context,(i+1).toString()),
-
-                            }
-
-
-
-                          }
-                            
-                          
-
-                        ],
-                      ),
-                    )
-                  ),*/
-                  
                   Expanded(
                     //height: MediaQuery.of(context).size.height,
                     child: ListView.builder(
@@ -167,9 +66,9 @@ class QuizPage extends StatelessWidget {
                           var enunciadoPregunta =   _.preguntas[index].enunciado;
                           var numPregunta = index + 1;
                           var id_pregunta = _.preguntas[index].id_pregunta;
-                          _.controllerInput.add(
+                          /*_.controllerInput.add(
                                 InputTextfield( id_pregunta.toString(), TextEditingController() )
-                          );
+                          );*/
 
                           //print(index); 
 
@@ -188,13 +87,26 @@ class QuizPage extends StatelessWidget {
 
                                       Padding(
                                         padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
-                                        child: Text(
-                                          '$numPregunta.- $enunciadoPregunta',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 16
-                                          ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '$numPregunta.- $enunciadoPregunta',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 16
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                               _.preguntas[index].requerido == "true"  ? " (*)": "",
+                                               style: TextStyle(
+                                                 color: Colors.red
+                                               ),
+                                            )
+                                          ],
                                         ),
                                       ),
 

@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
-import 'dart:io' show Platform;
-
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
-import 'package:gsencuesta/pages/Retomar/quizRetomar/SimpleSelectRetomar.dart';
-import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
+import 'package:gsencuesta/controller/VerEncuesta/VerEncuestaController.dart';
+import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/simpleSelect.dart';
 
-
-class RetomarEncuestaPage extends StatelessWidget {
+class VerEncuestaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    return GetBuilder<RetommarController>(
-      init: RetommarController(),
+    return GetBuilder<VerEncuestacontroller>(
+      init: VerEncuestacontroller(),
       builder: (_) => Scaffold(
-        backgroundColor: Colors.grey[200],
+
         appBar: AppBar(
           title: Text(_.titulo),
           centerTitle: true,
-            leading: IconButton(
-              icon:  Platform.isAndroid ? Icon(Icons.arrow_back) : Icon(Icons.arrow_back_ios),
-              onPressed: (){
-
-                _.pauseQuiz();
-
-              },
-            ),
         ),
 
-        body:  _.isLoadingData == true?  
+        body: _.isLoadingData == true?  
         
         Container(
           child: Column(
@@ -38,7 +25,7 @@ class RetomarEncuestaPage extends StatelessWidget {
                 Padding(
                   padding:  EdgeInsets.only(left: 20,right: 20),
                   child: Text(
-                    'Total de preguntas a responder ${_.preguntas.length}',
+                    '',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 18,fontWeight: FontWeight.w700
@@ -46,7 +33,7 @@ class RetomarEncuestaPage extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 30,),
+                //SizedBox(height: 30,),
 
                 Expanded(
                   child: ListView.builder(
@@ -57,10 +44,9 @@ class RetomarEncuestaPage extends StatelessWidget {
                       var enunciadoPregunta =   _.preguntas[index].enunciado;
                         var numPregunta = index + 1;
                         var id_pregunta = _.preguntas[index].id_pregunta;
-
-                      /*_.controllerInput.add(
+                      _.controllerInput.add(
                         InputTextfield( id_pregunta.toString(), TextEditingController() )
-                      );*/
+                      );
 
                       if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 
@@ -76,26 +62,13 @@ class RetomarEncuestaPage extends StatelessWidget {
 
                                     Padding(
                                       padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '$numPregunta.- $enunciadoPregunta',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 16
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            _.preguntas[index].requerido == "true"  ? " (*)": "",
-                                            style: TextStyle(
-                                              color: Colors.red
-                                            ),
-                                          )
-                                        ],
+                                      child: Text(
+                                        '$numPregunta.- $enunciadoPregunta',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16
+                                        ),
                                       ),
                                     ),
 
@@ -104,7 +77,7 @@ class RetomarEncuestaPage extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.only(left: 10,right: 10),
                                       child: TextField(
-                                        
+                                        readOnly: true,
                                         controller: _.controllerInput[index].controller,
                                         decoration: InputDecoration(
                                           hintText: 'Ingrese su respuesta'
@@ -137,28 +110,8 @@ class RetomarEncuestaPage extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 20,),
-                Container(
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromRGBO(0, 102, 84, 1)
-                  ),
-                  child: MaterialButton(
-                    child: Text(
-                      'Continuar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700
-                      ),
-                    ),                 
-                    onPressed: (){
-
-                      _.guardarFicha();
-
-                    }
-                  ),
-                ),
+                
+               
 
                 SizedBox(height: 20,),
 
@@ -169,12 +122,13 @@ class RetomarEncuestaPage extends StatelessWidget {
         : Center(
             child: CircularProgressIndicator(),
           ),
+        
       ),
     );
   }
 }
 
-SelectSimpleWidget(String enunciado , int id_pregunta, RetommarController _ ,BuildContext context, String numPregunta){
+SelectSimpleWidget(String enunciado , int id_pregunta, VerEncuestacontroller _ ,BuildContext context, String numPregunta){
 
   return Padding(
     padding: EdgeInsets.only(left: 10,right: 10),
@@ -203,7 +157,7 @@ SelectSimpleWidget(String enunciado , int id_pregunta, RetommarController _ ,Bui
             ),
             Container(
             
-              child: SimpleSelectRetomar(
+              child: SimpleSelectVer(
 
                 id_pregunta: id_pregunta,
               )
