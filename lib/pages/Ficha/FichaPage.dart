@@ -109,33 +109,38 @@ class FichaPage extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Container(
-                                      height: 102,
-                                      width: 120,
-                                      
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: 86,
+                                        width: 120,
+                                        
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            
+                                          ),
+                                          color: Colors.black
                                         ),
-                                        color: Colors.black
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          
+                                        child: ClipRRect(
+                                          /*borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            
+                                          ),*/
+                                          child: Image.memory(showImage64,fit: BoxFit.fill)
                                         ),
-                                        child: Image.memory(showImage64,fit: BoxFit.fill)
                                       ),
                                     ),
 
-                                    Text('Imagen ' + index.toString()),
+                                    Text('Imagen ' + (index + 1).toString()),
 
                                     IconButton(
                                       icon: Icon(Icons.delete,color: Colors.redAccent,), 
-                                      onPressed: (){}
+                                      onPressed: (){
+                                        _.deleteImage(_.listMultimedia[index].idMultimedia.toString());
+                                      }
                                     )
                                   ],
                                 ),

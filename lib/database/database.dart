@@ -979,8 +979,20 @@ class DBProvider{
       
       '''
     );
+    return response;
 
+  }
 
+  deletemultimedia(String idMultimedia)async{
+
+    final db = await database;
+    var  response = await db.rawQuery(
+      '''
+      DELETE FROM multimedia WHERE idMultimedia = "$idMultimedia"
+      '''
+    );
+
+    print(response);
     return response;
 
   }

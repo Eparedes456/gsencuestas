@@ -105,10 +105,6 @@ class FichaController extends GetxController{
     );
   }
 
-  
-
-
-  
 
   pickImage(String valor)async{
 
@@ -133,8 +129,6 @@ class FichaController extends GetxController{
 
     }else{
 
-      //maxHeight: 480,maxWidth: 640
-      //
       PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50);
       String photoBase64 = "";
       File image1;
@@ -153,15 +147,15 @@ class FichaController extends GetxController{
 
     }
 
-    
+  }
+  
+  deleteImage(String idMultimedia)async{
 
+    await DBProvider.db.deletemultimedia(idMultimedia);
+    _listMultimedia = [];
 
-
-    /*final ImagePicker image = ImagePicker();
-    PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 480,maxWidth: 640);
-    _imagePath = File(imageCapturada.path);
-    print(_imagePath);
-    update();  */
+    _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
+    update();
 
   }
 
