@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Profile/ProfileController.dart';
 import 'package:gsencuesta/pages/Login/LoginPage.dart';
+import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -33,7 +35,11 @@ class ProfilePage extends StatelessWidget {
 
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage: NetworkImage('https://static01.nyt.com/images/2017/05/07/arts/07GAL-GADOTweb/07GAL-GADOTweb-articleLarge.jpg?quality=75&auto=webp&disable=upscale'),
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 80,
+                        ),
+                        //backgroundImage: NetworkImage('https://static01.nyt.com/images/2017/05/07/arts/07GAL-GADOTweb/07GAL-GADOTweb-articleLarge.jpg?quality=75&auto=webp&disable=upscale'),
                       ),
 
                       Expanded(
@@ -73,45 +79,52 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     
-                    Container(
-                      
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                    GestureDetector(
+                      onTap: (){
 
-                          Padding(
-                            padding:  EdgeInsets.only(left: 5,right: 5,top: 8),
-                            child: Row(
-                              children: [
+                        Get.to(MisEncuestas());
 
-                                Expanded(child: Text('15')),
-                                Expanded(child: Icon(Icons.east))
+                      },
+                      child: Container(
+                        
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
 
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 8,),
-                          Padding(
-                            padding:  EdgeInsets.only(left: 5),
-                            child: Text(
-                              'Encuestas realizadas',
-                              style: TextStyle(
-                                color: Color.fromRGBO(67, 81, 99, 1),
-                                fontSize: 13,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w700
+                            Padding(
+                              padding:  EdgeInsets.only(left: 5,right: 5,top: 8),
+                              child: Row(
+                                children: [
+
+                                  Expanded(child: Text(_.encuestasFinalizadas)),
+                                  Expanded(child: Icon(Icons.east))
+
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 8,),
+                            SizedBox(height: 8,),
+                            Padding(
+                              padding:  EdgeInsets.only(left: 5),
+                              child: Text(
+                                'Encuestas realizadas',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(67, 81, 99, 1),
+                                  fontSize: 13,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w700
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 8,),
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
 

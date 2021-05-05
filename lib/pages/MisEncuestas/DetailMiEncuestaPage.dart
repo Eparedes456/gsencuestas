@@ -64,10 +64,10 @@ class DetailMiEncuestaPage extends StatelessWidget {
                     children: [
 
                       Container(
-                        height: 130,
-                        width: 110,
+                        height: 115,
+                        width: 80,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(7),bottomLeft: Radius.circular(7)),
                           child: Image(
                             image: AssetImage('assets/images/encuesta.png'),
                             fit: BoxFit.cover,
@@ -83,57 +83,69 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             children: [
                               
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
                                   Expanded(child: Text('Nº FICHA:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
                                   
-                                  Expanded(child: Text('${_.idFicha}'))
+                                  Expanded(child: Text('${_.idFicha}')),
+                                  Expanded(child: Container())
                                 ],
                               ),
-                              SizedBox(height: 8,),
+                              SizedBox(height: 5,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
                                   Expanded(child: Text('F. INICIO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
                                  
-                                  Expanded(child: Text('${_.fechaInicio}'))
+                                  Expanded(child: Text('${_.fechaInicio}')),
+                                  Expanded(child: Container())
                                 ],
                               ),
-                              SizedBox(height: 8,),
+                              SizedBox(height: 5,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
                                   Expanded(child: Text('F. FIN:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
                                  
-                                  Expanded(child: Text('${_.fechaFin}'))
+                                  Expanded(child: Text('${_.fechaFin}')),
+                                  Expanded(child: Container())
                                 ],
                               ),
-                              SizedBox(height: 8,),
+                              SizedBox(height: 5,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Expanded(child: Text('ESTADO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                   Expanded(child: Text('ESTADO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
                                   
-                                   Expanded(
-                                     child: Container(
+                                  SizedBox(width: 10,),
+                                   Container(
+                                       
                                         height: 25,
-                                        width: 90,
+                                        //width: 200,
                                         decoration: BoxDecoration(
                                           color:  _.estado == "F" ? Colors.redAccent : _.estado == "P"? Colors.yellow[700] : Colors.grey,
                                           borderRadius: BorderRadius.circular(8)
                                         ),
-                                        child: Center(
-                                          child: _.estado == "F" ? Text('Finalizado',style: TextStyle(color: Colors.white),) : _.estado == "P" ? Text('Pendiente',style: TextStyle(color: Colors.white)) :Text('Sincronizado',style: TextStyle(color: Colors.white)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 8,right: 8),
+                                          child: Center(
+                                            child: _.estado == "F" ? Text('Finalizado',style: TextStyle(color: Colors.white),) : _.estado == "P" ? Text('Pendiente',style: TextStyle(color: Colors.white)) :Text('Sincronizado',style: TextStyle(color: Colors.white)),
+                                          ),
                                         ),
                                       ),
-                                   ),
+                                   
+
+                                   Expanded(child: Container())
+                                   
+
                                   
                                 ],
                               ),
+                              SizedBox(height: 4,),
 
                             ],
                           ),

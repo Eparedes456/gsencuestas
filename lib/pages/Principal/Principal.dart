@@ -16,122 +16,128 @@ class PrincipalPage extends StatelessWidget {
 
     return GetBuilder<PrincipalController>(
       init: PrincipalController(),
-      builder: (_) => Scaffold(
-        
-        body: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-              Container(  
-                  height: size.height*0.3,
-                  width: double.infinity,
-                  color: Color.fromRGBO(0, 102, 84, 1),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+      builder: (_) => WillPopScope(
+        onWillPop: (){
 
-                      SafeArea(child: Container(),),
-                      Center(
-                        child: Container(
-                          
-                          width: 280,
-                          child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
+          _.exit();
+        },
+        child: Scaffold(
+          
+          body: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                Container(  
+                    height: size.height*0.3,
+                    width: double.infinity,
+                    color: Color.fromRGBO(0, 102, 84, 1),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        SafeArea(child: Container(),),
+                        Center(
+                          child: Container(
+                            
+                            width: 280,
+                            child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
+                          ),
                         ),
-                      ),
 
-                      Center(
-                        child: Padding(
-                          padding:  EdgeInsets.only(left: 10,top: 20,right: 10),
-                          child: Text(
-                            'Busca los proyectos que tienes asignados',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: 'Poppins'
+                        Center(
+                          child: Padding(
+                            padding:  EdgeInsets.only(left: 10,top: 20,right: 10),
+                            child: Text(
+                              'Busca los proyectos que tienes asignados',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Poppins'
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      SizedBox(height: 10,),
+                        SizedBox(height: 10,),
 
-                      Padding(
-                        padding:  EdgeInsets.only(left: 20,right: 20),
-                        child: Container(
-                          height: 45,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15)
-                              ),
-                              hintText: 'Buscar',
-                              hintStyle: TextStyle(
-                                fontSize: 14
-                              ),
-                              suffixIcon: Icon(Icons.search)
+                        Padding(
+                          padding:  EdgeInsets.only(left: 20,right: 20),
+                          child: Container(
+                            height: 45,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(15)
                             ),
-                          )
-                        ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                                ),
+                                hintText: 'Buscar',
+                                hintStyle: TextStyle(
+                                  fontSize: 14
+                                ),
+                                suffixIcon: Icon(Icons.search)
+                              ),
+                            )
+                          ),
+                        )
+
+
+                      ],
+                    ),
+                ),
+                SizedBox(height: 10,),
+
+                _.isLoading == false?  Expanded(
+                   
+                    child: Center(
+
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
                       )
+                      
+                    ),
+                ):
+
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      physics: ScrollPhysics(),
+                      itemCount: _.proyectos.length,
+                      itemBuilder: (BuildContext context, index){
+
+                        var proyectoId = _.proyectos[index].idProyecto;
+                        //return Text('hola');
+                        return buildCard(
+                          _, 
+                          context, 
+                          Color.fromRGBO(67, 197, 217, 1), 
+                          _.proyectos[index].nombre,
+                          _.proyectos[index].nombre, 
+                          _.proyectos[index].logo, 
+                          _.proyectos[index].nombre,
+                          proyectoId.toString(),
+                          _.proyectos[index]
+                        );
+
+                      }
+                    ),
+                )
+                
 
 
-                    ],
-                  ),
-              ),
-              SizedBox(height: 10,),
-
-              _.isLoading == false?  Expanded(
-                 
-                  child: Center(
-
-                    child: CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
-                    )
-                    
-                  ),
-              ):
-
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                    physics: ScrollPhysics(),
-                    itemCount: _.proyectos.length,
-                    itemBuilder: (BuildContext context, index){
-
-                      var proyectoId = _.proyectos[index].idProyecto;
-                      //return Text('hola');
-                      return buildCard(
-                        _, 
-                        context, 
-                        Color.fromRGBO(67, 197, 217, 1), 
-                        _.proyectos[index].nombre,
-                        _.proyectos[index].nombre, 
-                        _.proyectos[index].logo, 
-                        _.proyectos[index].nombre,
-                        proyectoId.toString(),
-                        _.proyectos[index]
-                      );
-
-                    }
-                  ),
-              )
-              
-
-
-            ],
-          ),
-        )
-        
-        
-        
+              ],
+            ),
+          )
+          
+          
+          
+        ),
       ),
     );
   }

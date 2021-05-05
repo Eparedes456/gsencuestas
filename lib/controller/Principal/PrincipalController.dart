@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
-
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:easyping/easyping.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,7 @@ import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
-
+import 'package:flutter/material.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:gsencuesta/pages/Perfil/ProfilePage.dart';
 import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
@@ -555,6 +554,54 @@ class PrincipalController extends GetxController{
 
   }
 
+  exit(){
+    Get.dialog(
+        AlertDialog(  
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)
+          ),
+          title: Text('Notificación'),
+          content: Text('¿Está seguro de cerrar la aplicación?'),
+          actions: [
 
+            Container(
+              height: 40,
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                color: Color.fromRGBO(0, 102, 84, 1),
+                onPressed: ()async{
+                  
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  
+
+                },
+                child: Text('Si'),
+              ),
+            ),
+
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                ),
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: MaterialButton(
+                onPressed: (){
+                  Get.back();
+                },
+                child: Text('Continuar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+              ),
+            )
+
+          ],
+
+        )
+
+      );
+  }
 
 }

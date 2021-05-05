@@ -13,367 +13,372 @@ class MisEncuestas extends StatelessWidget {
     return GetBuilder<MisEncuestasController>(
       init: MisEncuestasController(),
       //id: 'misencuestas',
-      builder:(_)=> Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          title: Text('Mis Encuestas'),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.cached),
-            onPressed: (){
+      builder:(_)=> WillPopScope(
+        onWillPop: (){
+          _.exit();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.grey[200],
+          appBar: AppBar(
+            title: Text('Mis Encuestas'),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.cached),
+              onPressed: (){
 
-              _.refreshPage();
-
-            },
-          ),
-          actions: [
-
-            PopupMenuButton(
-              onSelected: (value){
-
-                print(value);
-                _.updateScreen(value);
+                _.refreshPage();
 
               },
-              itemBuilder: (BuildContext context){
+            ),
+            actions: [
 
-                return <PopupMenuEntry>[
+              PopupMenuButton(
+                onSelected: (value){
 
-                  PopupMenuItem(
+                  print(value);
+                  _.updateScreen(value);
 
-                    child:Text('Pendiente'),
-                    value: "P",
+                },
+                itemBuilder: (BuildContext context){
+
+                  return <PopupMenuEntry>[
+
+                    PopupMenuItem(
+
+                      child:Text('Pendiente'),
+                      value: "P",
+                      
+                      
+                    ),
+
+                    PopupMenuItem(
+                      child: Text('Finalizado'),
+                      value: "F",
+                      
+                    ),
                     
-                    
-                  ),
+                    PopupMenuItem(
+                      child: Text('Sincronizado'),
+                      value: "S",
+                      
+                    ),
 
-                  PopupMenuItem(
-                    child: Text('Finalizado'),
-                    value: "F",
-                    
-                  ),
-                  
-                  PopupMenuItem(
-                    child: Text('Sincronizado'),
-                    value: "S",
-                    
-                  ),
-
-                  PopupMenuItem(
-                    child: Text('Todos'),
-                    value: "T",
-                    
-                  ),
+                    PopupMenuItem(
+                      child: Text('Todos'),
+                      value: "T",
+                      
+                    ),
 
 
-                ];
+                  ];
 
 
-              },
-            )
-
-          ],
-        ),
-
-        body: _.haydata == false && _.isLoading == false ? Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              Container(
-                height: 200,
-                child: Image(
-                  image: AssetImage('assets/images/noencuesta.png'),
-                ),
-              ),
-              SizedBox(height: 20,),
-
-              Padding(
-                padding: EdgeInsets.only(left: 10,right: 10),
-                child: Text('No se encontraron encuestas.'),
+                },
               )
 
             ],
-          )
-        ): _.haydata == true && _.isLoading == false ?
-        
-        
-        ListView.builder(
-          itemCount: _.listMisEncuestas.length,
-          itemBuilder: (BuildContext context,index){
+          ),
 
-            String idFicha = _.listMisEncuestas[index].idFicha;
-            print("Data :$idFicha ");
+          body: _.haydata == false && _.isLoading == false ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
 
-            return Padding(
-              padding:  EdgeInsets.only(bottom: 10,top: 10),
-              child: Column(
-                              children: [
+                Container(
+                  height: 200,
+                  child: Image(
+                    image: AssetImage('assets/images/noencuesta.png'),
+                  ),
+                ),
+                SizedBox(height: 20,),
 
-                                //SizedBox(height: 20,),
+                Padding(
+                  padding: EdgeInsets.only(left: 10,right: 10),
+                  child: Text('No se encontraron encuestas.'),
+                )
 
-                                Slidable(
-                                  actionPane: SlidableDrawerActionPane(),
-                                  actionExtentRatio: 0.25,
-                                  actions: [
-                                    
-                                    _.listMisEncuestas[index].estadoFicha == "F" || _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
-                                      caption: 'Eliminar',
-                                      color: Colors.redAccent,
-                                      icon: Icons.delete,
-                                      onTap: (){
+              ],
+            )
+          ): _.haydata == true && _.isLoading == false ?
+          
+          
+          ListView.builder(
+            itemCount: _.listMisEncuestas.length,
+            itemBuilder: (BuildContext context,index){
 
-                                        _.modalDelete(_.listMisEncuestas[index].idFicha);
+              String idFicha = _.listMisEncuestas[index].idFicha;
+             
 
-                                      }
-                                    ): null,
-                                    
+              return Padding(
+                padding:  EdgeInsets.only(bottom: 10,top: 10),
+                child: Column(
+                                children: [
 
-                                  ],
-                                  secondaryActions: [
-                                    _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
-                                      iconWidget: Icon(Icons.edit,color: Colors.white,),
-                                      foregroundColor: Colors.white,
-                                      caption: 'Retomar',
-                                      color: Colors.yellow[800],
-                                      onTap: (){
+                                  //SizedBox(height: 20,),
 
-                                        _.navigateToRetomarEncuesta(_.listMisEncuestas[index].idFicha.toString(), _.listMisEncuestas[index].idEncuesta, _.listMisEncuestas[index].nombreEncuesta ) ;
+                                  Slidable(
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    actions: [
+                                      
+                                      _.listMisEncuestas[index].estadoFicha == "F" || _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
+                                        caption: 'Eliminar',
+                                        color: Colors.redAccent,
+                                        icon: Icons.delete,
+                                        onTap: (){
 
-                                      },
-                                      //icon: Icons.edit,
-                                    ) : null,
+                                          _.modalDelete(_.listMisEncuestas[index].idFicha);
 
-                                    IconSlideAction(
-                                      caption: 'Detalle',
-                                      foregroundColor: Colors.white,
-                                      color: Color.fromRGBO(20, 183, 201, 1),   //20, 183, 201 mas oscuro   108, 230, 244 => claro
-                                      icon: FontAwesomeIcons.eye,
-                                      onTap: (){
-                                        _.navigateToDetail(idFicha);
-                                        
-                                      }
-                                    ),
+                                        }
+                                      ): null,
+                                      
 
-                                  ],
-                                  child: Padding(
-                                    padding:  EdgeInsets.only(left: 10,right: 10),
-                                    child: GestureDetector(
-                                      onTap: (){
+                                    ],
+                                    secondaryActions: [
+                                      _.listMisEncuestas[index].estadoFicha == "P" ? IconSlideAction(
+                                        iconWidget: Icon(Icons.edit,color: Colors.white,),
+                                        foregroundColor: Colors.white,
+                                        caption: 'Retomar',
+                                        color: Colors.yellow[800],
+                                        onTap: (){
 
-                                        _.navigateToDetail(idFicha);
+                                          _.navigateToRetomarEncuesta(_.listMisEncuestas[index].idFicha.toString(), _.listMisEncuestas[index].idEncuesta, _.listMisEncuestas[index].nombreEncuesta ) ;
 
-                                      },
-                                      child: Container(
-                                       
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(20)
-                                        ),
-                                        child:Row(
-                                            children: [
-                                              
-                                              Padding(
-                                                padding:  EdgeInsets.only(left: 5),
-                                                child: Container(
-                                                  height: 130,
-                                                  width: 70,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    borderRadius: BorderRadius.circular(10)
-                                                    //borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
-                                                  ),
-                                                  child: Center(
-                                                    child: Icon(Icons.content_paste,size: 30,color: Colors.white),
-                                                  ),
-                                                  
-                                                  
-                                                  
-                                                  /*ClipRRect(
-                                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
-                                                    child: _.listMisEncuestas[index].imagen == "" ||  _.listMisEncuestas[index].imagen  == null ? Image(image: AssetImage('assets/images/encuesta.png'),fit: BoxFit.cover,) :CachedNetworkImage(
+                                        },
+                                        //icon: Icons.edit,
+                                      ) : null,
+
+                                      IconSlideAction(
+                                        caption: 'Detalle',
+                                        foregroundColor: Colors.white,
+                                        color: Color.fromRGBO(20, 183, 201, 1),   //20, 183, 201 mas oscuro   108, 230, 244 => claro
+                                        icon: FontAwesomeIcons.eye,
+                                        onTap: (){
+                                          _.navigateToDetail(idFicha);
                                           
-                                                      imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
-                                                      placeholder: (context, url) => Image(
-                                                      image: AssetImage('assets/images/loading.gif'),),
-                                                      errorWidget: (context, url, error) => Center(
+                                        }
+                                      ),
 
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                    ],
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(left: 10,right: 10),
+                                      child: GestureDetector(
+                                        onTap: (){
+
+                                          _.navigateToDetail(idFicha);
+
+                                        },
+                                        child: Container(
+                                         
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(20)
+                                          ),
+                                          child:Row(
+                                              children: [
+                                                
+                                                Padding(
+                                                  padding:  EdgeInsets.only(left: 5),
+                                                  child: Container(
+                                                    height: 130,
+                                                    width: 70,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey,
+                                                      borderRadius: BorderRadius.circular(10)
+                                                      //borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
+                                                    ),
+                                                    child: Center(
+                                                      child: Icon(Icons.content_paste,size: 30,color: Colors.white),
+                                                    ),
+                                                    
+                                                    
+                                                    
+                                                    /*ClipRRect(
+                                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
+                                                      child: _.listMisEncuestas[index].imagen == "" ||  _.listMisEncuestas[index].imagen  == null ? Image(image: AssetImage('assets/images/encuesta.png'),fit: BoxFit.cover,) :CachedNetworkImage(
+                                            
+                                                        imageUrl: 'https://t2.ev.ltmcdn.com/es/posts/8/3/1/fotos_de_paisajes_naturales_138_orig.jpg',
+                                                        placeholder: (context, url) => Image(
+                                                        image: AssetImage('assets/images/loading.gif'),),
+                                                        errorWidget: (context, url, error) => Center(
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+
+                                                              Icon(Icons.error,color: Colors.red,),
+                                                              SizedBox(height: 8,),
+                                                              Text('Lo sentimos no pudimos cargar la imagen')
+                                                            ],
+                                                          )
+                                                        ),
+                                                        fit: BoxFit.cover,
+
+                                                      ),
+                                                    ),*/
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      
                                                           children: [
 
-                                                            Icon(Icons.error,color: Colors.red,),
-                                                            SizedBox(height: 8,),
-                                                            Text('Lo sentimos no pudimos cargar la imagen')
-                                                          ],
-                                                        )
-                                                      ),
-                                                      fit: BoxFit.cover,
-
-                                                    ),
-                                                  ),*/
-                                                ),
-                                              ),
-
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    
-                                                        children: [
-
-                                                          Expanded(
-                                                            child: Text(
-                                                              '${_.listMisEncuestas[index].nombreEncuesta}',
-                                                              style: TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'Poppins',
-                                                                fontSize: 13
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(width: 5,),
-                                                          
-                                                          Padding(
-                                                            padding:  EdgeInsets.only(bottom: 6),
-                                                            child: Container(
-                                                              height: 25,
-                                                              width: 90,
-                                                              decoration: BoxDecoration(
-                                                                color:   _.listMisEncuestas[index].estadoFicha == "F" ? Colors.redAccent :   _.listMisEncuestas[index].estadoFicha == "P" ? Colors.yellow[700]  : Colors.grey,
-                                                                borderRadius: BorderRadius.circular(5)
-                                                              ),
-                                                              child: Center(
-                                                                child: Text(
-                                                                  _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
-                                                                  style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontSize: 12
-                                                                  ),
+                                                            Expanded(
+                                                              child: Text(
+                                                                '${_.listMisEncuestas[index].nombreEncuesta}',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontFamily: 'Poppins',
+                                                                  fontSize: 13
                                                                 ),
                                                               ),
                                                             ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-
-                                                    
-
-                                                  
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10,top: 0),
-                                                      child: Text(
-                                                        '${_.listMisEncuestas[index].nombreProyecto}',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.grey[600]
+                                                            SizedBox(width: 5,),
+                                                            
+                                                            Padding(
+                                                              padding:  EdgeInsets.only(bottom: 6),
+                                                              child: Container(
+                                                                height: 25,
+                                                                width: 90,
+                                                                decoration: BoxDecoration(
+                                                                  color:   _.listMisEncuestas[index].estadoFicha == "F" ? Colors.redAccent :   _.listMisEncuestas[index].estadoFicha == "P" ? Colors.yellow[700]  : Colors.grey,
+                                                                  borderRadius: BorderRadius.circular(5)
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontSize: 12
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
+
+                                                      
 
                                                     
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10,top: 0),
+                                                        child: Text(
+                                                          '${_.listMisEncuestas[index].nombreProyecto}',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.grey[600]
+                                                          ),
+                                                        ),
+                                                      ),
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10),
-                                                      child: Row(
+                                                      
+
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10),
+                                                        child: Row(
+                                                          children: [
+
+                                                            Text(
+                                                              'Nª preguntas:',
+                                                              style: TextStyle(
+                                                                color: Colors.grey[600],
+                                                                fontSize: 12
+                                                              ),
+                                                            ),
+
+                                                            SizedBox(width: 8,),
+
+                                                            Text('${_.nroTotalPreguntas}',style: TextStyle(fontSize: 12),)
+
+                                                          ],
+                                                        ),
+                                                      ),
+
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10),
+                                                        child: Row(
                                                         children: [
 
-                                                          Text(
-                                                            'Nª preguntas:',
-                                                            style: TextStyle(
-                                                              color: Colors.grey[600],
-                                                              fontSize: 12
-                                                            ),
-                                                          ),
-
+                                                          Icon(Icons.account_circle,size: 12,),
                                                           SizedBox(width: 8,),
 
-                                                          Text('${_.nroTotalPreguntas}',style: TextStyle(fontSize: 12),)
+                                                          Text(
+
+                                                           '${_.listMisEncuestas[index].nombreEncuestado}',
+                                                           style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:Colors.grey[600]
+                                                           ),
+                                                          )
 
                                                         ],
+                                                    ),
                                                       ),
+
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10,bottom: 10),
+                                                        child: Row(
+                                                        children: [
+
+                                                          Icon(Icons.calendar_today,size: 12,),
+                                                          SizedBox(width: 8,),
+
+                                                          Text(
+
+                                                           '${_.listMisEncuestas[index].fechaInicio}',
+                                                           style: TextStyle(
+                                                             fontSize: 12,
+                                                             color: Colors.grey[600]
+                                                           ),
+                                                          )
+
+                                                        ],
                                                     ),
+                                                      ),
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10),
-                                                      child: Row(
-                                                      children: [
-
-                                                        Icon(Icons.account_circle,size: 12,),
-                                                        SizedBox(width: 8,),
-
-                                                        Text(
-
-                                                         '${_.listMisEncuestas[index].nombreEncuestado}',
-                                                         style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:Colors.grey[600]
-                                                         ),
-                                                        )
-
-                                                      ],
+                                                    ],
                                                   ),
-                                                    ),
+                                                )
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.only(left: 10,bottom: 10),
-                                                      child: Row(
-                                                      children: [
+                                              ],
 
-                                                        Icon(Icons.calendar_today,size: 12,),
-                                                        SizedBox(width: 8,),
-
-                                                        Text(
-
-                                                         '${_.listMisEncuestas[index].fechaInicio}',
-                                                         style: TextStyle(
-                                                           fontSize: 12,
-                                                           color: Colors.grey[600]
-                                                         ),
-                                                        )
-
-                                                      ],
-                                                  ),
-                                                    ),
-
-                                                  ],
-                                                ),
-                                              )
-
-                                            ],
-
+                                          ),
+                                          
                                         ),
-                                        
                                       ),
                                     ),
                                   ),
-                                ),
 
-                       
-                                
+                         
+                                  
 
-                                
+                                  
 
-                              ],
-                            ),
-            );
-                          
+                                ],
+                              ),
+              );
+                            
 
-          }
-        ): Center(
-          child: CircularProgressIndicator(),
-        )
+            }
+          ): Center(
+            child: CircularProgressIndicator(),
+          )
 
-        
-        
+          
+          
+        ),
       ),
     );
   }

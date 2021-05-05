@@ -442,19 +442,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   guardarFicha()async{
 
-    if(controllerInput.length > 0){
-
-      for (var i = 0; i < controllerInput.length; i++) {
-
-        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
-
-          controllerInput.removeWhere((item) => item.controller.text == "");
-
-        }
-        
-      }
-
-    }
+    
 
     print(controllerInput.length);
 
@@ -469,13 +457,13 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           
           for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
-            if( controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1 ){
+            if( /*controllerInput.indexWhere((element) => element.idPregunta */ controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() /*== -1 */  && controllerInput[z].controller.text == ""  ){
 
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
 
-              _controllerInput = [];
-              _preguntas.forEach((element) { 
+              //_controllerInput = [];
+              /*_preguntas.forEach((element) { 
 
                 _controllerInput.add(
                   InputTextfield(
@@ -484,7 +472,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                   )
                 );
 
-              });
+              });*/
               print(controllerInput.length);
 
               update();
@@ -500,13 +488,17 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                     children: [
                       Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
                       SizedBox(height: 12,),
-                      Text('Las preguntas con asterisco son requeridas'),
+                      Text('Las preguntas con asteriscos son requeridas'),
                     ],
                   ),
                 )
               );
 
               return;
+
+            }else{
+
+              formValidado  = true;
 
             }
           
@@ -531,7 +523,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
                   children: [
                     Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
                     SizedBox(height: 12,),
-                    Text('Las preguntas con asterisco son requeridas'),
+                    Text('Las preguntas con asteriscos son requeridas'),
                   ],
                 ),
               )
@@ -543,13 +535,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
         }
 
-        /*
-
-        if(respuesta.length == 0){
-          var numPregunta = z + 1;
-          print("La pregunta número $numPregunta es requerido");
-
-        }  */      
+             
 
       }
 
@@ -559,6 +545,12 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     if(formValidado == true){
 
       for (var i = 0; i < controllerInput.length; i++) {
+
+        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
+
+          controllerInput.removeWhere((item) => item.controller.text == "");
+
+        }
 
         List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
 
@@ -575,7 +567,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       }
 
-      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+      print("Formulario validado , inputables son :" + controllerInput.length.toString());
+
+     List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
       List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
       Map sendData ={
         'idEncuesta'        : idEncuesta,
@@ -585,6 +579,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
         'idFicha'           : idFicha
       };
 
+      //print(sendData);
       _positionStream.cancel();
       
       Get.to(
@@ -598,38 +593,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     }
 
-    /*print(controllerInput.length);
-
     
 
-    
-
-    print(listRespuestaDBlocal);
-    print(listtRACKING);
-
-    Map sendData ={
-      'idEncuesta'        : idEncuesta,
-      'idEncuestado'      : idEncuestado,
-      'tracking'          : listtRACKING,
-      'respuestas'        : listRespuestaDBlocal,
-      'idFicha'           : idFicha
-
-    };
-
-    print(sendData);*/
-
-    
-    /*
-    Get.to(
-      FichaPage(),
-      arguments: 
-      sendData
-    );
-
-    _controllerInput = [];
-    _pickOpcionSimple = [];
-
-    */
+   
 
   }
 

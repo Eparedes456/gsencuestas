@@ -222,7 +222,7 @@ class RetommarController extends GetxController{
 
     //List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
 
-    if(controllerInput.length > 0){
+    /*if(controllerInput.length > 0){
 
       for (var i = 0; i < controllerInput.length; i++) {
 
@@ -234,7 +234,8 @@ class RetommarController extends GetxController{
         
       }
 
-    }
+    }*/
+
     print(controllerInput.length);
     bool formValidado = true;
 
@@ -247,13 +248,13 @@ class RetommarController extends GetxController{
           
           for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
-            if( controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1 ){
+            if( /*controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1*/  controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() && controllerInput[z].controller.text == ""  ){
 
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
 
-              _controllerInput = [];
-              _preguntas.forEach((element) { 
+              //_controllerInput = [];
+              /*_preguntas.forEach((element) { 
 
                 _controllerInput.add(
                   InputTextfield(
@@ -262,7 +263,7 @@ class RetommarController extends GetxController{
                   )
                 );
 
-              });
+              });*/
               print(controllerInput.length);
 
               update();
@@ -286,6 +287,10 @@ class RetommarController extends GetxController{
 
               return;
 
+            }else{
+
+              formValidado  = true;
+              
             }
           
           }
@@ -319,15 +324,7 @@ class RetommarController extends GetxController{
 
           } 
 
-        }
-
-        /*
-
-        if(respuesta.length == 0){
-          var numPregunta = z + 1;
-          print("La pregunta número $numPregunta es requerido");
-
-        }  */      
+        }     
 
       }
 
@@ -355,7 +352,8 @@ class RetommarController extends GetxController{
         'idFicha'           : idFicha
 
       };
-      print(sendData);
+      //print(sendData);
+
       _positionStream.cancel();
       Get.to(
         FichaPage(),
@@ -430,6 +428,12 @@ class RetommarController extends GetxController{
 
       
       for (var i = 0; i < controllerInput.length; i++) {
+
+        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
+
+          controllerInput.removeWhere((item) => item.controller.text == "");
+
+        }
 
         List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
 

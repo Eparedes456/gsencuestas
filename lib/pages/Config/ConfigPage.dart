@@ -8,22 +8,27 @@ class ConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ConfigController>(
       init: ConfigController(),
-      builder: (_) =>  Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Configuración',style: TextStyle(fontFamily: 'Poppins'),),
-          leading: Container(),
-        ),
+      builder: (_) =>  WillPopScope(
+        onWillPop: (){
+          _.exit();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Configuración',style: TextStyle(fontFamily: 'Poppins'),),
+            leading: Container(),
+          ),
 
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
 
-              //buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
-              buildCard('Subir encuestas',FontAwesomeIcons.cloudUploadAlt,true,_),
-              //buildCard('Cambiar rango Gps',FontAwesomeIcons.locationArrow)
+                //buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
+                buildCard('Subir encuestas',FontAwesomeIcons.cloudUploadAlt,true,_),
+                //buildCard('Cambiar rango Gps',FontAwesomeIcons.locationArrow)
 
-            ],
+              ],
+            ),
           ),
         ),
       ),
