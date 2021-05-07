@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiServices {
 
-  final base_url = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
-
+  //final base_url = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
+  final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
   var dio = Dio();
   /* Funcion get */
 
@@ -20,7 +20,7 @@ class ApiServices {
 
     //var response = await dio.get(base_url + "/proyecto");
     var response = await http.get(
-      base_url + "proyecto",
+      base_url_dev + "proyecto",
       headers: {
 
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ class ApiServices {
 
    
     var response = await http.get(
-      base_url + "encuesta/byProyecto/$idProyecto",
+      base_url_dev + "encuesta/byProyecto/$idProyecto",
       headers: {
 
         'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ class ApiServices {
 
 
     var response = await http.get(
-      base_url + "encuesta/$idEncuesta",
+      base_url_dev + "encuesta/$idEncuesta",
       headers: {
 
         'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ class ApiServices {
 
   consultarParametros()async{
 
-    Response response = await dio.get(base_url + "parametros");
+    Response response = await dio.get(base_url_dev + "parametros");
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
@@ -187,7 +187,7 @@ class ApiServices {
 
   getAllUsers()async{
 
-    Response response = await dio.get(base_url + "usuario");
+    Response response = await dio.get(base_url_dev + "usuario");
     if(response.statusCode == 200){
 
       print('Respuesta de servidor exitosa!');
@@ -217,7 +217,7 @@ class ApiServices {
   }
 
   ingresar(String username, String password)async{
-    var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
+    var uri = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/auth";
 
     Map dataSend = {
         "password"  : password,
@@ -273,7 +273,7 @@ class ApiServices {
     var token = preferences.getString('token');
 
     var response = await http.get(
-      base_url + "encuestado",
+      base_url_dev + "encuestado",
       headers: {
 
         'Content-Type': 'application/json',
@@ -322,7 +322,7 @@ class ApiServices {
 
     var response = await http.post(
 
-      base_url + 'ficha',
+      base_url_dev + 'ficha',
       headers: {
 
         'Content-Type': 'application/json',
@@ -368,7 +368,7 @@ class ApiServices {
     var token = preferences.getString('token');
 
     var response = await http.get(
-      base_url + "encuestado?query=$data",
+      base_url_dev + "encuestado?query=$data",
       headers: {
 
         'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ class ApiServices {
         
 
    var response = await http.post(
-      base_url + "ficha/create_all",
+      base_url_dev + "ficha/create_all",
       headers: {
 
         'Content-Type': 'application/json',
@@ -449,13 +449,44 @@ class ApiServices {
 
   }
 
+  saveUser(Map data)async{
+
+    var sendData = json.encode(data);
+        
+
+    var response = await http.post(
+      base_url_dev + "usuario",
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+      },
+      body: sendData
+    );
+
+    if(response.statusCode == 200){
+
+      var decodedData = json.decode(response.body);
+
+      return decodedData;
+
+    }else if(response.statusCode == 500){
+
+      return 3;
+
+    }
+
+
+  }
+
+
+
 
 
   /* Funcion Post */
 
   testPost()async{
 
-    Response response = await dio.post(base_url,data: { "id" : 4 });
+    Response response = await dio.post(base_url_dev,data: { "id" : 4 });
 
     if(response.statusCode == 200){
 

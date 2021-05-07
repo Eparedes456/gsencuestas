@@ -7,6 +7,7 @@ import 'package:gsencuesta/controller/Login/LoginController.dart';
 class Formulario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return GetBuilder<LoginController>(
       init: LoginController(),
       builder: (_) => Container(
@@ -89,11 +90,12 @@ class Formulario extends StatelessWidget {
                   //_.loginApi();
                 },
                 child: Container(
+                  width: size.width*0.7,
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(10, 143, 119, 1),
-                    borderRadius: BorderRadius.circular(25)
+                    borderRadius: BorderRadius.circular(10)
                   ),
                   child: Text(
                     'Ingresar',
@@ -107,6 +109,24 @@ class Formulario extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 40,),
+              GestureDetector(
+                  onTap: (){
+                    _.navigateToRegisterUser();
+                  },
+                  child: Container(
+                    height: 40,
+                    width: size.width*0.7,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border:Border.all(
+                        color:  Color.fromRGBO(0, 102, 84, 1)
+                      )
+                    ),
+                    child: Center(
+                      child: Text('Registrarse',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1) ),),
+                    ),
+                  ),
+                ),
 
             ],
           ),

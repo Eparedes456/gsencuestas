@@ -62,6 +62,8 @@ class LoginPage extends StatelessWidget {
                           SizedBox(height: 5,),
                           Formulario(),
                           SizedBox(height: 10,),
+
+                          
                         ],
                       )
                     ),

@@ -180,7 +180,7 @@ buildCard(PrincipalController _ , BuildContext context, Color color, String titu
                     borderRadius:  BorderRadius.circular(9.6),
                     child: CachedNetworkImage(
                       
-                      imageUrl:  "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/recurso/proyecto/$idProyecto", //"$imageUrl",
+                      imageUrl:  "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/proyecto/$idProyecto", //"$imageUrl",
                       
                       placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => Center(
