@@ -128,8 +128,9 @@ class DetalleFichaController extends GetxController{
     dynamic dateTime2;
 
     if( _listFichasDb[0].fecha_fin == "NO REGISTRA" ){
-
-      fechaFinSend = "2021-05-12";
+      DateTime now = DateTime.now();
+      var utc = now.toUtc();
+      fechaFinSend = utc.toString();
 
     }else{
 
@@ -348,7 +349,7 @@ class DetalleFichaController extends GetxController{
     var encuesta = {};
     encuesta["idEncuesta"]   = idEncuestaSend;
     sendFicha['encuesta'] = encuesta;
-/*
+
     var encuestado = {};
     encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
     sendFicha['encuestado']   = encuestado;
@@ -492,7 +493,7 @@ class DetalleFichaController extends GetxController{
       );
 
     }
-      */
+      
 
     
 

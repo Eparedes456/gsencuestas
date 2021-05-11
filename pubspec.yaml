@@ -44,6 +44,8 @@ dependencies:
   flutter_slidable:
   google_maps_flutter:
   flutter_polyline_points:
+  simple_moment:
+  
 
 dev_dependencies:
   flutter_test:

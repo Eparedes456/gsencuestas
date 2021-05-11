@@ -15,6 +15,8 @@ import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
+import 'package:simple_moment/simple_moment.dart';
+
 
 class EncuestaController extends GetxController{
 
@@ -88,7 +90,9 @@ class EncuestaController extends GetxController{
   String get fechaEncuestaInicio => _fechaEncuestaInicio;
 
   bool _encuestasPendientes = false;
-  bool get encuestasPendientes => _encuestasPendientes; 
+  bool get encuestasPendientes => _encuestasPendientes;
+
+  
 
 
   loadData(EncuestaModel encuesta)async{
@@ -530,11 +534,31 @@ class EncuestaController extends GetxController{
 
     
     DateTime now = DateTime.now();
-    String formatDate = DateFormat('yyyy-MM-dd').format(now);
+    var utc = now.toUtc();
+    
+    String formatDate = DateFormat('yyyy-MM-ddHH:mm:ss').format(now);
     String hourFormat = DateFormat('HH:mm:ss').format(now);
     
-    String formattedDate = formatDate + "T" + hourFormat + ".0Z";
-    print(formattedDate);
+    
+    //String formattedDate = "2021-05-11T16:54:48.984Z"; //formatDate + "T" + hourFormat + ".0Z";
+    //print(formattedDate);
+    
+    var part = utc.toString().split(" ");
+    var fecha = part[0].toString();
+    var hora =part[1].toString();
+    print(part[1]);
+    String formattedDate =fecha + "T" + hora;
+  
+
+ 
+
+    //print("formattedDate = "+formatDate);
+    //print(fecha);
+    //print(time);
+    //String formattedDate = fecha + "T" + time + "z";
+    //print(formatDate);
+    //print(now);
+ 
 
     //print(formatDate + "T" + hourFormat + ".0Z");
     

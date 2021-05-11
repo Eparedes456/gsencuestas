@@ -260,7 +260,7 @@ class AboutPage extends StatelessWidget {
                         ),
                         Padding(
                           padding:  EdgeInsets.only(left: 60,top: 5),
-                          child: Text('Analista Programador / Team Lider',style: TextStyle(color: Colors.grey),),
+                          child: Text('Analista Programador/Team Lider',style: TextStyle(color: Colors.grey),),
                         ),
                       ],
                     )
@@ -405,7 +405,7 @@ class AboutPage extends StatelessWidget {
                         
                         Padding(
                           padding:  EdgeInsets.only(right: 70),
-                          child: Text('Diseñador UI/UX - Documentador',style: TextStyle(color: Colors.grey),),
+                          child: Text('Diseñador UI/UX',style: TextStyle(color: Colors.grey),),
                         ),
                         
                       ],
