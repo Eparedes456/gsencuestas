@@ -337,7 +337,7 @@ class DetalleFichaController extends GetxController{
       
 
     };
-
+    print(fechaInicioSend);
     sendFicha['idficha']      =  int.parse(_idFicha);
     sendFicha['fechaFin']     = fechaFinSend;
     sendFicha['fechaInicio']  = fechaInicioSend;
@@ -348,7 +348,7 @@ class DetalleFichaController extends GetxController{
     var encuesta = {};
     encuesta["idEncuesta"]   = idEncuestaSend;
     sendFicha['encuesta'] = encuesta;
-
+/*
     var encuestado = {};
     encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
     sendFicha['encuestado']   = encuestado;
@@ -492,7 +492,7 @@ class DetalleFichaController extends GetxController{
       );
 
     }
-
+      */
 
     
 

@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>GSEncuesta</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,13 +17,23 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>GSEncuesta need to access your camera to capture a photo add and update profile picture.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>La aplicación necesita acceder a su localización</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>La aplicación necesita acceder a su localización</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>GSEncuesta need to access your photo library to select a photo add an update profile picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>GSEncuesta need to acces to library to take a photo</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -46,9 +58,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>La aplicación necesita acceder a su localización</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>La aplicación necesita acceder a su localización</string>
 </dict>
 </plist>

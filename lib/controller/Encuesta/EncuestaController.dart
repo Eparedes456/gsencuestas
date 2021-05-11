@@ -534,6 +534,7 @@ class EncuestaController extends GetxController{
     String hourFormat = DateFormat('HH:mm:ss').format(now);
     
     String formattedDate = formatDate + "T" + hourFormat + ".0Z";
+    print(formattedDate);
 
     //print(formatDate + "T" + hourFormat + ".0Z");
     

@@ -25,9 +25,6 @@ class SimpleSelectPage extends StatelessWidget {
                         index: index,
                       );
                       
-                      
-                      
-
                     }else{
 
                       return Container();

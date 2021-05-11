@@ -168,8 +168,13 @@ class RetommarController extends GetxController{
 
     opcionesPreguntas.forEach((element) async{ 
 
-      element.selected = false;
-      await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+      if(element.idPregunta == opcionEscogida.idPregunta){
+        element.selected = false;
+        await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+      }
+
+      //element.selected = false;
+      //await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
 
       
       if(element.idOpcion == opcionEscogida.idOpcion){

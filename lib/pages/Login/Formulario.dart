@@ -12,7 +12,7 @@ class Formulario extends StatelessWidget {
       init: LoginController(),
       builder: (_) => Container(
 
-        height: MediaQuery.of(context).size.height * 0.5,
+        //height: MediaQuery.of(context).size.height * 0.5,
         width: MediaQuery.of(context).size.width * 0.90,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -108,7 +108,7 @@ class Formulario extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 40,),
+              SizedBox(height: 20,),
               GestureDetector(
                   onTap: (){
                     _.navigateToRegisterUser();
@@ -126,7 +126,8 @@ class Formulario extends StatelessWidget {
                       child: Text('Registrarse',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1) ),),
                     ),
                   ),
-                ),
+              ),
+              SizedBox(height: 20,),
 
             ],
           ),

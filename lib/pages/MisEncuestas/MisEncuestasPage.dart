@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/MisEncuestas/MisEncuestasController.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
+import 'package:intl/intl.dart';
 
 class MisEncuestas extends StatelessWidget {
   @override
@@ -108,6 +109,10 @@ class MisEncuestas extends StatelessWidget {
             itemBuilder: (BuildContext context,index){
 
               String idFicha = _.listMisEncuestas[index].idFicha;
+
+              final dateTime = DateTime.parse(_.listMisEncuestas[index].fechaInicio);
+              final format = DateFormat('dd-MM-yyyy');
+              final clockString = format.format(dateTime); 
              
 
               return Padding(
@@ -336,8 +341,8 @@ class MisEncuestas extends StatelessWidget {
                                                           SizedBox(width: 8,),
 
                                                           Text(
-
-                                                           '${_.listMisEncuestas[index].fechaInicio}',
+                                                            clockString,
+                                                           //'${_.listMisEncuestas[index].fechaInicio}',
                                                            style: TextStyle(
                                                              fontSize: 12,
                                                              color: Colors.grey[600]
