@@ -29,7 +29,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>La aplicación necesita acceder a su localización</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>La aplicación necesita acceder a su localización</string>
+	<string>La aplicación necesita acceder a su localización para guardar los puntos de georreferenciación de las encuestas realizadas.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>GSEncuesta need to access your photo library to select a photo add an update profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
