@@ -51,6 +51,7 @@ class LoginPage extends StatelessWidget {
                             child: Center(
                               child: Container(
                                 alignment: Alignment.center,
+                                height: size.height*0.23,
                                 width: 250,
                                 child: Image(
                                   image: AssetImage('assets/images/survey-logo.png'),

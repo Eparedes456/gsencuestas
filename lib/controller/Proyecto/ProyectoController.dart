@@ -17,8 +17,11 @@ class ProyectoController extends GetxController{
   List<EncuestaModel> _encuestas = [];
   List<EncuestaModel> get  encuestas => _encuestas;
 
-  bool _isLoadingEncuestas = false;
+  bool _isLoadingEncuestas = true;
   bool get isLoading => _isLoadingEncuestas;
+
+  bool _hayEncuestas = false;
+  bool get hayEncuestas => _hayEncuestas;
 
   String _imagen = "";
   String get imagen => _imagen;
@@ -85,6 +88,7 @@ class ProyectoController extends GetxController{
 
       if(resultado != 1 && resultado != 2 && resultado  != 3 ){
 
+
         resultado.forEach((item){
 
         
@@ -120,7 +124,12 @@ class ProyectoController extends GetxController{
         if(_encuestas.length > 0){
 
           _isLoadingEncuestas = true;
+          _hayEncuestas = true;
 
+        }else{
+          print('no hay encuestas');
+          _isLoadingEncuestas = false;
+          _hayEncuestas = false;
         }
 
 

@@ -28,7 +28,7 @@ class FichaController extends GetxController{
     idFicha = listData["idFicha"];
     print(idFicha);
 
-    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
+    /*_positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
 
       print(posicion.latitude);
       print(posicion.longitude);
@@ -41,7 +41,7 @@ class FichaController extends GetxController{
 
       
 
-    });
+    });*/
 
 
   }
@@ -212,7 +212,7 @@ class FichaController extends GetxController{
     var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, formattedDate,"F");
 
     print(hola);
-    _positionStream.cancel();
+    //_positionStream.cancel();
 
     Get.dialog(
                 AlertDialog(

@@ -33,14 +33,13 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     this.getPreguntas(idEncuesta.toString());
 
     
-    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.best,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
 
-      print(posicion.latitude);
-      print(posicion.longitude);
+     
 
       await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(), posicion.longitude.toString(), 'TRUE');
 
-      List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackings();
+      List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
       
       print(respuestaBd);
 
@@ -549,7 +548,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     }
 
     if(formValidado == true){
-
+      _positionStream.cancel();
       for (var i = 0; i < controllerInput.length; i++) {
 
         if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
@@ -585,17 +584,18 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
         'idFicha'           : idFicha
       };
 
-      //print(sendData);
-      _positionStream.cancel();
+      print(sendData);
       
+      listtRACKING = [];
+      _controllerInput = [];
+      _pickOpcionSimple = [];
+
       Get.to(
         FichaPage(),
         arguments: 
         sendData
       );
-
-      _controllerInput = [];
-      _pickOpcionSimple = [];
+      
 
     }
 

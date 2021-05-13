@@ -158,16 +158,37 @@ class ProyectoPage extends StatelessWidget {
                   ),
 
                   Expanded(
-                    child:  _.isLoading == false? Center(
+                    child:  _.isLoading == true && _.hayEncuestas == false? Center(
                       child: CircularProgressIndicator(
                         valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
                         //backgroundColor: Colors.green,
                       ),
-                    ):
+                    ): _.isLoading == false && _.hayEncuestas == false?
                     
+                    Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          Container(
+                            height: 200,
+                            child: Image(
+                              image: AssetImage('assets/images/noencuesta.png'),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+
+                          Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: Text('No se encontraron encuestas.'),
+                          )
+
+                        ],
+                      )
+                    )
                     
-                    
-                    ListView.builder(
+                    :ListView.builder(
 
                       itemCount: _.encuestas.length,
                       itemBuilder: (context,index){

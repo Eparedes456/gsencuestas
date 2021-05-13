@@ -687,7 +687,7 @@ class DBProvider{
     var response = await db.rawQuery(
       
       '''
-      UPDATE ficha SET observacion = '$observacion', estado = '$estado', fecha_fin = '$fechafinal'  WHERE idFicha = '$idFicha'
+      UPDATE ficha SET observacion = "$observacion", estado = "$estado", fecha_fin = "$fechafinal"  WHERE idFicha = "$idFicha"
 
       '''
     );
@@ -994,6 +994,36 @@ class DBProvider{
 
     print(response);
     return response;
+
+  }
+
+  searchProyecto(String value)async{
+    final db = await database;
+    if(value == "" || value == null){
+      var respuesta = await db.query("proyecto");
+
+      List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
+        respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+
+      return listProyectos;
+      
+    }else{
+      var buscar = "%"+value+"%";
+      var response = await db.rawQuery(
+        '''
+        SELECT * FROM proyecto WHERE nombre LIKE "$buscar"
+        '''
+      );
+
+      List<ProyectoModel> listProyectos = response.isNotEmpty ? 
+        response.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+
+      return listProyectos;
+    
+    }
+
+    
+    
 
   }
   

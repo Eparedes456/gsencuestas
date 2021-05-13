@@ -37,18 +37,20 @@ class PrincipalPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
 
-                        SafeArea(child: Container(),),
-                        Center(
-                          child: Container(
-                            
-                            width: 280,
-                            child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
+                        //SafeArea(child: Container(),),
+                        SafeArea(
+                          child: Center(
+                            child: Container(
+                              
+                              width: size.width*0.7,
+                              child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
+                            ),
                           ),
                         ),
 
                         Center(
                           child: Padding(
-                            padding:  EdgeInsets.only(left: 10,top: 20,right: 10),
+                            padding:  EdgeInsets.only(left: 10,top: 8,right: 10),
                             child: Text(
                               'Busca los proyectos que tienes asignados',
                               style: TextStyle(
@@ -56,11 +58,12 @@ class PrincipalPage extends StatelessWidget {
                                 fontSize: 16,
                                 fontFamily: 'Poppins'
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
 
-                        SizedBox(height: 10,),
+                        SizedBox(height:8,),
 
                         Padding(
                           padding:  EdgeInsets.only(left: 20,right: 20),
@@ -72,6 +75,8 @@ class PrincipalPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15)
                             ),
                             child: TextField(
+                              textCapitalization: TextCapitalization.characters,
+                              controller: _.controllerSearch,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15)
@@ -80,8 +85,16 @@ class PrincipalPage extends StatelessWidget {
                                 hintStyle: TextStyle(
                                   fontSize: 14
                                 ),
-                                suffixIcon: Icon(Icons.search)
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.search),
+                                  onPressed: (){
+                                    //_.searchProyecto('');
+                                  },
+                                )
                               ),
+                              onSubmitted: (value){
+                                _.searchProyecto(value);
+                              },
                             )
                           ),
                         )
@@ -92,7 +105,7 @@ class PrincipalPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10,),
 
-                _.isLoading == false?  Expanded(
+                _.isLoading == true  ? Expanded(
                    
                     child: Center(
 
@@ -101,6 +114,29 @@ class PrincipalPage extends StatelessWidget {
                       )
                       
                     ),
+                ):  _.haydata == false ? Expanded(
+                  child:Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          Container(
+                            height: 200,
+                            child: Image(
+                              image: AssetImage('assets/images/noencuesta.png'),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+
+                          Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: Text('No se encontraron proyectos.'),
+                          )
+
+                        ],
+                      )
+                    )
                 ):
 
                 Expanded(

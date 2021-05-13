@@ -10,12 +10,12 @@ class Logo extends StatelessWidget {
       children: [
 
         Padding(
-          padding:  EdgeInsets.only(top: 20),
+          padding:  EdgeInsets.only(top: 8),
           child: Center(
             child: Container(
               alignment: Alignment.center,
-              //height: 160,
-              width: 280,
+              //height: ,
+              width: MediaQuery.of(context).size.width*0.65,
               
               child: Image(
                 image: AssetImage('assets/images/splash.png'),

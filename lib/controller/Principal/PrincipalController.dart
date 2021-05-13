@@ -34,8 +34,14 @@ class PrincipalController extends GetxController{
   List<OpcionesModel> _opcionesPreguntas = [];
   List<EncuestadoModel> _encuestadosLista = [];
 
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
+
+  bool _hayData = false;
+  bool get haydata => _hayData;
+
+  TextEditingController _controllerSearch = new TextEditingController();
+  TextEditingController get controllerSearch => _controllerSearch;
 
   @override
   void onReady() {
@@ -107,7 +113,8 @@ class PrincipalController extends GetxController{
           
           if(_proyectos.length > 0 ){
 
-            _isLoading = true;
+            _isLoading = false;
+            _hayData = true;
           }
 
           
@@ -145,7 +152,8 @@ class PrincipalController extends GetxController{
 
         if(_proyectos.length > 0 ){
 
-          _isLoading = true;
+          _isLoading = false;
+          _hayData = true;
 
         }
 
@@ -541,6 +549,39 @@ class PrincipalController extends GetxController{
     }
   }
 
+  searchProyecto(String value)async{
+    _proyectos = [];
+
+    if(value == "" || value == null ){
+      List<ProyectoModel>resultado = await DBProvider.db.searchProyecto(controllerSearch.text);
+      if(resultado.length == 0 ){
+        print('No se encontro el proyecto');
+        
+        //update();
+      }else{
+
+        _proyectos = resultado;
+        _hayData = true;
+        update();
+      }
+
+    
+    }else{
+      List<ProyectoModel>resultado = await DBProvider.db.searchProyecto(controllerSearch.text);
+        if(resultado.length == 0 ){
+          print('No se encontro el proyecto');
+          _hayData = false;
+          
+          _proyectos = [];
+
+          update();
+        }else{
+          _proyectos = resultado;
+          _hayData = true;
+          update();
+        }
+    }
+  }
   navigateToProyecto(ProyectoModel proyecto){
 
     
