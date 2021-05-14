@@ -50,7 +50,8 @@ class LoginController extends GetxController{
 
   TextEditingController get username => _username;
   TextEditingController get password => _password;
-
+  bool _show = true;
+  bool get show => _show;
   
 
   loading(String mensaje, String valor){
@@ -286,7 +287,12 @@ class LoginController extends GetxController{
 
   }
 
+  ver(){
 
+    _show = !_show;
+    update();
+
+  }
 
 
   exit(){

@@ -75,7 +75,7 @@ class RetommarController extends GetxController{
     List <FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
     print(ficha);
     idEncuestado = ficha[0].idEncuestado.toString();
-    respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+    respuestas = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
     print(respuestas);
 
@@ -155,6 +155,7 @@ class RetommarController extends GetxController{
     //update('simple');
     _isLoadingData = true;
     update();
+    update(['multiple']);
     
     Future.delayed(Duration(seconds: 1),()async{
       await inptuData();
@@ -191,6 +192,35 @@ class RetommarController extends GetxController{
 
     update(['simple']);
 
+  }
+
+  capturarRespuestaMultipleRetomar(OpcionesModel opcionEscogida)async{
+    print(opcionEscogida.idOpcion);
+    opcionesPreguntas.forEach((element) async{
+      if(element.idPregunta == opcionEscogida.idPregunta){
+
+        if(element.idOpcion == opcionEscogida.idOpcion){
+          
+          if(element.selected == true){
+
+            element.selected = false;
+            await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+
+          }else{
+
+            element.selected  = true;
+            await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor); 
+          }
+
+        }
+
+      }
+
+    });
+
+    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+    print(listRespuestaDB);
+    update(['multiple']);
   }
 
 
@@ -342,7 +372,7 @@ class RetommarController extends GetxController{
 
       List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
 
-      respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+      respuestas = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
 
       print(respuestas);
@@ -357,7 +387,7 @@ class RetommarController extends GetxController{
         'idFicha'           : idFicha
 
       };
-      //print(sendData);
+      print(sendData);
 
       _positionStream.cancel();
       Get.to(

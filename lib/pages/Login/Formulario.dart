@@ -34,12 +34,12 @@ class Formulario extends StatelessWidget {
             children: [
 
               Padding(
-                        padding:  EdgeInsets.only(left: 10,right: 10,top: 30),
+                        padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
                         child: Center(
                           child: Container(
                             alignment: Alignment.center,
                             
-                            width: 250,
+                            width: size.width*0.5,
                             child: Image(
                               image: AssetImage('assets/images/logo_gsencuestas.png'),
                               fit: BoxFit.fitWidth,
@@ -60,7 +60,7 @@ class Formulario extends StatelessWidget {
                 ),
               ),*/
 
-              SizedBox(height: 20,),
+              SizedBox(height: 10,),
               
               TextField(
                 controller: _.username,
@@ -72,11 +72,18 @@ class Formulario extends StatelessWidget {
               SizedBox(height: 20,),
               
               TextField(
-                obscureText: true,
+                obscureText: _.show,
                 controller: _.password,
                 decoration: InputDecoration(
                   hintText: 'Contraseña',
-                  suffixIcon: Icon(Icons.visibility)
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      _.show ?  Icons.visibility : Icons.visibility_off
+                    ),
+                    onTap: (){
+                      _.ver();
+                    },
+                  )
                 ),
               ),
 

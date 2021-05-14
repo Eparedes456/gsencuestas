@@ -29,7 +29,8 @@ class PrincipalPage extends StatelessWidget {
               children: [
                 
                 Container(  
-                    height: size.height*0.3,
+                    //height: size.height*0.3,
+                    
                     width: double.infinity,
                     color: Color.fromRGBO(0, 102, 84, 1),
                     child: Column(
@@ -42,7 +43,7 @@ class PrincipalPage extends StatelessWidget {
                           child: Center(
                             child: Container(
                               
-                              width: size.width*0.7,
+                              width: size.width*0.6,
                               child: Image.asset('assets/images/logo_gsencuesta_inverse.png')
                             ),
                           ),
@@ -97,7 +98,8 @@ class PrincipalPage extends StatelessWidget {
                               },
                             )
                           ),
-                        )
+                        ),
+                        SizedBox(height:8,),
 
 
                       ],

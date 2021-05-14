@@ -13,6 +13,7 @@ class AboutPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Acerca de la Aplicación'),
+        leading: Container(),
       ),
 
       body: SingleChildScrollView(
@@ -71,7 +72,7 @@ class AboutPage extends StatelessWidget {
 
                 Container(
                   height : 90,
-                  width: 150,
+                  width: size.width*0.3,
                   padding: EdgeInsets.only(left: 10,top: 10),
                   
                   child: Image.asset('assets/images/survey-logo.png'),
@@ -110,7 +111,7 @@ class AboutPage extends StatelessWidget {
 
                 Container(
                   height : 90,
-                  width: 150,
+                  width: size.width*0.3,
                   padding: EdgeInsets.only(left: 10,top: 10),
                   
                   child: Image.asset('assets/images/noconecction.png'),
@@ -149,7 +150,7 @@ class AboutPage extends StatelessWidget {
 
                 Container(
                   height : 90,
-                  width: 150,
+                  width: size.width*0.3,
                   padding: EdgeInsets.only(left: 10,top: 10),
                   
                   child: Image.asset('assets/images/sincronizar.png'),
@@ -188,7 +189,7 @@ class AboutPage extends StatelessWidget {
 
                 Container(
                   height : 90,
-                  width: 150,
+                  width: size.width*0.3,
                   padding: EdgeInsets.only(left: 10,top: 10),
                   
                   child: Image.asset('assets/images/googlemaps.png'),
@@ -242,7 +243,7 @@ class AboutPage extends StatelessWidget {
               children: [
 
                 Padding(
-                  padding: EdgeInsets.only(top:10,left: 40,right: 30),
+                  padding: EdgeInsets.only(top:10,left: 30,right: 10),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -256,11 +257,11 @@ class AboutPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 60,top: 10),
-                          child: Text('LINYGN DEL AGUILA ESCUDERO',style: TextStyle(),),
+                          child: Text('LINYGN DEL AGUILA ESCUDERO',),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 60,top: 5),
-                          child: Text('Analista Programador/Team Lider',style: TextStyle(color: Colors.grey),),
+                          padding:  EdgeInsets.only(left: 60,top: 0),
+                          child: Text('Team Lider',style: TextStyle(color: Colors.grey),),
                         ),
                       ],
                     )
@@ -268,9 +269,9 @@ class AboutPage extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding:  EdgeInsets.only(left: 10),
+                  padding:  EdgeInsets.only(left: 5),
                   child: Container(
-                    height: 80,
+                    height: size.height*0.13,
                     width: 90,
                     child: Image(
                         image: AssetImage('assets/images/userDev.png'),
@@ -289,7 +290,7 @@ class AboutPage extends StatelessWidget {
                 
 
                 Padding(
-                  padding:   EdgeInsets.only(top: 10,left: 20,right: 40),
+                  padding:   EdgeInsets.only(top: 10,left: 20,right: 10),
                   child: Container(
                     //height: 60,
                     
@@ -304,12 +305,12 @@ class AboutPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10,right: 70),
-                          child: Text('ERICK PAREDES RAMÍREZ',style: TextStyle(),),
+                          padding: EdgeInsets.only(top: 10,right: 75),
+                          child: Text('ANGEL LABAJOS CARO',style: TextStyle(),),
                         ),
                         
                         Padding(
-                          padding:  EdgeInsets.only(right: 70),
+                          padding:  EdgeInsets.only(right: 75),
                           child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                         
@@ -318,13 +319,24 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 
-                Padding(
+                /*Padding(
                   padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
                   child: Container(
                     height: 80,
                     width: 90,
                     child: Image(
                         image: AssetImage('assets/images/userDev3.png'),
+                    ),
+                  ),
+                ),*/
+
+                Padding(
+                  padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
+                  child: Container(
+                    height: size.height*0.13,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/userDev2.png'),
                     ),
                   ),
                 ),
@@ -337,7 +349,114 @@ class AboutPage extends StatelessWidget {
               children: [
 
                 Padding(
-                  padding: EdgeInsets.only(top:10,left: 40,right: 30),
+                  padding: EdgeInsets.only(top:10,left: 40,right: 10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 60,top: 10),
+                          child: Text('ERICK PAREDES RAMÍREZ',style: TextStyle(),),
+                        ),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 60,top: 0),
+                          child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+
+                Padding(
+                  padding:  EdgeInsets.only(left: 5),
+                  child: Container(
+                    height: size.height*0.13,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/userDev3.png'),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+
+            SizedBox(height: 10,),
+
+            Stack(
+              children: [
+
+                
+
+                Padding(
+                  padding:   EdgeInsets.only(top: 10,left: 20,right: 10),
+                  child: Container(
+                    //height: 60,
+                    
+                    width:  double.infinity  ,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 10,right: 75),
+                          child: Text('DENYS GUERRERO GUERRA',style: TextStyle(),),
+                        ),
+                        
+                        Padding(
+                          padding:  EdgeInsets.only(right: 75),
+                          child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ),
+                
+                /*Padding(
+                  padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
+                  child: Container(
+                    height: 80,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/userDev3.png'),
+                    ),
+                  ),
+                ),*/
+
+                Padding(
+                  padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
+                  child: Container(
+                    height: size.height*0.13,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/denys.png'),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+
+            SizedBox(height: 10,),
+
+            Stack(
+              children: [
+
+                Padding(
+                  padding: EdgeInsets.only(top:10,left: 40,right: 10),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -354,7 +473,7 @@ class AboutPage extends StatelessWidget {
                           child: Text('EVER CARLOS ROJAS',style: TextStyle(),),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 60,top: 5),
+                          padding:  EdgeInsets.only(left: 60,top: 0),
                           child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                       ],
@@ -363,12 +482,12 @@ class AboutPage extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding:  EdgeInsets.only(left: 10),
+                  padding:  EdgeInsets.only(left: 5),
                   child: Container(
-                    height: 80,
+                    height: size.height*0.13,
                     width: 90,
                     child: Image(
-                        image: AssetImage('assets/images/userDev2.png'),
+                        image: AssetImage('assets/images/ever.png'),
                     ),
                   ),
                 ),
@@ -384,7 +503,7 @@ class AboutPage extends StatelessWidget {
                 
 
                 Padding(
-                  padding:   EdgeInsets.only(top: 10,left: 20,right: 40),
+                  padding:   EdgeInsets.only(top: 10,left: 20,right: 10),
                   child: Container(
                     //height: 60,
                     
@@ -399,13 +518,13 @@ class AboutPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10,right: 70),
-                          child: Text('JOSE LUIS ROJAS VÁSQUEZ',style: TextStyle(),),
+                          padding: EdgeInsets.only(top: 10,right: 75),
+                          child: Text('MICHAEL LABAJOS DETQUIZAN',style: TextStyle(),),
                         ),
                         
                         Padding(
-                          padding:  EdgeInsets.only(right: 70),
-                          child: Text('Diseñador UI/UX',style: TextStyle(color: Colors.grey),),
+                          padding:  EdgeInsets.only(right: 75),
+                          child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                         
                       ],
@@ -413,13 +532,24 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 
-                Padding(
+                /*Padding(
                   padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
                   child: Container(
                     height: 80,
                     width: 90,
                     child: Image(
-                        image: AssetImage('assets/images/userDev4.png'),
+                        image: AssetImage('assets/images/userDev3.png'),
+                    ),
+                  ),
+                ),*/
+
+                Padding(
+                  padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
+                  child: Container(
+                    height: size.height*0.13,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/michael.png'),
                     ),
                   ),
                 ),
@@ -427,8 +557,51 @@ class AboutPage extends StatelessWidget {
               ],
             ),
 
+            SizedBox(height: 10,),
 
+            Stack(
+              children: [
 
+                Padding(
+                  padding: EdgeInsets.only(top:10,left: 40,right: 10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 60,top: 10),
+                          child: Text('JOSE LUIS ROJAS VÁSQUEZ',style: TextStyle(),),
+                        ),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 60,top: 0),
+                          child: Text('Diseñador UI/UX',style: TextStyle(color: Colors.grey),),
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+
+                Padding(
+                  padding:  EdgeInsets.only(left: 5),
+                  child: Container(
+                    height: size.height*0.13,
+                    width: 90,
+                    child: Image(
+                        image: AssetImage('assets/images/userDev4.png'),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5,),
+
+              ],
+            ),
             
           ],
         ),

@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
+import 'package:gsencuesta/pages/Retomar/quizRetomar/MultiSelectWidgetRetomar.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/SimpleSelectRetomar.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
 
@@ -127,10 +128,12 @@ class RetomarEncuestaPage extends StatelessWidget {
                           );
 
 
-                      }else{
+                      }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
                         return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
+                      }else if(_.preguntas[index].tipo_pregunta == "MULTIPLE"){
+                        return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
                       }
 
                     },
@@ -205,6 +208,53 @@ SelectSimpleWidget(String enunciado , int id_pregunta, RetommarController _ ,Bui
             
               child: SimpleSelectRetomar(
 
+                id_pregunta: id_pregunta,
+              )
+              
+              
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      )
+    ),
+  );
+
+}
+
+
+MultiSelectWidget(String enunciado, int id_pregunta, RetommarController _ ,BuildContext context, String numPregunta){
+
+  return Padding(
+    padding: EdgeInsets.only(left: 10,right: 10),
+    child: Container(
+      width: double.infinity,
+      child:Card(
+        elevation: 5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Padding(
+              padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
+              child: Text(
+                '$numPregunta.- $enunciado',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Poppins',
+                  fontSize: 16
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+            
+              child: MultipleSelectRetomarPage(
                 id_pregunta: id_pregunta,
               )
               

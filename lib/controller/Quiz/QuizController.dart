@@ -80,8 +80,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
 
 
-
-
   getPreguntas(String idEncuesta)async{
 
     _opcionesPreguntas = [];
@@ -124,8 +122,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
               choice_filter           : item["choice_filter"], 
               bind_name               : item["bind_name"],
               bind_type               : item["bind_type"],
-              bind_field_length       : item["bind_field_length"],
-              bind_field_placeholder  : item["bind_field_placeholder"],
+              bind_field_length       : item["bindFieldLength"].toString(),
+              bind_field_placeholder  : item["bindFieldPlaceholder"],
               orden                   : item["orden"],
               estado                  : item["estado"].toString(),
               updated_at              : item["createdAt"],
@@ -371,6 +369,35 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
   }
 
+  capturarRespuestaMultiple(OpcionesModel opcionEscogida)async{
+    print(opcionEscogida.idOpcion);
+    opcionesPreguntas.forEach((element) async{
+      if(element.idPregunta == opcionEscogida.idPregunta){
+
+        if(element.idOpcion == opcionEscogida.idOpcion){
+          
+          if(element.selected == true){
+
+            element.selected = false;
+            await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
+
+          }else{
+
+            element.selected  = true;
+            await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor); 
+          }
+
+        }
+
+      }
+
+    });
+
+    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+    print(listRespuestaDB);
+    update(['multiple']);
+  }
+
   modalLoading(String mensaje){
     Get.dialog(
 
@@ -574,7 +601,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       print("Formulario validado , inputables son :" + controllerInput.length.toString());
 
-     List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+     List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
       List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
       Map sendData ={
         'idEncuesta'        : idEncuesta,
@@ -595,6 +622,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
         arguments: 
         sendData
       );
+      
       
 
     }

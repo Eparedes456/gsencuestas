@@ -407,7 +407,7 @@ class EncuestaPage extends StatelessWidget {
                             Text(
                               'Inicia',
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: Color.fromRGBO(0, 102, 84, 1),
                                 fontWeight: FontWeight.bold
                               ),
                             ),
@@ -440,7 +440,7 @@ class EncuestaPage extends StatelessWidget {
                             Text(
                               'Finaliza',
                               style: TextStyle(
-                                color: Colors.grey,
+                                color:  Color.fromRGBO(0, 102, 84, 1),
                                 fontWeight: FontWeight.bold
                               ),
                             ),
@@ -473,7 +473,7 @@ class EncuestaPage extends StatelessWidget {
                             Text(
                               'Nº preguntas',
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: Color.fromRGBO(0, 102, 84, 1),
                                 fontWeight: FontWeight.bold
                               ),
                             ),

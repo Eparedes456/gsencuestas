@@ -438,7 +438,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
 
-                                Expanded(child: Text('latitud:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(child: Text('Latitud:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
                                 Expanded(child: Text('${_.latitud}'))
                               ],
                             ),

@@ -136,9 +136,12 @@ class DetalleFichaController extends GetxController{
 
       dateTime2 = DateTime.parse(_listFichasDb[0].fecha_fin);
       final format3 = DateFormat('yyyy-MM-dd');
-      fechaFinSend = format3.format(dateTime2);
+      //fechaFinSend = format3.format(dateTime2);
       final format2 = DateFormat('dd-MM-yyyy');
-      final clockString2 = format2.format(dateTime2); 
+      final clockString2 = format2.format(dateTime2);
+      DateTime now = DateTime.now();
+      var utc = now.toUtc();
+      fechaFinSend = utc.toString();
 
       _fechaFin = clockString2;
 

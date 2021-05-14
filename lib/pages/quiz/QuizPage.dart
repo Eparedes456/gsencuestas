@@ -60,12 +60,16 @@ class QuizPage extends StatelessWidget {
                     child: ListView.builder(
                         shrinkWrap: true,
                         //physics: ScrollPhysics(),
+                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         itemCount: _.preguntas.length,
                         itemBuilder: (BuildContext context, index){
 
                           var enunciadoPregunta =   _.preguntas[index].enunciado;
                           var numPregunta = index + 1;
                           var id_pregunta = _.preguntas[index].id_pregunta;
+                          var placeholder = _.preguntas[index].bind_field_placeholder;
+                          var maxLength = _.preguntas[index].bind_field_length;
+                        
                           /*_.controllerInput.add(
                                 InputTextfield( id_pregunta.toString(), TextEditingController() )
                           );*/
@@ -115,10 +119,10 @@ class QuizPage extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(left: 10,right: 10),
                                         child: TextField(
-                                          
+                                          maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
                                           controller: _.controllerInput[index].controller,
                                           decoration: InputDecoration(
-                                            hintText: 'Ingrese su respuesta'
+                                            hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
                                           ),
                                           /*onSubmitted: (valor){
                                             
@@ -147,6 +151,8 @@ class QuizPage extends StatelessWidget {
 
                             return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
+                          }else  if( _.preguntas[index].tipo_pregunta == "MULTIPLE"){
+                            return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
                           }
 
 
@@ -323,7 +329,7 @@ TextFieldWidget1(String enunciado, String  numPregunta,QuizController _ ,int ind
 SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildContext context, String numPregunta){
 
   return Padding(
-    padding: EdgeInsets.only(left: 20,right: 20),
+    padding: EdgeInsets.only(left: 10,right: 10),
     child: Container(
       width: double.infinity,
       child: Card(
@@ -351,6 +357,52 @@ SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildCo
             
               child: SimpleSelectPage(
 
+                id_pregunta: id_pregunta,
+              )
+              
+              
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      )
+    ),
+  );
+
+}
+
+MultiSelectWidget(String enunciado, int id_pregunta, QuizController _ ,BuildContext context, String numPregunta){
+
+  return Padding(
+    padding: EdgeInsets.only(left: 10,right: 10),
+    child: Container(
+      width: double.infinity,
+      child:Card(
+        elevation: 5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Padding(
+              padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
+              child: Text(
+                '$numPregunta.- $enunciado',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Poppins',
+                  fontSize: 16
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+            
+              child: MultipleSelectPage(
                 id_pregunta: id_pregunta,
               )
               

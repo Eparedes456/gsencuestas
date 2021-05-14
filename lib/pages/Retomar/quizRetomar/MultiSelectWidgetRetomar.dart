@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
+import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
 
-class MultipleSelectPage extends StatelessWidget {
+class MultipleSelectRetomarPage extends StatelessWidget {
 
   final int id_pregunta;
-  MultipleSelectPage({Key key, @required this.id_pregunta}) : super(key: key);
+  MultipleSelectRetomarPage({Key key, @required this.id_pregunta}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<QuizController>(
-      init: QuizController(),
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
       builder: (_)=>ListView.builder(
         shrinkWrap: true,
         physics: ScrollPhysics(),
@@ -42,14 +43,14 @@ class Opciones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<QuizController>(
-      init: QuizController(),
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
       id: 'multiple',
       builder: (_)=>Padding(
         padding: EdgeInsets.only(left: 20,right:20,bottom: 8),
         child: GestureDetector(
           onTap: (){
-               _.capturarRespuestaMultiple(_.opcionesPreguntas[index]);
+               _.capturarRespuestaMultipleRetomar(_.opcionesPreguntas[index]);
           },
           child: Container(
             height:   45,             
@@ -65,10 +66,16 @@ class Opciones extends StatelessWidget {
                 children: [                   
                   Expanded(
                     child: Text(
-                      _.opcionesPreguntas[index].label
+                      _.opcionesPreguntas[index].label,
+                      style: TextStyle(
+                        color: _.opcionesPreguntas[index].selected == true ? Colors.white : Colors.black
+                      ),
                     )
                   ),
-                  Icon(Icons.check_circle_outline)                 
+                  Icon(
+                    Icons.check_circle_outline,
+                    color: _.opcionesPreguntas[index].selected == true ? Colors.white : Colors.black,
+                  )                 
                 ],
               ),
             ),
