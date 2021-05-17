@@ -10,6 +10,7 @@ import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
+import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class PrincipalController extends GetxController{
   List<PreguntaModel> _preguntas = [];
   List<OpcionesModel> _opcionesPreguntas = [];
   List<EncuestadoModel> _encuestadosLista = [];
-
+  List<ParametroModel> _parametros = [];
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -78,6 +79,63 @@ class PrincipalController extends GetxController{
       print('hay conexion a internet');
       print('verifico en la tabla parametros para actualziar o no hacer nada');
 
+      List<ParametroModel> dataParametro = await DBProvider.db.getParametros();
+      print(dataParametro);
+      if(dataParametro.length > 0){
+        var fechaActuUsuario      = dataParametro[0].ultiimaActualizacionUsuario.toString();
+        var fechaActuInstitucion  = dataParametro[0].ultimaActualizacion.toString();
+        print(fechaActuUsuario);
+
+        var response = await apiConexion.getParametroUsuario();
+        print(response);
+        if(fechaActuUsuario == response["ultimaActualizacionUsuario"]){
+          print("si coinciden");
+
+        }else{
+          print('descargar los nuevos usuarios para guardar en la base de datos local');
+          await DBProvider.db.deleteAllUsuario();
+          var listUserApi = await apiConexion.getAllUsers();
+
+          listUserApi.forEach((item){
+
+            _usuarios.add(
+
+              UsuarioModel(
+
+                
+                idUsuario       : item["idUsuario"],
+                nombre          : item["nombre"],
+                apellidoPaterno : item["apellidoPaterno"],
+                apellidoMaterno : item["apellidoMaterno"],
+                dni             : item["dni"],
+                email           : item["email"],
+                username        : item["login"],
+                password        : item["password"],
+                foto            : item["foto"],
+                estado          : item["estado"].toString(),
+                createdAt       : item["createdAt"],
+              )
+
+            );
+          });
+
+          print(_usuarios);
+
+          for (var i = 0; i < _usuarios.length ; i++) {
+
+            await DBProvider.db.insertUsuarios(_usuarios[i]);  
+          }
+
+        }
+        var resp = await apiConexion.getParametroMaestro();
+      if( fechaActuInstitucion  == resp["ultimaActualizacion"]){
+          print('si coinciden, no hacer nada');
+      }else{
+        print('No coinciden, eliminar toda la data de las tablas maestras y actualizar con la nueva data');
+      }
+        
+      }
+
       if(flag1 == null){
 
         insertUserDb();
@@ -115,6 +173,13 @@ class PrincipalController extends GetxController{
 
             _isLoading = false;
             _hayData = true;
+          }else{
+
+            print('no hay proyectos');
+            _isLoading = false;
+            _hayData = false;
+            
+
           }
 
           
@@ -155,6 +220,10 @@ class PrincipalController extends GetxController{
           _isLoading = false;
           _hayData = true;
 
+        }else{
+          print('no hay proyectos');
+          _isLoading = false;
+          _hayData = false;
         }
 
 
@@ -163,94 +232,6 @@ class PrincipalController extends GetxController{
 
     }
     
-    
-
-    /*if(connectionInternet == DataConnectionStatus.connected ){
-
-     
-      
-      if(flag1 == null){
-
-        insertUserDb();
-
-      }else{
-
-        var listProyecto = await apiConexion.getProyectos();
-
-        if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
-
-          listProyecto.forEach((item){
-
-            _proyectos.add(
-
-              ProyectoModel(
-                idProyecto: item["idProyecto"],
-                nombre: item["nombre"],
-                abreviatura: item["abreviatura"],
-                nombreResponsable: item["nombre_responsable"],
-                logo: item["logo"],
-                latitud: item["latitud"],
-                longitud: item["longitud"],
-                estado: item["estado"].toString(),
-                createdAt: item["createdAt"],
-                updatedAt: item["updatedAt"]
-
-              )
-
-            );
-          });
-
-          print(_proyectos.length);
-          
-          if(_proyectos.length > 0 ){
-
-            _isLoading = true;
-          }
-
-          
-
-        }else if( listProyecto == 1){
-
-          print('Error de servidor');
-
-        }else if(listProyecto == 2){
-
-          print(' eRROR DE TOKEN');
-
-        }else{
-
-          print('Error, no existe la pagina 404');
-
-        }
-
-
-
-
-      }
-
-    }else{
-
-      
-
-      if(flag1 != null){
-
-        print('Consulto mi base de datos local');
-
-        _proyectos = await DBProvider.db.getAllProyectos();
-
-        print(_proyectos);
-
-
-        if(_proyectos.length > 0 ){
-
-          _isLoading = true;
-
-        }
-
-
-      }
-
-    }*/
 
     update();
 
@@ -286,6 +267,7 @@ class PrincipalController extends GetxController{
             email           : item["email"],
             username        : item["login"],
             password        : item["password"],
+            foto            : item["foto"],
             estado          : item["estado"].toString(),
             createdAt       : item["createdAt"],
           )
@@ -332,14 +314,52 @@ class PrincipalController extends GetxController{
           
       }
 
+      var parametro = await apiConexion.getParametroUsuario();
+      if(parametro !=1 && parametro !=2 && parametro !=3){
+        
+          print(parametro["idParametro"]);
+
+          _parametros.add(
+            ParametroModel(
+              idParametro                 : parametro["idParametro"],
+              ultiimaActualizacionUsuario : parametro["ultimaActualizacionUsuario"],
+              idInstitucion               : 1,
+              ultimaActualizacion         : "",
+
+            )
+          );
+        print(_parametros.length);
+        for (var e = 0; e < _parametros.length ; e++) {
+          await DBProvider.db.insertParametros(_parametros[e]);
+        }
+      }
+
+      var parametro1 = await apiConexion.getParametroMaestro();
+      if(parametro1 !=1 && parametro1 !=2 && parametro1 !=3){
+        await DBProvider.db.updateParametros(parametro1["ultimaActualizacion"], parametro1["idInstitucion"]);
+      }
+
+      List<ParametroModel> dataParametro1 = await DBProvider.db.getParametros();
+      print(dataParametro1);
+
+
       var listProyecto = await apiConexion.getProyectos();
 
       if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
 
+        if(listProyecto.length  == 0){
+
+          print('no hay proyectos');
+          _isLoading = false;
+          _hayData = false;
+          var insertDataLocal = "Si";
+          preferences.setString('primeraCarga', insertDataLocal);
+          update();
+          return;
+        }
+
       listProyecto.forEach((item){
-
         _proyectos.add(
-
           ProyectoModel(
             idProyecto: item["idProyecto"],
             nombre: item["nombre"],

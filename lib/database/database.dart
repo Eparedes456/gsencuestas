@@ -4,6 +4,7 @@ import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
+import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
@@ -199,6 +200,7 @@ class DBProvider{
             email TEXT,
             username TEXT,
             password TEXT,
+            foto TEXT,
             estado TEXT,
             createdAt TEXT
            
@@ -276,6 +278,17 @@ class DBProvider{
           '''
         );
 
+        await db.execute(
+          '''
+          CREATE TABLE parametro(
+            idParametro INTEGER PRIMARY KEY AUTOINCREMENT,
+            ultiimaActualizacionUsuario TEXT,
+            idInstitucion INTEGER,
+            ultimaActualizacion TEXT
+          )
+          '''
+        );
+
         
 
       },
@@ -344,21 +357,26 @@ class DBProvider{
 
   }
 
+  dataUser(String value)async{
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM usuario WHERE username = '$value'
+      '''
+    );
+    List<UsuarioModel> dataUser = response.isNotEmpty ? response.map((e) => UsuarioModel.fromMap(e)).toList() : [];
+    return dataUser;
+
+  }
+
   
   /*Consulta de insertar los proyectos */
   
   insertProyectos(ProyectoModel nuevoProyecto)async{
 
     final db  = await database;
-
-    
-
-      var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
-      return respuesta;
-    
-
-    
-
+    var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
+    return respuesta;
   }
 
   /* Consultar todos los proyectos  */
@@ -1021,11 +1039,38 @@ class DBProvider{
       return listProyectos;
     
     }
-
-    
-    
-
   }
+
+  /* Parametro */
   
+  insertParametros(ParametroModel nuevoParametro)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("parametro", nuevoParametro.toMap());
+    return respuesta;
+  }
+  updateParametros(String ultimaActualizacion , int idInstitucion)async{
+    final db = await database;
+    var respuestas = await db.rawUpdate(
+      '''
+      UPDATE parametro SET idInstitucion = $idInstitucion , ultimaActualizacion = '$ultimaActualizacion' WHERE idParametro = 1
+      '''
+    );
+    return respuestas;
+  }
+
+  getParametros()async{
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM parametro
+      
+      '''
+    );
+
+    List<ParametroModel> parametroData = response.isNotEmpty ? response.map((e) => ParametroModel.fromMap(e)).toList() : [];
+
+    return parametroData;
+  }
 
 }

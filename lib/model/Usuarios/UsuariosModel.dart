@@ -35,7 +35,8 @@ class UsuarioModel{
   String dni;
   String email; 
   String username;
-  String password;  
+  String password;
+  String foto;  
   String estado;
   String createdAt;
   
@@ -43,8 +44,8 @@ class UsuarioModel{
 
   UsuarioModel(
       {
-        this.idUsuario,this.nombre,this.apellidoPaterno,
-        this.apellidoMaterno,this.dni,this.email,this.username,this.password,this.estado,this.createdAt
+        this.idUsuario,this.nombre,this.apellidoPaterno,this.apellidoMaterno,this.dni,this.email,this.username,this.password,
+        this.foto,this.estado,this.createdAt
         
       }
   );
@@ -60,6 +61,7 @@ class UsuarioModel{
     email               : json['email'],
     username            : json['username'],
     password            : json['password'],
+    foto                : json['foto'],
     estado              : json['estado'],
     createdAt           : json['createdAt'],
     
@@ -78,6 +80,7 @@ class UsuarioModel{
       'email'               : email,
       'username'            : username,
       'password'            : password,
+      'foto'                : foto,
       'estado'              : estado,
       'createdAt'           : createdAt,
          

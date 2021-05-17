@@ -243,9 +243,11 @@ class LoginController extends GetxController{
 
     }else{
 
-      var token = resultado["token"] ;
-      var idUsuario = resultado["user"]["id"];
-      var nombreUser = resultado["user"]["nombreCompleto"];
+      var token         = resultado["token"] ;
+      var idUsuario     = resultado["user"]["id"];
+      var nombreUser    = resultado["user"]["nombreCompleto"];
+      var usernamex     = resultado["user"]["username"]; 
+      var idInstitucion = resultado["user"]["idInstitucion"].toString();
       _username.clear();
       _password.clear();
       print(token);
@@ -255,7 +257,8 @@ class LoginController extends GetxController{
       preferences.setString('token', token);
       preferences.setString('idUsuario', idUsuario.toString());
       preferences.setString('nombreUser', nombreUser);
-
+      preferences.setString('loginUser', usernamex);
+      preferences.setString('idInstitucion', idInstitucion);
       Get.to(TabsPage());
 
     }

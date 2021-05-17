@@ -34,12 +34,12 @@ class ProfilePage extends StatelessWidget {
                       
 
                       CircleAvatar(
-                        radius: 40,
-                        child: Icon(
+                        radius: 30,
+                        /*child: Icon(
                           Icons.account_circle,
                           size: 80,
-                        ),
-                        //backgroundImage: NetworkImage('https://static01.nyt.com/images/2017/05/07/arts/07GAL-GADOTweb/07GAL-GADOTweb-articleLarge.jpg?quality=75&auto=webp&disable=upscale'),
+                        ),*/
+                        backgroundImage:  _.photoBase64 == null || _.photoBase64 == "" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_.photoBase64)  //NetworkImage('https://static01.nyt.com/images/2017/05/07/arts/07GAL-GADOTweb/07GAL-GADOTweb-articleLarge.jpg?quality=75&auto=webp&disable=upscale'),
                       ),
 
                       Expanded(

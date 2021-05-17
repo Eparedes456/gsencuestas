@@ -130,7 +130,11 @@ class DetalleFichaController extends GetxController{
     if( _listFichasDb[0].fecha_fin == "NO REGISTRA" ){
       DateTime now = DateTime.now();
       var utc = now.toUtc();
-      fechaFinSend = utc.toString();
+      var part = utc.toString().split(" ");
+      var fecha = part[0].toString();
+      var hora =part[1].toString();
+      
+      fechaFinSend = fecha + "T" + hora;
 
     }else{
 
@@ -141,8 +145,11 @@ class DetalleFichaController extends GetxController{
       final clockString2 = format2.format(dateTime2);
       DateTime now = DateTime.now();
       var utc = now.toUtc();
-      fechaFinSend = utc.toString();
-
+      var part = utc.toString().split(" ");
+      var fecha = part[0].toString();
+      var hora =part[1].toString();
+      
+      fechaFinSend = fecha + "T" + hora;
       _fechaFin = clockString2;
 
     }
