@@ -255,23 +255,9 @@ class RetommarController extends GetxController{
 
   guardarFicha()async{
 
-    //List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestas();
-
-    /*if(controllerInput.length > 0){
-
-      for (var i = 0; i < controllerInput.length; i++) {
-
-        if(controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null ){
-
-          controllerInput.removeWhere((item) => item.controller.text == "");
-
-        }
-        
-      }
-
-    }*/
-
+    
     print(controllerInput.length);
+
     bool formValidado = true;
 
     for (var z = 0; z < _preguntas.length; z++) {
@@ -283,7 +269,7 @@ class RetommarController extends GetxController{
           
           for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
-            if( /*controllerInput.indexWhere((element) => element.idPregunta == _preguntas[z].id_pregunta.toString()) == -1*/  controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() && controllerInput[z].controller.text == ""  ){
+            if( controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() && controllerInput[z].controller.text == ""  ){
 
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
@@ -469,26 +455,30 @@ class RetommarController extends GetxController{
           controllerInput.removeWhere((item) => item.controller.text == "");
 
         }
+      }
 
-        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
+      for (var x = 0; x < controllerInput.length; x++) {
+        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[x].idPregunta);
 
         if(respuesta.length > 0 ){
 
           if(respuesta[0].valor != ""){
 
             print('Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
-            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[i].idPregunta,idFicha,controllerInput[i].controller.text);
+            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[x].idPregunta,idFicha,controllerInput[x].controller.text);
 
 
           }
 
         }else{
 
-          await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+          await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta, idFicha.toString(), "",controllerInput[x].controller.text);
 
         }
-
       }
+        
+
+      
 
   }
 

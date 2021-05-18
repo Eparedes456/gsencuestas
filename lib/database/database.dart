@@ -416,21 +416,24 @@ class DBProvider{
 
   }
 
+  /*Eliminar todos los proyectos */
+  deleteallProyectos()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM proyecto
+      '''
+    );
+    return respuesta;
+  }
 
   /*Consulta de insertar las encuestas por proyecto */
   
   insertEncuestasxProyecto(EncuestaModel nuevoEncuesta)async{
 
     final db  = await database;
-
-    
-
-      var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
-      return respuesta;
-    
-
-    
-
+    var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
+    return respuesta;
   }
 
   /* Traer todas las encuestas  */
@@ -481,6 +484,16 @@ class DBProvider{
     return respuesta;
 
   }
+  /*Eliminar encuestas */
+  deleteallEncuestas()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM encuesta
+      '''
+    );
+    return respuesta;
+  }
 
 
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
@@ -524,6 +537,18 @@ class DBProvider{
       respuesta.map((e) => PreguntaModel.fromMap(e)).toList() :[];
 
     return listPregunta;
+  }
+
+  /* Eliminar todas las preguntas */
+
+  deleteallPreguntas()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM pregunta
+      '''
+    );
+    return respuesta;
   }
 
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
@@ -586,6 +611,16 @@ class DBProvider{
     return respuesta;
 
   }
+  /* Eliminar todas las opciones */
+  deleteallOpciones()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM opcion
+      '''
+    );
+    return respuesta;
+  }
 
   /* insertar y creaciòn  de nueva ficha */
 
@@ -597,10 +632,6 @@ class DBProvider{
 
     final db = await database;
     
-    
-
-    //print(" INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latitud, longitud, fecha_inicio,fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')");
-
     return  await db.rawQuery(
       
       '''
@@ -610,14 +641,7 @@ class DBProvider{
       '''
     );
 
-     //print(respuesta);
-
-
   }
-
-  
-
-
 
   /* Traer todas las fichas insertadas */
 
@@ -631,17 +655,11 @@ class DBProvider{
       '''
     );
     print(response);
-    
     List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
-
-   
-
     return listFichas;
-
   }
 
   /* Traer la ultima ficha insertada */
-
 
   getLastFicha()async{
 
@@ -652,9 +670,7 @@ class DBProvider{
 
       '''
     );
-    //print(response1);
     return response1;
-
   }
 
   /* Traer una ficha especifica */
@@ -663,23 +679,16 @@ class DBProvider{
 
     final db = await  database;
     var response = await db.rawQuery(
-
       '''
-
       SELECT * FROM ficha WHERE  idFicha = $idFicha
-
       '''
-
     );
-
     List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
-
     return fichaList;
 
   }
 
   fichasPendientes(String valor)async {
-
     final db = await database;
 
     var response =  await db.rawQuery(
@@ -688,11 +697,8 @@ class DBProvider{
       
       '''
     );
-
     List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
-
     return fichaList;
-
   }
 
   /* Actualizar FICHA */
@@ -872,7 +878,7 @@ class DBProvider{
     final db = await database;
     var response = await db.rawQuery(
       '''
-      UPDATE respuesta SET valor = $valor WHERE idPregunta = $idPregunta AND idFicha = $idFicha
+      UPDATE respuesta SET valor = '$valor' WHERE idPregunta = $idPregunta AND idFicha = $idFicha
       '''
     );
 
@@ -946,20 +952,42 @@ class DBProvider{
   /* Obtener los encuestados */
 
   getOneEncuestado(String idEncuestado)async{
-
     final db = await database;
-
     var respuesta = await db.rawQuery(
       '''
       SELECT * FROM encuestado WHERE idEncuestado = '$idEncuestado'
       '''
     );
-
     List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty ? 
       respuesta.map((e) => EncuestadoModel.fromMap(e)).toList() :[];
 
     return listEncuestado;
 
+  }
+
+  getAllEncuestado()async{
+
+    final db = await database;
+  
+    var response = await db.rawQuery(
+      '''
+      SELECT * FROM encuestado 
+      '''
+    );
+    print(response);
+    List<EncuestadoModel> encuestados  = response.isNotEmpty ? response.map((e) => EncuestadoModel.fromMap(e)).toList() :[];
+    return encuestados;
+  }
+
+  /*Eliminara todos los encuestados */
+  deleteallEncuestados()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM encuestado
+      '''
+    );
+    return respuesta;
   }
 
 
@@ -1049,11 +1077,11 @@ class DBProvider{
     var respuesta = await db.insert("parametro", nuevoParametro.toMap());
     return respuesta;
   }
-  updateParametros(String ultimaActualizacion , int idInstitucion)async{
+  updateParametros(String ultimaActualizacion , int idInstitucion, String ultimaActuaUsuario)async{
     final db = await database;
     var respuestas = await db.rawUpdate(
       '''
-      UPDATE parametro SET idInstitucion = $idInstitucion , ultimaActualizacion = '$ultimaActualizacion' WHERE idParametro = 1
+      UPDATE parametro SET idInstitucion = $idInstitucion , ultimaActualizacion = '$ultimaActualizacion', ultiimaActualizacionUsuario = '$ultimaActuaUsuario' WHERE idParametro = 1
       '''
     );
     return respuestas;

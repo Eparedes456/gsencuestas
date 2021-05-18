@@ -59,7 +59,8 @@ class MisEncuestasController extends GetxController{
   getAllFichas() async{
 
     _listFichasDb = await DBProvider.db.getAllFichas();
-
+    var listEncuestados = await DBProvider.db.getAllEncuestado();
+    print(listEncuestados);
     if(_listFichasDb.length > 0){  
 
       for( var element in _listFichasDb ){
