@@ -71,7 +71,10 @@ class MisEncuestasController extends GetxController{
         var listEncuestas = await DBProvider.db.getAllEncuestas();
         print(listMisEncuestas);
         _listDbEncuesta = await DBProvider.db.getOneEncuesta(idEncuesta);
+        
         _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
+        var data = await DBProvider.db.getAllEncuestado();
+        print(data);
         _listPreguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
         _nroTotalPreguntas = _listPreguntas.length.toString();
 
@@ -150,6 +153,7 @@ class MisEncuestasController extends GetxController{
           String idEncuestado = element.idEncuestado.toString();
 
           _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
+
           _listDbEncuesta = await DBProvider.db.getOneEncuesta( idEncuesta );
           _listPreguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
           _nroTotalPreguntas = _listPreguntas.length.toString();

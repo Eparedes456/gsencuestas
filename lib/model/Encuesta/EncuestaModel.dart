@@ -35,13 +35,14 @@ class EncuestaModel{
   String createdAt;
   String updatedAt;
   String idFicha = "";
+  String publicado;
   
   
 
   EncuestaModel(
       {
         this.idEncuesta,this.idProyecto,this.titulo,this.descripcion,this.url_guia,this.expira,this.fechaInicio,this.fechaFin,this.logo,
-        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,this.idFicha
+        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,this.idFicha,this.publicado
         
       }
   );

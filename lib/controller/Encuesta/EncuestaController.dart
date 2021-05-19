@@ -319,7 +319,7 @@ class EncuestaController extends GetxController{
 
       if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
-        List response = await apiConexion.findEncuestado(insertEncuestadoController.text);
+        var response = await apiConexion.findEncuestado(insertEncuestadoController.text);
         if(response == 2){
 
           Get.back();
@@ -375,8 +375,8 @@ class EncuestaController extends GetxController{
   showEncuestadoModal(dynamic data){
 
     
-    var idEncuestado2    = data[0]["idEncuestado"];
-    var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
+    var idEncuestado2    = data["idEncuestado"];
+    var nombreCompleto  =  data["nombre"] + " " + data["apellidoPaterno"] + " " + data["apellidoMaterno"];
 
     Get.dialog(
 

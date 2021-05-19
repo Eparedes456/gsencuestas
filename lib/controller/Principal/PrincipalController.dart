@@ -157,8 +157,15 @@ class PrincipalController extends GetxController{
             await DBProvider.db.deleteallEncuestados();
             await DBProvider.db.deleteallPreguntas();
             await DBProvider.db.deleteallOpciones();
+
+            var data = await DBProvider.db.getAllPreguntas();
+            var data1 = await DBProvider.db.getAllOpciones();
+            
+            await DBProvider.db.updateParametros(resp["ultimaActualizacion"], idInstitucion, response["ultimaActualizacionUsuario"]);
             cargarEncuestados();
             cargarProyectosEncuesta();
+            
+            
 
           }
         }
@@ -167,6 +174,7 @@ class PrincipalController extends GetxController{
       if(flag1 == null){
         insertUserDb();
       }else{
+        _proyectos = [];
         var listProyecto = await apiConexion.getProyectos();
         if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
           listProyecto.forEach((item){
@@ -253,6 +261,7 @@ class PrincipalController extends GetxController{
       cargarProyectosEncuesta();
     }
   }
+
   searchProyecto(String value)async{
     _proyectos = [];
     if(value == "" || value == null ){
@@ -361,7 +370,10 @@ class PrincipalController extends GetxController{
     for (var e = 0; e < _encuestadosLista.length ; e++) {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);      
     }
+    var data = await DBProvider.db.getAllEncuestado();
+    print(data);
   }
+  
   cargarProyectosEncuesta()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var listProyecto = await apiConexion.getProyectos();
@@ -393,8 +405,13 @@ class PrincipalController extends GetxController{
       });
 
       for (var x = 0; x < _proyectos.length ; x++) {
+        var data = await DBProvider.db.getAllProyectos();
+        print(data);
         await DBProvider.db.insertProyectos(_proyectos[x]);
+        var data1 = await DBProvider.db.getAllProyectos();
+        print(data1);
       }
+
       for (var j = 0; j < _proyectos.length; j++) {
         var listEncuestaApi = await apiConexion.getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
         var idProyecto = _proyectos[j].idProyecto.toString();
@@ -500,7 +517,9 @@ class PrincipalController extends GetxController{
       print('Error, no existe la pagina 404');
     }
     var insertDataLocal = "Si";
+    //_proyectos = [];
     preferences.setString('primeraCarga', insertDataLocal);      
+    
     update();
 
     

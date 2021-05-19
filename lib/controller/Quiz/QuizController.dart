@@ -33,7 +33,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     this.getPreguntas(idEncuesta.toString());
 
     
-    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.best,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
+    _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
 
      
 
