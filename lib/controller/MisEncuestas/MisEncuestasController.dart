@@ -12,6 +12,7 @@ import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MisEncuestasController extends GetxController{
@@ -57,8 +58,9 @@ class MisEncuestasController extends GetxController{
 
 
   getAllFichas() async{
-
-    _listFichasDb = await DBProvider.db.getAllFichas();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var idUsuario = await preferences.getString('idUsuario');
+    _listFichasDb = await DBProvider.db.getAllFichas( int.parse(idUsuario));
     var listEncuestados = await DBProvider.db.getAllEncuestado();
     print(listEncuestados);
     if(_listFichasDb.length > 0){  

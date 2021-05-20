@@ -212,6 +212,9 @@ class PrincipalController extends GetxController{
     }else{
       if(flag1 != null){
         print('Consulto mi base de datos local');
+        var idUsuario = int.parse(preferences.getString('idUsuario'));
+        /*var listproyecto = await DBProvider.db.getAllProyectos();
+        print(listproyecto);*/
         _proyectos = await DBProvider.db.getAllProyectos();
         if(_proyectos.length > 0 ){
           _isLoading = false;
@@ -397,6 +400,7 @@ class PrincipalController extends GetxController{
             logo: item["logo"],
             latitud: item["latitud"],
             longitud: item["longitud"],
+            idUsuario: preferences.getString('idUsuario'),
             estado: item["estado"].toString(),
             createdAt: item["createdAt"],
             updatedAt: item["updatedAt"]

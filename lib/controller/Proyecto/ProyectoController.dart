@@ -152,8 +152,7 @@ class ProyectoController extends GetxController{
 
     }else{
 
-      
-
+    
       _encuestas = await DBProvider.db.consultEncuestaxProyecto(idProyecto);
 
       print(_encuestas);
@@ -163,8 +162,12 @@ class ProyectoController extends GetxController{
 
       if(_encuestas.length > 0){
 
-        _isLoadingEncuestas = true;
+        _isLoadingEncuestas = false;
+        _hayEncuestas = true;
 
+      }else{
+        _isLoadingEncuestas = false;
+        _hayEncuestas = false;
       }
 
 

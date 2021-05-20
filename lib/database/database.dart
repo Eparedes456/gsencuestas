@@ -220,6 +220,7 @@ class DBProvider{
             logo TEXT,
             latitud TEXT,
             longitud TEXT,
+            idUsuario INTEGER,
             estado TEXT,
             createdAt TEXT,
             updatedAt TEXT
@@ -292,7 +293,7 @@ class DBProvider{
         
 
       },
-      version: 8
+      version: 9
 
     ); 
 
@@ -381,17 +382,30 @@ class DBProvider{
 
   /* Consultar todos los proyectos  */
 
+  getAllProyectos1(var idUsuario)async{
+
+    final db = await database;
+    
+    //var respuesta = await db.query("proyecto");
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM proyecto WHERE idUsuario = $idUsuario
+      '''
+    );
+    List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
+      respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+    return listProyectos;
+  }
+
   getAllProyectos()async{
 
     final db = await database;
+    
     var respuesta = await db.query("proyecto");
-
+    
     List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
       respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
-
     return listProyectos;
-    
-
   }
 
   /* Consultar un proyecto */
@@ -645,13 +659,13 @@ class DBProvider{
 
   /* Traer todas las fichas insertadas */
 
-  getAllFichas()async{
+  getAllFichas( var idUsuario)async{
 
     final db = await database;
     //var response = await db.query('ficha',orderBy: 'DESC',);
     var response = await db.rawQuery(
       '''
-      SELECT * FROM ficha ORDER BY idFicha DESC
+      SELECT * FROM ficha WHERE idUsuario = $idUsuario ORDER BY idFicha DESC
       '''
     );
     print(response);

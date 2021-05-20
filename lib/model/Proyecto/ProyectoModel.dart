@@ -31,6 +31,7 @@ class ProyectoModel{
   String logo;
   String latitud;
   String longitud;
+  String idUsuario;
   String estado;
   String createdAt;
   String updatedAt;
@@ -38,7 +39,7 @@ class ProyectoModel{
   ProyectoModel(
     {
       this.idProyecto,this.nombre,this.abreviatura,this.nombreResponsable,this.logo,
-      this.latitud,this.longitud,this.estado,this.createdAt,this.updatedAt
+      this.latitud,this.longitud,this.idUsuario,this.estado,this.createdAt,this.updatedAt
         
     }
   );
@@ -53,6 +54,7 @@ class ProyectoModel{
     logo                : json['logo'],
     latitud             : json['latitud'],
     longitud            : json['longitud'],
+    idUsuario           : json['idUsuario'].toString(),
     estado              : json['estado'],
     createdAt           : json['createdAt'],
     updatedAt           : json['updatedAt'],
@@ -69,6 +71,7 @@ class ProyectoModel{
       'logo'                : logo,
       'latitud'             : latitud,
       'longitud'            : longitud,
+      'idUsuario'           : idUsuario,
       'estado'              : estado,
       'createdAt'           : createdAt,
       'updatedAt'            : updatedAt,   

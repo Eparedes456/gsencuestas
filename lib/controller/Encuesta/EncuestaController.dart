@@ -15,6 +15,7 @@ import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 
@@ -572,8 +573,9 @@ class EncuestaController extends GetxController{
 
     
     var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate,latitud,longitud);
-
-    List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var idUsuario = await preferences.getString('idUsuario');
+    List<FichasModel> listDbLocal  =  await DBProvider.db.getAllFichas( int.parse(idUsuario) );
     var getLastFichaid = await DBProvider.db.getLastFicha();
    
     int idFicha = getLastFichaid[0]["idFicha"];

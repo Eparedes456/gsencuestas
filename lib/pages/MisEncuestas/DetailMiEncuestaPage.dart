@@ -358,7 +358,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                             child: Icon(FontAwesomeIcons.clipboard,size: 15,),
                                           ),
                                           SizedBox(width: 15,),
-                                          Text('Click aqui',style: TextStyle(fontSize: 13),)
+                                          Text('Pulse aqui',style: TextStyle(fontSize: 13),)
                                         ],
                                       ),
                                     ),
