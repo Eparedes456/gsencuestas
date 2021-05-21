@@ -70,11 +70,6 @@ class QuizPage extends StatelessWidget {
                           var placeholder = _.preguntas[index].bind_field_placeholder;
                           var maxLength = _.preguntas[index].bind_field_length;
                         
-                          /*_.controllerInput.add(
-                                InputTextfield( id_pregunta.toString(), TextEditingController() )
-                          );*/
-
-                          //print(index); 
 
                           if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 

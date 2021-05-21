@@ -49,26 +49,8 @@ class EncuestaPage extends StatelessWidget {
                           image: AssetImage('assets/images/noimage2.png'),
                           fit: BoxFit.cover,
                         ),
-                        
-                        /*Center(
-
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-
-                              Icon(Icons.error,color: Colors.red,),
-                              SizedBox(height: 8,),
-                              Text('Lo sentimos no pudimos cargar la imagen')
-                            ],
-                          )
-                        ),*/
                         fit: BoxFit.cover,
                       )
-                      
-                      /*Image(
-                        image: NetworkImage('${_.imagePortada}'),
-                        fit: BoxFit.cover,
-                      ),*/
                     ),
                   )
                 ),

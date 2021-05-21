@@ -56,12 +56,10 @@ class RetomarEncuestaPage extends StatelessWidget {
                     itemBuilder: (BuildContext context, index){
 
                       var enunciadoPregunta =   _.preguntas[index].enunciado;
-                        var numPregunta = index + 1;
-                        var id_pregunta = _.preguntas[index].id_pregunta;
-
-                      /*_.controllerInput.add(
-                        InputTextfield( id_pregunta.toString(), TextEditingController() )
-                      );*/
+                      var numPregunta = index + 1;
+                      var id_pregunta = _.preguntas[index].id_pregunta;
+                      var maxLength = _.preguntas[index].bind_field_length;
+                      var placeholder = _.preguntas[index].bind_field_placeholder;
 
                       if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 
@@ -105,10 +103,10 @@ class RetomarEncuestaPage extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.only(left: 10,right: 10),
                                       child: TextField(
-                                        
+                                        maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
                                         controller: _.controllerInput[index].controller,
                                         decoration: InputDecoration(
-                                          hintText: 'Ingrese su respuesta'
+                                          hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
                                         ),
                                         onSubmitted: (valor){
 

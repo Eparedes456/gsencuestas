@@ -431,7 +431,7 @@ class ApiServices {
     var token = preferences.getString('token');
 
     var response = await http.get(
-      base_url_dev + "encuestado/byDocumento/$data",
+      base_url_dev + "encuestado?query=$data",
       headers: {
 
         'Content-Type': 'application/json',

@@ -44,7 +44,7 @@ class ProfileController extends GetxController{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    //_userName = preferences.getString('nombreUser');
+    _userName = preferences.getString('nombreUser');
     var nombreUsuario =  preferences.getString('loginUser');
     
     List<UsuarioModel> usuarioData = await DBProvider.db.dataUser(nombreUsuario);
@@ -59,7 +59,7 @@ class ProfileController extends GetxController{
 
     List<FichasModel> listMisEncuestas = await DBProvider.db.fichasPendientes("F");
 
-    _userName = usuarioData[0].nombre + " " + usuarioData[0].apellidoPaterno + " " + usuarioData[0].apellidoMaterno;
+    //_userName = usuarioData[0].nombre + " " + usuarioData[0].apellidoPaterno + " " + usuarioData[0].apellidoMaterno;
     print(listMisEncuestas.length);
 
     if(listMisEncuestas.length == 0){

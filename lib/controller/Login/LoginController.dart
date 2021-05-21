@@ -187,12 +187,17 @@ class LoginController extends GetxController{
 
         if(response.length > 0){
 
-          var idUsuario = response[0].idUsuario;
-          var nombreUser = response[0].nombre;
+          var idUsuario     = response[0].idUsuario;
+          var nombreUser    = response[0].nombre + ' ' + response[0].apellidoPaterno + ' ' + response[0].apellidoMaterno;
+          var usernamex     = response[0].username; 
+
           _username.clear();
           _password.clear();
           preferences.setString('idUsuario', idUsuario.toString());
           preferences.setString('nombreUser', nombreUser);
+          //var idInstitucion = resultado["user"]["idInstitucion"].toString();
+          preferences.setString('loginUser', usernamex);
+          //preferences.setString('idInstitucion', idInstitucion);
           Get.offAll(TabsPage());
 
 

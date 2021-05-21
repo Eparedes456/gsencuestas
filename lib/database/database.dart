@@ -572,7 +572,7 @@ class DBProvider{
 
     var respuesta = await db.rawQuery(
       '''
-      SELECT * FROM pregunta WHERE idEncuesta = '$idEncuesta'
+      SELECT * FROM pregunta WHERE idEncuesta = '$idEncuesta' ORDER BY orden ASC
       '''
     );
 
@@ -954,12 +954,17 @@ class DBProvider{
   searchEncuestado(String valor)async{
 
     final db = await database;
-    var respuesta = await db.query("encuestado",where: 'documento = ?', whereArgs: [valor]);
-    
+    //var respuesta = await db.query("encuestado",where: 'documento = ?', whereArgs: [valor]);
+    var buscar = valor;
+    var respuesta = await db.rawQuery(
+      '''
+      SELECT * FROM encuestado  WHERE (documento  LIKE "%$buscar%" OR nombre LIKE  "%$buscar%")
+      '''
+    );
 
     //List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
 
-    return respuesta.toList();
+    return respuesta; //.toList();
 
   }
 

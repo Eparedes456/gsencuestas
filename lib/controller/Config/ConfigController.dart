@@ -53,10 +53,16 @@ class ConfigController extends GetxController{
       List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
       List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(listFichas[i].idFicha.toString());
 
-      var sendFicha = {};
+      DateTime now      = DateTime.now();
+      var utc           = now.toUtc();
+      var part          = utc.toString().split(" ");
+      var fecha         = part[0].toString();
+      var hora          = part[1].toString();
+      String fechaFin   = fecha + "T" + hora;
 
+      var sendFicha = {};
       sendFicha['idficha']      = listFichas[i].idFicha;
-      sendFicha['fechaFin']     = listFichas[i].fecha_fin;
+      sendFicha['fechaFin']     = fechaFin;
       sendFicha['fechaInicio']  = listFichas[i].fecha_inicio;
       sendFicha['idUsuario']    = listFichas[i].idUsuario;
       sendFicha["latitud"]      = listFichas[i].latitud;
@@ -225,16 +231,6 @@ class ConfigController extends GetxController{
           );
 
         }
-
-      
-
-
-
-
-
-
-
-
     }
 
   }
@@ -308,10 +304,7 @@ class ConfigController extends GetxController{
                 ),
                 color: Color.fromRGBO(0, 102, 84, 1),
                 onPressed: ()async{
-                  
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                  
-
                 },
                 child: Text('Si'),
               ),

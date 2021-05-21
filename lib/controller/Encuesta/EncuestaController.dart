@@ -140,7 +140,7 @@ class EncuestaController extends GetxController{
       }
 
       _encuestasPendientes = true;
-
+      print(_listEncuesta.length);
     }else{
 
       _encuestasPendientes = false;
@@ -351,7 +351,7 @@ class EncuestaController extends GetxController{
 
         print("Busco al encuestado en la bd local");
 
-        List respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
+        var respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
 
         if(respuesta.length > 0){
 
@@ -375,9 +375,9 @@ class EncuestaController extends GetxController{
 
   showEncuestadoModal(dynamic data){
 
-    
-    var idEncuestado2    = data["idEncuestado"];
-    var nombreCompleto  =  data["nombre"] + " " + data["apellidoPaterno"] + " " + data["apellidoMaterno"];
+    print(data[0]["idEncuestado"]);
+    var idEncuestado2    = data[0]["idEncuestado"].toString();
+    var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
 
     Get.dialog(
 
