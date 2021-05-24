@@ -7,12 +7,15 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
+import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
@@ -36,6 +39,9 @@ class PrincipalController extends GetxController{
   List<OpcionesModel> _opcionesPreguntas = [];
   List<EncuestadoModel> _encuestadosLista = [];
   List<ParametroModel> _parametros = [];
+  List<DepartamentoModel> _listDepartamento = [];
+  List<ProvinciaModel>  _listProvincia =[];
+  List<DistritoModel> _listDistrito =  [];
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -162,8 +168,9 @@ class PrincipalController extends GetxController{
             var data1 = await DBProvider.db.getAllOpciones();
             
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"], idInstitucion, response["ultimaActualizacionUsuario"]);
-            cargarEncuestados();
-            cargarProyectosEncuesta();
+            await cargarEncuestados();
+            //await cargarUbigeo();
+            await cargarProyectosEncuesta();
             
             
 
@@ -237,8 +244,9 @@ class PrincipalController extends GetxController{
       print("Consulto a la base de datos a la tabla proyecto");
     }else{
       await DBProvider.db.deleteAllUsuario();
-      cargarUsuarios();
-      cargarEncuestados();
+      await cargarUsuarios();
+      await cargarEncuestados();
+      
       var parametro = await apiConexion.getParametroUsuario();
       if(parametro !=1 && parametro !=2 && parametro !=3){
           print(parametro["idParametro"]);
@@ -261,7 +269,8 @@ class PrincipalController extends GetxController{
       }
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
-      cargarProyectosEncuesta();
+      await cargarProyectosEncuesta();
+      await cargarUbigeo();
     }
   }
 
@@ -363,6 +372,7 @@ class PrincipalController extends GetxController{
               direccion       : element["direccion"],
               telefono        : element["telefono"],
               email           : element["email"],
+              idUbigeo        : element["idUbigeo"],
               estado          : element["estado"].toString() ,
             )
           );
@@ -553,4 +563,81 @@ class PrincipalController extends GetxController{
       await DBProvider.db.insertUsuarios(_usuarios[i]);  
     }
   }
+
+  cargarUbigeo()async{
+    var response = await apiConexion.getDepartamentos();
+    print(response);
+    if(response.length > 0){
+      response.forEach((elementos){
+
+        _listDepartamento.add(
+          DepartamentoModel(
+            idDepartamento        : elementos["id"], 
+            codigoDepartamento    : elementos["codigoDepartamento"], 
+            descripcion           : elementos["descripcion"], 
+            estado                : elementos["estado"]
+          )
+        );
+
+      });
+      print(_listDepartamento);
+      for (var i = 0; i < _listDepartamento.length; i++) {
+        await DBProvider.db.insertDepartamentos(_listDepartamento[i]);
+      }
+
+      for (var s = 0; s < _listDepartamento.length ; s++) {
+        
+        var respuesta = await apiConexion.getProvincias(_listDepartamento[s].codigoDepartamento);
+        if(respuesta.length > 0){
+          respuesta.forEach((item){
+
+            _listProvincia.add(
+              ProvinciaModel(
+                idProvincia         : item["id"],
+                codigoDepartamento  : item["codigoDepartamento"],
+                codigoProvincia     : item["codigoProvincia"],
+                descripcion         : item["descripcion"],
+                estado              : item["estado"],
+              )
+            );
+
+          });
+          print(_listProvincia);
+          for (var a = 0; a < _listProvincia.length ; a++) {
+            await DBProvider.db.insetProvincias(_listProvincia[a]);
+            var response = await apiConexion.getDistritos(_listProvincia[a].codigoProvincia,_listProvincia[a].codigoDepartamento);
+            response.forEach((element){
+              _listDistrito.add(
+                DistritoModel(
+                  idDistrito          : element["id"],
+                  codigoDepartamento  : element["codigoDepartamento"],
+                  codigoProvincia     : element["codigoProvincia"],
+                  codigoDistrito      : element["codigoDistrito"],
+                  descripcion         : element["descripcion"],
+                  estado              : element["estado"] 
+                )
+              );
+        
+            });
+            for (var z = 0; z < _listDistrito.length; z++) {
+              await DBProvider.db.insertDistritos(_listDistrito[z]);
+            }
+            _listDistrito  =[]; 
+          }
+          _listProvincia = [];
+        }
+        
+        
+      }
+
+
+    }
+    var dbDepartamento  = await DBProvider.db.getDepartamentos("20");
+   
+    var dbProvincias     = await DBProvider.db.getProvincia();
+    print(dbDepartamento);
+
+    print(dbProvincias);
+  }
+
 }

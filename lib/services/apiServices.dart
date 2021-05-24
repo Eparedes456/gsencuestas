@@ -349,7 +349,7 @@ class ApiServices {
 
       print('Respuesta de servidor exitosa!');
       //print(response.data);
-      var decodedData = json.decode(response.body);
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
 
       return decodedData;
       
@@ -511,6 +511,82 @@ class ApiServices {
 
 
   }
+
+  /*Ubigeo servicios api */
+
+  getDepartamentos()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    var response = await http.get(
+      base_url_dev + "ubigeo/departamento",
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    if(response.statusCode == 200){
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      return decodedData;
+    }else if(response.statusCode == 401){
+      return 1;
+    }else if(response.statusCode == 500){
+      return 2;
+    }else{
+      return 3;
+    }
+
+  }
+
+  getProvincias(String codigoDepartamento)async{
+    
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    var response = await http.get(
+      base_url_dev + "ubigeo/provincia/$codigoDepartamento",
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if(response.statusCode == 200){
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      return decodedData;
+    }else if(response.statusCode == 401){
+      return 1;
+    }else if(response.statusCode == 500){
+      return 2;
+    }else{
+      return 3;
+    }
+  }
+
+  getDistritos(String codProvincia, String codigoDepartamento)async{
+    
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    var response = await http.get(
+      base_url_dev + "ubigeo/distrito?codigoDepartamento=$codigoDepartamento&codigoProvincia=$codProvincia",
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    if(response.statusCode == 200){
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      return decodedData;
+    }else if(response.statusCode == 401){
+      return 1;
+    }else if(response.statusCode == 500){
+      return 2;
+    }else{
+      return 3;
+    }
+  }
+  /* */
 
   saveUser(Map data)async{
 

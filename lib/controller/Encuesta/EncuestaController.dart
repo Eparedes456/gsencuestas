@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,11 +8,14 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
+import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
@@ -71,7 +77,9 @@ class EncuestaController extends GetxController{
   String _nroTotalPreguntas = "";
   String get nroTotalPreguntas => _nroTotalPreguntas;
   
-
+  Uint8List _photoBase64;
+  Uint8List get photoBase64 => _photoBase64;
+  
   List<PreguntaModel> _listPregunta = [];
   List<PreguntaModel> get listPregunta => _listPregunta;
 
@@ -352,7 +360,6 @@ class EncuestaController extends GetxController{
         print("Busco al encuestado en la bd local");
 
         var respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
-
         if(respuesta.length > 0){
 
           Get.back(); 
@@ -373,30 +380,172 @@ class EncuestaController extends GetxController{
 
   }
 
-  showEncuestadoModal(dynamic data){
+  showEncuestadoModal(dynamic data)async{
 
     print(data[0]["idEncuestado"]);
-    var idEncuestado2    = data[0]["idEncuestado"].toString();
+    var idEncuestado2   = data[0]["idEncuestado"].toString();
     var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
-
+    var foto            = data[0]["foto"];
+    _photoBase64        = base64Decode(foto); 
+    var idUbigeo        = data[0]["idUbigeo"];
+    var partes = idUbigeo.split("");
+    var codDepartamento = partes[0] + partes[1];
+    var codProvincia = partes[2] + partes[3];
+    var codDistritos = partes[4] + partes[5];
+    print(idUbigeo); 
+    print(codDepartamento);
+    print(codProvincia);
+    print(codDistritos);
+    
+    List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(codDepartamento.toString());
+    List<ProvinciaModel> dataProvincia        = await DBProvider.db.getOneProvincia(codProvincia.toString(),codDepartamento.toString()); 
+    List<ProvinciaModel> dataProvinciaa        = await DBProvider.db.getProvincia();
+    List<DistritoModel> dataDistrito        = await DBProvider.db.getDistritos(codProvincia.toString(),codDepartamento.toString(),codDistritos.toString()); 
+    print(dataDepartamento);
+    print(dataProvinciaa);
     Get.dialog(
 
       AlertDialog(
 
         title: Text('Encuestado encontrado'),
-        content: ListTile(
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              //leading: Icon(Icons.people,size: 16,),
+              leading: CircleAvatar(
+                radius: 30,
+                backgroundImage: MemoryImage(_photoBase64)
+              ),
+              //trailing: Icon(Icons.arrow_forward,size: 16,),
+              title: Text('$nombreCompleto',style: TextStyle(fontSize: 14),),
+              onTap: (){
 
-          leading: Icon(Icons.people,size: 16,),
-          trailing: Icon(Icons.arrow_forward,size: 16,),
-          title: Text('$nombreCompleto',style: TextStyle(fontSize: 14),),
-          onTap: (){
+                idEncuestado = idEncuestado2.toString();
+                print(idEncuestado);
 
-            idEncuestado = idEncuestado2.toString();
-            print(idEncuestado);
+                confirmationModal(idEncuestado);
+              },
 
-            confirmationModal(idEncuestado);
-          },
+            ),
+            SizedBox(height: 8,),
+            Text('Ambito  de intervención',style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 8,),
+            Text('DEPARTAMENTO'),
+            Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child: Center(
+                child: Padding(
+                  padding:  EdgeInsets.only(left: 8,right: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Text(dataDepartamento[0].descripcion)),
+                      Icon(Icons.unfold_more)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 8,),
+            Text('PROVINCIA'),
+            Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child:Center(
+                child: Padding(
+                  padding:  EdgeInsets.only(left: 8,right: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Text(dataProvincia[0].descripcion)),
+                      Icon(Icons.unfold_more)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 8,),
+            Text('DISTRITO'),
+            Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child:Center(
+                child: Padding(
+                  padding:  EdgeInsets.only(left: 8,right: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Text(dataDistrito[0].descripcion)),
+                      Icon(Icons.unfold_more)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 8,),
+            Text('CENTRO POBLADO'),
+            Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child:Center(
+                child: Padding(
+                  padding:  EdgeInsets.only(left: 8,right: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Text('SAN MARTIN')),
+                      Icon(Icons.unfold_more)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 8,),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                height: 45,
+                child: MaterialButton(
+                  onPressed: (){
 
+                  },
+                  child: Text(
+                    'Empezar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)

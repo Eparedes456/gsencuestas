@@ -1,4 +1,6 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
+import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
 import 'package:gsencuesta/model/Encuesta/EncuestaModel.dart';
 import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
@@ -6,6 +8,7 @@ import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
@@ -272,6 +275,7 @@ class DBProvider{
             telefono TEXT,
             email TEXT,
             foto TEXT,
+            idUbigeo INTEGER,
             estado TEXT
 
           )
@@ -290,8 +294,41 @@ class DBProvider{
           '''
         );
 
-        
+        await db.execute(
+          '''
+          CREATE TABLE departamento(
+            idDepartamento INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigoDepartamento TEXT,
+            descripcion TEXT,
+            estado TEXT
+          )
+          '''
+        );
 
+        await db.execute(
+          '''
+          CREATE TABLE provincia(
+            idProvincia INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigoDepartamento TEXT,
+            codigoProvincia TEXT,
+            descripcion TEXT,
+            estado TEXT
+          )
+          '''
+        );
+
+        await db.execute(
+          '''
+          CREATE TABLE distrito(
+            idDistrito INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigoDepartamento TEXT,
+            codigoProvincia TEXT,
+            codigoDistrito TEXT,
+            descripcion TEXT,
+            estado TEXT
+          )
+          '''
+        );
       },
       version: 9
 
@@ -1119,5 +1156,69 @@ class DBProvider{
 
     return parametroData;
   }
+
+  /* Ubigeo */
+    insertDepartamentos(DepartamentoModel nuevoDepartamento)async{
+      final db = await database;
+      var respuesta = await db.insert("departamento", nuevoDepartamento.toMap());
+      return respuesta;
+    }
+
+    insetProvincias(ProvinciaModel nuevoProvincia)async{
+      final db  = await database;
+      var respuesta = await db.insert("provincia", nuevoProvincia.toMap());
+      return respuesta;
+    }
+
+    insertDistritos(DistritoModel nuevoDistrito)async{
+      final db  = await database;
+      var respuesta = await db.insert("distrito", nuevoDistrito.toMap());
+      return respuesta;
+    }
+
+    getDepartamentos(String codDepartamento)async{
+      final db = await database;
+      var response = await db.rawQuery(
+        '''
+        SELECT * FROM departamento WHERE codigoDepartamento = '$codDepartamento'
+        '''
+      );
+      List<DepartamentoModel> listDepartamento = response.isNotEmpty ? response.map((e) => DepartamentoModel.fromMap(e)).toList() : [];
+      return listDepartamento;
+    }
+
+    getProvincia()async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM provincia
+        '''
+      );
+      List<ProvinciaModel> listProvincia = respuesta.isNotEmpty ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList() : [];
+      return listProvincia;
+    }
+    getOneProvincia(String codigoProvincia, String codigoDepartamento)async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM provincia WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento'
+        '''
+      );
+      List<ProvinciaModel> listProvincia = respuesta.isNotEmpty ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList() : [];
+      return listProvincia;
+    }
+    getDistritos(String codigoProvincia, String codigoDepartamento, String codigoDistrito)async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM distrito WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento' AND codigoDistrito = '$codigoDistrito'
+        '''
+      );
+      List<DistritoModel> listDistrito = respuesta.isNotEmpty ? respuesta.map((e) => DistritoModel.fromMap(e)).toList() : [];
+      return listDistrito;
+    }
+
+
+  /* */
 
 }

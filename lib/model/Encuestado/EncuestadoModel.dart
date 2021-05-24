@@ -19,8 +19,6 @@ String encuestadoToJson( EncuestadoModel data ){
 
 
 class EncuestadoModel{
-
-  
   String idEncuestado;
   String documento;
   String nombre;
@@ -43,19 +41,13 @@ class EncuestadoModel{
 
   EncuestadoModel(
     {
-
       this.idEncuestado, this.documento, this.nombre, this.apellidoPaterno, this.apellidoMaterno, this.sexo, this.estadoCivil, this.direccion, this.telefono, this.email, this.foto, this.estado, this.tipoPersona,
       this.tipoDocumento, this.representanteLegal, this.idUbigeo, this.observacion, this.createdAt, this.updatedAt
-
     }
-
-
   );
-
+  
      // El from json es para mostrare los datos de la base de datos local
-
   factory EncuestadoModel.fromMap(Map<String, dynamic> json) => EncuestadoModel(
-
     idEncuestado            : json["idEncuestado"].toString(),
     documento               : json["documento"],
     nombre                  : json["nombre"],
@@ -67,18 +59,13 @@ class EncuestadoModel{
     telefono                : json['telefono'],
     email                   : json['email'],
     foto                    : json['foto'],
+    idUbigeo                : json["idUbigeo"].toString(),
     estado                  : json['estado'],
-               
-
   );
-
-
   //  El toJson es para insertar los datos a la base de dato local
 
   Map<String,dynamic> toMap(){
-
-    return {
-      
+    return {  
       'idEncuestado'                : idEncuestado,
       'documento'                   : documento,
       'nombre'                      : nombre,
@@ -90,14 +77,8 @@ class EncuestadoModel{
       'telefono'                    : telefono,
       'email'                       : email,
       'foto'                        : foto,
+      'idUbigeo'                    : idUbigeo,
       'estado'                      : estado,
-      
-
     };
-
-
   }
-
-
-
 }
