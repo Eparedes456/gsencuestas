@@ -387,17 +387,20 @@ class EncuestaController extends GetxController{
     var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
     var foto            = data[0]["foto"];
     _photoBase64        = base64Decode(foto); 
-    var idUbigeo        = data[0]["idUbigeo"];
-    var partes = idUbigeo.split("");
-    var codDepartamento = partes[0] + partes[1];
-    var codProvincia = partes[2] + partes[3];
-    var codDistritos = partes[4] + partes[5];
-    print(idUbigeo); 
-    print(codDepartamento);
-    print(codProvincia);
-    print(codDistritos);
+    var idUbigeo        =  "220101,210203";  //data[0]["idUbigeo"];
+    var dataUbi = idUbigeo.split(",");
+  
+    List<DepartamentoModel> showDepartamentos  =[];
+
     
-    List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(codDepartamento.toString());
+    
+    /*var codDepartamento = partes[0] + partes[1];
+    var codProvincia = partes[2] + partes[3];
+    var codDistritos = partes[4] + partes[5];*/
+    print(dataUbi); 
+    
+    
+    /*List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(codDepartamento.toString());
     List<ProvinciaModel> dataProvincia        = await DBProvider.db.getOneProvincia(codProvincia.toString(),codDepartamento.toString()); 
     List<ProvinciaModel> dataProvinciaa        = await DBProvider.db.getProvincia();
     List<DistritoModel> dataDistrito        = await DBProvider.db.getDistritos(codProvincia.toString(),codDepartamento.toString(),codDistritos.toString()); 
@@ -553,7 +556,7 @@ class EncuestaController extends GetxController{
 
       )
 
-    );
+    );*/
 
 
   }
