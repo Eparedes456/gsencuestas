@@ -1180,7 +1180,7 @@ class DBProvider{
       final db = await database;
       var response = await db.rawQuery(
         '''
-        SELECT * FROM departamento WHERE codigoDepartamento = '$codDepartamento'
+        SELECT DISTINCT codigoDepartamento,descripcion FROM departamento WHERE codigoDepartamento = '$codDepartamento'
         '''
       );
       List<DepartamentoModel> listDepartamento = response.isNotEmpty ? response.map((e) => DepartamentoModel.fromMap(e)).toList() : [];

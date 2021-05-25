@@ -276,6 +276,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     
 
     update();
+    
 
   }
 

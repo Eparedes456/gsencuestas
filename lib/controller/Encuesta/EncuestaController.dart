@@ -103,6 +103,22 @@ class EncuestaController extends GetxController{
 
   
 
+  /**  ubigeo */
+    
+  String _valueDepartamento;
+  String get valueDepartamento => _valueDepartamento;
+
+  String _valueProvincia;
+  String get valueprovincia => _valueProvincia;
+  List<ProvinciaModel> _listprovincias = [];
+  List<ProvinciaModel> get listprovincias => _listprovincias;
+
+  List<DistritoModel> _listDistritos = [];
+  List<DistritoModel> get listDistrito => _listDistritos;
+  String _valueDistrito;
+  String get valueDistrito => _valueDistrito;
+  /** */
+
 
   loadData(EncuestaModel encuesta)async{
 
@@ -387,25 +403,65 @@ class EncuestaController extends GetxController{
     var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
     var foto            = data[0]["foto"];
     _photoBase64        = base64Decode(foto); 
-    var idUbigeo        =  "220101,210203";  //data[0]["idUbigeo"];
+    var idUbigeo        =  "220101,220203,210402";  //data[0]["idUbigeo"];
     var dataUbi = idUbigeo.split(",");
-  
+    List temporalDepartamento = [];
+    List temporalProvincia =[];
     List<DepartamentoModel> showDepartamentos  =[];
+    List<ProvinciaModel> showProvincias = [];
+
+    print(dataUbi);
+    
+    dataUbi.forEach((element) {
+      var flat = element.substring(0,2);
+      temporalDepartamento.add(flat);
+    });
+
+    dataUbi.forEach((element) {
+      var flat = element.substring(0,4);
+      temporalProvincia.add(flat);
+    });
 
     
+
+    List listCodDep       = temporalDepartamento.toSet().toList();
+    List listcodProvincia = temporalProvincia.toSet().toList();
     
-    /*var codDepartamento = partes[0] + partes[1];
-    var codProvincia = partes[2] + partes[3];
-    var codDistritos = partes[4] + partes[5];*/
-    print(dataUbi); 
+
+
+
+
+    for (var i = 0; i < listCodDep.length; i++) {
+      List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(listCodDep[i].toString());
+      showDepartamentos.add(dataDepartamento[0]);
+    }
+    _valueDepartamento = showDepartamentos[0].descripcion;
+    var idDepartamento = showDepartamentos[0].codigoDepartamento;
+    listcodProvincia.removeWhere((element) => element.toString().substring(0,2) != idDepartamento );
     
-    
-    /*List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(codDepartamento.toString());
+    print(listcodProvincia);
+    temporalProvincia = [];
+    listcodProvincia.forEach((element) {
+      var flat = element.substring(2,4);
+      temporalProvincia.add(flat);
+    });
+    List codProvincia = temporalProvincia.toSet().toList();
+    for (var x = 0; x < codProvincia.length; x++) {
+      List<ProvinciaModel> dataProvincias = await DBProvider.db.getOneProvincia(codProvincia[x].toString(),idDepartamento);
+      _listprovincias.add(dataProvincias[0]);
+    }
+    print(dataUbi[0].substring(2,4));
+    print(idDepartamento);
+
+    _valueProvincia = _listprovincias[0].descripcion;
+    /*List<DepartamentoModel> dataDepar.tamento  = await DBProvider.db .getDepartamentos(codDepartamento.toString());
     List<ProvinciaModel> dataProvincia        = await DBProvider.db.getOneProvincia(codProvincia.toString(),codDepartamento.toString()); 
     List<ProvinciaModel> dataProvinciaa        = await DBProvider.db.getProvincia();
     List<DistritoModel> dataDistrito        = await DBProvider.db.getDistritos(codProvincia.toString(),codDepartamento.toString(),codDistritos.toString()); 
     print(dataDepartamento);
-    print(dataProvinciaa);
+    print(dataProvinciaa);*/
+
+
     Get.dialog(
 
       AlertDialog(
@@ -438,48 +494,12 @@ class EncuestaController extends GetxController{
             Text('Ambito  de intervención',style: TextStyle(fontWeight: FontWeight.bold),),
             SizedBox(height: 8,),
             Text('DEPARTAMENTO'),
-            Container(
-              width: double.infinity,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey[200],
-              ),
-              child: Center(
-                child: Padding(
-                  padding:  EdgeInsets.only(left: 8,right: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Text(dataDepartamento[0].descripcion)),
-                      Icon(Icons.unfold_more)
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            DropDownDepartamento(showDepartamentos: showDepartamentos, dataUbi: dataUbi,),
+            
             SizedBox(height: 8,),
             Text('PROVINCIA'),
-            Container(
-              width: double.infinity,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey[200],
-              ),
-              child:Center(
-                child: Padding(
-                  padding:  EdgeInsets.only(left: 8,right: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Text(dataProvincia[0].descripcion)),
-                      Icon(Icons.unfold_more)
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            DropDownProvincia(showProvincia: _listprovincias,dataUbi: dataUbi,),
+            
             SizedBox(height: 8,),
             Text('DISTRITO'),
             Container(
@@ -495,7 +515,7 @@ class EncuestaController extends GetxController{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: Text(dataDistrito[0].descripcion)),
+                      Expanded(child: Text('dataDistrito[0].descripcion')),
                       Icon(Icons.unfold_more)
                     ],
                   ),
@@ -556,7 +576,7 @@ class EncuestaController extends GetxController{
 
       )
 
-    );*/
+    );
 
 
   }
@@ -599,33 +619,6 @@ class EncuestaController extends GetxController{
               child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
             ),
           )
-
-          /*FlatButton(
-
-            onPressed: (){
-
-              navigateToQuiz(id);
-
-            },
-            color: Color.fromRGBO(0, 102, 84, 1),
-            child: Text('Empezar'),
-
-
-          ),*/
-
-         /*FlatButton(
-
-            onPressed: (){
-
-              Get.back();
-
-            },
-            color: Colors.grey,
-            child: Text('Cancelar',style: TextStyle(color: Colors.white),),
-
-
-          ),*/
-
         ],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
@@ -680,50 +673,24 @@ class EncuestaController extends GetxController{
 
   }
 
-
   //  creamos la ficha en la bse de datos y si logras insertar exitosamente entonces navegamos a la pagina de las preguntas y  opciones.
 
   navigateToQuiz(String idEncuestado)async{
 
-    
     DateTime now = DateTime.now();
     var utc = now.toUtc();
     
     String formatDate = DateFormat('yyyy-MM-ddHH:mm:ss').format(now);
     String hourFormat = DateFormat('HH:mm:ss').format(now);
     
-    
-    //String formattedDate = "2021-05-11T16:54:48.984Z"; //formatDate + "T" + hourFormat + ".0Z";
-    //print(formattedDate);
-    
     var part = utc.toString().split(" ");
     var fecha = part[0].toString();
     var hora =part[1].toString();
     print(part[1]);
     String formattedDate =fecha + "T" + hora;
-  
-
- 
-
-    //print("formattedDate = "+formatDate);
-    //print(fecha);
-    //print(time);
-    //String formattedDate = fecha + "T" + time + "z";
-    //print(formatDate);
-    //print(now);
- 
-
-    //print(formatDate + "T" + hourFormat + ".0Z");
-    
-    
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     String latitud = position.latitude.toString();
     String longitud = position.longitude.toString();
-    
-    
-
-
-    
     var ficha = await DBProvider.db.insertNewFicha( int.parse(idEncuesta) , int.parse(idEncuestado), formattedDate,latitud,longitud);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var idUsuario = await preferences.getString('idUsuario');
@@ -766,7 +733,6 @@ class EncuestaController extends GetxController{
 
 
   }
-
 
   pendientesEncuestas()async{
 
@@ -910,8 +876,40 @@ class EncuestaController extends GetxController{
 
   }
 
+  
+  selectdepartamento(String valor){
+    _valueDepartamento  = valor;
+    update(['departamento']);
+  }
+
+  selectedDepartamento(List<String> dataUbi, DepartamentoModel value)async{
+    var result = dataUbi.where((element) =>  element.contains(value.codigoDepartamento));
+    //print(result);
+    var flat = result.toString().substring(1,5);
+    print(flat.substring(2,4));
+    _listprovincias  = await DBProvider.db .getOneProvincia( flat.substring(2,4) ,flat.substring(0,2) );
+    print(_listprovincias);
+    _valueProvincia = _listprovincias[0].descripcion;
+    update(['provincia']);
+  }
 
 
+  changeProvincia(String valor){
+    _valueProvincia  = valor;
+    update(['provincia']);
+  }
+
+  selectedProvincia(List<String> dataUbi, ProvinciaModel value)async{
+    var result = dataUbi.where((element) =>  element.contains(value.codigoDepartamento) && element.contains(value.codigoProvincia));
+    print(result.toString());
+    var flat1 = result.toString().substring(1,7);
+    print(flat1);
+    print(flat1.substring(0,2));
+    print(flat1.substring(2,4));
+    print(flat1.substring(4,6));
+    _listDistritos  = await DBProvider.db.getDistritos( flat1.substring(2,4).toString(), flat1.substring(0,2).toString(), flat1.substring(4,6) );
+    print(_listDistritos);
+  }
 
   @override
   void onClose() {
@@ -925,6 +923,130 @@ class EncuestaController extends GetxController{
     super.dispose();
   }
 
-
-
 }
+
+class DropDownDepartamento extends StatelessWidget {
+  final List<DepartamentoModel> showDepartamentos;
+  final List<String> dataUbi;
+  const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+
+    String value = showDepartamentos[0].descripcion;
+
+    return GetBuilder<EncuestaController>(
+      init: EncuestaController(),
+      id: 'departamento',
+      builder: (_)=> Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child: DropdownButton(
+                underline: Container(color: Colors.transparent,),
+                hint: Padding(
+                  padding:  EdgeInsets.only(left: 8),
+                  child: Text('Seleccione un departamento'),
+                ),
+                isExpanded: true,
+                value: _.valueDepartamento,
+                items: showDepartamentos.map((value){
+                  return DropdownMenuItem(
+                    value: value.descripcion,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(value.descripcion,style: TextStyle(fontSize: 14),),
+                    ),
+                    onTap: ()async{
+                      //print(value.codigoDepartamento);
+                      _.selectedDepartamento(dataUbi,value);
+                    },
+                  );
+                }).toList(),
+                onChanged: (valor){
+                  
+                 _.selectdepartamento(valor);
+                
+                },
+              ),
+            ),
+    );
+  }
+}
+
+class DropDownProvincia extends StatelessWidget {
+  final List<ProvinciaModel> showProvincia;
+  final List<String> dataUbi;
+  const DropDownProvincia({Key key,this.showProvincia,this.dataUbi}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<EncuestaController>(
+
+      init: EncuestaController(),
+      id: 'provincia',
+      builder: (_)=> Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child: DropdownButton(
+                underline: Container(color: Colors.transparent,),
+                hint: Padding(
+                  padding:  EdgeInsets.only(left: 8),
+                  child: Text('Seleccione un departamento'),
+                ),
+                isExpanded: true,
+                value: _.valueprovincia,
+                items: _.listprovincias.map((value){
+                  return DropdownMenuItem(
+                    value: value.descripcion,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(value.descripcion,style: TextStyle(fontSize: 14),),
+                    ),
+                    onTap: ()async{
+                      _.selectedProvincia(dataUbi,value);
+                    },
+                  );
+                }).toList(),
+                onChanged: (valor){
+                  
+                 _.changeProvincia(valor);
+                
+                },
+              ),
+            ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
