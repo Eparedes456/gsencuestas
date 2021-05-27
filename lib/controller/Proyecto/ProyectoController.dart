@@ -91,8 +91,6 @@ class ProyectoController extends GetxController{
 
         resultado.forEach((item){
 
-        
-
           _encuestas.add(
 
             EncuestaModel(
@@ -109,7 +107,8 @@ class ProyectoController extends GetxController{
               logo                : item["logo"].toString(),
               dinamico            : item["dinamico"].toString(),
               esquema             : item["esquema"].toString(),
-              estado              : item["estado"].toString(),    
+              estado              : item["estado"].toString(),
+              sourceMultimedia    : item["sourceMultimedia"], 
             )
 
           );

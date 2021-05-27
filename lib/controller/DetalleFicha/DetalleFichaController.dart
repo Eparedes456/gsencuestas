@@ -105,6 +105,7 @@ class DetalleFichaController extends GetxController{
   String fechaInicioSend;
   String fechaFinSend;
   String observacionFicha;
+  String ubigeoFicha;
 
   int idEncuestaSend = 0;
 
@@ -114,9 +115,10 @@ class DetalleFichaController extends GetxController{
     _listFichasDb = await DBProvider.db.oneFicha(idFicha);
     
     print(_listFichasDb);
-    _idFicha = _listFichasDb[0].idFicha.toString();
-    _estado = _listFichasDb[0].estado;
-    idEncuestaSend = _listFichasDb[0].idEncuesta;
+    _idFicha          = _listFichasDb[0].idFicha.toString();
+    _estado           = _listFichasDb[0].estado;
+    idEncuestaSend    = _listFichasDb[0].idEncuesta;
+    ubigeoFicha       = _listFichasDb[0].ubigeo;
 
     final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
     final format = DateFormat('dd-MM-yyyy');
@@ -356,6 +358,7 @@ class DetalleFichaController extends GetxController{
     sendFicha["latitud"]      = latitud;
     sendFicha["longitud"]     = longitud;
     sendFicha["observacion"]  = observacionFicha;
+    sendFicha["ubigeo"]       = ubigeoFicha;
     var encuesta = {};
     encuesta["idEncuesta"]   = idEncuestaSend;
     sendFicha['encuesta'] = encuesta;

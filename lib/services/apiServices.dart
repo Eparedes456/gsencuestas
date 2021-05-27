@@ -9,6 +9,8 @@ class ApiServices {
 
   //final base_url = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
   final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
+  //final base_url_dev = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
+
   var dio = Dio();
   /* Funcion get */
 

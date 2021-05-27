@@ -36,14 +36,12 @@ class EncuestaModel{
   String updatedAt;
   String idFicha = "";
   String publicado;
+  String sourceMultimedia;
   
-  
-
   EncuestaModel(
       {
         this.idEncuesta,this.idProyecto,this.titulo,this.descripcion,this.url_guia,this.expira,this.fechaInicio,this.fechaFin,this.logo,
-        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,this.idFicha,this.publicado
-        
+        this.dinamico,this.esquema,this.estado,this.createdAt,this.updatedAt,this.idFicha,this.publicado,this.sourceMultimedia
       }
   );
 
@@ -62,6 +60,8 @@ class EncuestaModel{
     dinamico            : json['dinamico'],
     esquema             : json['esquema'],
     estado              : json['estado'],
+    publicado           : json['publicado'].toString(),
+    sourceMultimedia    : json['sourceMultimedia'],
     createdAt           : json['createdAt'],
     updatedAt           : json['updatedAt'],
   );
@@ -83,8 +83,10 @@ class EncuestaModel{
       'dinamico'            : dinamico,
       'esquema'             : esquema,
       'estado'              : estado,
+      'publicado'           : publicado,
+      'sourceMultimedia'    : sourceMultimedia,
       'createdAt'           : createdAt,
-      'updatedAt'            : updatedAt,   
+      'updatedAt'           : updatedAt,   
 
     };
 

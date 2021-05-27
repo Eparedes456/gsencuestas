@@ -121,7 +121,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
               relevant                : item["relevant"],
               choice_filter           : item["choice_filter"], 
               bind_name               : item["bind_name"],
-              bind_type               : item["bind_type"],
+              bind_type               : item["bindType"],
               bind_field_length       : item["bindFieldLength"].toString(),
               bind_field_placeholder  : item["bindFieldPlaceholder"],
               orden                   : item["orden"],

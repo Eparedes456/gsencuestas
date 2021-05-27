@@ -14,6 +14,7 @@ import 'package:gsencuesta/services/apiServices.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FichaController extends GetxController{
 
@@ -27,23 +28,8 @@ class FichaController extends GetxController{
 
     idFicha = listData["idFicha"];
     print(idFicha);
-
-    /*_positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
-
-      print(posicion.latitude);
-      print(posicion.longitude);
-
-      await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(), posicion.longitude.toString(), 'TRUE');
-
-      List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackings();
-      
-      print(respuestaBd);
-
-      
-
-    });*/
-
-
+    loadData();
+    
   }
 
   @override
@@ -64,10 +50,18 @@ class FichaController extends GetxController{
   List<MultimediaModel> get listMultimedia => _listMultimedia;
   StreamSubscription<Position> _positionStream;
   
+  String _sourceMultimedia = "";
+  String get sourceMultimedia => _sourceMultimedia;
 
   File _imagePath;
   File get imagepath => _imagePath;
   
+
+  loadData()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    _sourceMultimedia =  await preferences.getString('multimedia');
+    update();
+  }
 
   showModalImage()async{
     Get.dialog(
@@ -81,22 +75,23 @@ class FichaController extends GetxController{
           mainAxisSize: MainAxisSize.min,
           children: [
 
-            ListTile(
+            _sourceMultimedia == 'C' || _sourceMultimedia == 'T' ? ListTile(
               leading: Icon(Icons.photo_camera),
               title: Text('Usar camara'),
               onTap: (){
                 Get.back();
                 pickImage("CAMARA");
               },
-            ),
-            ListTile(
+            ):Container(),
+
+            _sourceMultimedia == 'G' || _sourceMultimedia == 'T'?  ListTile(
               leading: Icon(Icons.collections),
               title: Text('Abrir galeria'),
               onTap: (){
                 Get.back();
                 pickImage("GALERIA");
               },
-            ),
+            ) : Container() ,
 
 
           ],

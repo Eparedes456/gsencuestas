@@ -270,6 +270,7 @@ class PrincipalController extends GetxController{
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
       await cargarProyectosEncuesta();
+      loadingUbigeo();
       await cargarUbigeo();
     }
   }
@@ -354,6 +355,7 @@ class PrincipalController extends GetxController{
 
       );
   }
+  
   cargarEncuestados()async{
     var listEncuestados = await apiConexion.getAllEncuestado();
     if( listEncuestados != 1 && listEncuestados != 2 && listEncuestados  != 3 ){
@@ -432,20 +434,22 @@ class PrincipalController extends GetxController{
         listEncuestaApi.forEach((item){
           _encuestas.add(
             EncuestaModel(
-              idEncuesta    : item["idEncuesta"],
-              idProyecto    : idProyecto.toString(),
-              titulo        : item["titulo"],
-              descripcion   : item["descripcion"],
-              url_guia      : item["url_guia"],
-              expira        : item["expira"].toString(),
-              fechaInicio   : item["fechaInicio"],
-              fechaFin      : item["fechaFin"],
-              logo          : item["logo"],
-              dinamico      : item["dinamico"].toString(),
-              esquema       : item["esquema"],
-              estado        : item["estado"].toString(),
-              createdAt     : item["createdAt"],
-              updatedAt     : item["updatedAt"]
+              idEncuesta        : item["idEncuesta"],
+              idProyecto        : idProyecto.toString(),
+              titulo            : item["titulo"],
+              descripcion       : item["descripcion"],
+              url_guia          : item["url_guia"],
+              expira            : item["expira"].toString(),
+              fechaInicio       : item["fechaInicio"],
+              fechaFin          : item["fechaFin"],
+              logo              : item["logo"],
+              dinamico          : item["dinamico"].toString(),
+              esquema           : item["esquema"],
+              estado            : item["estado"].toString(),
+              sourceMultimedia  : item["sourceMultimedia"],
+              publicado         : item['publicado'].toString(),
+              createdAt         : item["createdAt"],
+              updatedAt         : item["updatedAt"]
 
 
             )
@@ -480,7 +484,7 @@ class PrincipalController extends GetxController{
               relevant                : item["relevant"],
               choice_filter           : item["choice_filter"], 
               bind_name               : item["bind_name"],
-              bind_type               : item["bind_type"],
+              bind_type               : item["bindType"],
               bind_field_length       : item["bindFieldLength"].toString(),
               bind_field_placeholder  : item["bindFieldPlaceholder"],
               orden                   : item["orden"],
@@ -636,8 +640,28 @@ class PrincipalController extends GetxController{
    
     var dbProvincias     = await DBProvider.db.getProvincia();
     print(dbDepartamento);
-
     print(dbProvincias);
+    Get.back();
   }
+
+  loadingUbigeo(){
+    
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        title: Text('Cargando datos adicionales',style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal),),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
 
 }

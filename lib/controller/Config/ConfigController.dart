@@ -68,6 +68,7 @@ class ConfigController extends GetxController{
       sendFicha["latitud"]      = listFichas[i].latitud;
       sendFicha["longitud"]     = listFichas[i].longitud;
       sendFicha["observacion"]  = listFichas[i].observacion;
+      sendFicha["ubigeo"]       = listFichas[i].ubigeo;
       var encuesta = {};
       encuesta["idEncuesta"]   = listFichas[i].idEncuesta;
       sendFicha['encuesta'] = encuesta;

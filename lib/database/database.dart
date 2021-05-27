@@ -62,6 +62,8 @@ class DBProvider{
             logo TEXT,
             dinamico TEXT,
             esquema TEXT,
+            sourceMultimedia TEXT,
+            publicado TEXT,
             estado  TEXT,
             createdAt TEXT,
             updatedAt TEXT
@@ -165,6 +167,7 @@ class DBProvider{
             fecha_inicio TEXT,
             fecha_fin TEXT,
             observacion TEXT,
+            ubigeo      TEXT,
             estado TEXT,
             updated_at TEXT
           
@@ -275,7 +278,7 @@ class DBProvider{
             telefono TEXT,
             email TEXT,
             foto TEXT,
-            idUbigeo INTEGER,
+            idUbigeo TEXT,
             estado TEXT
 
           )
@@ -675,7 +678,7 @@ class DBProvider{
 
   /* insertar y creaciòn  de nueva ficha */
 
-  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio, String latitud, String longitud)async{
+  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio, String latitud, String longitud,String ubigeo)async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -687,7 +690,7 @@ class DBProvider{
       
       '''
       INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latitud, longitud, fecha_inicio,
-      fecha_fin, observacion, estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' , 'P' , 'NO REGISTRA')
+      fecha_fin, observacion, ubigeo ,estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' ,'$ubigeo' ,'P' , 'NO REGISTRA')
 
       '''
     );

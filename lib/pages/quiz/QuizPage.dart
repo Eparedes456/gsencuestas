@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/CoordenadasWidget.dart';
@@ -69,7 +70,7 @@ class QuizPage extends StatelessWidget {
                           var id_pregunta = _.preguntas[index].id_pregunta;
                           var placeholder = _.preguntas[index].bind_field_placeholder;
                           var maxLength = _.preguntas[index].bind_field_length;
-                        
+                          var typeData = _.preguntas[index].bind_type;
 
                           if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
 
@@ -119,14 +120,10 @@ class QuizPage extends StatelessWidget {
                                           decoration: InputDecoration(
                                             hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
                                           ),
-                                          /*onSubmitted: (valor){
-                                            
-                                            _.guardarInput (_.preguntas[index].id_pregunta.toString() ,valor);
-
-                                          },*/
-                                          /*onChanged: (valor){
-                                            _.guardarInput (_.preguntas[index].id_pregunta.toString() ,valor);
-                                          },*/
+                                          keyboardType: typeData == "number" ? TextInputType.phone  : TextInputType.text,
+                                          inputFormatters: typeData == "number"?  <TextInputFormatter>[
+                                            FilteringTextInputFormatter.digitsOnly
+                                          ] : null
                                         ),
                                       
                                       ),
