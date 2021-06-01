@@ -17,6 +17,7 @@ import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
+import 'package:gsencuesta/pages/Practica/Practica.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
@@ -566,8 +567,9 @@ class EncuestaController extends GetxController{
                     print(idEncuestado);
                     print(ubigeo);
 
-                    confirmationModal(idEncuestado,ubigeo);
+                    //confirmationModal(idEncuestado,ubigeo);
 
+                    Get.to(Practica());
                   },
                   child: Text(
                     'Empezar',
