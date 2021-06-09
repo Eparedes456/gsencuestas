@@ -5,6 +5,7 @@ import 'package:gsencuesta/controller/Login/LoginController.dart';
 
 
 class Formulario extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

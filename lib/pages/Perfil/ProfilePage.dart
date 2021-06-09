@@ -218,6 +218,33 @@ class ProfilePage extends StatelessWidget {
                 ),
                 SizedBox(height: 20,),
 
+                Expanded(
+                  child: Padding(
+                    padding:  EdgeInsets.only(left: 8,right: 8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 12,),
+                          ListTile(
+                            leading: Icon(Icons.map,color: Color.fromRGBO(0, 102, 84, 1),),
+                            title: Text('Registrar parcela'),
+                            subtitle: Text('Capta los puntos latitud y longitud para la parcela.'),
+                            trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,),
+                            onTap: (){
+                              _.navigateToParcela();
+                            },
+                          ),
+                          Divider()
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+
 
               ],
             ),

@@ -8,6 +8,8 @@ import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:gsencuesta/pages/Login/LoginPage.dart';
+import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
+import 'package:gsencuesta/pages/Parcela/ParcelasPage.dart';
 import 'package:gsencuesta/pages/Perfil/EditProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,7 +102,11 @@ class ProfileController extends GetxController{
 
   }
 
-  
+  navigateToParcela()async{
+    Get.to(
+      NewParcelaPage()
+    );
+  }
 
 
 
