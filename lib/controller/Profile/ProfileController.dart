@@ -104,7 +104,7 @@ class ProfileController extends GetxController{
 
   navigateToParcela()async{
     Get.to(
-      NewParcelaPage()
+      ParcelaPage()
     );
   }
 

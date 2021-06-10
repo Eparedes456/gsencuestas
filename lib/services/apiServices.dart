@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiServices {
 
   //final base_url = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
-  final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
-  //final base_url_dev = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
+  //final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
+  final base_url_dev = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
 
   var dio = Dio();
   /* Funcion get */
@@ -282,8 +282,8 @@ class ApiServices {
   }
 
   ingresar(String username, String password)async{
-    var uri = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/auth";
-
+    //var uri = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/auth";
+    var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
     Map dataSend = {
         "password"  : password,
         "username"  : username
@@ -611,6 +611,51 @@ class ApiServices {
       return decodedData;
 
     }else if(response.statusCode == 500){
+
+      return 3;
+
+    }
+
+  }
+
+  /* Parcelas */
+
+  saveParcela(Map data)async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+    var sendData = json.encode(data);
+    print(sendData);
+
+   var response = await http.post(
+      base_url_dev + "parcela",
+      headers: {
+
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+
+      },
+      body: sendData
+    );
+
+    if(response.statusCode == 200){
+
+      var decodedData = json.decode(response.body);
+
+      return decodedData;
+
+    }else if(response.statusCode == 401){
+
+      return 1;
+      
+    }else if(response.statusCode == 500){
+
+      return 2;
+
+    }else{
 
       return 3;
 

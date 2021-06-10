@@ -169,7 +169,7 @@ class PrincipalController extends GetxController{
             
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"], idInstitucion, response["ultimaActualizacionUsuario"]);
             await cargarEncuestados();
-            //await cargarUbigeo();
+            await cargarUbigeo();
             await cargarProyectosEncuesta();
             
             
@@ -473,7 +473,7 @@ class PrincipalController extends GetxController{
               idEncuesta              :  int.parse(idEncuesta),
               enunciado               : item["enunciado"],
               tipo_pregunta           : item["tipo_pregunta"],
-              apariencia              : item["apariencia"],
+              apariencia              :  "",//item["apariencia"],
               requerido               : item["requerido"].toString(),
               requerido_msj           : item["requerido_msj"],
               readonly                : item["readonly"].toString(),

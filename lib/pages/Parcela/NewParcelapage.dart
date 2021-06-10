@@ -15,23 +15,18 @@ class NewParcelaPage extends StatelessWidget {
         ),
         body: Stack(
           children: [
-             GoogleMap(
-                  myLocationButtonEnabled: true,
-                  myLocationEnabled: true,
-                  
-                  //compassEnabled: true,
-                  //tiltGesturesEnabled: false,
-                  markers: _.markers,
-                  mapType: MapType.satellite,
-                  polylines: _.polylines,
-                  initialCameraPosition: _.initialCameraPosition,
-                  onMapCreated: (GoogleMapController controller){
-                    _.controller.complete(controller);
-
-                    //_.setPolyline();
-                    //_.showMarker();
-                  },
-              ),
+            GoogleMap(
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,    
+              markers: _.markers,
+              mapType: MapType.satellite,
+              polylines: _.polylines,
+              polygons: _.polygons,
+              initialCameraPosition: _.initialCameraPosition,
+              onMapCreated: (GoogleMapController controller){
+                _.controller.complete(controller);
+              },
+            ),
             
             
           ],
@@ -78,7 +73,9 @@ class NewParcelaPage extends StatelessWidget {
                     
                   ),
                   child: MaterialButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      _.polygonSave();
+                    },
                     child: Text(
                       'Guardar',
                       style: TextStyle(
