@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
 import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
@@ -70,6 +71,7 @@ class Parcela1Controller extends GetxController{
   /*  PARCELAS */
 
   List<ParcelaModel> _listParcelas = [];
+  List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
 
   getAllParcela()async{
 
@@ -89,6 +91,17 @@ class Parcela1Controller extends GetxController{
           updatedAt     : item["updatedAt"]
         )
       );
+
+      _listParcelaCoordenada.add(
+        ParcelaCoordenadasModel(
+          idParcelaCoordenada   : item["idParcelaCoordenada"],
+          idParcela             : item["idParcela"],
+          latitud               : item["latitud"],
+          longitud              : item["longitud"]   
+        )
+      );
+
+
     });
 
     print(_listParcelas);
