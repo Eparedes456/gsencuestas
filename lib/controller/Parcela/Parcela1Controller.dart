@@ -26,8 +26,14 @@ class Parcela1Controller extends GetxController{
     super.onReady();
   }
 
-  newParcela(){
-    Get.to(NewParcelaPage());
+  newParcela(ubi,id){
+    Get.to(
+      NewParcelaPage(),
+      arguments: {
+        'ubigeo'        : ubi,
+        'idEncuestado'  : id, 
+      }
+    );
   }
 
   TextEditingController insertEncuestadoController = new TextEditingController();
@@ -360,7 +366,9 @@ class Parcela1Controller extends GetxController{
                     //confirmationModal(idEncuestado,ubigeo);
 
                     //Get.to(Practica());
-                    newParcela();
+                    Get.back();
+                    newParcela(ubigeo, idEncuestado);
+
                   },
                   child: Text(
                     'Empezar',

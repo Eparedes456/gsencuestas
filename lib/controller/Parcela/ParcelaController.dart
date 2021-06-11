@@ -17,9 +17,13 @@ class ParcelaController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     
-
     polylinePoints = PolylinePoints();
+    var listData = Get.arguments;
     
+    idSeccion = listData["idEncuestado"];
+    ubigeo    = listData["ubigeo"];
+    print(idSeccion);
+    print(ubigeo);
     this.onload();
     super.onInit();
   }
@@ -30,6 +34,8 @@ class ParcelaController extends GetxController{
     super.onReady();
   }
 
+  String idSeccion;
+  String ubigeo = "";
   Completer<GoogleMapController> _controller = Completer();
   Completer<GoogleMapController> get controller => _controller;
 
@@ -200,32 +206,21 @@ class ParcelaController extends GetxController{
   }
 
   polygonSave()async{
+
     setPolygon();
     calculateAreaPolygon();
+    showModaLoading();
     var dataSend = {
       "area"              : double.parse(areacalculada),
       "descripcion"       : "Prueba2",
       "foto"              : "",
-      "idSeccion"         : 2,  // id del encuestado
-      "ubigeo"            : "220101",
+      "idSeccion"         : idSeccion,  // id del encuestado
+      "ubigeo"            : ubigeo,
       "seccion"           : "BENEFICIARIO"
     };
 
     var coordenadas ={};
     List<Map> listCoordenadasMap = new List();
-
-    /*for (var i = 0; i < polylineCoordinate.length ; i++) {
-      
-      coordenadas["latitud"]  = polylineCoordinate[i].latitude;
-      coordenadas["longitud"] = polylineCoordinate[i].longitude;
-
-      listCoordenadasMap.add(
-        coordenadas
-      );
-      dataSend['parcelaCoordenada']  = listCoordenadasMap;
-      
-
-    }*/
 
     polylineCoordinate.forEach((element) { 
 
@@ -241,11 +236,37 @@ class ParcelaController extends GetxController{
     dataSend['parcelaCoordenada']  = listCoordenadasMap;
     print(listCoordenadasMap);
     print(dataSend);
-    var reuslt  = await apiConexion.saveParcela(dataSend);
+    var result  = await apiConexion.saveParcela(dataSend);
+    
+    if(result["success"] == true){
+
+      Get.back();
+      Get.back();
+
+    }
+
+    print(result);
 
     update();
   }
   
+  showModaLoading(){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+        title: Text('Guardando la data ..'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator()
+          ],
+        ),
+      )
+    );
+  }
+
   calculateAreaPolygon(){
     double area = 0;
     if(polylineCoordinate.length > 2){
@@ -272,5 +293,8 @@ class ParcelaController extends GetxController{
   double convertToRadian(double input){
     return input * Math.pi/180;
   }
+
+
+
 
 }
