@@ -226,6 +226,7 @@ class ParcelaController extends GetxController{
 
       coordenadas["latitud"] = element.latitude;
       coordenadas["longitud"] = element.longitude;
+      
 
       listCoordenadasMap.add(
         coordenadas
