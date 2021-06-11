@@ -529,28 +529,6 @@ class EncuestaController extends GetxController{
             Text('DISTRITO'),
             DropDownDistrito(),
             
-            /*SizedBox(height: 8,),
-            Text('CENTRO POBLADO'),
-            Container(
-              width: double.infinity,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey[200],
-              ),
-              child:Center(
-                child: Padding(
-                  padding:  EdgeInsets.only(left: 8,right: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Text('SAN MARTIN')),
-                      Icon(Icons.unfold_more)
-                    ],
-                  ),
-                ),
-              ),
-            ),*/
             SizedBox(height: 8,),
             Center(
               child: Container(
