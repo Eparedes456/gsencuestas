@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
 import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
@@ -18,6 +19,7 @@ class Parcela1Controller extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    this.getAllParcela();
   }
 
   @override
@@ -63,6 +65,41 @@ class Parcela1Controller extends GetxController{
   List listCodDep = [];
   List listcodProvincia = [];
   List liscodDistrito = [];
+
+
+  /*  PARCELAS */
+
+  List<ParcelaModel> _listParcelas = [];
+
+  getAllParcela()async{
+
+    var response = await apiConexion.getAllParcelas();
+
+    response.forEach((item){
+      _listParcelas.add(
+        ParcelaModel(
+          idParcela     : item["idParcela"],
+          descripcion   : item["descripcion"],
+          idSeccion     : item["idSeccion"],
+          seccion       : item["seccion"],
+          area          : item["area"],
+          ubigeo        : item["ubigeo"],
+          foto          : item["foto"],
+          createdAt     : item["createdAt"],
+          updatedAt     : item["updatedAt"]
+        )
+      );
+    });
+
+    print(_listParcelas);
+
+
+  }
+
+
+
+
+
 
   /** */
 
