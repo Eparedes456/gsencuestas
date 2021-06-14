@@ -376,6 +376,7 @@ class PrincipalController extends GetxController{
               email           : element["email"],
               idUbigeo        : element["idUbigeo"],
               estado          : element["estado"].toString() ,
+              foto            : element["foto"] 
             )
           );
 

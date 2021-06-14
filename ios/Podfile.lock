@@ -96,6 +96,8 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - url_launcher (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -109,6 +111,7 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
   trunk:
@@ -151,6 +154,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
   connectivity_plus: f5e5e0b894ec1187bfab9816d6c2f034da8d46da
@@ -179,6 +184,7 @@ SPEC CHECKSUMS:
   SCrypto: 8287dcf6151df38f9bc0efad2ed982c54a96d1b8
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
 
 PODFILE CHECKSUM: 096b3d7493550dad8bc8913b199bde6b0d069f9f
 

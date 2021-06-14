@@ -231,8 +231,11 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 12,),
                           ListTile(
                             leading: Icon(Icons.map,color: Color.fromRGBO(0, 102, 84, 1),),
-                            title: Text('Registrar parcela'),
-                            subtitle: Text('Capta los puntos latitud y longitud para la parcela.'),
+                            title: Text(
+                              'Ver parcelas de los beneficiarios',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            subtitle: Text('Lista de beneficiarios con sus correspondientes parcelas geolocalizadas.',style: TextStyle(fontSize: 12),),
                             trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,),
                             onTap: (){
                               _.navigateToParcela();

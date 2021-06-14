@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
 import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
+import 'package:gsencuesta/model/Parcela/BeneficiarioParcela.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
@@ -71,45 +72,133 @@ class Parcela1Controller extends GetxController{
   /*  PARCELAS */
 
   List<ParcelaModel> _listParcelas = [];
+  List<ParcelaModel> get listParcela => _listParcelas;
   List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
+  bool hayParcela = false;
+  bool loading = true;
+  bool cargaCoordenadas = false;
 
   getAllParcela()async{
 
-    var response = await apiConexion.getAllParcelas();
+      List response = await apiConexion.getAllParcelas();
 
-    response.forEach((item){
+    for (var i = 0; i < response.length; i++) {
+      print(response[i]["idSeccion"]);
+      var beneficiario = await DBProvider.db.getOneEncuestado(response[i]["idSeccion"].toString());
+      var foto = beneficiario[0].foto;
+      _photoBase64 = base64Decode(foto);
+
+      
       _listParcelas.add(
         ParcelaModel(
-          idParcela     : item["idParcela"],
-          descripcion   : item["descripcion"],
-          idSeccion     : item["idSeccion"],
-          seccion       : item["seccion"],
-          area          : item["area"],
-          ubigeo        : item["ubigeo"],
-          foto          : item["foto"],
-          createdAt     : item["createdAt"],
-          updatedAt     : item["updatedAt"]
+          idParcela       : response[i]["idParcela"],//["idParcela"],
+          descripcion     : response[i]["descripcion"],
+          idSeccion       : response[i]["idSeccion"],
+          seccion         : response[i]["seccion"],
+          area            : response[i]["area"],
+          ubigeo          : response[i]["ubigeo"],
+          foto            : _photoBase64,
+          nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
+          createdAt       : response[i]["createdAt"],
+          updatedAt       : response[i]["updatedAt"]
         )
       );
+ 
+      for (var x = 0; x < response[i]["parcelaCoordenada"].length; x++){
 
-      _listParcelaCoordenada.add(
-        ParcelaCoordenadasModel(
-          idParcelaCoordenada   : item["idParcelaCoordenada"],
-          idParcela             : item["idParcela"],
-          latitud               : item["latitud"],
-          longitud              : item["longitud"]   
-        )
-      );
+        _listParcelaCoordenada.add(
+          ParcelaCoordenadasModel(
+            //idParcelaCoordenada   : response[i]["parcelaCoordenada"][x]["idParcelaCoordenada"],
+            idParcela             : response[i]["idParcela"],
+            idBeneficiario        : response[i]["idSeccion"],
+            latitud               : response[i]["parcelaCoordenada"][x]["latitud"],
+            longitud              : response[i]["parcelaCoordenada"][x]["longitud"]   
+          )
+        );
 
+        
 
-    });
+      }
 
-    print(_listParcelas);
+    }
+    for (var z = 0; z < _listParcelaCoordenada.length; z++) {
+      await DBProvider.db.insertParcelaCoordenadas(_listParcelaCoordenada[z]);
+    }
+    var result = await DBProvider.db.getParcelaCoordenadas();
+    
+
+  
+    if(_listParcelas.length > 0){
+      hayParcela = true;
+      loading = false;
+    }
+    update();
+
+    
 
 
   }
 
+  navigateToBeneficiarioParcela(String idBeneficiario,List<ParcelaModel> lista){
+    Get.to(
+      BeneficiaroParcela(),
+      arguments: {
+        "idBeneficiario" : idBeneficiario,
+        "parcelas"       : lista
+      }
+    );
+  }
 
+  bottomSheet(){
+    Get.bottomSheet(
+      Container(
+        height: 150,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
+        ),
+        child: Column(
+          children: [
+            
+            Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.visibility),
+                  SizedBox(width: 12,),
+                  Text('Ver coordenadas en el mapa')
+                ],
+              ),
+            ),
+            Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.edit),
+                  SizedBox(width: 12,),
+                  Text('Editar los puntos')
+                ],
+              ),
+            ),
+
+            Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.delete),
+                  SizedBox(width: 12,),
+                  Text('Eliminar parcela')
+                ],
+              ),
+            ),
+          ],
+        ),
+      )
+    );
+  }
 
 
 

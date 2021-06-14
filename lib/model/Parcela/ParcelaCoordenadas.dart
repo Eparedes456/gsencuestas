@@ -18,13 +18,14 @@ String parcelasCoordenadasToJson( ParcelaCoordenadasModel data ){
 class ParcelaCoordenadasModel {
   int         idParcelaCoordenada;
   int         idParcela;
+  int         idBeneficiario;
   String      latitud;
   String      longitud;
-  int         orden;
+  
    
     ParcelaCoordenadasModel({
 
-      this.idParcelaCoordenada,this.idParcela,this.latitud,this.longitud,this.orden
+      this.idParcelaCoordenada,this.idParcela,this.idBeneficiario,this.latitud,this.longitud,
 
     });
 
@@ -35,9 +36,10 @@ class ParcelaCoordenadasModel {
 
     idParcelaCoordenada         : json["idParcelaCoordenada"],
     idParcela                   : json["idParcela"],
+    idBeneficiario              : json["idBeneficiario"],
     latitud                     : json['latitud'],
     longitud                    : json['longitud'],
-    orden                       : json['orden'] 
+     
     
   );
 
@@ -49,10 +51,11 @@ class ParcelaCoordenadasModel {
     return {
 
       'idParcelaCoordenada'       : idParcelaCoordenada,      
-      'idParcela'                 : idParcela,     
+      'idParcela'                 : idParcela,   
+      'idBeneficiario'            : idBeneficiario,  
       'latitud'                   : latitud,      
       'longitud'                  : longitud,
-      'orden'                     : orden   
+       
       
     };
 

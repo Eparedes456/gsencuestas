@@ -74,7 +74,8 @@ class NewParcelaPage extends StatelessWidget {
                   ),
                   child: MaterialButton(
                     onPressed: (){
-                      _.polygonSave();
+                      //_.polygonSave();
+                      _.modal();
                       //_.showModaLoading();
                     },
                     child: Text(

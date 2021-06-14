@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'dart:convert';
+
+import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
 
 ParcelaModel parcelasFromJson(String str){
 
@@ -22,13 +26,15 @@ class ParcelaModel {
   String      seccion;
   double      area;
   String      ubigeo;
-  String      foto;
+  Uint8List      foto;
+  String      nombreCompleto;
+  List<ParcelaCoordenadasModel> coordenadas;
   String      createdAt;
   String      updatedAt; 
    
     ParcelaModel({
 
-      this.idParcela,this.descripcion,this.idSeccion,this.seccion,this.area,this.ubigeo,this.foto,
+      this.idParcela,this.descripcion,this.idSeccion,this.seccion,this.area,this.ubigeo,this.foto,this.nombreCompleto,this.coordenadas,
       this.createdAt ,this.updatedAt
 
     });

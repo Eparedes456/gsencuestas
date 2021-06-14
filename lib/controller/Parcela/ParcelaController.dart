@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math' as Math;
@@ -59,7 +60,7 @@ class ParcelaController extends GetxController{
   List listCodDep = [];
   List listcodProvincia = [];
   List liscodDistrito = [];
-
+  TextEditingController _descripcion = new TextEditingController();
   ApiServices apiConexion = ApiServices();
 
  onload()async{
@@ -73,7 +74,7 @@ class ParcelaController extends GetxController{
       target: miubicacion,
   );
 
-  _markers.add(
+  /*_markers.add(
       Marker(
         markerId: MarkerId(i.toString()),
         position: LatLng(-6.021184, -76.987839),
@@ -119,8 +120,8 @@ class ParcelaController extends GetxController{
         ),
         icon: BitmapDescriptor.defaultMarker
       )
-  );
-  polylineCoordinate.add(
+  );*/
+  /*polylineCoordinate.add(
       LatLng(-6.021184, -76.987839)
   );
   polylineCoordinate.add(
@@ -131,7 +132,7 @@ class ParcelaController extends GetxController{
   );
   polylineCoordinate.add(
       LatLng(-6.021184, -76.987839)
-  );
+  );*/
 
 
   update();
@@ -161,6 +162,7 @@ class ParcelaController extends GetxController{
         fillColor: Colors.yellow
       )
     );
+    update();
   }
 
   showMarker(){
@@ -182,7 +184,7 @@ class ParcelaController extends GetxController{
     print("añadiento nuevo punto");
     position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position);
-    /*_markers.add(
+    _markers.add(
       Marker(
         markerId: MarkerId(i.toString()),
         position: LatLng(position.latitude, position.longitude),
@@ -192,7 +194,10 @@ class ParcelaController extends GetxController{
         ),
         icon: BitmapDescriptor.defaultMarker
       )
-    );*/ 
+    );
+    polylineCoordinate.add(
+      LatLng(position.latitude, position.longitude)
+    ); 
     
     print(_markers.length);
 
@@ -208,11 +213,11 @@ class ParcelaController extends GetxController{
   polygonSave()async{
 
     setPolygon();
-    calculateAreaPolygon();
+    //calculateAreaPolygon();
     showModaLoading();
     var dataSend = {
       "area"              : double.parse(areacalculada),
-      "descripcion"       : "Prueba2",
+      "descripcion"       : _descripcion.text,
       "foto"              : "",
       "idSeccion"         : idSeccion,  // id del encuestado
       "ubigeo"            : ubigeo,
@@ -262,6 +267,43 @@ class ParcelaController extends GetxController{
           mainAxisSize: MainAxisSize.min,
           children: [
             CircularProgressIndicator()
+          ],
+        ),
+      )
+    );
+  }
+
+  modal(){
+    calculateAreaPolygon();
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+        title: Text('Preview'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Area en m2 : $areacalculada'),
+            SizedBox(height: 12,),
+            TextField(
+              controller: _descripcion,
+              decoration: InputDecoration(
+                hintText: 'Ingrese una descripcion',
+                hintStyle: TextStyle(
+                  fontSize: 12
+                )
+              ),
+            ),
+            SizedBox(height: 12,),
+            MaterialButton(
+              color: Color.fromRGBO(0, 102, 84, 1),
+              onPressed: (){
+                Get.back();
+                polygonSave();
+              },
+              child: Text('Guardar',style: TextStyle(color: Colors.white),),
+            )
           ],
         ),
       )

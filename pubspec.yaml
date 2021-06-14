@@ -45,6 +45,7 @@ dependencies:
   google_maps_flutter:
   flutter_polyline_points:
   simple_moment:
+  url_launcher:
   
 
 dev_dependencies:

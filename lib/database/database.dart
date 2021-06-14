@@ -7,6 +7,7 @@ import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
@@ -329,6 +330,17 @@ class DBProvider{
             codigoDistrito TEXT,
             descripcion TEXT,
             estado TEXT
+          )
+          '''
+        );
+        await db.execute(
+          '''
+          CREATE TABLE parcelaCoordenadas(
+            idParcelaCoordenada INTEGER PRIMARY KEY AUTOINCREMENT,
+            idParcela INTEGER,
+            idBeneficiario INTEGER,
+            latitud TEXT,
+            longitud TEXT
           )
           '''
         );
@@ -1221,6 +1233,29 @@ class DBProvider{
       return listDistrito;
     }
 
+
+  /* */
+
+  /* Parcelassssssss  ªªªª   Coordenadas    */
+
+  insertParcelaCoordenadas(ParcelaCoordenadasModel nuevaParcela)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("parcelaCoordenadas", nuevaParcela.toMap());
+    return respuesta;
+
+  }
+
+  getParcelaCoordenadas()async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM parcelaCoordenadas
+        '''
+      );
+      List<ParcelaCoordenadasModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaCoordenadasModel.fromMap(e)).toList() : [];
+      return listParceCoorde;
+    }
 
   /* */
 

@@ -57,8 +57,8 @@ class TabsPage extends StatelessWidget {
             
 
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.cogs),
-              label: 'Config'
+              icon: Icon(FontAwesomeIcons.tools),
+              label: 'Herramientas'
             ),
 
             BottomNavigationBarItem(
