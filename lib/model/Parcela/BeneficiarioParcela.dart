@@ -153,8 +153,8 @@ class BeneficiaroParcela extends StatelessWidget {
                         return Column(
                           children: [
                             ListTile(
-                              title: Text('${_.listParcelasBeneficiario[i].descripcion}'),
-                              subtitle: Text('${_.listParcelasBeneficiario[i].area} m2'),
+                              title: Text(' Descripcion: ${_.listParcelasBeneficiario[i].descripcion}'),
+                              subtitle: Text('Area: ${_.listParcelasBeneficiario[i].area} m2'),
                             ),
                             Divider()
                           ],

@@ -69,6 +69,7 @@ class ParcelaPage extends StatelessWidget {
                       ],
                     ),
                     onTap: (){
+                      print(_.listParcela[i].idSeccion);
                       _.navigateToBeneficiarioParcela(_.listParcela[i].idSeccion.toString(), _.listParcela);
                     },
                     /*trailing: IconButton(
