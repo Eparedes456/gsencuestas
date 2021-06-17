@@ -42,12 +42,13 @@ class PreguntaModel {
   String  estado;
   String  updated_at;
   String created_at;
+  int    index1;
    
     PreguntaModel({
 
       this.id_pregunta,this.id_bloque,this.idEncuesta,this.enunciado,this.tipo_pregunta,this.apariencia,this.requerido,this.requerido_msj,this.readonly,this.defecto,
       this.calculation,this.restriccion,this.restriccion_msj,this.relevant,this.choice_filter,this.bind_name,this.bind_type,this.bind_field_length,this.bind_field_placeholder,
-      this.orden,this.estado,this.updated_at,this.created_at
+      this.orden,this.estado,this.updated_at,this.created_at,this.index1
 
     });
 
@@ -78,8 +79,8 @@ class PreguntaModel {
     orden                   : json['orden'],
     estado                  : json['estado'],
     updated_at              : json['updatedAt'],
-    created_at              : json['createdAt']         
-
+    created_at              : json['createdAt'],         
+    index1                   : json['index1'] 
   );
 
 
@@ -110,7 +111,8 @@ class PreguntaModel {
       'orden'                   : orden,
       'estado'                  : estado,       
       'updated_at'              : updated_at,
-      'created_at'              : created_at
+      'created_at'              : created_at,
+      'index1'                   : index1
 
     };
 

@@ -520,7 +520,7 @@ class PrincipalController extends GetxController{
         var idEncuesta = _encuestas[n].idEncuesta.toString();
         var listPreguntasxEncuesta = await apiConexion.getPreguntasxEncuesta(idEncuesta);
         listPreguntas = listPreguntasxEncuesta["pregunta"];
-        listPreguntas.forEach((item)async{
+        listPreguntas.asMap().forEach((index,item)async{
           int idPregunta = item["idPregunta"];
           _preguntas.add(
             PreguntaModel(
@@ -546,7 +546,8 @@ class PrincipalController extends GetxController{
               orden                   : item["orden"],
               estado                  : item["estado"].toString(),
               updated_at              : item["updatedAt"],
-              created_at              : item["createdAt"]
+              created_at              : item["createdAt"],
+              index1                   : index                
             ),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];

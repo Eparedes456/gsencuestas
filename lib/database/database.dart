@@ -121,7 +121,8 @@ class DBProvider{
             orden INTEGER,
             estado TEXT,
             created_at TEXT,
-            updated_at TEXT
+            updated_at TEXT,
+            index1      INTEGER
             
             
 

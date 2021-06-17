@@ -16,7 +16,7 @@ class Practica extends StatelessWidget {
           itemCount: _.listPregunta.length,
           itemBuilder: (contex,i){
 
-            if(_.listPregunta[i].tipo_pregunta == "IMPUTABLE"){
+            if(_.listPregunta[i].tipo_pregunta == "INTEGER"){
 
               return Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
@@ -57,9 +57,13 @@ class Practica extends StatelessWidget {
                           padding: EdgeInsets.only(left: 10,right: 10),
                           child: TextField(
                             controller: _.controllerInput[i].controller,
-                         
-                          ),
-                                      
+                            onChanged: (value){
+                              _.calcular();
+                            },
+                            onSubmitted: (value){
+                              //_.calcular();
+                            },
+                          ),           
                         ),
                       ],
                     ),
@@ -67,7 +71,7 @@ class Practica extends StatelessWidget {
                 )
               );
 
-            }else if(_.listPregunta[i].tipo_pregunta == "CALCULO"){
+            }else if(_.listPregunta[i].tipo_pregunta == "NOTE"){
 
               return Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
@@ -88,27 +92,54 @@ class Practica extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Text((() {
-                          if(_.listPregunta[i].calculation != null) {
-                            var data = _.listPregunta[i].calculation;
-                            var part =data.split("+");
-                            for (var i = 0; i < _.controllerInput.length; i++) {
-                              print(_.controllerInput[i].name);
-                            }
-
-
-                            return "";
-                          }else{
-                            return "Hola";
-                          }
-                              
-                        })())
+                        Padding(
+                          padding: EdgeInsets.only(left: 10,right: 10),
+                          child: TextField(
+                            controller: _.controllerInput[i].controller,
+                            readOnly: true,
+                          ),           
+                        ),
+                        //Text(_.total.toString())
                       ],
                     ),
                   ),
                 ),
               );
-            }/*else{
+            }else if(_.listPregunta[i].tipo_pregunta == "TEXT"){
+              return Padding(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                child: Container(
+                  width: double.infinity,
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 20,left: 10,right: 10),
+                          child: Text(
+                            _.listPregunta[i].enunciado,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Poppins',
+                              fontSize: 16
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10,right: 10),
+                          child: TextField(
+                            controller: _.controllerInput[i].controller,
+                            
+                          ),           
+                        ),
+                        //Text(_.total.toString())
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            /*else{
 
               return Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
