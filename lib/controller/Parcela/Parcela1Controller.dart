@@ -80,54 +80,9 @@ class Parcela1Controller extends GetxController{
 
   getAllParcela()async{
 
-      List response = await apiConexion.getAllParcelas();
-
-    for (var i = 0; i < response.length; i++) {
-      print(response[i]["idSeccion"]);
-      var beneficiario = await DBProvider.db.getOneEncuestado(response[i]["idSeccion"].toString());
-      var foto = beneficiario[0].foto;
-      _photoBase64 = base64Decode(foto);
-
-      
-      _listParcelas.add(
-        ParcelaModel(
-          idParcela       : response[i]["idParcela"],//["idParcela"],
-          descripcion     : response[i]["descripcion"],
-          idSeccion       : response[i]["idSeccion"],
-          seccion         : response[i]["seccion"],
-          area            : response[i]["area"],
-          ubigeo          : response[i]["ubigeo"],
-          foto            : _photoBase64,
-          nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
-          createdAt       : response[i]["createdAt"],
-          updatedAt       : response[i]["updatedAt"]
-        )
-      );
- 
-      for (var x = 0; x < response[i]["parcelaCoordenada"].length; x++){
-
-        _listParcelaCoordenada.add(
-          ParcelaCoordenadasModel(
-            //idParcelaCoordenada   : response[i]["parcelaCoordenada"][x]["idParcelaCoordenada"],
-            idParcela             : response[i]["idParcela"],
-            idBeneficiario        : response[i]["idSeccion"],
-            latitud               : response[i]["parcelaCoordenada"][x]["latitud"],
-            longitud              : response[i]["parcelaCoordenada"][x]["longitud"]   
-          )
-        );
-
-        
-
-      }
-
-    }
-    for (var z = 0; z < _listParcelaCoordenada.length; z++) {
-      await DBProvider.db.insertParcelaCoordenadas(_listParcelaCoordenada[z]);
-    }
-    var result = await DBProvider.db.getParcelaCoordenadas();
-    
-
-  
+    //List response = await apiConexion.getAllParcelas();
+    List<ParcelaModel> response = await DBProvider.db.getParcela();
+    _listParcelas = response;
     if(_listParcelas.length > 0){
       hayParcela = true;
       loading = false;
@@ -144,7 +99,7 @@ class Parcela1Controller extends GetxController{
       BeneficiaroParcela(),
       arguments: {
         "idBeneficiario" : idBeneficiario,
-        "parcelas"       : lista
+        //"parcelas"       : lista
       }
     );
   }

@@ -8,6 +8,7 @@ import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
@@ -344,8 +345,24 @@ class DBProvider{
           )
           '''
         );
+        await db.execute(
+          '''
+          CREATE TABLE parcelas(
+            idParcela INTEGER PRIMARY KEY AUTOINCREMENT,
+            descripcion TEXT,
+            idSeccion INTEGER,
+            seccion TEXT,
+            area TEXT,
+            foto TEXT,
+            nombreCompleto TEXT,
+            ubigeo TEXT,
+            createdAt TEXT,
+            updatedAt TEXT
+          )
+          '''
+        );
       },
-      version: 9
+      version: 10
 
     ); 
 
@@ -1245,6 +1262,25 @@ class DBProvider{
     return respuesta;
 
   }
+  insertParcela(ParcelaModel nuevaParcela)async{
+
+    final db  = await database;
+    var respuesta = await db.insert("parcelas", nuevaParcela.toMap());
+    return respuesta;
+
+  }
+
+  getParcela()async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT DISTINCT idParcela, descripcion, idSeccion, seccion, area, foto, nombreCompleto ,
+          ubigeo, createdAt, updatedAt  FROM parcelas
+        '''
+      );
+      List<ParcelaModel> listParcela = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList() : [];
+      return listParcela;
+  }
 
   getParcelaCoordenadas()async{
       final db = await database;
@@ -1255,7 +1291,17 @@ class DBProvider{
       );
       List<ParcelaCoordenadasModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaCoordenadasModel.fromMap(e)).toList() : [];
       return listParceCoorde;
-    }
+  }
+  getBeneParcelas(String idBeneficiario)async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM parcelas WHERE idSeccion = '$idBeneficiario'
+        '''
+    );
+    List<ParcelaModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList() : [];
+    return listParceCoorde;
+  }
 
   /* */
 

@@ -42,8 +42,10 @@ class BeneficiarioParcelaController extends GetxController{
     numDocumento = beneficiarioData[0].documento;
     var foto = beneficiarioData[0].foto;
     _photoBase64 = base64Decode(foto);
-    listParcelasBeneficiario = data["parcelas"];
-    listParcelasBeneficiario.removeWhere((element) => element.idSeccion.toString() != beneficiarioData[0].idEncuestado);
+    listParcelasBeneficiario = await DBProvider.db.getBeneParcelas(idBeneficiario.toString());
+    
+    //listParcelasBeneficiario = data["parcelas"];
+    //listParcelasBeneficiario.removeWhere((element) => element.idSeccion.toString() != beneficiarioData[0].idEncuestado);
     print(listParcelasBeneficiario);
     cantidadParcelas = listParcelasBeneficiario.length.toString();
     update();

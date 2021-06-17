@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:easyping/easyping.dart';
@@ -14,6 +15,8 @@ import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Parametro/Parametromodel.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
+import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
@@ -42,6 +45,8 @@ class PrincipalController extends GetxController{
   List<DepartamentoModel> _listDepartamento = [];
   List<ProvinciaModel>  _listProvincia =[];
   List<DistritoModel> _listDistrito =  [];
+  List<ParcelaModel> _listParcelas = [];
+   List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -169,6 +174,7 @@ class PrincipalController extends GetxController{
             
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"], idInstitucion, response["ultimaActualizacionUsuario"]);
             await cargarEncuestados();
+            await cargarParcelas();
             await cargarUbigeo();
             await cargarProyectosEncuesta();
             
@@ -270,6 +276,7 @@ class PrincipalController extends GetxController{
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
       await cargarProyectosEncuesta();
+      await cargarParcelas();
       loadingUbigeo();
       await cargarUbigeo();
     }
@@ -388,6 +395,54 @@ class PrincipalController extends GetxController{
     }
     var data = await DBProvider.db.getAllEncuestado();
     print(data);
+  }
+
+  cargarParcelas()async{
+    var listParcelas = await apiConexion.getAllParcelas();
+    for (var i = 0; i < listParcelas.length; i++) {
+      var beneficiario = await DBProvider.db.getOneEncuestado(listParcelas[i]["idSeccion"].toString());
+      var foto = beneficiario[0].foto;
+      Uint8List _photoBase64 = base64Decode(foto);
+      _listParcelas.add(
+        ParcelaModel(
+          idParcela       : listParcelas[i]["idParcela"],
+          descripcion     : listParcelas[i]["descripcion"],
+          idSeccion       : listParcelas[i]["idSeccion"],
+          seccion         : listParcelas[i]["seccion"],
+          area            : listParcelas[i]["area"],
+          ubigeo          : listParcelas[i]["ubigeo"],
+          foto            : _photoBase64,
+          nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
+          createdAt       : listParcelas[i]["createdAt"],
+          updatedAt       : listParcelas[i]["updatedAt"]
+        )
+      );
+
+      for (var x = 0; x < listParcelas[i]["parcelaCoordenada"].length; x++){
+
+        _listParcelaCoordenada.add(
+          ParcelaCoordenadasModel(
+            idParcela             : listParcelas[i]["idParcela"],
+            idBeneficiario        : listParcelas[i]["idSeccion"],
+            latitud               : listParcelas[i]["parcelaCoordenada"][x]["latitud"],
+            longitud              : listParcelas[i]["parcelaCoordenada"][x]["longitud"]   
+          )
+        );
+
+        
+
+      }
+    }
+    for (var i = 0; i < _listParcelas.length; i++) {
+      await DBProvider.db.insertParcela(_listParcelas[i]);
+    }
+
+    for (var z = 0; z < _listParcelaCoordenada.length; z++) {
+      await DBProvider.db.insertParcelaCoordenadas(_listParcelaCoordenada[z]);
+    }
+    
+
+    
   }
   
   cargarProyectosEncuesta()async{

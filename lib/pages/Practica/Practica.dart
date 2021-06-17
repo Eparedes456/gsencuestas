@@ -57,15 +57,7 @@ class Practica extends StatelessWidget {
                           padding: EdgeInsets.only(left: 10,right: 10),
                           child: TextField(
                             controller: _.controllerInput[i].controller,
-                          /*maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
-                          controller: _.controllerInput[index].controller,
-                          decoration: InputDecoration(
-                            hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
-                          ),
-                          keyboardType: typeData == "number" ? TextInputType.phone  : TextInputType.text,
-                          inputFormatters: typeData == "number"?  <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ] : null*/
+                         
                           ),
                                       
                         ),
@@ -75,7 +67,48 @@ class Practica extends StatelessWidget {
                 )
               );
 
-            }else{
+            }else if(_.listPregunta[i].tipo_pregunta == "CALCULO"){
+
+              return Padding(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                child: Container(
+                  width: double.infinity,
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 20,left: 10,right: 10),
+                          child: Text(
+                            _.listPregunta[i].enunciado,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Poppins',
+                              fontSize: 16
+                            ),
+                          ),
+                        ),
+                        Text((() {
+                          if(_.listPregunta[i].calculation != null) {
+                            var data = _.listPregunta[i].calculation;
+                            var part =data.split("+");
+                            for (var i = 0; i < _.controllerInput.length; i++) {
+                              print(_.controllerInput[i].name);
+                            }
+
+
+                            return "";
+                          }else{
+                            return "Hola";
+                          }
+                              
+                        })())
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }/*else{
 
               return Padding(
                 padding: EdgeInsets.only(left: 10,right: 10),
@@ -144,7 +177,7 @@ class Practica extends StatelessWidget {
                 )
               );
 
-            }
+            }*/
 
             
           }

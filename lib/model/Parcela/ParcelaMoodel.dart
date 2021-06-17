@@ -48,9 +48,10 @@ class ParcelaModel {
     descripcion       : json["descripcion"],
     idSeccion         : json['idSeccion'],
     seccion           : json['seccion'],
-    area              : json['area'],
+    area              : double.parse(json['area']) ,
     ubigeo            : json['ubigeo'],
     foto              : json['foto'],
+    nombreCompleto    : json['nombreCompleto'],
     createdAt         : json['createdAt'],
     updatedAt         : json['updatedAt']       
 
@@ -68,9 +69,10 @@ class ParcelaModel {
       'seccion'         : seccion,   
       'area'            : area,         
       'ubigeo'          : ubigeo,      
-      'foto'            : foto,    
-      'createdAt'     : createdAt, 
-      'updatedAt'     : updatedAt
+      'foto'            : foto,
+      'nombreCompleto'  : nombreCompleto,    
+      'createdAt'       : createdAt, 
+      'updatedAt'       : updatedAt
 
     };
 
