@@ -94,11 +94,11 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
       if(response != 1 && response != 2 && response  != 3){
 
         var data = response["pregunta"];
-        //print(response["pregunta"]);
+        
 
         int idPregunta;
 
-        data.forEach((item){  
+        data.asMap().forEach((index,item){  
 
           idPregunta = item["idPregunta"];
 
@@ -109,8 +109,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
               id_bloque               : item["id_bloque"],
               idEncuesta              : item["id_encuesta"],
               enunciado               : item["enunciado"],
-              tipo_pregunta           : item["tipo_pregunta"],
-              apariencia              : item["apariencia"],
+              tipo_pregunta           : item["tipoPregunta"]["questionType"],
+              apariencia              : "",//item["apariencia"],
               requerido               : item["requerido"].toString(),
               requerido_msj           : item["requerido_msj"],
               readonly                : item["readonly"].toString(),
@@ -120,7 +120,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
               restriccion_msj         : item["restriccion_msj"],
               relevant                : item["relevant"],
               choice_filter           : item["choice_filter"], 
-              bind_name               : item["bind_name"],
+              bind_name               : item["name"],
               bind_type               : item["bindType"],
               bind_field_length       : item["bindFieldLength"].toString(),
               bind_field_placeholder  : item["bindFieldPlaceholder"],
@@ -132,12 +132,32 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
             )
           );
 
-          controllerInput.add(
-            InputTextfield(
-              item["idPregunta"].toString(),
-              TextEditingController()
-            )
-          );
+          if(item["tipoPregunta"]["questionType"] == "note"){
+
+            controllerInput.add(
+              InputTextfield(
+                item["idPregunta"].toString(),
+                TextEditingController(text: "0"),
+                item["name"].toString(),
+                index,
+                item["tipoPregunta"]["questionType"],
+                item["calculation"]
+              )
+            );
+
+          }else{
+            controllerInput.add(
+              InputTextfield(
+                item["idPregunta"].toString(),
+                TextEditingController(),
+                item["name"].toString(),
+                index,
+                item["tipoPregunta"]["questionType"],
+                item["calculation"]
+              )
+            );
+          }
+          
           /*if( item["tipo_pregunta"] == "IMPUTABLE" ){
 
             _controllerInput.add(
@@ -146,8 +166,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
             
           }*/
 
-
-          print('hola');
+          print(controllerInput);
+          
           List preguOpcion = item["preguntaGrupoOpcion"];
 
           if(preguOpcion.length > 0){
@@ -212,12 +232,16 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
       _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
       print(_preguntas);
 
-      preguntas.forEach((element) { 
+      preguntas.asMap().forEach((index,element) { 
 
         controllerInput.add(
           InputTextfield(
             element.id_pregunta.toString(),
-            TextEditingController()
+            TextEditingController(),
+            element.bind_name,
+            index,
+            element.tipo_pregunta,
+            element.calculation
           )
         );
 
@@ -486,11 +510,11 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
       if(_preguntas[z].requerido == "true" || _preguntas[z].requerido == true){
 
         var numPregunta = z + 1;
-        if(_preguntas[z].tipo_pregunta =="IMPUTABLE"){
+        if(_preguntas[z].tipo_pregunta == "integer" || _preguntas[z].tipo_pregunta == "decimmal" || _preguntas[z].tipo_pregunta == "text"){
           
           for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
-            if( /*controllerInput.indexWhere((element) => element.idPregunta */ controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() /*== -1 */  && controllerInput[z].controller.text == ""  ){
+            if(  controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString()  && controllerInput[z].controller.text == ""  ){
 
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
@@ -733,8 +757,156 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     }
 
+    List<PreguntaModel> tempList = [];
+
+    calcular(){
+      tempList =  _preguntas.where((element) => element.tipo_pregunta.contains("note")).toList();
+      print(tempList);
+      List<PreguntaModel> filtered2 =  _preguntas.where((element) => element.tipo_pregunta.contains("integer") || element.tipo_pregunta.contains("decimal")).toList();
+      if(tempList.length > 0){
+        //print('si hay');
+        tempList.forEach((item) {
+          var oper1 = item.calculation.indexOf('+');
+          if(oper1 != -1){
+            operaSum(filtered2,item);
+            
+          }else if(oper1  == -1){
+            var oper2 = item.calculation.indexOf('-');
+            if(oper2 != -1){
+              operaResta(filtered2,item);
+              
+            }else if(oper2 == -1){
+              var oper3 = item.calculation.indexOf('*');
+              if(oper3 != -1){
+                operaMultiplicacion(filtered2, item);
+              }else if(oper3 == -1){
+                var oper4 = item.calculation.indexOf('/');
+                if(oper4 != -1){
+                  operaMultiplicacion(filtered2, item);
+                }
+              }
+            }
+          }
+          
+        });
+      }
 
 
+    }
+
+  operaSum(List<PreguntaModel> filtered2,PreguntaModel item){
+
+    var part = item.calculation.split('+');
+    var total  = 0;
+    part.asMap().forEach((index,partes) {
+            
+      List<PreguntaModel> filtered1 = _preguntas.where((data) => data.bind_name.contains(partes)).toList();
+      _preguntas.asMap().forEach((index,element) { 
+        if(filtered1[0].bind_name == controllerInput[index].name){
+          var value1  = controllerInput[index].controller.text;
+          if( value1 == "" || value1 == null){
+          }else{
+            total = int.parse(value1)  + total;
+            print("Resultaod de la suma : $total");
+
+          }
+          List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("+")).toList();
+          print(tempController);
+          controllerInput.asMap().forEach((index,element) { 
+            if(tempController[0].calculation == element.calculation){
+              element.controller.text = total.toString();
+            }
+          });
+
+                
+        }else{
+          //print('No es ${controllerInput[index].name}');
+        }
+
+      }); 
+           
+            
+    });
+    //update();
+  }
+
+  operaResta(List<PreguntaModel> filtered2,PreguntaModel item){
+    var part = item.calculation.split('-');
+    var total2 = 0;
+    part.asMap().forEach((index,partes) {
+            
+      List<PreguntaModel> filtered1 = _preguntas.where((data) => data.bind_name.contains(partes)).toList();
+      _preguntas.asMap().forEach((index,element) { 
+        if(filtered1[0].bind_name == controllerInput[index].name){
+          var value1  = controllerInput[index].controller.text;
+          if( value1 == "" || value1 == null){
+          }else{
+            total2 = int.parse(value1)  - total2;
+            if(total2 > 0){
+
+            }else{
+              total2 = total2 *-1;
+            }
+            print("Resultaod de la resta : $total2");
+
+          }
+           List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("-")).toList();
+          print(tempController);
+          controllerInput.asMap().forEach((index,element) { 
+            if(tempController[0].calculation == element.calculation){
+              element.controller.text = total2.toString();
+            }
+          });
+
+                
+        }else{
+          //print('No es ${controllerInput[index].name}');
+        }
+
+      }); 
+           
+            
+    });
+    //update();
+
+
+  }
+
+  operaMultiplicacion(List<PreguntaModel> filtered2,PreguntaModel item){
+    var part = item.calculation.split('*');
+    var total3 = 1;
+    part.asMap().forEach((index,partes) {
+            
+      List<PreguntaModel> filtered1 = _preguntas.where((data) => data.bind_name.contains(partes)).toList();
+      _preguntas.asMap().forEach((index,element) { 
+        if(filtered1[0].bind_name == controllerInput[index].name){
+          var value1  = controllerInput[index].controller.text;
+          if( value1 == "" || value1 == null){
+          }else{
+            total3 = int.parse(value1)  * total3;
+            
+            print("Resultaod de la multiplicacion : $total3");
+
+          }
+           List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("*")).toList();
+          print(tempController);
+          controllerInput.asMap().forEach((index,element) { 
+            if(tempController[0].calculation == element.calculation){
+              element.controller.text = total3.toString();
+            }
+          });
+
+                
+        }else{
+          //print('No es ${controllerInput[index].name}');
+        }
+
+      }); 
+           
+            
+    });
+    //update();
+  }
 
   @override
   void onClose() {
@@ -752,7 +924,11 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     String idPregunta;
     TextEditingController controller;
+    String name;
+    int    index;
+    String tipo_pregunta;
+    String calculation;
 
-    InputTextfield(this.idPregunta,this.controller);
+    InputTextfield(this.idPregunta,this.controller,this.name,this.index,this.tipo_pregunta,this.calculation);
 
   }

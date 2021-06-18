@@ -208,7 +208,7 @@ class EncuestaController extends GetxController{
             idEncuesta       : item["id_encuesta"],
             enunciado         : item["enunciado"],
             tipo_pregunta     : item["tipo_pregunta"],
-            apariencia        : item["apariencia"],
+            apariencia        : "",//item["apariencia"],
             requerido         : item["requerido"].toString(),
             requerido_msj     : item["requerido_msj"],
             readonly          : item["readonly"].toString(),
@@ -545,9 +545,9 @@ class EncuestaController extends GetxController{
                     print(idEncuestado);
                     print(ubigeo);
 
-                    //confirmationModal(idEncuestado,ubigeo);
+                    confirmationModal(idEncuestado,ubigeo);
 
-                    Get.to(Practica());
+                    //Get.to(Practica());
                   },
                   child: Text(
                     'Empezar',

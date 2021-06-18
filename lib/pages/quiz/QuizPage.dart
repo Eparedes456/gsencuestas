@@ -43,7 +43,7 @@ class QuizPage extends StatelessWidget {
             child: Column(
                 children: [
 
-                  SizedBox(height: 40,),
+                  SizedBox(height: 10,),
                   Padding(
                     padding:  EdgeInsets.only(left: 20,right: 20),
                     child: Text(
@@ -55,7 +55,7 @@ class QuizPage extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 30,),
+                  SizedBox(height: 10,),
                   Expanded(
                     //height: MediaQuery.of(context).size.height,
                     child: ListView.builder(
@@ -72,7 +72,7 @@ class QuizPage extends StatelessWidget {
                           var maxLength = _.preguntas[index].bind_field_length;
                           var typeData = _.preguntas[index].bind_type;
 
-                          if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
+                          if(_.preguntas[index].tipo_pregunta == "integer" || _.preguntas[index].tipo_pregunta == "decimal" ){
 
                             
                               return Padding(
@@ -123,7 +123,10 @@ class QuizPage extends StatelessWidget {
                                           keyboardType: typeData == "number" ? TextInputType.phone  : TextInputType.text,
                                           inputFormatters: typeData == "number"?  <TextInputFormatter>[
                                             FilteringTextInputFormatter.digitsOnly
-                                          ] : null
+                                          ] : null,
+                                          onChanged: (value){
+                                            _.calcular();
+                                          },
                                         ),
                                       
                                       ),
@@ -139,6 +142,100 @@ class QuizPage extends StatelessWidget {
                             );
 
         
+                          }else if(_.preguntas[index].tipo_pregunta == "text"){
+                            return Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: Container(
+                                width: double.infinity,
+                                child: Card(
+                                  elevation: 5,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Padding(
+                                        padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '$numPregunta.- $enunciadoPregunta',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 16
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                               _.preguntas[index].requerido == "true"  ? " (*)": "",
+                                               style: TextStyle(
+                                                 color: Colors.red
+                                               ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+
+                                      SizedBox( height: 20,),
+
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10,right: 10),
+                                        child: TextField(
+                                          maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                                          controller: _.controllerInput[index].controller,
+                                          decoration: InputDecoration(
+                                            hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                          ),
+                                          keyboardType:  TextInputType.text,
+                                          
+                                        ),
+                                      
+                                      ),
+
+                                      SizedBox( height: 20,),
+
+
+
+                                    ],
+                                  ),
+                                )
+                              ),
+                            );
+                          }else if(_.preguntas[index].tipo_pregunta == "note"){
+                            return Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: Container(
+                                width: double.infinity,
+                                child: Card(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 20,left: 10,right: 10),
+                                        child: Text(
+                                          '$numPregunta.- $enunciadoPregunta',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 16
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10,right: 10),
+                                        child: TextField(
+                                          controller: _.controllerInput[index].controller,
+                                          readOnly: true,
+                                        ),           
+                                      ),
+                                      //Text(_.total.toString())
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
                           }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
                             return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
