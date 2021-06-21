@@ -95,7 +95,11 @@ class RetommarController extends GetxController{
         controllerInput.add(
           InputTextfield(
             preguntas[i].id_pregunta.toString(),
-            TextEditingController()
+            TextEditingController(),
+            preguntas[i].bind_name,
+            i,
+            preguntas[i].tipo_pregunta,
+            preguntas[i].calculation
           )
         );
 
@@ -274,17 +278,7 @@ class RetommarController extends GetxController{
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
 
-              //_controllerInput = [];
-              /*_preguntas.forEach((element) { 
-
-                _controllerInput.add(
-                  InputTextfield(
-                    element.id_pregunta.toString(),
-                    TextEditingController()
-                  )
-                );
-
-              });*/
+              
               print(controllerInput.length);
 
               update();
@@ -501,7 +495,11 @@ class RetommarController extends GetxController{
 
     String idPregunta;
     TextEditingController controller;
+    String name;
+    int    index;
+    String tipo_pregunta;
+    String calculation;
 
-    InputTextfield(this.idPregunta,this.controller);
+    InputTextfield(this.idPregunta,this.controller,this.name,this.index,this.tipo_pregunta,this.calculation);
 
   }

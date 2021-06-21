@@ -61,7 +61,7 @@ class RetomarEncuestaPage extends StatelessWidget {
                       var maxLength = _.preguntas[index].bind_field_length;
                       var placeholder = _.preguntas[index].bind_field_placeholder;
 
-                      if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
+                      if(_.preguntas[index].tipo_pregunta == "integer" || _.preguntas[index].tipo_pregunta == "decimal" ){
 
                         return Padding(
                             padding: EdgeInsets.only(left: 10,right: 10),
@@ -123,8 +123,73 @@ class RetomarEncuestaPage extends StatelessWidget {
                                 ),
                               )
                             ),
-                          );
+                        );
 
+
+                      }else if(_.preguntas[index].tipo_pregunta == "text"){
+                        return Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: Container(
+                              width: double.infinity,
+                              child: Card(
+                                elevation: 5,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Padding(
+                                      padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '$numPregunta.- $enunciadoPregunta',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 16
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            _.preguntas[index].requerido == "true"  ? " (*)": "",
+                                            style: TextStyle(
+                                              color: Colors.red
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox( height: 20,),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10,right: 10),
+                                      child: TextField(
+                                        maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                                        controller: _.controllerInput[index].controller,
+                                        decoration: InputDecoration(
+                                          hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                        ),
+                                        onSubmitted: (valor){
+
+                                        },
+                                      ),
+                                    
+                                    ),
+
+                                    SizedBox( height: 20,),
+
+
+
+                                  ],
+                                ),
+                              )
+                            ),
+                        );
+
+                      }else if(_.preguntas[index].tipo_pregunta == "note"){
 
                       }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
 
