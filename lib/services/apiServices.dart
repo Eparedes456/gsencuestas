@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiServices {
 
   //final base_url = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
-  //final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
-  final base_url_dev = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
+  final base_url_dev = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/";
+  //final base_url_dev = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/v1/";
 
   var dio = Dio();
   /* Funcion get */
@@ -282,8 +282,8 @@ class ApiServices {
   }
 
   ingresar(String username, String password)async{
-    //var uri = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/auth";
-    var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
+    var uri = "https://dev.regionsanmartin.gob.pe/gsencuesta/api/auth";
+    //var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
     Map dataSend = {
         "password"  : password,
         "username"  : username

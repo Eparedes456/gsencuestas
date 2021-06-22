@@ -369,8 +369,24 @@ class EncuestaController extends GetxController{
           
           if( response.length > 0 ){
 
-            Get.back(); 
-            showEncuestadoModal();
+            Get.back();
+            encuestado = [];
+            
+            response.forEach((element){
+              encuestado.add(
+                EncuestadoModel(
+                  idEncuestado    : element["idEncuestado"].toString(),
+                  nombre          : element["nombre"],
+                  apellidoPaterno : element["apellidoPaterno"], 
+                  apellidoMaterno : element["apellidoMaterno"],
+                  tipoDocumento   : element["tipoDocumento"],
+                  foto            : element["foto"],
+                  idUbigeo        : element["idUbigeo"]   
+                )
+              );
+            });
+
+            showEncuestadoModal(encuestado);
 
           }else{
           
@@ -391,7 +407,7 @@ class EncuestaController extends GetxController{
         if(respuesta.length > 0){
 
           Get.back(); 
-          showEncuestadoModal();
+          showEncuestadoModal(respuesta);
 
         }else{
           
@@ -408,7 +424,11 @@ class EncuestaController extends GetxController{
 
   }
 
-  showEncuestadoModal()async{
+  showEncuestadoModal(var response)async{
+
+    
+
+
     Get.dialog(
         AlertDialog(
           shape: RoundedRectangleBorder(
@@ -420,17 +440,34 @@ class EncuestaController extends GetxController{
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: MemoryImage(_photoBase64)
+              Container(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: response.length,
+                  itemBuilder: (context,i){
+                    var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
+                    var foto            = response[i].foto;
+                    _photoBase64        = base64Decode(foto); 
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage:  _photoBase64 == "" || _photoBase64 == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
+                        ),
+                        title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
+                        onTap: (){
+                          Get.back();
+                          showEncuestadoModalFinal(response[i]);
+
+                        },
+                      ),
+                    );
+                  }
                 ),
-                title: Text('nombreCompleto',style: TextStyle(fontSize: 14),),
-                onTap: (){
-                  
-                },
-            ),
+              )
             ],
           ),
 
@@ -443,18 +480,19 @@ class EncuestaController extends GetxController{
   List liscodDistrito = [];
 
   showEncuestadoModalFinal(dynamic data)async{
+    print(data);
     listCodDep = [];
     listcodProvincia = [];
     liscodDistrito = [];
     _listprovincias = [];
     _listDistritos = [];
 
-    print(data[0]["idEncuestado"]);
-    var idEncuestado2   = data[0]["idEncuestado"].toString();
-    var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
-    var foto            = data[0]["foto"];
+    print(data.idEncuestado);
+    var idEncuestado2   = data.idEncuestado.toString();
+    var nombreCompleto  =  data.nombre + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
+    var foto            = data.foto;
     _photoBase64        = base64Decode(foto); 
-    var idUbigeo        =  data[0]["idUbigeo"]; // "220101,220203,210402,220103";  
+    var idUbigeo        =  data.idUbigeo; // "220101,220203,210402,220103";  
     var dataUbi = idUbigeo.split(",");
     List temporalDepartamento = [];
     List temporalProvincia    = [];

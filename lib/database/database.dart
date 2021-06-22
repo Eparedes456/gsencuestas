@@ -1032,7 +1032,7 @@ class DBProvider{
       '''
     );
 
-    //List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
+    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
 
     return respuesta; //.toList();
 
