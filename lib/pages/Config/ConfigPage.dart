@@ -15,16 +15,24 @@ class ConfigPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text('Configuración',style: TextStyle(fontFamily: 'Poppins'),),
+            title: Text('Herramientas',style: TextStyle(fontFamily: 'Poppins'),),
             leading: Container(),
           ),
 
           body: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
                 //buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
-                buildCard('Subir encuestas',FontAwesomeIcons.cloudUploadAlt,true,_),
+                buildCard('Subir encuestas',"" ,FontAwesomeIcons.cloudUploadAlt,true,_),
+                Padding(
+                  padding:  EdgeInsets.only(left: 20,top: 10),
+                  child: Text('DRASAM',style: TextStyle(
+                    fontSize: 18
+                  ),),
+                ),
+                buildCard("Gestión de Parcelas","Administración de las Parcelas por Beneficiarios, permite registrar nuevas coordenadas y crear polígonos por parcela" ,Icons.map, false, _)
                 //buildCard('Cambiar rango Gps',FontAwesomeIcons.locationArrow)
 
               ],
@@ -37,7 +45,7 @@ class ConfigPage extends StatelessWidget {
 }
 
 
-buildCard(String contenido,IconData icon, bool upload,ConfigController _){
+buildCard(String contenido,String subtitle ,IconData icon, bool upload,ConfigController _){
 
   return Padding(
     padding: EdgeInsets.only(left: 10,right: 10,top: 20),
@@ -46,6 +54,7 @@ buildCard(String contenido,IconData icon, bool upload,ConfigController _){
         padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
         child: ListTile(
           title: Text(contenido),
+          subtitle: Text(subtitle),
           leading: Icon(icon),
           trailing: upload ? Container(
             height: 30,
@@ -59,9 +68,7 @@ buildCard(String contenido,IconData icon, bool upload,ConfigController _){
                 color: Colors.white
               ),),
             ),
-          ) : Container(
-            height: 5,width: 5,
-          ),
+          ) : Icon(Icons.arrow_forward_ios,color: Colors.grey,),
           onTap: (){
 
             if(upload){
@@ -78,6 +85,7 @@ buildCard(String contenido,IconData icon, bool upload,ConfigController _){
 
             }else{
 
+              _.navigateToParcela();
 
             }
 

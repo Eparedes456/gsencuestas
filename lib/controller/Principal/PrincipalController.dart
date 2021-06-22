@@ -528,7 +528,7 @@ class PrincipalController extends GetxController{
               id_bloque               : item["id_bloque"],
               idEncuesta              :  int.parse(idEncuesta),
               enunciado               : item["enunciado"],
-              tipo_pregunta           : item["tipo_pregunta"],
+              tipo_pregunta           : item["tipoPregunta"]["questionType"],
               apariencia              :  "",//item["apariencia"],
               requerido               : item["requerido"].toString(),
               requerido_msj           : item["requerido_msj"],
@@ -539,7 +539,7 @@ class PrincipalController extends GetxController{
               restriccion_msj         : item["restriccion_msj"],
               relevant                : item["relevant"],
               choice_filter           : item["choice_filter"], 
-              bind_name               : item["bind_name"],
+              bind_name               : item["name"],
               bind_type               : item["bindType"],
               bind_field_length       : item["bindFieldLength"].toString(),
               bind_field_placeholder  : item["bindFieldPlaceholder"],
@@ -547,7 +547,7 @@ class PrincipalController extends GetxController{
               estado                  : item["estado"].toString(),
               updated_at              : item["updatedAt"],
               created_at              : item["createdAt"],
-              index1                   : index                
+              index1                  : index                
             ),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
@@ -708,11 +708,13 @@ class PrincipalController extends GetxController{
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
         ),
-        title: Text('Cargando datos adicionales',style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal),),
+        title: Text('Cargando datos de la tabla ubigeo',style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal),),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CircularProgressIndicator(),
+            SizedBox(height: 8,),
+            Text('tiempo estimado de carga 2 min a 3 min')
           ],
         ),
       ),

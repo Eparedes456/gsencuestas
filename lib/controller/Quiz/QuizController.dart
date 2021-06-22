@@ -519,17 +519,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
               formValidado = false;
               print('La pregunta número $numPregunta es requerida');
 
-              //_controllerInput = [];
-              /*_preguntas.forEach((element) { 
-
-                _controllerInput.add(
-                  InputTextfield(
-                    element.id_pregunta.toString(),
-                    TextEditingController()
-                  )
-                );
-
-              });*/
+              
               print(controllerInput.length);
 
               update();
@@ -588,6 +578,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
             return;
 
+          }else{
+            formValidado  = true;
           } 
 
         }
@@ -608,21 +600,26 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           controllerInput.removeWhere((item) => item.controller.text == "");
 
         }
-
-        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[i].idPregunta);
+      }
+      for(var x = 0; x < controllerInput.length ; x ++){
+        List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,controllerInput[x].idPregunta);
 
         if(respuesta.length > 0 ){
 
           if(respuesta[0].valor != ""){
 
             print('Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
-            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[i].idPregunta,idFicha,controllerInput[i].controller.text);
+            await DBProvider.db.actualizarRespuestaxFicha(controllerInput[x].idPregunta,idFicha,controllerInput[x].controller.text);
           }
         }else{
-          await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta, idFicha.toString(), "",controllerInput[i].controller.text);
+          await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta, idFicha.toString(), "",controllerInput[x].controller.text);
         }
-
       }
+
+
+        
+
+      
 
       print("Formulario validado , inputables son :" + controllerInput.length.toString());
 

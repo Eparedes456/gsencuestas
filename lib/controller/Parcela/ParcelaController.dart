@@ -25,7 +25,7 @@ class ParcelaController extends GetxController{
     ubigeo    = listData["ubigeo"];
     print(idSeccion);
     print(ubigeo);
-    this.onload();
+    onload();
     super.onInit();
   }
 
@@ -54,6 +54,7 @@ class ParcelaController extends GetxController{
   Set<Marker> get markers => _markers;
   LatLng miubicacion;
   Position position;
+  bool load = true;
   var i;
   int _polygonCounterId = 1;
   String areacalculada = "";
@@ -73,67 +74,11 @@ class ParcelaController extends GetxController{
       bearing: 0,
       target: miubicacion,
   );
+  print(_initialCameraPosition);
 
-  /*_markers.add(
-      Marker(
-        markerId: MarkerId(i.toString()),
-        position: LatLng(-6.021184, -76.987839),
-        infoWindow: InfoWindow(
-          title: 'Punto 1',
-          snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
-        ),
-        icon: BitmapDescriptor.defaultMarker
-      )
-  );
-
-  _markers.add(
-      Marker(
-        markerId: MarkerId(i.toString()),
-        position: LatLng(-6.021776, -76.988057),
-        infoWindow: InfoWindow(
-          title: 'Punto 2',
-          snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
-        ),
-        icon: BitmapDescriptor.defaultMarker
-      )
-  );
-
-  _markers.add(
-      Marker(
-        markerId: MarkerId(i.toString()),
-        position: LatLng(-6.021824, -76.987517),
-        infoWindow: InfoWindow(
-          title: 'Punto 3',
-          snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
-        ),
-        icon: BitmapDescriptor.defaultMarker
-      )
-  );
-
-  _markers.add(
-      Marker(
-        markerId: MarkerId(i.toString()),
-        position: LatLng(-6.021184, -76.987839),
-        infoWindow: InfoWindow(
-          title: 'Punto 4',
-          snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
-        ),
-        icon: BitmapDescriptor.defaultMarker
-      )
-  );*/
-  /*polylineCoordinate.add(
-      LatLng(-6.021184, -76.987839)
-  );
-  polylineCoordinate.add(
-      LatLng(-6.021776, -76.988057)
-  );
-  polylineCoordinate.add(
-      LatLng(-6.021824, -76.987517)
-  );
-  polylineCoordinate.add(
-      LatLng(-6.021184, -76.987839)
-  );*/
-
+  if(miubicacion.latitude != null){
+    load = false;
+  }
 
   update();
  }

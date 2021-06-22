@@ -44,7 +44,8 @@ class ParcelaPage extends StatelessWidget {
         :  _.loading == false && _.hayParcela == true ? ListView.builder(
           itemCount: _.listParcela.length,
           itemBuilder: (context,i){
-            
+            Uint8List _photoBase64;
+            _photoBase64 = base64Decode(_.listParcela[i].foto);
             
             return Column(
               children: [
@@ -53,10 +54,10 @@ class ParcelaPage extends StatelessWidget {
                   padding:  EdgeInsets.only(top: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: MemoryImage(_.listParcela[i].foto),
+                      backgroundImage: MemoryImage(_photoBase64),
                     ),
                     title: Text(
-                      _.listParcela[i].nombreCompleto,
+                      _.listParcela[i].nombre +  " " + _.listParcela[i].apellidoPaterno + " " + _.listParcela[i].apellidoMaterno,
                       style: TextStyle(
                         fontSize: 14
                       ),
@@ -64,20 +65,15 @@ class ParcelaPage extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Descripcion : ${_.listParcela[i].descripcion}',style: TextStyle(fontSize: 12),),
-                        Text('Area : ${_.listParcela[i].area} m2',style: TextStyle(fontSize: 12),)
+                        Text('Direccion : ${_.listParcela[i].direccion}',style: TextStyle(fontSize: 12),),
+                        Text('telefono : ${_.listParcela[i].telefono}',style: TextStyle(fontSize: 12),)
                       ],
                     ),
                     onTap: (){
-                      print(_.listParcela[i].idSeccion);
-                      _.navigateToBeneficiarioParcela(_.listParcela[i].idSeccion.toString(), _.listParcela);
+                      print(_.listParcela[i].idEncuestado);
+                      _.navigateToBeneficiarioParcela(_.listParcela[i].idEncuestado.toString());
                     },
-                    /*trailing: IconButton(
-                      icon: Icon(Icons.more_vert), 
-                      onPressed: (){
-                        _.bottomSheet();
-                      }
-                    ),*/
+                  
                   ),
                 ),
                 Divider()
@@ -85,15 +81,6 @@ class ParcelaPage extends StatelessWidget {
             );
           }
         ): Center(child: Text('No hay parcelas registradas'),),
-
-        /*floatingActionButton: FloatingActionButton(
-          backgroundColor: Color.fromRGBO(0, 102, 84, 1),
-          onPressed: (){
-            //_.newParcela();
-            _.showModalSearch();
-          },
-          child: Icon(Icons.add),
-        ),*/
       ),
     );
     

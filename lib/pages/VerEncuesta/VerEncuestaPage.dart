@@ -48,7 +48,7 @@ class VerEncuestaPage extends StatelessWidget {
                         InputTextfield( id_pregunta.toString(), TextEditingController() )
                       );
 
-                      if(_.preguntas[index].tipo_pregunta == "IMPUTABLE"){
+                      if(_.preguntas[index].tipo_pregunta == "integer" || _.preguntas[index].tipo_pregunta == "decimal" || _.preguntas[index].tipo_pregunta == "text" || _.preguntas[index].tipo_pregunta == "note" ){
 
                         return Padding(
                             padding: EdgeInsets.only(left: 10,right: 10),

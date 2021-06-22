@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Departamento/DepartamentoModel.dart';
 import 'package:gsencuesta/model/Distritos/DistritosModel.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Parcela/BeneficiarioParcela.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaCoordenadas.dart';
 import 'package:gsencuesta/model/Parcela/ParcelaMoodel.dart';
@@ -71,8 +72,8 @@ class Parcela1Controller extends GetxController{
 
   /*  PARCELAS */
 
-  List<ParcelaModel> _listParcelas = [];
-  List<ParcelaModel> get listParcela => _listParcelas;
+  List<EncuestadoModel> _listParcelas = [];
+  List<EncuestadoModel> get listParcela => _listParcelas;
   List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
   bool hayParcela = false;
   bool loading = true;
@@ -81,7 +82,7 @@ class Parcela1Controller extends GetxController{
   getAllParcela()async{
 
     //List response = await apiConexion.getAllParcelas();
-    List<ParcelaModel> response = await DBProvider.db.getParcela();
+    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
     _listParcelas = response;
     if(_listParcelas.length > 0){
       hayParcela = true;
@@ -94,7 +95,7 @@ class Parcela1Controller extends GetxController{
 
   }
 
-  navigateToBeneficiarioParcela(String idBeneficiario,List<ParcelaModel> lista){
+  navigateToBeneficiarioParcela(String idBeneficiario){
     Get.to(
       BeneficiaroParcela(),
       arguments: {
@@ -265,7 +266,7 @@ class Parcela1Controller extends GetxController{
         if(respuesta.length > 0){
 
           Get.back(); 
-          //showEncuestadoModal(respuesta);
+          showEncuestadoModal(respuesta);
 
         }else{
           
@@ -536,7 +537,7 @@ class Parcela1Controller extends GetxController{
     _listDistritos          = [];
     List temporalDistrito   = [];
 
-    var result = dataUbi.where((element) =>  element.contains(value.codigoDepartamento) && element.contains(value.codigoProvincia));
+    var result = dataUbi.where((element) =>  element.contains(value.codigoDepartamento + value.codigoProvincia));
     print(result);
     result.forEach((element) { 
       temporalDistrito.add(element);
@@ -551,6 +552,7 @@ class Parcela1Controller extends GetxController{
     }
     print(_listDistritos);
      _valueDistrito = _listDistritos[0].descripcion;
+     _selectCodProvincia = value.codigoProvincia;
      _selectCodDistrito = _listDistritos[0].codigoDistrito;
      update(['distrito']);
     

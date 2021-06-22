@@ -236,11 +236,11 @@ class QuizPage extends StatelessWidget {
                                 ),
                               ),
                             );
-                          }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
+                          }else if(_.preguntas[index].tipo_pregunta == "select_one list_name"){
 
                             return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
-                          }else  if( _.preguntas[index].tipo_pregunta == "MULTIPLE"){
+                          }else  if( _.preguntas[index].tipo_pregunta == "select_multiple list_name"){
                             return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
                           }
 

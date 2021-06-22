@@ -116,6 +116,9 @@ class EncuestaController extends GetxController{
 
   List<DistritoModel> _listDistritos = [];
   List<DistritoModel> get listDistrito => _listDistritos;
+
+  List<EncuestadoModel> encuestado =[];
+
   String _valueDistrito;
   String get valueDistrito => _valueDistrito;
 
@@ -300,7 +303,7 @@ class EncuestaController extends GetxController{
                 hintStyle: TextStyle(
                   fontSize: 13
                 ),
-                hintText: 'Ingrese el dni'
+                hintText: 'Ingrese el dni o el nombre del encuestado'
               ),
             ),
             SizedBox(height: 12,),
@@ -367,7 +370,7 @@ class EncuestaController extends GetxController{
           if( response.length > 0 ){
 
             Get.back(); 
-            showEncuestadoModal(response);
+            showEncuestadoModal();
 
           }else{
           
@@ -388,7 +391,7 @@ class EncuestaController extends GetxController{
         if(respuesta.length > 0){
 
           Get.back(); 
-          showEncuestadoModal(respuesta);
+          showEncuestadoModal();
 
         }else{
           
@@ -404,11 +407,42 @@ class EncuestaController extends GetxController{
     }
 
   }
+
+  showEncuestadoModal()async{
+    Get.dialog(
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text('Encuestados encontrados'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: MemoryImage(_photoBase64)
+                ),
+                title: Text('nombreCompleto',style: TextStyle(fontSize: 14),),
+                onTap: (){
+                  
+                },
+            ),
+            ],
+          ),
+
+        )
+    );
+  }
+
   List listCodDep = [];
   List listcodProvincia = [];
   List liscodDistrito = [];
 
-  showEncuestadoModal(dynamic data)async{
+  showEncuestadoModalFinal(dynamic data)async{
     listCodDep = [];
     listcodProvincia = [];
     liscodDistrito = [];
@@ -923,8 +957,8 @@ class EncuestaController extends GetxController{
     _listDistritos          = [];
     List temporalDistrito   = [];
 
-    var result = dataUbi.where((element) =>  element.contains(value.codigoDepartamento) && element.contains(value.codigoProvincia));
-    print(result);
+    List result = dataUbi.where((element) =>   element.contains(value.codigoDepartamento + value.codigoProvincia) /*&& element.contains(value.codigoProvincia)*/).toList();
+    print(result.length);
     result.forEach((element) { 
       temporalDistrito.add(element);
     });
@@ -938,6 +972,7 @@ class EncuestaController extends GetxController{
     }
     print(_listDistritos);
      _valueDistrito = _listDistritos[0].descripcion;
+     _selectCodProvincia = value.codigoProvincia;
      _selectCodDistrito = _listDistritos[0].codigoDistrito;
      update(['distrito']);
     

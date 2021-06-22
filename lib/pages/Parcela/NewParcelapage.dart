@@ -13,7 +13,11 @@ class NewParcelaPage extends StatelessWidget {
           title: Text('Agregar parcelas'),
           elevation: 0,
         ),
-        body: Stack(
+        body: _.load?
+          Center(
+            child: CircularProgressIndicator(),
+          )
+        :  Stack(
           children: [
             GoogleMap(
               myLocationButtonEnabled: true,

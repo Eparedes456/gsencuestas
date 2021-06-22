@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -60,6 +61,7 @@ class RetomarEncuestaPage extends StatelessWidget {
                       var id_pregunta = _.preguntas[index].id_pregunta;
                       var maxLength = _.preguntas[index].bind_field_length;
                       var placeholder = _.preguntas[index].bind_field_placeholder;
+                      var typeData = _.preguntas[index].bind_type;
 
                       if(_.preguntas[index].tipo_pregunta == "integer" || _.preguntas[index].tipo_pregunta == "decimal" ){
 
@@ -103,15 +105,22 @@ class RetomarEncuestaPage extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.only(left: 10,right: 10),
                                       child: TextField(
-                                        maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
-                                        controller: _.controllerInput[index].controller,
-                                        decoration: InputDecoration(
-                                          hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                          maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                                          controller: _.controllerInput[index].controller,
+                                          decoration: InputDecoration(
+                                            hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                          ),
+                                          keyboardType: typeData == "number" ? TextInputType.phone  : TextInputType.text,
+                                          inputFormatters: typeData == "number"?  <TextInputFormatter>[
+                                            FilteringTextInputFormatter.digitsOnly
+                                          ] : null,
+                                          onChanged: (value){
+                                            _.calcular();
+                                          },
+                                          onSubmitted: (value){
+                                            //_.calcular();
+                                          },
                                         ),
-                                        onSubmitted: (valor){
-
-                                        },
-                                      ),
                                     
                                     ),
 
@@ -191,11 +200,44 @@ class RetomarEncuestaPage extends StatelessWidget {
 
                       }else if(_.preguntas[index].tipo_pregunta == "note"){
 
-                      }else if(_.preguntas[index].tipo_pregunta == "SIMPLE"){
+                        return Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: Container(
+                                width: double.infinity,
+                                child: Card(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 20,left: 10,right: 10),
+                                        child: Text(
+                                          '$numPregunta.- $enunciadoPregunta',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 16
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10,right: 10),
+                                        child: TextField(
+                                          controller: _.controllerInput[index].controller,
+                                          readOnly: true,
+                                        ),           
+                                      ),
+                                      //Text(_.total.toString())
+                                    ],
+                                  ),
+                                ),
+                              ),
+                        );
+
+                      }else if(_.preguntas[index].tipo_pregunta == "select_one list_name"){
 
                         return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
 
-                      }else if(_.preguntas[index].tipo_pregunta == "MULTIPLE"){
+                      }else if(_.preguntas[index].tipo_pregunta == "select_multiple list_name"){
                         return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
                       }
 

@@ -229,7 +229,7 @@ class ProfilePage extends StatelessWidget {
                       child: Column(
                         children: [
                           SizedBox(height: 12,),
-                          ListTile(
+                          /*ListTile(
                             leading: Icon(Icons.map,color: Color.fromRGBO(0, 102, 84, 1),),
                             title: Text(
                               'Ver parcelas de los beneficiarios',
@@ -241,7 +241,7 @@ class ProfilePage extends StatelessWidget {
                               _.navigateToParcela();
                             },
                           ),
-                          Divider()
+                          Divider()*/
                         ],
                       ),
                     ),
