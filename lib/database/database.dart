@@ -14,6 +14,7 @@ import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -343,6 +344,17 @@ class DBProvider{
             idBeneficiario INTEGER,
             latitud TEXT,
             longitud TEXT
+          )
+          '''
+        );
+        await db.execute(
+          '''
+          CREATE TABLE ubigeo(
+            idUbigeo INTEGER PRIMARY KEY AUTOINCREMENT,
+            codigoDepartamento TEXT,
+            codigoProvincia TEXT,
+            codigoDistrito TEXT,
+            descripcion TEXT
           )
           '''
         );
@@ -1190,6 +1202,23 @@ class DBProvider{
   }
 
   /* Ubigeo */
+    insertUbigeo(UbigeoModel nuevoUbigeo)async{
+
+      final db  = await database;
+      var respuesta = await db.insert("ubigeo", nuevoUbigeo.toMap());
+      return respuesta;
+    }
+    getAllUbigeo()async{
+      final db = await database;
+      var respuesta = await db.rawQuery(
+        '''
+        SELECT * FROM ubigeo LIMIT 20
+        '''
+      );
+      List<UbigeoModel> listUbigeo = respuesta.isNotEmpty ? respuesta.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      return listUbigeo;
+    }
+
     insertDepartamentos(DepartamentoModel nuevoDepartamento)async{
       final db = await database;
       var respuesta = await db.insert("departamento", nuevoDepartamento.toMap());
@@ -1206,6 +1235,41 @@ class DBProvider{
       final db  = await database;
       var respuesta = await db.insert("distrito", nuevoDistrito.toMap());
       return respuesta;
+    }
+    getDepartamentos1(String codDepartamento)async{
+      final db = await database;
+      var response = await db.rawQuery(
+        '''
+        SELECT codigoDepartamento,descripcion FROM ubigeo WHERE codigoDepartamento = '$codDepartamento' 
+        AND codigoProvincia = '00' AND codigoDistrito = '00'
+        '''
+      );
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      return listDepartamento; 
+    }
+    
+    getProvincia1(String codigoProvincia, String codigoDepartamento)async{
+      final db = await database;
+      var response = await db.rawQuery(
+        '''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '00'
+        '''
+      );
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      return listDepartamento; 
+    }
+
+    getDistrito1(String codigoProvincia, String codigoDepartamento, String codigoDistrito)async{
+      final db = await database;
+      var response = await db.rawQuery(
+        '''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
+        '''
+      );
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      return listDepartamento; 
     }
 
     getDepartamentos(String codDepartamento)async{

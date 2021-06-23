@@ -26,6 +26,7 @@ import 'package:gsencuesta/pages/Perfil/ProfilePage.dart';
 import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 
 
 
@@ -46,7 +47,8 @@ class PrincipalController extends GetxController{
   List<ProvinciaModel>  _listProvincia =[];
   List<DistritoModel> _listDistrito =  [];
   List<ParcelaModel> _listParcelas = [];
-   List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
+  List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
+  List<UbigeoModel> _listUbigeos = [];
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -626,7 +628,30 @@ class PrincipalController extends GetxController{
   }
 
   cargarUbigeo()async{
-    var response = await apiConexion.getDepartamentos();
+    var response = await rootBundle.loadString("assets/ubigeo.json");
+    final data = await json.decode(response);
+    
+    data.forEach((element){
+      _listUbigeos.add(
+        UbigeoModel(
+          idUbigeo            : element["id"],
+          codigoDepartamento  : element["codigoDepartamento"],
+          codigoProvincia     : element["codigoProvincia"],
+          codigoDistrito      : element["codigoDistrito"],
+          descripcion         : element["descripcion"] 
+        )
+      );
+    });
+
+    print(_listUbigeos.length);
+
+    for (var x = 0; x < _listUbigeos.length; x++) {
+      await DBProvider.db.insertUbigeo(_listUbigeos[x]);
+    }
+    List<UbigeoModel> ubigeos  = await DBProvider.db.getAllUbigeo();
+    print(ubigeos.length);
+
+    /*var response = await apiConexion.getDepartamentos();
     print(response);
     if(response.length > 0){
       response.forEach((elementos){
@@ -697,7 +722,7 @@ class PrincipalController extends GetxController{
    
     var dbProvincias     = await DBProvider.db.getProvincia();
     print(dbDepartamento);
-    print(dbProvincias);
+    print(dbProvincias);*/
     Get.back();
   }
 
@@ -714,7 +739,7 @@ class PrincipalController extends GetxController{
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 8,),
-            Text('tiempo estimado de carga 2 min a 3 min')
+            Text('Tiempo estimado de carga 1 min')
           ],
         ),
       ),

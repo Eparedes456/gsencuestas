@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
+import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Practica/Practica.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
@@ -111,11 +112,11 @@ class EncuestaController extends GetxController{
 
   String _valueProvincia;
   String get valueprovincia => _valueProvincia;
-  List<ProvinciaModel> _listprovincias = [];
-  List<ProvinciaModel> get listprovincias => _listprovincias;
+  List<UbigeoModel> _listprovincias = [];
+  List<UbigeoModel> get listprovincias => _listprovincias;
 
-  List<DistritoModel> _listDistritos = [];
-  List<DistritoModel> get listDistrito => _listDistritos;
+  List<UbigeoModel> _listDistritos = [];
+  List<UbigeoModel> get listDistrito => _listDistritos;
 
   List<EncuestadoModel> encuestado =[];
 
@@ -498,7 +499,7 @@ class EncuestaController extends GetxController{
     List temporalProvincia    = [];
     List temporalDistrito     = [];
 
-    List<DepartamentoModel> showDepartamentos = [];
+    List<UbigeoModel> showDepartamentos = [];
     List<ProvinciaModel>    showProvincias    = [];
     List<DistritoModel>     showDistritos     = [];
 
@@ -520,7 +521,8 @@ class EncuestaController extends GetxController{
     
 
     for (var i = 0; i < listCodDep.length; i++) {
-      List<DepartamentoModel> dataDepartamento  = await DBProvider.db .getDepartamentos(listCodDep[i].toString());
+      List<UbigeoModel> dataDepartamento  = await DBProvider.db .getDepartamentos1(listCodDep[i].toString());
+      print(dataDepartamento[0].descripcion);
       showDepartamentos.add(dataDepartamento[0]);
     }
     _valueDepartamento = showDepartamentos[0].descripcion;
@@ -534,8 +536,9 @@ class EncuestaController extends GetxController{
       temporalProvincia.add(flat);
     });
     List codProvincia = temporalProvincia.toSet().toList();
+
     for (var x = 0; x < codProvincia.length; x++) {
-      List<ProvinciaModel> dataProvincias = await DBProvider.db.getOneProvincia(codProvincia[x].toString(),idDepartamento);
+      List<UbigeoModel> dataProvincias = await DBProvider.db.getProvincia1(codProvincia[x].toString(),idDepartamento);
       _listprovincias.add(dataProvincias[0]);
     }
     print(dataUbi[0].substring(2,4));
@@ -549,7 +552,7 @@ class EncuestaController extends GetxController{
     });
     for (var d = 0; d < temporalDistrito.length; d++) {
 
-      List<DistritoModel> dataDistritos = await DBProvider.db.getDistritos(
+      List<UbigeoModel> dataDistritos = await DBProvider.db.getDistrito1(
         temporalDistrito[d].toString().substring(2,4), temporalDistrito[d].toString().substring(0,2), temporalDistrito[d].toString().substring(4,6)
       );
       _listDistritos.add(dataDistritos[0]);
@@ -946,7 +949,7 @@ class EncuestaController extends GetxController{
     update(['departamento']);
   }
 
-  selectedDepartamento(List<String> dataUbi, DepartamentoModel value)async{
+  selectedDepartamento(List<String> dataUbi, UbigeoModel value)async{
     _listprovincias = [];
     _listDistritos = [];
     List temporalProvincia  = [];
@@ -972,7 +975,7 @@ class EncuestaController extends GetxController{
     
     List codProvincia = temporalProvincia.toSet().toList();
     for (var x = 0; x < codProvincia.length; x++) {
-      List<ProvinciaModel> dataProvincias = await DBProvider.db.getOneProvincia(codProvincia[x].toString(),value.codigoDepartamento);
+      List<UbigeoModel> dataProvincias = await DBProvider.db.getOneProvincia(codProvincia[x].toString(),value.codigoDepartamento);
       _listprovincias.add(dataProvincias[0]);
     }
    
@@ -991,7 +994,7 @@ class EncuestaController extends GetxController{
     update(['provincia']);
   }
 
-  selectedProvincia(List<String> dataUbi, ProvinciaModel value)async{
+  selectedProvincia(List<String> dataUbi, UbigeoModel value)async{
     _listDistritos          = [];
     List temporalDistrito   = [];
 
@@ -1003,7 +1006,7 @@ class EncuestaController extends GetxController{
     print(temporalDistrito);
     for (var d = 0; d < temporalDistrito.length; d++) {
 
-      List<DistritoModel> dataDistritos = await DBProvider.db.getDistritos(
+      List<UbigeoModel> dataDistritos = await DBProvider.db.getDistrito1(
         temporalDistrito[d].toString().substring(2,4), temporalDistrito[d].toString().substring(0,2), temporalDistrito[d].toString().substring(4,6)
       );
       _listDistritos.add(dataDistritos[0]);
@@ -1021,7 +1024,7 @@ class EncuestaController extends GetxController{
     update(['distrito']);
   }
 
-  selectedDistrito(DistritoModel value){
+  selectedDistrito(UbigeoModel value){
     _selectCodDistrito = value.codigoDistrito;
 
   }
@@ -1041,7 +1044,7 @@ class EncuestaController extends GetxController{
 }
 
 class DropDownDepartamento extends StatelessWidget {
-  final List<DepartamentoModel> showDepartamentos;
+  final List<UbigeoModel> showDepartamentos;
   final List<String> dataUbi;
   const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi}) : super(key: key);
   @override
@@ -1092,7 +1095,7 @@ class DropDownDepartamento extends StatelessWidget {
 }
 
 class DropDownProvincia extends StatelessWidget {
-  final List<ProvinciaModel> showProvincia;
+  final List<UbigeoModel> showProvincia;
   final List<String> dataUbi;
   const DropDownProvincia({Key key,this.showProvincia,this.dataUbi}) : super(key: key);
   @override
@@ -1143,7 +1146,7 @@ class DropDownProvincia extends StatelessWidget {
 }
 
 class DropDownDistrito extends StatelessWidget {
-  final List<DistritoModel> showDistrito;
+  final List<UbigeoModel> showDistrito;
   final List<String> dataUbi;
   const DropDownDistrito({Key key,this.showDistrito,this.dataUbi}) : super(key: key);
   @override
