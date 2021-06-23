@@ -118,7 +118,7 @@ class BeneficiaroParcela extends StatelessWidget {
                     )
                   ),
                   SizedBox(height: 15,),
-                  Padding(
+                  _.hayData == true ? Padding(
                     padding:  EdgeInsets.only(left: 10,right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,33 +138,36 @@ class BeneficiaroParcela extends StatelessWidget {
 
                       ],
                     ),
-                  ),
+                  ) : Container(),
                   SizedBox(height: 20,),
               
-                  Container(
-                    color: Colors.white,
-                    width: double.infinity,
-                    height: 300,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: AlwaysScrollableScrollPhysics(),//NeverScrollableScrollPhysics(),
-                      itemCount: _.listParcelasBeneficiario.length,
-                      itemBuilder: (context,i){
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Text(' Descripcion: ${_.listParcelasBeneficiario[i].descripcion}'),
-                              subtitle: Text('Area: ${_.listParcelasBeneficiario[i].area} m2'),
-                            ),
-                            Divider()
-                          ],
-                        );
-                      }
-                    ),
+                  _.hayData == true?  Container(
+                      color: Colors.white,
+                      width: double.infinity,
+                      height: 300,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),//NeverScrollableScrollPhysics(),
+                        itemCount: _.listParcelasBeneficiario.length,
+                        itemBuilder: (context,i){
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(' Descripcion: ${_.listParcelasBeneficiario[i].descripcion}'),
+                                subtitle: Text('Area: ${_.listParcelasBeneficiario[i].area} m2'),
+                              ),
+                              Divider()
+                            ],
+                          );
+                        }
+                      ),
+                            
                           
                         
                       
-                    
+                    ):
+                   Center(
+                    child: Text('No cuenta con parcelas registradas.'),
                   ),
                   
                 ],

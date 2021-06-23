@@ -29,7 +29,9 @@ class BeneficiarioParcelaController extends GetxController{
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
   List<ParcelaModel> listParcelasBeneficiario = [];
-  String cantidadParcelas = ""; 
+  String cantidadParcelas = "";
+
+  bool hayData = false;
 
   loadData(var data)async{
 
@@ -48,6 +50,12 @@ class BeneficiarioParcelaController extends GetxController{
     //listParcelasBeneficiario.removeWhere((element) => element.idSeccion.toString() != beneficiarioData[0].idEncuestado);
     print(listParcelasBeneficiario);
     cantidadParcelas = listParcelasBeneficiario.length.toString();
+    if(listParcelasBeneficiario.length == 0){
+      hayData = false;
+    }else{
+      hayData = true;
+    }
+    
     update();
 
     

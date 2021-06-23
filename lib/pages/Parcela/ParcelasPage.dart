@@ -13,7 +13,7 @@ class ParcelaPage extends StatelessWidget {
       builder: (_) => Scaffold(
         appBar: AppBar(
           title: Text(
-            'Lista de beneficiarios con',
+            'Lista de encuestados con',
             style: TextStyle(
               fontSize: 18
             ),

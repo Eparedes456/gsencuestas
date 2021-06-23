@@ -787,15 +787,13 @@ class DBProvider{
 
   /* Actualizar FICHA */
 
-  updateFicha(String idFicha,String observacion, String fechafinal,String estado)async{
+  updateFicha(String idFicha,String observa, String fechafinal,String estado)async{
 
     final db = await database;
-
-    //print("  UPDATE ficha SET observacion = '$observacion', estado = 'F', fecha_fin = ''  WHERE idFicha = '$idFicha' ");
-    var response = await db.rawQuery(
+    var response2 = await db.rawQuery(
       
       '''
-      UPDATE ficha SET observacion = "$observacion", estado = "$estado", fecha_fin = "$fechafinal"  WHERE idFicha = "$idFicha"
+      UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal"  WHERE idFicha = "$idFicha"
 
       '''
     );
@@ -806,6 +804,7 @@ class DBProvider{
     List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
 
     print(listFichas);
+    return listFichas;
     //return response;
 
 

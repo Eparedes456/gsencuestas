@@ -110,8 +110,8 @@ class RetomarEncuestaPage extends StatelessWidget {
                                           decoration: InputDecoration(
                                             hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
                                           ),
-                                          keyboardType: typeData == "number" ? TextInputType.phone  : TextInputType.text,
-                                          inputFormatters: typeData == "number"?  <TextInputFormatter>[
+                                          keyboardType: typeData == "number" || typeData == "decimal" ? TextInputType.phone  : TextInputType.text,
+                                          inputFormatters: typeData == "number" || typeData == "decimal"?  <TextInputFormatter>[
                                             FilteringTextInputFormatter.digitsOnly
                                           ] : null,
                                           onChanged: (value){

@@ -16,6 +16,8 @@ import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 
+import '../../model/Encuestado/EncuestadoModel.dart';
+
 class Parcela1Controller extends GetxController{
 
   @override
@@ -46,6 +48,7 @@ class Parcela1Controller extends GetxController{
   ApiServices apiConexion = ApiServices();
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
+  List<EncuestadoModel> encuestado = [];
   
   /**  ubigeo */
     
@@ -212,6 +215,8 @@ class Parcela1Controller extends GetxController{
 
   }
 
+
+
   searchEncuestado()async{
 
     Get.back();
@@ -245,7 +250,22 @@ class Parcela1Controller extends GetxController{
           if( response.length > 0 ){
 
             Get.back(); 
-            showEncuestadoModal(response);
+            encuestado = [];
+            response.forEach((element){
+              encuestado.add(
+                EncuestadoModel(
+                  idEncuestado    : element["idEncuestado"].toString(),
+                  nombre          : element["nombre"],
+                  apellidoPaterno : element["apellidoPaterno"], 
+                  apellidoMaterno : element["apellidoMaterno"],
+                  tipoDocumento   : element["tipoDocumento"],
+                  foto            : element["foto"],
+                  idUbigeo        : element["idUbigeo"]   
+                )
+              );
+            });
+            //showEncuestadoModal(response);
+            showEncuesta1(encuestado);
 
           }else{
           
@@ -266,7 +286,7 @@ class Parcela1Controller extends GetxController{
         if(respuesta.length > 0){
 
           Get.back(); 
-          showEncuestadoModal(respuesta);
+          showEncuesta1(respuesta);
 
         }else{
           
@@ -282,6 +302,56 @@ class Parcela1Controller extends GetxController{
     }
 
   }
+
+  showEncuesta1(var response){
+
+    Get.dialog(
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text('Encuestados encontrados'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: response.length,
+                  itemBuilder: (context,i){
+                    var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
+                    print(nombreCompleto);
+                    var foto            = response[i].foto;
+                    _photoBase64        = base64Decode(foto); 
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage:  _photoBase64 == "" || _photoBase64 == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
+                        ),
+                        title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
+                        onTap: (){
+                          Get.back();
+                          //showEncuestadoModalFinal(response[i]);
+                            showEncuestadoModal(response[i]);
+                        },
+                      ),
+                    );
+                  }
+                ),
+              )
+            ],
+          ),
+
+        )
+    );
+  }
+
 
   loadMessage(String message, bool isLoading){
 
@@ -327,12 +397,12 @@ class Parcela1Controller extends GetxController{
     _listprovincias = [];
     _listDistritos = [];
 
-    print(data[0]["idEncuestado"]);
-    var idEncuestado2   = data[0]["idEncuestado"].toString();
-    var nombreCompleto  =  data[0]["nombre"] + " " + data[0]["apellidoPaterno"] + " " + data[0]["apellidoMaterno"];
-    var foto            = data[0]["foto"];
+    print(data.idEncuestado);
+    var idEncuestado2   = data.idEncuestado.toString();
+    var nombreCompleto  =  data.nombre + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
+    var foto            = data.foto;
     _photoBase64        = base64Decode(foto); 
-    var idUbigeo        =  data[0]["idUbigeo"]; // "220101,220203,210402,220103";  
+    var idUbigeo        =  data.idUbigeo; // "220101,220203,210402,220103";  
     var dataUbi = idUbigeo.split(",");
     List temporalDepartamento = [];
     List temporalProvincia    = [];

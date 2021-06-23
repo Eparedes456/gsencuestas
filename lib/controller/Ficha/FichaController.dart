@@ -16,6 +16,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/Ficha/FichasModel.dart';
+
 class FichaController extends GetxController{
 
 
@@ -203,13 +205,15 @@ class FichaController extends GetxController{
     String hourFormat = DateFormat('HH:mm:ss').format(now);
 
     String formattedDate = formatDate + "T" + hourFormat + ".0Z";
+    String observa = _controllerObservacion.text;
 
-    var hola =  await DBProvider.db.updateFicha( idFicha, _controllerObservacion.text, formattedDate,"F");
+    List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F");
 
     print(hola);
     //_positionStream.cancel();
+    if(hola.length > 0){
 
-    Get.dialog(
+      Get.dialog(
                 AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)
@@ -225,13 +229,17 @@ class FichaController extends GetxController{
                   ),
                 ),
                 barrierDismissible: false
-    );
+      );
 
-    Future.delayed(Duration(seconds: 2),(){
+      Future.delayed(Duration(seconds: 2),(){
 
-      Get.offAll( TabsPage());
-                
-    });
+        Get.offAll( TabsPage());
+                  
+      });
+
+    }
+
+    
     
     
 
