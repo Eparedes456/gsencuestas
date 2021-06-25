@@ -63,7 +63,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
 
-                      Container(
+                      /*Container(
                         height: 115,
                         width: 80,
                         child: ClipRRect(
@@ -73,11 +73,11 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      ),
+                      ),*/
                       
                       Expanded(
                         child: Padding(
-                          padding:  EdgeInsets.only(left: 10,right: 10),
+                          padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -86,43 +86,18 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Expanded(child: Text('Nº FICHA:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
-                                  
+                                  //Expanded(child: Text('Nº FICHA:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Text('Nº FICHA:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),),
+                                        //Text('${_.idFicha}')
+                                      ],
+                                    ),
+                                  ),
                                   Expanded(child: Text('${_.idFicha}')),
-                                  Expanded(child: Container())
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Expanded(child: Text('F. INICIO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
-                                 
-                                  Expanded(child: Text('${_.fechaInicio}')),
-                                  Expanded(child: Container())
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Expanded(child: Text('F. FIN:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
-                                 
-                                  Expanded(child: Text('${_.fechaFin}')),
-                                  Expanded(child: Container())
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                   Expanded(child: Text('ESTADO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
-                                  
-                                  SizedBox(width: 10,),
-                                   Container(
+                                  Expanded(child: Text('ESTADO:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Container(
                                        
                                         height: 25,
                                         //width: 200,
@@ -136,15 +111,48 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                             child: _.estado == "F" ? Text('Finalizado',style: TextStyle(color: Colors.white),) : _.estado == "P" ? Text('Pendiente',style: TextStyle(color: Colors.white)) :Text('Sincronizado',style: TextStyle(color: Colors.white)),
                                           ),
                                         ),
-                                      ),
-                                   
-
-                                   Expanded(child: Container())
-                                   
+                                  ),
 
                                   
                                 ],
                               ),
+                              SizedBox(height: 5,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+
+                                  Expanded(child: Text('F.Inicio:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.fechaInicio}',style: TextStyle(fontSize: 12),)),
+                                  
+                                  Expanded(child: Text('H.Inicio:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.hora_inicio}')),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+
+                                  Expanded(child: Text('F.Fin:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.fechaFin}',style: TextStyle(fontSize: 12))),
+                                  Expanded(child: Text('H.Fin:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.hora_inicio}')),
+                                ],
+                              ),
+                              SizedBox(height: 5,),
+
+                              _.retornoEncuesta == true  ? Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+
+                                  Expanded(child: Text('F.Retorno:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.fecha_retorno}',style: TextStyle(fontSize: 12))),
+                                  Expanded(child: Text('H.Retorno:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
+                                  Expanded(child: Text('${_.hora_retorno}')),
+                                ],
+                              ) : Container(),
+                              _.retornoEncuesta == true  ? SizedBox(height: 5,) : Container(),
+                              
                               SizedBox(height: 4,),
 
                             ],
@@ -161,9 +169,6 @@ class DetailMiEncuestaPage extends StatelessWidget {
 
               Stack(
                 children: [
-
-                  
-
                   Padding(
                     padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
                     child: Container(
@@ -256,15 +261,10 @@ class DetailMiEncuestaPage extends StatelessWidget {
                 ],
               ),
 
-            
-
               SizedBox(height: 20,),
 
               Stack(
                 children: [
-
-                  
-
                   Padding(
                     padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
                     child: Container(
@@ -393,6 +393,126 @@ class DetailMiEncuestaPage extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 8,top: 4),
                           child: Text(
                             'DATOS DE LA ENCUESTA',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                      
+                    ),
+                  )
+
+                ],
+              ),
+
+              SizedBox(height: 20,),
+
+              Stack(
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10,right: 10,top: 10),
+                    child: Container(
+                      //height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey
+                        ),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Padding(
+                        padding:  EdgeInsets.only(left: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            SizedBox(height: 30,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Expanded(child: Text('observación:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(
+                                  child: Padding(
+                                    padding:  EdgeInsets.only(right: 10),
+                                    child: Container(
+                                      //height: 100,
+                                      child: Text('${_.observacionFicha}',textAlign: TextAlign.justify,)
+                                    ),
+                                  )
+                                )
+                              ],
+                            ),
+
+                            SizedBox(height: 8,),
+                            
+
+                            SizedBox(height: 8,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+
+                                Expanded(child: Text('Ver imagenes:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold),)),
+                                Expanded(
+
+                                  child: Padding(
+                                    padding:  EdgeInsets.only(left: 10,right: 10),
+                                    child: MaterialButton(
+                                      height:  30,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      color: Colors.blue,
+                                      onPressed: (){
+                                        _.navigateToImage();
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom: 3.5),
+                                            child: Icon(FontAwesomeIcons.image,size: 15,color: Colors.white,),
+                                          ),
+                                          SizedBox(width: 15,),
+                                          Text('Pulse aqui',style: TextStyle(fontSize: 13,color: Colors.white),)
+                                        ],
+                                      ),
+                                    ),
+                                  )
+
+                                )
+                              ],
+                            ),
+
+                            
+
+                            SizedBox(height: 20,),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Container(
+                      height: 30,
+                      width: 200,
+                      
+                      decoration: BoxDecoration(
+                        color: Colors.green[900],
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8,top: 4),
+                          child: Text(
+                            'Datos adicionales',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold

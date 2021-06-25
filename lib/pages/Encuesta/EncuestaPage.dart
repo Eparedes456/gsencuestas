@@ -186,17 +186,7 @@ class EncuestaPage extends StatelessWidget {
                                       //icon: Icons.edit,
                                   ),
 
-                                  /*
-                                  IconSlideAction(
-                                    caption: 'Detalle',
-                                    foregroundColor: Colors.white,
-                                    color: Color.fromRGBO(20, 183, 201, 1),   //20, 183, 201 mas oscuro   108, 230, 244 => claro
-                                    icon: FontAwesomeIcons.eye,
-                                    onTap: (){
-                                     
-                                        
-                                    }
-                                  ) */
+                                  
 
                                 ],
 
@@ -224,9 +214,7 @@ class EncuestaPage extends StatelessWidget {
                                                   child: Icon(Icons.content_paste,size: 30,color: Colors.white),
                                                 ),
                                                   
-                                                  /*Image(
-                                                    image: AssetImage('assets/images/survey-logo.png'),
-                                                  ),*/
+                                                
                                               ),
                                             ),
                                             
@@ -243,7 +231,7 @@ class EncuestaPage extends StatelessWidget {
                                                       children: [
                                                         Icon(Icons.account_circle,size: 13,),
                                                         SizedBox(width: 5,),
-                                                        Text('Encuestado: ${_.listEncuesta[index].nombreEncuestado}',style: TextStyle(fontSize: 11),),
+                                                        Expanded(child: Text('Encuestado: ${_.listEncuesta[index].nombreEncuestado}',style: TextStyle(fontSize: 11),)),
                                                       ],
                                                     ),
                                                   

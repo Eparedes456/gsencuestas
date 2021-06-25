@@ -207,7 +207,14 @@ class FichaController extends GetxController{
     String formattedDate = formatDate + "T" + hourFormat + ".0Z";
     String observa = _controllerObservacion.text;
 
-    List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F");
+    var utc = now.toUtc();    
+    var part = utc.toString().split(" ");
+    var fecha = part[0].toString();
+    var hora =part[1].toString();
+    print(part[1]);
+    String fecha_retorno =fecha + "T" + hora;
+
+    List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F", fecha_retorno);
 
     print(hola);
     //_positionStream.cancel();

@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Maps/GoogleMaps.dart';
+import 'package:gsencuesta/pages/MisEncuestas/ImagenesEncuestapage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
 import 'package:gsencuesta/pages/Tabs/Tabs.dart';
 import 'package:gsencuesta/pages/VerEncuesta/VerEncuestaPage.dart';
@@ -61,6 +62,8 @@ class DetalleFichaController extends GetxController{
   String get fechaFin => _fechaFin;
   String _nroPreguntas = "";
   String get nroPreguntas => _nroPreguntas;
+  bool retornoEncuesta = false;
+  
 
   List<TrackingModel> _listTracking = [];
   List<TrackingModel> get listTracking => _listTracking;
@@ -106,6 +109,10 @@ class DetalleFichaController extends GetxController{
   String fechaFinSend;
   String observacionFicha;
   String ubigeoFicha;
+  String fecha_retorno;
+  String hora_inicio;
+  String hora_fin;
+  String hora_retorno;
 
   int idEncuestaSend = 0;
 
@@ -114,16 +121,28 @@ class DetalleFichaController extends GetxController{
 
     _listFichasDb = await DBProvider.db.oneFicha(idFicha);
     
-    print(_listFichasDb);
+   
     _idFicha          = _listFichasDb[0].idFicha.toString();
     _estado           = _listFichasDb[0].estado;
     idEncuestaSend    = _listFichasDb[0].idEncuesta;
     ubigeoFicha       = _listFichasDb[0].ubigeo;
+    observacionFicha  = _listFichasDb[0].observacion; 
+    
+   
+    if(_listFichasDb[0].fecha_retorno != null || _listFichasDb[0].fecha_retorno != ""){
+      retornoEncuesta   = true;
+      final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
+      final format = DateFormat('dd-MM-yyyy').format(dateTime);
+      String hourFormat = DateFormat('HH:mm:ss').format(dateTime);
+      hora_retorno = hourFormat;
+      fecha_retorno     =  format;
+    }
 
     final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
     final format = DateFormat('dd-MM-yyyy');
+    String hourFormat = DateFormat('HH:mm:ss').format(dateTime);
     final clockString = format.format(dateTime); 
-
+    hora_inicio = hourFormat;
     _fechaInicio =  clockString;
     fechaInicioSend = _listFichasDb[0].fecha_inicio;
 
@@ -142,7 +161,7 @@ class DetalleFichaController extends GetxController{
 
       dateTime2 = DateTime.parse(_listFichasDb[0].fecha_fin);
       final format3 = DateFormat('yyyy-MM-dd');
-      //fechaFinSend = format3.format(dateTime2);
+      String hourFormat = DateFormat('HH:mm:ss').format(dateTime2);
       final format2 = DateFormat('dd-MM-yyyy');
       final clockString2 = format2.format(dateTime2);
       DateTime now = DateTime.now();
@@ -153,32 +172,16 @@ class DetalleFichaController extends GetxController{
       
       fechaFinSend = fecha + "T" + hora;
       _fechaFin = clockString2;
+      hora_fin = hourFormat;
 
     }
 
-    
-
-    
-    
-
-
     observacionFicha = _listFichasDb[0].observacion.toString();
-
-
-
 
     idUsuario = _listFichasDb[0].idUsuario.toString();
     _latitud = _listFichasDb[0].latitud.toString();
     _longitud = _listFichasDb[0].longitud.toString();
     var idEncuesta =  _listFichasDb[0].idEncuesta;
-
-    
-    
-
-    print(dateTime);
-
-    
-    print(clockString);
 
     String idEncuestado = _listFichasDb[0].idEncuestado.toString();
     listEncuestadoModel = await DBProvider.db.getOneEncuestado(idEncuestado);
@@ -194,12 +197,6 @@ class DetalleFichaController extends GetxController{
     String idProyecto = encuestaList[0].idProyecto;
     proyectoList = await DBProvider.db.getOneProyecto(idProyecto);
     _nombreProyecto = proyectoList[0].nombre;
-
-    
-
-
-
-    
 
     update();
 
@@ -335,6 +332,18 @@ class DetalleFichaController extends GetxController{
 
   }
 
+  navigateToImage(){
+    var data = {
+      'idFicha'   : idFicha
+    };
+    Get.to(
+      ImagenesEncuesta(),
+      transition: Transition.downToUp,
+      arguments: idFicha
+    );
+
+  }
+
 
   sendDataToServer()async{
 
@@ -465,7 +474,7 @@ class DetalleFichaController extends GetxController{
         print('se inserto correctamente'); 
         _estado = "S";
 
-        await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado);
+        await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado,fecha_retorno);
 
         Get.back();
 

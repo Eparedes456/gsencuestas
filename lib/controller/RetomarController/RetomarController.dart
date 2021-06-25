@@ -12,6 +12,7 @@ import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
+import 'package:intl/intl.dart';
 
 class RetommarController extends GetxController{
 
@@ -347,7 +348,17 @@ class RetommarController extends GetxController{
     }
 
     if(formValidado == true){
-
+      DateTime now = DateTime.now();
+      var utc = now.toUtc();
+      
+      String formatDate = DateFormat('yyyy-MM-ddHH:mm:ss').format(now);
+      String hourFormat = DateFormat('HH:mm:ss').format(now);
+      
+      var part = utc.toString().split(" ");
+      var fecha = part[0].toString();
+      var hora =part[1].toString();
+      print(part[1]);
+      String formattedDate =fecha + "T" + hora;
       await guardarinputBack();
 
       List<TrackingModel> listtRACKING = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
@@ -364,7 +375,8 @@ class RetommarController extends GetxController{
         'idEncuestado'      : idEncuestado,
         'tracking'          : listtRACKING,
         'respuestas'        : respuestas,
-        'idFicha'           : idFicha
+        'idFicha'           : idFicha,
+        'fecha_retorno'     : formattedDate
 
       };
       print(sendData);

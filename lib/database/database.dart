@@ -170,6 +170,8 @@ class DBProvider{
             longitud TEXT,
             fecha_inicio TEXT,
             fecha_fin TEXT,
+            fecha_retorno TEXT,
+            fecha_envio   TEXT,
             observacion TEXT,
             ubigeo      TEXT,
             estado TEXT,
@@ -799,13 +801,14 @@ class DBProvider{
 
   /* Actualizar FICHA */
 
-  updateFicha(String idFicha,String observa, String fechafinal,String estado)async{
+  updateFicha(String idFicha,String observa, String fechafinal,String estado,String fecha_retorno)async{
 
     final db = await database;
     var response2 = await db.rawQuery(
       
       '''
-      UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal"  WHERE idFicha = "$idFicha"
+      UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal",
+      fecha_retorno = "$fecha_retorno" WHERE idFicha = "$idFicha"
 
       '''
     );

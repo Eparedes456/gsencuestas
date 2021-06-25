@@ -442,7 +442,7 @@ class EncuestaController extends GetxController{
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: 300,
+                height: 400,
                 child: ListView.builder(
                   itemCount: response.length,
                   itemBuilder: (context,i){

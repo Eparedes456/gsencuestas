@@ -27,6 +27,8 @@ class FichasModel {
   String  longitud;
   String  fecha_inicio;
   String  fecha_fin;
+  String  fecha_retorno;
+  String  fecha_envio;
   String  observacion;
   String  estado;
   String  ubigeo;
@@ -36,7 +38,7 @@ class FichasModel {
     FichasModel({
 
       this.idFicha,this.idEncuesta,this.idUsuario,this.idEncuestado,this.latitud,this.longitud,
-      this.fecha_inicio,this.fecha_fin, this.ubigeo ,this.estado,this.createdAt ,this.updatedAt,this.observacion
+      this.fecha_inicio,this.fecha_fin, this.fecha_retorno ,this.fecha_envio ,this.ubigeo ,this.estado,this.createdAt ,this.updatedAt,this.observacion
       
     });
 
@@ -53,11 +55,14 @@ class FichasModel {
     longitud        : json['longitud'],
     fecha_inicio    : json['fecha_inicio'],
     fecha_fin       : json['fecha_fin'],
+    fecha_retorno   : json['fecha_retorno'],
+     fecha_envio     : json['fecha_envio'],
     ubigeo          : json['ubigeo'],
     estado          : json['estado'].toString(),
     createdAt       : json['createdAt'],
     updatedAt       : json['updatedAt'],
-    observacion     : json['observacion']        
+    observacion     : json['observacion'],
+   
 
   );
 
@@ -76,6 +81,8 @@ class FichasModel {
       'longitud'      : longitud,      
       'fecha_inicio'  : fecha_inicio,    
       'fecha_fin'     : fecha_fin,
+      'fecha_retorno' : fecha_retorno,
+      'fecha_envio'   : fecha_envio,
       'ubigeo'        : ubigeo,       
       'estado'        : estado, 
       'createdAt'     : createdAt, 

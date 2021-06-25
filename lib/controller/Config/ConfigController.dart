@@ -167,7 +167,7 @@ class ConfigController extends GetxController{
             var _estado = "S";
 
             
-            await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado);
+            await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado,"");
             contador++;
             if(contador == data.length){
 
@@ -339,6 +339,36 @@ class ConfigController extends GetxController{
     Get.to(
       ParcelaPage()
     );
+  }
+
+  modalLoadingDescargar(){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        title: Text('Descargando datos..'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator()
+          ],
+        ),
+      )
+    );
+  }
+
+  downloadAllDataToServer()async{
+    modalLoadingDescargar();
+
+    await DBProvider.db.deleteallEncuestas();
+    await DBProvider.db.deleteallProyectos();
+    await DBProvider.db.deleteallEncuestados();
+    await DBProvider.db.deleteallPreguntas();
+    await DBProvider.db.deleteallOpciones();
+
+    Get.back();
+
   }
 
 }

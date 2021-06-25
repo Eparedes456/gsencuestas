@@ -25,14 +25,15 @@ class ConfigPage extends StatelessWidget {
               children: [
 
                 //buildCard('Descargar data',FontAwesomeIcons.cloudDownloadAlt,false,_),
-                buildCard('Subir encuestas',"" ,FontAwesomeIcons.cloudUploadAlt,true,_),
+                buildCard('Subir encuestas',"" ,FontAwesomeIcons.cloudUploadAlt,true,_,"1"),
+                buildCard('Descargar actualizaciones y datos adicionales',"" ,FontAwesomeIcons.cloudDownloadAlt,false,_,"2"),
                 Padding(
                   padding:  EdgeInsets.only(left: 20,top: 10),
                   child: Text('DRASAM',style: TextStyle(
                     fontSize: 18
                   ),),
                 ),
-                buildCard("Gestión de Parcelas","Administración de las Parcelas por Beneficiarios, permite registrar nuevas coordenadas y crear polígonos por parcela" ,Icons.map, false, _)
+                buildCard("Gestión de Parcelas","Administración de las Parcelas por Beneficiarios, permite registrar nuevas coordenadas y crear polígonos por parcela" ,Icons.map, false, _,"")
                 //buildCard('Cambiar rango Gps',FontAwesomeIcons.locationArrow)
 
               ],
@@ -45,7 +46,7 @@ class ConfigPage extends StatelessWidget {
 }
 
 
-buildCard(String contenido,String subtitle ,IconData icon, bool upload,ConfigController _){
+buildCard(String contenido,String subtitle ,IconData icon, bool upload,ConfigController _, String estado){
 
   return Padding(
     padding: EdgeInsets.only(left: 10,right: 10,top: 20),
@@ -84,8 +85,14 @@ buildCard(String contenido,String subtitle ,IconData icon, bool upload,ConfigCon
               
 
             }else{
+              if(estado == ""){
+                _.navigateToParcela();
+              }else{
+                print('hola');
+                _.downloadAllDataToServer();
+              }
 
-              _.navigateToParcela();
+              
 
             }
 

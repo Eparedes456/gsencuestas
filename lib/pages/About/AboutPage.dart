@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class AboutPage extends StatelessWidget {
@@ -243,7 +244,7 @@ class AboutPage extends StatelessWidget {
               children: [
 
                 Padding(
-                  padding: EdgeInsets.only(top:10,left: 30,right: 10),
+                  padding: EdgeInsets.only(top:10,left: 40,right: 10),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -257,12 +258,13 @@ class AboutPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 60,top: 10),
-                          child: Text('LINYGN DEL AGUILA ESCUDERO',),
+                          child: Text('LINYGN DEL AGUILA ESCUDERO',style: TextStyle(),),
                         ),
                         Padding(
                           padding:  EdgeInsets.only(left: 60,top: 0),
-                          child: Text('Team Lider',style: TextStyle(color: Colors.grey),),
+                          child: Text('Analista Programador / Team Lider',style: TextStyle(color: Colors.grey),),
                         ),
+                        
                       ],
                     )
                   ),
@@ -305,12 +307,12 @@ class AboutPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10,right: 75),
+                          padding: EdgeInsets.only(top: 10,right: MediaQuery.of(context).size.width *0.25),
                           child: Text('ANGEL LABAJOS CARO',style: TextStyle(),),
                         ),
                         
                         Padding(
-                          padding:  EdgeInsets.only(right: 75),
+                          padding:  EdgeInsets.only(right:  MediaQuery.of(context).size.width *0.25),
                           child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                         
@@ -319,16 +321,7 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 
-                /*Padding(
-                  padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
-                  child: Container(
-                    height: 80,
-                    width: 90,
-                    child: Image(
-                        image: AssetImage('assets/images/userDev3.png'),
-                    ),
-                  ),
-                ),*/
+                
 
                 Padding(
                   padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
@@ -392,9 +385,6 @@ class AboutPage extends StatelessWidget {
 
             Stack(
               children: [
-
-                
-
                 Padding(
                   padding:   EdgeInsets.only(top: 10,left: 20,right: 10),
                   child: Container(
@@ -411,12 +401,12 @@ class AboutPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10,right: 75),
+                          padding: EdgeInsets.only(top: 10,right: MediaQuery.of(context).size.width *0.25),
                           child: Text('DENYS GUERRERO GUERRA',style: TextStyle(),),
                         ),
                         
                         Padding(
-                          padding:  EdgeInsets.only(right: 75),
+                          padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.25),
                           child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                         
@@ -424,18 +414,7 @@ class AboutPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                
-                /*Padding(
-                  padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
-                  child: Container(
-                    height: 80,
-                    width: 90,
-                    child: Image(
-                        image: AssetImage('assets/images/userDev3.png'),
-                    ),
-                  ),
-                ),*/
-
+  
                 Padding(
                   padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
                   child: Container(
@@ -505,8 +484,6 @@ class AboutPage extends StatelessWidget {
                 Padding(
                   padding:   EdgeInsets.only(top: 10,left: 20,right: 10),
                   child: Container(
-                    //height: 60,
-                    
                     width:  double.infinity  ,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -518,12 +495,12 @@ class AboutPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10,right: 75),
+                          padding: EdgeInsets.only(top: 10,right: MediaQuery.of(context).size.width *0.25),
                           child: Text('MICHAEL LABAJOS DETQUIZAN',style: TextStyle(),),
                         ),
                         
                         Padding(
-                          padding:  EdgeInsets.only(right: 75),
+                          padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width *0.25),
                           child: Text('Analista Programador',style: TextStyle(color: Colors.grey),),
                         ),
                         
@@ -532,17 +509,6 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 
-                /*Padding(
-                  padding:  EdgeInsets.only(left: size.width*0.75,right: 20),
-                  child: Container(
-                    height: 80,
-                    width: 90,
-                    child: Image(
-                        image: AssetImage('assets/images/userDev3.png'),
-                    ),
-                  ),
-                ),*/
-
                 Padding(
                   padding:  EdgeInsets.only(left: size.width*0.75,right: 5),
                   child: Container(
@@ -602,6 +568,51 @@ class AboutPage extends StatelessWidget {
 
               ],
             ),
+
+            SizedBox(height: 20,),
+            Padding(
+              padding:  EdgeInsets.only(left: 18,right: 10),
+              child: Text(
+                'Versión de la aplicación',
+                style: TextStyle(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16
+                ),
+              ),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding:  EdgeInsets.only(left: 20,right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(FontAwesomeIcons.android,color: Colors.green,),
+                        Text('Android'),
+                        Text('1.0.3')
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12,),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(FontAwesomeIcons.apple,color: Colors.grey[600],),
+                        Text('Apple'),
+                        Text('1.0.0')
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+
             
           ],
         ),
