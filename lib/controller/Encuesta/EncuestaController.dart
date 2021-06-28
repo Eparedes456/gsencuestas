@@ -355,7 +355,7 @@ class EncuestaController extends GetxController{
 
       ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-      if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+      /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
         var response = await apiConexion.findEncuestado(insertEncuestadoController.text);
         if(response == 2){
@@ -397,14 +397,14 @@ class EncuestaController extends GetxController{
           }
           
 
-        }
+        }*/
 
 
-      }else{
+      //}else{
 
         print("Busco al encuestado en la bd local");
 
-        var respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
+        List<EncuestadoModel> respuesta = await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
         if(respuesta.length > 0){
 
           Get.back(); 
@@ -417,7 +417,7 @@ class EncuestaController extends GetxController{
 
         }
 
-      }
+      //}
 
       
 
@@ -850,6 +850,15 @@ class EncuestaController extends GetxController{
   }
 
   navigateToRetomarEncuesta(String idFicha, String  idEncuesta, String encuestaName)async{
+    DateTime now = DateTime.now();
+    var utc = now.toUtc();    
+    var part = utc.toString().split(" ");
+    var fecha = part[0].toString();
+    var hora =part[1].toString();
+    String fecha_retorno =fecha + "T" + hora;
+    //print(fecha_retorno);
+    List<FichasModel> listFichas =  await DBProvider.db.updateFechaRetorno( idFicha, fecha_retorno);
+    print(listFichas);
 
     var data = {
       'idFicha'         : idFicha,

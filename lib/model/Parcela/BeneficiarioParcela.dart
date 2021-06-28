@@ -15,6 +15,14 @@ class BeneficiaroParcela extends StatelessWidget {
           appBar: AppBar(
             title: Text('Beneficiario'),
             centerTitle: true,
+            actions: [
+            IconButton(
+              icon: Icon(Icons.add_circle),
+              onPressed: (){
+                _.showEncuestadoModal();
+              }
+            )
+          ],
           ),
           body: Container(
             child: SingleChildScrollView(

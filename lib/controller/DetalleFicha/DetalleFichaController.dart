@@ -129,9 +129,11 @@ class DetalleFichaController extends GetxController{
     observacionFicha  = _listFichasDb[0].observacion; 
     
    
-    if(_listFichasDb[0].fecha_retorno != null || _listFichasDb[0].fecha_retorno != ""){
+    if(_listFichasDb[0].fecha_retorno == null){
+      print('no se hacer nada ');
+    }else{
       retornoEncuesta   = true;
-      final dateTime = DateTime.parse(_listFichasDb[0].fecha_inicio);
+      final dateTime = DateTime.parse(_listFichasDb[0].fecha_retorno);
       final format = DateFormat('dd-MM-yyyy').format(dateTime);
       String hourFormat = DateFormat('HH:mm:ss').format(dateTime);
       hora_retorno = hourFormat;
@@ -346,9 +348,15 @@ class DetalleFichaController extends GetxController{
 
 
   sendDataToServer()async{
-
+    DateTime now = DateTime.now();
+    var utc = now.toUtc();    
+    var part = utc.toString().split(" ");
+    var fecha = part[0].toString();
+    var hora =part[1].toString();
+    String fecha_envio =fecha + "T" + hora;
+    List<FichasModel> listFichas =  await DBProvider.db.updateFechaEnvio( idFicha, fecha_envio);
+    
   
-
     List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(_idFicha);
     List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(_idFicha);
     List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
@@ -360,17 +368,19 @@ class DetalleFichaController extends GetxController{
 
     };
     print(fechaInicioSend);
-    sendFicha['idficha']      =  int.parse(_idFicha);
-    sendFicha['fechaFin']     = fechaFinSend;
-    sendFicha['fechaInicio']  = fechaInicioSend;
-    sendFicha['idUsuario']    = int.parse(idUsuario);
-    sendFicha["latitud"]      = latitud;
-    sendFicha["longitud"]     = longitud;
-    sendFicha["observacion"]  = observacionFicha;
-    sendFicha["ubigeo"]       = ubigeoFicha;
+    sendFicha['idficha']        =  int.parse(_idFicha);
+    sendFicha['fechaFin']       = fechaFinSend;
+    sendFicha['fechaInicio']    = fechaInicioSend;
+    sendFicha['idUsuario']      = int.parse(idUsuario);
+    sendFicha["latitud"]        = latitud;
+    sendFicha["longitud"]       = longitud;
+    sendFicha["observacion"]    = observacionFicha;
+    sendFicha["ubigeo"]         = ubigeoFicha;
+    sendFicha["fecha_retorno"]  = _listFichasDb[0].fecha_retorno.toString();
+    sendFicha["fecha_envio"]    = fecha_envio;
     var encuesta = {};
-    encuesta["idEncuesta"]   = idEncuestaSend;
-    sendFicha['encuesta'] = encuesta;
+    encuesta["idEncuesta"]      = idEncuestaSend;
+    sendFicha['encuesta']       = encuesta;
 
     var encuestado = {};
     encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
@@ -440,6 +450,7 @@ class DetalleFichaController extends GetxController{
         multimedia["latitud"]         =   listMultimedia[z].latitud;
         multimedia["longitud"]        =   listMultimedia[z].longitud;
         multimedia["url"]             =   listMultimedia[z].tipo;
+        multimedia["fecha_capturada"] =   listMultimedia[z].fecha_capturada;
       
       
         
@@ -479,27 +490,26 @@ class DetalleFichaController extends GetxController{
         Get.back();
 
         Get.dialog(
-                AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                  ),
-                  //title: Text('Notificación'),
-                  content:  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
-                      SizedBox(height: 8,),
-                      Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
-                    ],
-                  ),
-                ),
-                barrierDismissible: false
-              );
-
-                Future.delayed(Duration(seconds: 2),(){
-                  Get.back();
-                  update();
-                });
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)
+            ),
+            //title: Text('Notificación'),
+            content:  Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
+                SizedBox(height: 8,),
+                Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
+              ],
+            ),
+          ),
+          barrierDismissible: false
+        );
+        Future.delayed(Duration(seconds: 2),(){
+          Get.back();
+          update();
+        });
         
 
       }else{

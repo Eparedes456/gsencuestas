@@ -19,14 +19,14 @@ class ParcelaPage extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          actions: [
+          /*actions: [
             IconButton(
               icon: Icon(Icons.add_circle),
               onPressed: (){
                 _.showModalSearch();
               }
             )
-          ],
+          ],*/
           bottom: PreferredSize(
             preferredSize: Size(0.0,20.0),
             child: Column(

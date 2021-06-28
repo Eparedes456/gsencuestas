@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -263,6 +264,7 @@ class DBProvider{
             tipo TEXT,
             latitud TEXT,
             longitud TEXT,
+            fecha_captura TEXT,
             estado TEXT
 
           )
@@ -807,8 +809,8 @@ class DBProvider{
     var response2 = await db.rawQuery(
       
       '''
-      UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal",
-      fecha_retorno = "$fecha_retorno" WHERE idFicha = "$idFicha"
+      UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal"
+       WHERE idFicha = "$idFicha"
 
       '''
     );
@@ -822,6 +824,45 @@ class DBProvider{
     return listFichas;
     //return response;
 
+
+  }
+
+  /* Actualizar ficha el campo retorno */
+
+  updateFechaRetorno( String idFicha, String fecha_retorno)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      UPDATE ficha SET fecha_retorno = '$fecha_retorno' WHERE idFicha = '$idFicha'
+      '''
+    );
+    var response1 = await db.query('ficha');
+
+    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+
+    print(listFichas);
+    return listFichas;
+
+  }
+
+
+  /* Actualizar ficha el campo retorno */
+
+  updateFechaEnvio( String idFicha, String fecha_envio)async{
+
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      UPDATE ficha SET fecha_envio = '$fecha_envio' WHERE idFicha = '$idFicha'
+      '''
+    );
+    var response1 = await db.query('ficha');
+
+    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+
+    print(listFichas);
+    return listFichas;
 
   }
 
@@ -1048,7 +1089,8 @@ class DBProvider{
 
     List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
 
-    return respuesta; //.toList();
+    return listEncuestado;
+    //return respuesta; //.toList();
 
   }
 
@@ -1115,7 +1157,7 @@ class DBProvider{
 
   /*Consulta insertar todas las multimedias */
 
-  insertMultimedia(String idFicha, String tipo)async{
+  insertMultimedia(String idFicha, String tipo, String  fecha_captura)async{
 
     final db = await database;
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -1124,7 +1166,7 @@ class DBProvider{
 
     var response = await db.rawQuery(
       '''
-      INSERT INTO multimedia(idFicha,tipo,latitud,longitud,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','TRUE')
+      INSERT INTO multimedia(idFicha,tipo,latitud,longitud,fecha_captura,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','$fecha_captura','TRUE')
       
       '''
     );
@@ -1221,6 +1263,14 @@ class DBProvider{
       List<UbigeoModel> listUbigeo = respuesta.isNotEmpty ? respuesta.map((e) => UbigeoModel.fromMap(e)).toList() : [];
       return listUbigeo;
     }
+
+    deleteAllUbigeo()async{
+      final db = await database;
+      var respuesta = await db.delete("ubigeo");
+     
+    }
+
+    /* */
 
     insertDepartamentos(DepartamentoModel nuevoDepartamento)async{
       final db = await database;
@@ -1368,6 +1418,11 @@ class DBProvider{
     );
     List<ParcelaModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList() : [];
     return listParceCoorde;
+  }
+
+  deleteAllParcelas()async{
+    final db = await database;
+    var respuesta = await db.delete("parcelas");
   }
 
   /* */

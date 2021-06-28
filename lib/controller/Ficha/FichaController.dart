@@ -105,6 +105,13 @@ class FichaController extends GetxController{
 
   pickImage(String valor)async{
 
+    DateTime now = DateTime.now();
+    var utc = now.toUtc();    
+    var part = utc.toString().split(" ");
+    var fecha = part[0].toString();
+    var hora =part[1].toString();
+    String fecha_captura =fecha + "T" + hora;
+
     final ImagePicker image = ImagePicker();
     if(valor == "CAMARA"){
       PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
@@ -118,7 +125,7 @@ class FichaController extends GetxController{
 
       print(photoBase64);
 
-      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64);
+      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64,fecha_captura);
       _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
 
       print(_listMultimedia);
@@ -134,9 +141,9 @@ class FichaController extends GetxController{
 
       photoBase64 = base64Encode(image1.readAsBytesSync());
 
-      print(photoBase64);
+      
 
-      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64);
+      var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64,fecha_captura);
       _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
 
       print(_listMultimedia);

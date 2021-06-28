@@ -402,24 +402,26 @@ class PrincipalController extends GetxController{
   cargarParcelas()async{
     var listParcelas = await apiConexion.getAllParcelas();
     for (var i = 0; i < listParcelas.length; i++) {
-      var beneficiario = await DBProvider.db.getOneEncuestado(listParcelas[i]["idSeccion"].toString());
-      var foto = beneficiario[0].foto;
-      Uint8List _photoBase64 = base64Decode(foto);
-      _listParcelas.add(
-        ParcelaModel(
-          idParcela       : listParcelas[i]["idParcela"],
-          descripcion     : listParcelas[i]["descripcion"],
-          idSeccion       : listParcelas[i]["idSeccion"],
-          seccion         : listParcelas[i]["seccion"],
-          area            : listParcelas[i]["area"],
-          ubigeo          : listParcelas[i]["ubigeo"],
-          foto            : _photoBase64,
-          nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
-          createdAt       : listParcelas[i]["createdAt"],
-          updatedAt       : listParcelas[i]["updatedAt"]
-        )
-      );
-
+      List<EncuestadoModel> beneficiario = await DBProvider.db.getOneEncuestado(listParcelas[i]["idSeccion"].toString());
+      if(beneficiario.length > 0){
+        var foto = beneficiario[0].foto;
+        Uint8List _photoBase64 = base64Decode(foto);
+        _listParcelas.add(
+          ParcelaModel(
+            idParcela       : listParcelas[i]["idParcela"],
+            descripcion     : listParcelas[i]["descripcion"],
+            idSeccion       : listParcelas[i]["idSeccion"],
+            seccion         : listParcelas[i]["seccion"],
+            area            : listParcelas[i]["area"],
+            ubigeo          : listParcelas[i]["ubigeo"],
+            foto            : _photoBase64,
+            nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
+            createdAt       : listParcelas[i]["createdAt"],
+            updatedAt       : listParcelas[i]["updatedAt"]
+          )
+        );
+      }
+      
       for (var x = 0; x < listParcelas[i]["parcelaCoordenada"].length; x++){
 
         _listParcelaCoordenada.add(
@@ -430,10 +432,9 @@ class PrincipalController extends GetxController{
             longitud              : listParcelas[i]["parcelaCoordenada"][x]["longitud"]   
           )
         );
-
-        
-
       }
+
+      
     }
     for (var i = 0; i < _listParcelas.length; i++) {
       await DBProvider.db.insertParcela(_listParcelas[i]);
@@ -650,79 +651,6 @@ class PrincipalController extends GetxController{
     }
     List<UbigeoModel> ubigeos  = await DBProvider.db.getAllUbigeo();
     print(ubigeos.length);
-
-    /*var response = await apiConexion.getDepartamentos();
-    print(response);
-    if(response.length > 0){
-      response.forEach((elementos){
-
-        _listDepartamento.add(
-          DepartamentoModel(
-            idDepartamento        : elementos["id"], 
-            codigoDepartamento    : elementos["codigoDepartamento"], 
-            descripcion           : elementos["descripcion"], 
-            estado                : elementos["estado"]
-          )
-        );
-
-      });
-      print(_listDepartamento);
-      for (var i = 0; i < _listDepartamento.length; i++) {
-        await DBProvider.db.insertDepartamentos(_listDepartamento[i]);
-      }
-
-      for (var s = 0; s < _listDepartamento.length ; s++) {
-        
-        var respuesta = await apiConexion.getProvincias(_listDepartamento[s].codigoDepartamento);
-        if(respuesta.length > 0){
-          respuesta.forEach((item){
-
-            _listProvincia.add(
-              ProvinciaModel(
-                idProvincia         : item["id"],
-                codigoDepartamento  : item["codigoDepartamento"],
-                codigoProvincia     : item["codigoProvincia"],
-                descripcion         : item["descripcion"],
-                estado              : item["estado"],
-              )
-            );
-
-          });
-          print(_listProvincia);
-          for (var a = 0; a < _listProvincia.length ; a++) {
-            await DBProvider.db.insetProvincias(_listProvincia[a]);
-            var response = await apiConexion.getDistritos(_listProvincia[a].codigoProvincia,_listProvincia[a].codigoDepartamento);
-            response.forEach((element){
-              _listDistrito.add(
-                DistritoModel(
-                  idDistrito          : element["id"],
-                  codigoDepartamento  : element["codigoDepartamento"],
-                  codigoProvincia     : element["codigoProvincia"],
-                  codigoDistrito      : element["codigoDistrito"],
-                  descripcion         : element["descripcion"],
-                  estado              : element["estado"] 
-                )
-              );
-        
-            });
-            for (var z = 0; z < _listDistrito.length; z++) {
-              await DBProvider.db.insertDistritos(_listDistrito[z]);
-            }
-            _listDistrito  =[]; 
-          }
-          _listProvincia = [];
-        }
-        
-        
-      }
-
-
-    }
-    var dbDepartamento  = await DBProvider.db.getDepartamentos("20");
-   
-    var dbProvincias     = await DBProvider.db.getProvincia();
-    print(dbDepartamento);
-    print(dbProvincias);*/
     Get.back();
   }
 

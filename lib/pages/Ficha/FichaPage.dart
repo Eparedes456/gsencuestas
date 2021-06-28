@@ -157,40 +157,6 @@ class FichaPage extends StatelessWidget {
                   ),
                 ):Container(),
 
-                
-
-                /*Padding(
-                    padding:  EdgeInsets.only(left: 10,right: 10,top: 20),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: (){
-                          _.pickImage();
-                        },
-                        child: _.imagepath == null ? Container(
-                          height: 200,
-                          width: 800,
-                          //color: Colors.black,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/no-image.png'),
-                              fit: BoxFit.cover
-                            )
-                          ),
-                        ): Container(
-                          height: 300,
-                          width: double.infinity,
-                          child: Image.file(_.imagepath,fit: BoxFit.cover,),
-                        ),
-                      ),
-                    ),
-                ),*/
-
-                /*Padding(
-                  padding: EdgeInsets.only(left:20,right: 20,top: 20),
-                  child: Text('Por favor tome fotos del lugar donde se esta relizando la encuesta.'),
-                ),*/
-
-                
 
                 SizedBox(height: 20,),
 

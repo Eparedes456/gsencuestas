@@ -108,56 +108,7 @@ class Parcela1Controller extends GetxController{
     );
   }
 
-  bottomSheet(){
-    Get.bottomSheet(
-      Container(
-        height: 150,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
-        ),
-        child: Column(
-          children: [
-            
-            Padding(
-              padding:  EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.visibility),
-                  SizedBox(width: 12,),
-                  Text('Ver coordenadas en el mapa')
-                ],
-              ),
-            ),
-            Padding(
-              padding:  EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.edit),
-                  SizedBox(width: 12,),
-                  Text('Editar los puntos')
-                ],
-              ),
-            ),
-
-            Padding(
-              padding:  EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.delete),
-                  SizedBox(width: 12,),
-                  Text('Eliminar parcela')
-                ],
-              ),
-            ),
-          ],
-        ),
-      )
-    );
-  }
+  
 
 
 

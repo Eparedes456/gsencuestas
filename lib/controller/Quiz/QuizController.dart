@@ -498,9 +498,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
   /* guardar la ficha */
 
   guardarFicha()async{
-
-    
-
     print(controllerInput.length);
 
     bool formValidado = true;
@@ -512,7 +509,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
         var numPregunta = z + 1;
         if(_preguntas[z].tipo_pregunta == "integer" || _preguntas[z].tipo_pregunta == "decimmal" || _preguntas[z].tipo_pregunta == "text"){
           
-          for (var x = 0; x <= controllerInput.length ; x++) {
+          //for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
             if(  controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString()  && controllerInput[z].controller.text == ""  ){
 
@@ -549,9 +546,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
             }
           
-          }
+          //}
 
-        }else{
+        }/*else{
 
           List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,_preguntas[z].id_pregunta.toString());
 
@@ -582,12 +579,8 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
             formValidado  = true;
           } 
 
-        }
-
-             
-
+        }*/
       }
-
       
     }
 
@@ -615,11 +608,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
           await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta, idFicha.toString(), "",controllerInput[x].controller.text);
         }
       }
-
-
-        
-
-      
 
       print("Formulario validado , inputables son :" + controllerInput.length.toString());
 
@@ -649,17 +637,10 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     }
 
-    
-
-   
-
   }
 
 
     pauseQuiz()async{
-
-      
-
       Get.dialog(
         AlertDialog(  
           shape: RoundedRectangleBorder(
@@ -910,10 +891,6 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     // TODO: implement onClose
     super.onClose();
   }
-
-
-
-
 
 }
 

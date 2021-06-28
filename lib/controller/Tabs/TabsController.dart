@@ -1,6 +1,13 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Ficha/FichasModel.dart';
+import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
+import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/services/apiServices.dart';
 
 
 class TabsController extends GetxController{
@@ -13,6 +20,7 @@ class TabsController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    this.checkConecction();
   }
 
   @override
@@ -21,8 +29,242 @@ class TabsController extends GetxController{
     super.onReady();
   }
 
+  ApiServices apiConexion = new ApiServices();
 
+  checkConecction()async{
+    List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
+    var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
+      
+      print(result);
+      if(result == ConnectivityResult.wifi || result  == ConnectivityResult.mobile){
+        
+        if(listFichas.length > 0){
+          print('hago la sincronización, envio las fichas al servidor');
+          print(listFichas.length);
+          await uploadData(listFichas);
+        }
 
+        print('estoy  conectado a internet');
+
+      }else{
+
+      }
+      
+    });
+
+  }
+
+  uploadData(List<FichasModel> dataFichas)async{
+    List data = [];
+    for (var i = 0; i < dataFichas.length; i++) {
+      List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(dataFichas[i].idFicha.toString());
+      List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(dataFichas[i].idFicha.toString());
+      List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(dataFichas[i].idFicha.toString());
+
+      DateTime now      = DateTime.now();
+      var utc           = now.toUtc();
+      var part          = utc.toString().split(" ");
+      var fecha         = part[0].toString();
+      var hora          = part[1].toString();
+      String fechaFin   = fecha + "T" + hora;
+
+      var sendFicha = {};
+      sendFicha['idficha']        = dataFichas[i].idFicha;
+      sendFicha['fechaFin']       = fechaFin;
+      sendFicha['fechaInicio']    = dataFichas[i].fecha_inicio;
+      sendFicha['idUsuario']      = dataFichas[i].idUsuario;
+      sendFicha["latitud"]        = dataFichas[i].latitud;
+      sendFicha["longitud"]       = dataFichas[i].longitud;
+      sendFicha["observacion"]    = dataFichas[i].observacion;
+      sendFicha["ubigeo"]         = dataFichas[i].ubigeo;
+      sendFicha["fecha_retorno"]  = dataFichas[0].fecha_retorno.toString();
+      sendFicha["fecha_envio"]    = fechaFin;
+      var encuesta = {};
+      encuesta["idEncuesta"]   = dataFichas[i].idEncuesta;
+      sendFicha['encuesta'] = encuesta;
+
+      var encuestado = {};
+      encuestado["idEncuestado"] = dataFichas[i].idEncuestado;
+      sendFicha['encuestado']   = encuestado;
+
+      var respuesta ={};
+      List<Map> listRespuestaMap = new List();
+
+      var pregunta = {};
+
+      for (var i = 0; i < listRespuestaDBlocal.length; i++) {
+
+        bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
+        pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
+
+        respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
+        respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
+        respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
+        respuesta["estado"]       =   b; //listRespuestaDBlocal[i].estado;
+        respuesta["pregunta"]     =   pregunta;
+          
+        listRespuestaMap.add(
+          respuesta
+        );
+
+        sendFicha['respuesta']  = listRespuestaMap;
+        
+        respuesta ={};
+        pregunta = {};
+        
+      }
+
+      var tracking = {};
+      List<Map> listTrackingMap = new List();
+      for (var i = 0; i < listTracking.length; i++) {
+        bool b = listTracking[i].estado.toLowerCase() == 'true';
+
+        tracking["idTracking"]      =   listTracking[i].idTracking;
+        tracking["latitud"]         =   listTracking[i].latitud;
+        tracking["longitud"]        =   listTracking[i].longitud;
+        tracking["estado"]          =   b;   //listTracking[x].estado;
+          
+        listTrackingMap.add(
+          tracking
+        );
+
+        sendFicha['tracking']  = listTrackingMap;
+        tracking ={};
+      }
+      var multimedia = {};
+      List<Map> listMultimediaMap = new List();
+
+      for (var z = 0; z < listMultimedia.length; z++) {
+
+        multimedia["idMultimedia"]    =   listMultimedia[z].idMultimedia;
+        multimedia["latitud"]         =   listMultimedia[z].latitud;
+        multimedia["longitud"]        =   listMultimedia[z].longitud;
+        multimedia["url"]             =   listMultimedia[z].tipo;
+      
+        listMultimediaMap.add(
+          multimedia
+        );
+
+        sendFicha['multimedia']  = listMultimediaMap;
+        multimedia ={};
+        
+      }
+      data.add(sendFicha);
+
+    }
+
+    if(data.length > 0){
+      int contador = 0;
+      //loadingmodal();
+      for (var x = 0; x < data.length; x++) {
+        var response  = await apiConexion.sendFichaToServer(data[x]);
+        if(response == 2){
+          Get.back();
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  //title: Text('Notificación'),
+                  content:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.cancel,color: Colors.redAccent,size: 60,),
+                      SizedBox(height: 8,),
+                      Text('Error de servidor comuniquese con el administrador del sistema.',textAlign: TextAlign.justify,),
+                    ],
+                  ),
+                ),
+                
+              );
+
+        }else if(response == 3){
+
+          Get.back();
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  //title: Text('Notificación'),
+                  content:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.cancel,color: Colors.redAccent,size: 60,),
+                      SizedBox(height: 8,),
+                      Text('Estimado usuario su token a expirado.',textAlign: TextAlign.justify,),
+                    ],
+                  ),
+                ),
+                
+              );
+
+        }else if(response == 1){
+
+        }else if(response != null){
+          var _estado = "S";
+          await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado,"");
+          contador++;
+
+          if(contador == data.length){
+
+              Get.back();
+
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  //title: Text('Notificación'),
+                  content:  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
+                      SizedBox(height: 8,),
+                      Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
+                    ],
+                  ),
+                ),
+                barrierDismissible: false
+              );
+               Future.delayed(Duration(seconds: 2),(){
+                Get.back();
+                
+              });
+        }else{
+          Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  title: Text('Notificación'),
+                  content: Text('No se pudo subir los datos, error inesperado.'),
+                )
+          );
+        }
+      }
+
+    }
+    }
+
+  }
+
+  loadingmodal()async{
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        title: Text('Sincronizando los datos'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator()
+          ],
+        ),
+      )
+    );
+  }
 
 
   @override

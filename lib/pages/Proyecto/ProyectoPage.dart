@@ -192,7 +192,8 @@ class ProyectoPage extends StatelessWidget {
 
                       itemCount: _.encuestas.length,
                       itemBuilder: (context,index){
-
+                        print(_.encuestas[index].idEncuesta);
+                        print('https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.encuestas[index].idEncuesta}');
                         return GestureDetector(
                           onTap: (){
 

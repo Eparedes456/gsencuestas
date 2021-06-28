@@ -56,7 +56,7 @@ class FichasModel {
     fecha_inicio    : json['fecha_inicio'],
     fecha_fin       : json['fecha_fin'],
     fecha_retorno   : json['fecha_retorno'],
-     fecha_envio     : json['fecha_envio'],
+    fecha_envio     : json['fecha_envio'],
     ubigeo          : json['ubigeo'],
     estado          : json['estado'].toString(),
     createdAt       : json['createdAt'],
