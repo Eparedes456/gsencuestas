@@ -71,7 +71,10 @@ class BeneficiarioParcelaController extends GetxController{
     var foto        = beneficiarioData[0].foto;
     idUbigeo1       = beneficiarioData[0].idUbigeo;
     idEncuestado    = beneficiarioData[0].idEncuestado;
-    _photoBase64    = base64Decode(foto);
+    if(foto != null){
+      _photoBase64    = base64Decode(foto);
+    }
+    
     listParcelasBeneficiario = await DBProvider.db.getBeneParcelas(idBeneficiario.toString());
     
     //listParcelasBeneficiario = data["parcelas"];

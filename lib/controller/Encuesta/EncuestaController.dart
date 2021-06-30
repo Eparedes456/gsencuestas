@@ -353,7 +353,7 @@ class EncuestaController extends GetxController{
 
     }else{
 
-      ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+      //ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
       /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
@@ -425,11 +425,7 @@ class EncuestaController extends GetxController{
 
   }
 
-  showEncuestadoModal(var response)async{
-
-    
-
-
+  showEncuestadoModal(List<EncuestadoModel> response)async{
     Get.dialog(
         AlertDialog(
           shape: RoundedRectangleBorder(
@@ -448,7 +444,10 @@ class EncuestaController extends GetxController{
                   itemBuilder: (context,i){
                     var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
                     var foto            = response[i].foto;
-                    _photoBase64        = base64Decode(foto); 
+                    if(foto != null){
+                      _photoBase64        = base64Decode(foto);
+                    }
+                    
 
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -456,7 +455,7 @@ class EncuestaController extends GetxController{
                         contentPadding: EdgeInsets.zero,
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundImage:  _photoBase64 == "" || _photoBase64 == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
+                          backgroundImage:  foto == "" || foto == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
                         ),
                         title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
                         onTap: (){
@@ -480,7 +479,7 @@ class EncuestaController extends GetxController{
   List listcodProvincia = [];
   List liscodDistrito = [];
 
-  showEncuestadoModalFinal(dynamic data)async{
+  showEncuestadoModalFinal(EncuestadoModel data)async{
     print(data);
     listCodDep = [];
     listcodProvincia = [];
@@ -492,7 +491,10 @@ class EncuestaController extends GetxController{
     var idEncuestado2   = data.idEncuestado.toString();
     var nombreCompleto  =  data.nombre + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
     var foto            = data.foto;
-    _photoBase64        = base64Decode(foto); 
+    if(foto != null){
+      _photoBase64        = base64Decode(foto);
+    }
+     
     var idUbigeo        =  data.idUbigeo; // "220101,220203,210402,220103";  
     var dataUbi = idUbigeo.split(",");
     List temporalDepartamento = [];
@@ -580,14 +582,11 @@ class EncuestaController extends GetxController{
               //leading: Icon(Icons.people,size: 16,),
               leading: CircleAvatar(
                 radius: 30,
-                backgroundImage: MemoryImage(_photoBase64)
+                backgroundImage: foto == null || foto == "null"? AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
               ),
               //trailing: Icon(Icons.arrow_forward,size: 16,),
               title: Text('$nombreCompleto',style: TextStyle(fontSize: 14),),
-              onTap: (){
-
-                
-              },
+              
 
             ),
             SizedBox(height: 8,),

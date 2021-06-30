@@ -44,8 +44,12 @@ class ParcelaPage extends StatelessWidget {
         :  _.loading == false && _.hayParcela == true ? ListView.builder(
           itemCount: _.listParcela.length,
           itemBuilder: (context,i){
+
             Uint8List _photoBase64;
-            _photoBase64 = base64Decode(_.listParcela[i].foto);
+            if(_.listParcela[i].foto !=null){
+              _photoBase64 = base64Decode(_.listParcela[i].foto);
+            }
+            
             
             return Column(
               children: [
@@ -54,7 +58,7 @@ class ParcelaPage extends StatelessWidget {
                   padding:  EdgeInsets.only(top: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: MemoryImage(_photoBase64),
+                      backgroundImage: _.listParcela[i].foto == null || _.listParcela[i].foto == "null" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_photoBase64),
                     ),
                     title: Text(
                       _.listParcela[i].nombre +  " " + _.listParcela[i].apellidoPaterno + " " + _.listParcela[i].apellidoMaterno,

@@ -34,17 +34,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
     
     _positionStream = Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high,intervalDuration: Duration(minutes:2)).listen((Position posicion) async{ 
-
-     
-
       await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(), posicion.longitude.toString(), 'TRUE');
-
       List<TrackingModel>  respuestaBd = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
-      
       print(respuestaBd);
-
-      
-
     });
 
     
@@ -85,9 +77,9 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
     _opcionesPreguntas = [];
     
     //var connectionInternet = await DataConnectionChecker().connectionStatus;
-    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+    //ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    /*if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       var response = await apiConexion.getPreguntasxEncuesta(idEncuesta);
 
@@ -227,7 +219,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       _isLoadingData = true;
 
-    }else{
+    }else{*/
 
       _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
       print(_preguntas);
@@ -293,7 +285,7 @@ class QuizController extends GetxController with  SingleGetTickerProviderMixin{
 
       _isLoadingData = true;
 
-    }
+    //}
 
     
 
