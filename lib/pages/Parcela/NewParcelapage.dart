@@ -32,6 +32,8 @@ class NewParcelaPage extends StatelessWidget {
               },
               //onTap: _.tapMap(),
             ),
+
+            _.showCard ==  true? cardFlotante(_) : Container(),
             
             
           ],
@@ -98,6 +100,63 @@ class NewParcelaPage extends StatelessWidget {
           ),
         )
         
+      ),
+    );
+  }
+
+  cardFlotante(ParcelaController _){
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10,right: 10),
+        child: Container(
+          height: 110,
+          width: double.infinity,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10,right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5,),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      children: [
+                        Expanded(child: Container()),
+                        Expanded(child: Text('Punto ${_.punto}')),
+                        GestureDetector(
+                          onTap: (){
+                            _.close();
+                          },
+                          child: Icon(Icons.cancel)
+                        )
+                      ],
+                    )
+                  ),
+                  SizedBox(height: 5,),
+                  Center(child: Text('Latitud: ${_.latitud} , Longitud: ${_.longitud}')),
+                  SizedBox(height: 5,),
+                  Center(
+                    child: Container(
+                      color: Colors.blue,
+                      height: 30,
+                      width: 150,
+                      child: MaterialButton(
+                        child: Text('Eliminar punto'),
+                        onPressed: (){},
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

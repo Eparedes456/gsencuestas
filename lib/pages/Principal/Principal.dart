@@ -66,7 +66,7 @@ class PrincipalPage extends StatelessWidget {
 
                         SizedBox(height:8,),
 
-                        Padding(
+                        /*Padding(
                           padding:  EdgeInsets.only(left: 20,right: 20),
                           child: Container(
                             height: 45,
@@ -98,8 +98,8 @@ class PrincipalPage extends StatelessWidget {
                               },
                             )
                           ),
-                        ),
-                        SizedBox(height:8,),
+                        ),*/
+                        //SizedBox(height:8,),
 
 
                       ],
@@ -107,7 +107,372 @@ class PrincipalPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10,),
 
-                _.isLoading == true  ? Expanded(
+                Container(
+                  height: 100,//size.height*0.17,
+                  //color: Colors.black,
+                  child:  Padding(
+                    padding:  EdgeInsets.only(right: 5),
+                    child: _.isLoading == true ? Center(
+                      child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                        ),
+                    ): _.haydata == false ? Center(child: Text('No tiene proyectos asignados'))
+                    : Row(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _.proyectos.length,
+                            itemBuilder: (BuildContext context, index){
+                              var proyectoId              = _.proyectos[index].idProyecto;
+                              var name                    = _.proyectos[index].nombre;
+                              ProyectoModel proyectoData  = _.proyectos[index];
+                              
+                              return Padding(
+                                padding:  EdgeInsets.only(left: 5,right: 10,bottom: 20),
+                                child: GestureDetector(
+                                  onTap: (){
+                                     //_.navigateToProyecto(proyectoData);
+                                     _.loadEncuestas(proyectoId,name);
+                                     _.validarEcuestaDiEst(false, true,proyectoId ,name);
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      TweenAnimationBuilder(
+                                        builder: (context,value,child){
+                                          return Transform.translate(
+                                            offset: Offset(value*50,0.0),
+                                            child: child,
+                                          );
+                                        },
+                                        tween: Tween(begin: 1.0,end: 0.0),
+                                        curve: Curves.bounceOut,
+                                        duration: Duration(seconds: 1),
+                                        child: Container(
+                                          height: 170,
+                                          width: size.width*0.5,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(9.6),
+                                            //color: Colors.black87,
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:  BorderRadius.circular(9.6),
+                                            child :CachedNetworkImage(
+                              
+                                              imageUrl:  "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/proyecto/$proyectoId", //"$imageUrl",
+                                              
+                                              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                              /*errorWidget: (context, url, error) => Center(
+
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+
+                                                    Icon(Icons.error,color: Colors.red,),
+                                                    SizedBox(height: 8,),
+                                                    Text('Lo sentimos no pudimos cargar la imagen')
+                                                  ],
+                                                )
+                                              ),*/
+                                              errorWidget: (context, url, error) => Image(
+                                                image: AssetImage('assets/images/noimage2.png'),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              fit: BoxFit.cover,
+
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 19.2,
+                                        left: 19.2,
+                                        right: 19.2,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(4.8),
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                              sigmaY: 19.2,sigmaX: 19.2
+                                            ),
+                                            child: Container(
+                                              //height: 36,
+                                              padding: EdgeInsets.only(
+                                                left: 16.72,right: 14.4
+                                              ),
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                '$name',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            print('mostrando encuesta');
+                            _.validarEcuestaDiEst(true,false,0,"");
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(bottom: 20),
+                            height: 100,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(0, 102, 84, 1),
+                              borderRadius: BorderRadius.circular(9.6)
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(child: Icon(Icons.content_paste,color: Colors.white,)),
+                                Center(child: Text('Encuestas estaticas',textAlign: TextAlign.center,style: TextStyle(color: Colors.white),))
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8,),
+                Padding(
+                  padding:  EdgeInsets.only(left: 20),
+                  child: Text(
+                    'Encuestas ${_.valor}',
+                    style: TextStyle(
+                      color: Colors.blueGrey
+                    ),
+                  ),
+                ),
+
+                _.presionadoEstatica == false && _.presionadoDinamica == false ?
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.arrow_upward,color: Color.fromRGBO(0, 102, 84, 1),size: 50,),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 20,right: 20,top: 8),
+                          child: Text(
+                            'Presione en uno de los proyectos , para mostrar las encuestas correspondientes.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ): _.presionadoEstatica == false && _.presionadoDinamica == true ?
+                Expanded(
+                  child: ListView.builder(
+
+                      itemCount: _.listEncuesta.length,
+                      itemBuilder: (context,index){
+                        print(_.listEncuesta[index].idEncuesta);
+                        print('https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}');
+                        return GestureDetector(
+                          onTap: (){
+                            _.navigateToEncuesta(_.listEncuesta[index]);
+                          },
+                          child: Stack(
+                            children: [
+
+                              Container(
+                                margin: EdgeInsets.fromLTRB(40, 5, 20.0, 5),
+                                height: 170,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
+                                child: Padding(
+                                  padding:  EdgeInsets.fromLTRB(100,20,20,20),
+                                  child: ListView(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            _.listEncuesta[index].titulo,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Poppins',
+                                            ),
+                                          ),
+                                          Text(
+                                            _.listEncuesta[index].descripcion,
+                                            style: TextStyle(
+                                              color: Colors.grey[600]
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                          ),
+                                        ],
+                                      ),
+
+                                    ], 
+                                  ),
+                                ),
+                              ),
+
+                              Positioned(
+                                left: 20,
+                                top: 15,
+                                bottom: 15,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: CachedNetworkImage(
+
+                                    width: 110,
+                                    imageUrl: "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}",    //'${_.encuestas[index].logo}',
+                                    placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
+                                    errorWidget: (context, url, error) => Image(
+                                      image: AssetImage('assets/images/noimage2.png'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    ),
+                )
+                :Expanded(
+                  child: ListView(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10,right: 10,top: 0),
+                        child: Card(
+                          child: Padding(
+                            padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                            child: ListTile(
+                              title: Text('Gestión de Parcelas'),
+                              subtitle: Text('Administración de las Parcelas por encuestado, permite registrar nuevas coordenadas y crear polígonos por parcela'),
+                              leading: Icon(Icons.map),
+                              trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,),
+                              onTap: (){
+                                _.navigateToParcela();
+                              },
+                            )
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                )
+                 /*Expanded(
+                  child: _.isLoadingEncuestas == true && _.hayEncuestas == false? Center(
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                        //backgroundColor: Colors.green,
+                      ),
+                  ): _.isLoadingEncuestas == false && _.hayEncuestas == false? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.arrow_upward,color: Color.fromRGBO(0, 102, 84, 1),size: 50,),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 20,right: 20,top: 8),
+                          child: Text(
+                            'Presione en uno de los proyectos , para mostrar las encuestas correspondientes.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ):ListView.builder(
+
+                      itemCount: _.listEncuesta.length,
+                      itemBuilder: (context,index){
+                        print(_.listEncuesta[index].idEncuesta);
+                        print('https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}');
+                        return GestureDetector(
+                          onTap: (){
+                            _.navigateToEncuesta(_.listEncuesta[index]);
+                          },
+                          child: Stack(
+                            children: [
+
+                              Container(
+                                margin: EdgeInsets.fromLTRB(40, 5, 20.0, 5),
+                                height: 170,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
+                                child: Padding(
+                                  padding:  EdgeInsets.fromLTRB(100,20,20,20),
+                                  child: ListView(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            _.listEncuesta[index].titulo,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Poppins',
+                                            ),
+                                          ),
+                                          Text(
+                                            _.listEncuesta[index].descripcion,
+                                            style: TextStyle(
+                                              color: Colors.grey[600]
+                                            ),
+                                            textAlign: TextAlign.justify,
+                                          ),
+                                        ],
+                                      ),
+
+                                    ], 
+                                  ),
+                                ),
+                              ),
+
+                              Positioned(
+                                left: 20,
+                                top: 15,
+                                bottom: 15,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: CachedNetworkImage(
+
+                                    width: 110,
+                                    imageUrl: "https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}",    //'${_.encuestas[index].logo}',
+                                    placeholder: (context, url) => Image(image: AssetImage('assets/images/loading.gif'),),
+                                    errorWidget: (context, url, error) => Image(
+                                      image: AssetImage('assets/images/noimage2.png'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    ),
+                  
+                )*/
+
+                /*_.isLoading == true  ? Expanded(
                    
                     child: Center(
 
@@ -139,9 +504,9 @@ class PrincipalPage extends StatelessWidget {
                         ],
                       )
                     )
-                ):
+                ):*/
 
-                Expanded(
+                /*Expanded(
                   child: ListView.builder(
                       shrinkWrap: true,
                       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -165,7 +530,7 @@ class PrincipalPage extends StatelessWidget {
 
                       }
                   ),
-                )
+                )*/
                 
 
 

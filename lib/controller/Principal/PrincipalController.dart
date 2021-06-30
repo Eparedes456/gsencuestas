@@ -22,6 +22,8 @@ import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
+import 'package:gsencuesta/pages/Encuesta/EncuestaPage.dart';
+import 'package:gsencuesta/pages/Parcela/ParcelasPage.dart';
 import 'package:gsencuesta/pages/Perfil/ProfilePage.dart';
 import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
@@ -39,6 +41,7 @@ class PrincipalController extends GetxController{
 
   List<UsuarioModel> _usuarios = [];
   List<EncuestaModel> _encuestas = [];
+  List<EncuestaModel> get listEncuesta => _encuestas;
   List<PreguntaModel> _preguntas = [];
   List<OpcionesModel> _opcionesPreguntas = [];
   List<EncuestadoModel> _encuestadosLista = [];
@@ -54,6 +57,19 @@ class PrincipalController extends GetxController{
 
   bool _hayData = false;
   bool get haydata => _hayData;
+
+  bool hayEncuestas = false;
+  bool isLoadingEncuestas = false;
+
+  String _nombreProyecto = "";
+  String get nombreProyecto => _nombreProyecto;
+
+  /*Dinammica o estatica boleanos */
+    bool presionadoEstatica = false;
+    bool presionadoDinamica =  false;
+    String valor = "";
+  /* */
+
 
   TextEditingController _controllerSearch = new TextEditingController();
   TextEditingController get controllerSearch => _controllerSearch;
@@ -165,11 +181,20 @@ class PrincipalController extends GetxController{
             );
           }else{
             print('eliminar datas maestras');
-            await DBProvider.db.deleteallEncuestas();
-            await DBProvider.db.deleteallProyectos();
-            await DBProvider.db.deleteallEncuestados();
-            await DBProvider.db.deleteallPreguntas();
-            await DBProvider.db.deleteallOpciones();
+            await DBProvider.db.deleteAllUsuario(); //  usuario table
+            await DBProvider.db.deleteAllUbigeo();  // ubigeo table
+            await DBProvider.db.deleteAllParcelas(); // parcelas table
+            await DBProvider.db.deleteallEncuestas(); // encuestas table
+            await DBProvider.db.deleteallProyectos(); //proyectos table
+            await DBProvider.db.deleteallEncuestados(); //encuestados table
+            await DBProvider.db.deleteallPreguntas(); // preguntas table
+            await DBProvider.db.deleteallOpciones(); //opciones table
+            await DBProvider.db.deletAllBloque(); // bloque table
+            await DBProvider.db.deletAllFichas(); // fichas table
+            await DBProvider.db.deletAllRespuesta(); // respuestas table
+            await DBProvider.db.deletAllTracking(); // tracking table
+            await DBProvider.db.deletAllMultimedia(); // multimedia table
+            await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
 
             var data = await DBProvider.db.getAllPreguntas();
             var data1 = await DBProvider.db.getAllOpciones();
@@ -228,8 +253,6 @@ class PrincipalController extends GetxController{
       if(flag1 != null){
         print('Consulto mi base de datos local');
         var idUsuario = int.parse(preferences.getString('idUsuario'));
-        /*var listproyecto = await DBProvider.db.getAllProyectos();
-        print(listproyecto);*/
         _proyectos = await DBProvider.db.getAllProyectos();
         if(_proyectos.length > 0 ){
           _isLoading = false;
@@ -493,24 +516,25 @@ class PrincipalController extends GetxController{
         listEncuestaApi.forEach((item){
           _encuestas.add(
             EncuestaModel(
-              idEncuesta        : item["idEncuesta"],
-              idProyecto        : idProyecto.toString(),
-              titulo            : item["titulo"],
-              descripcion       : item["descripcion"],
-              url_guia          : item["url_guia"],
-              expira            : item["expira"].toString(),
-              fechaInicio       : item["fechaInicio"],
-              fechaFin          : item["fechaFin"],
-              logo              : item["logo"],
-              dinamico          : item["dinamico"].toString(),
-              esquema           : item["esquema"],
-              estado            : item["estado"].toString(),
-              sourceMultimedia  : item["sourceMultimedia"],
-              publicado         : item['publicado'].toString(),
-              createdAt         : item["createdAt"],
-              updatedAt         : item["updatedAt"]
-
-
+              idEncuesta            : item["idEncuesta"],
+              idProyecto            : idProyecto.toString(),
+              titulo                : item["titulo"],
+              descripcion           : item["descripcion"],
+              url_guia              : item["url_guia"],
+              expira                : item["expira"].toString(),
+              fechaInicio           : item["fechaInicio"],
+              fechaFin              : item["fechaFin"],
+              logo                  : item["logo"],
+              dinamico              : item["dinamico"].toString(),
+              esquema               : item["esquema"],
+              estado                : item["estado"].toString(),
+              sourceMultimedia      : item["sourceMultimedia"],
+              publicado             : item['publicado'].toString(),
+              requeridoObservacion  : item['requeridoObservacion'].toString(),
+              requeridoMultimedia   : item['requeridoMultimedia'].toString(),
+              esRetomado            : item['esRetomado'].toString(),
+              createdAt             : item["createdAt"],
+              updatedAt             : item["updatedAt"]
             )
           );
         });        
@@ -675,5 +699,123 @@ class PrincipalController extends GetxController{
     );
   }
 
+  loadEncuestas(int id_proyecto, String proyectonombre)async{
+    _nombreProyecto  =  proyectonombre;
+    _encuestas = [];
+    print(id_proyecto);
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+
+    /*if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+
+      var resultado = await apiConexion.getEncuestasxProyecto(id_proyecto.toString());
+
+      if(resultado != 1 && resultado != 2 && resultado  != 3 ){
+
+        resultado.forEach((item){
+          _encuestas.add(
+
+            EncuestaModel(
+
+              createdAt           : item["createdAt"].toString(),
+              updatedAt           : item["updatedAt"].toString(),
+              idEncuesta          : item["idEncuesta"],
+              titulo              : item["titulo"].toString(),
+              descripcion         : item["descripcion"].toString(),
+              url_guia            : item["url_guia"].toString(), 
+              expira              : item["expira"].toString(),
+              fechaInicio         : item["fechaInicio"].toString(),
+              fechaFin            : item["fechaFin"].toString(),
+              logo                : item["logo"].toString(),
+              dinamico            : item["dinamico"].toString(),
+              esquema             : item["esquema"].toString(),
+              estado              : item["estado"].toString(),
+              sourceMultimedia    : item["sourceMultimedia"], 
+            )
+
+          );
+
+
+        });
+        print(_encuestas.length);
+
+        if(_encuestas.length > 0){
+
+          isLoadingEncuestas = true;
+          hayEncuestas = true;
+
+        }else{
+          print('no hay encuestas');
+          isLoadingEncuestas = false;
+          hayEncuestas = false;
+        }
+
+
+
+      }else if( resultado == 1){
+
+        print('Error de servidor');
+
+      }else if(resultado == 2){
+
+        print(' eRROR DE TOKEN');
+
+      }else{
+
+        print('Error, no existe la pagina 404');
+
+      }
+
+    }else{*/
+      _encuestas = await DBProvider.db.consultEncuestaxProyecto(id_proyecto.toString());
+
+      print(_encuestas);
+
+      
+      print(_encuestas.length);
+
+      if(_encuestas.length > 0){
+
+        isLoadingEncuestas = false;
+        hayEncuestas = true;
+
+      }else{
+        isLoadingEncuestas = false;
+        hayEncuestas = false;
+      }
+
+    //}
+    update();
+    //loadEncuestas(id_proyecto.toString());
+  }
+
+  navigateToEncuesta(var encuestaPage){
+    Get.to(
+      EncuestaPage(),
+      arguments: [encuestaPage,_nombreProyecto]
+    );
+  }
+
+  validarEcuestaDiEst(bool estatica,bool dinamica,int id_proyecto,String proyectonombre)async{
+
+    if(estatica == true && dinamica == false){
+      presionadoEstatica = estatica;
+      presionadoDinamica = dinamica;
+      valor = "estáticas";
+
+    }else if(estatica == false && dinamica ==  true){
+      presionadoEstatica = estatica;
+      presionadoDinamica = dinamica;
+      valor = "dinámicas";
+      loadEncuestas(id_proyecto, proyectonombre);
+
+    }
+    update();
+
+  }
+  navigateToParcela()async{
+    Get.to(
+      ParcelaPage()
+    );
+  }
 
 }

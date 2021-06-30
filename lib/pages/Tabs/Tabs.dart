@@ -50,7 +50,7 @@ class TabsPage extends StatelessWidget {
 
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.clone),
-              label: 'Proyectos',
+              label: 'Encuestas',
               
             ),
 

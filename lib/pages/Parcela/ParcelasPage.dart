@@ -19,14 +19,6 @@ class ParcelaPage extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          /*actions: [
-            IconButton(
-              icon: Icon(Icons.add_circle),
-              onPressed: (){
-                _.showModalSearch();
-              }
-            )
-          ],*/
           bottom: PreferredSize(
             preferredSize: Size(0.0,20.0),
             child: Column(
@@ -41,7 +33,7 @@ class ParcelaPage extends StatelessWidget {
         body: _.loading == true && _.hayParcela ==  false  ? Center(child: CircularProgressIndicator(),) 
         
         
-        :  _.loading == false && _.hayParcela == true ? ListView.builder(
+        :    _.loading == false && _.hayParcela == true ? ListView.builder(
           itemCount: _.listParcela.length,
           itemBuilder: (context,i){
 
@@ -84,7 +76,7 @@ class ParcelaPage extends StatelessWidget {
               ],
             );
           }
-        ): Center(child: Text('No hay parcelas registradas'),),
+        ): Center(child: Text('No hay encuestados asigandos a este usuario'),),
       ),
     );
     

@@ -90,6 +90,9 @@ class Parcela1Controller extends GetxController{
     if(_listParcelas.length > 0){
       hayParcela = true;
       loading = false;
+    }else if(_listParcelas.length == 0){
+      hayParcela = false;
+      loading = false;
     }
     update();
 

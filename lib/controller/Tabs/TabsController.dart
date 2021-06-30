@@ -77,8 +77,11 @@ class TabsController extends GetxController{
       sendFicha["longitud"]       = dataFichas[i].longitud;
       sendFicha["observacion"]    = dataFichas[i].observacion;
       sendFicha["ubigeo"]         = dataFichas[i].ubigeo;
-      sendFicha["fecha_retorno"]  = dataFichas[0].fecha_retorno.toString();
-      sendFicha["fecha_envio"]    = fechaFin;
+      sendFicha["fechaRetomo"]    = dataFichas[i].fecha_retorno == null || dataFichas[i].fecha_retorno == "null" ?  "" : dataFichas[i].fecha_retorno.toString();
+      sendFicha["latitudRetomo"]  = dataFichas[i].latitud_retorno == null ? "" :dataFichas[i].latitud_retorno ;
+      sendFicha["longitudRetomo"] = dataFichas[i].longitud_retorno == null ? "" : dataFichas[i].longitud_retorno;
+      sendFicha["fechaEnvio"]     = fechaFin;
+
       var encuesta = {};
       encuesta["idEncuesta"]   = dataFichas[i].idEncuesta;
       sendFicha['encuesta'] = encuesta;

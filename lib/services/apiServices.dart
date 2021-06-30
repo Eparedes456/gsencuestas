@@ -481,11 +481,9 @@ class ApiServices {
    var response = await http.post(
       base_url_dev + "ficha/create_all",
       headers: {
-
         'Content-Type': 'application/json',
         //'Accept': 'application/json',
         'Authorization': 'Bearer $token'
-
       },
       body: sendData
     );

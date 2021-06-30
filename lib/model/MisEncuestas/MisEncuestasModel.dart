@@ -29,11 +29,12 @@ class MisEncuestasModel{
   String fechaInicio;
   String imagen;
   String estadoFicha;
+  String esRetomado;
 
   MisEncuestasModel({
 
     this.idFicha, this.idProyecto, this.idEncuesta, this.nombreEncuestado ,this.nombreProyecto, this.nombreEncuesta, this.nroPreguntas,
-    this.fechaInicio, this.imagen ,this.estadoFicha
+    this.fechaInicio, this.imagen ,this.estadoFicha,this.esRetomado
 
   });
 
@@ -72,6 +73,7 @@ class MisEncuestasModel{
       'estado'                : fechaInicio,
       'createdAt'             : imagen,
       'updated_at'            : estadoFicha,
+      'esRetomado'            : esRetomado
 
 
     };

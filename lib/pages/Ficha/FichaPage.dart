@@ -52,12 +52,6 @@ class FichaPage extends StatelessWidget {
                 ),
 
                 SizedBox(height: 12,),
-
-                /*Padding(
-                  padding: EdgeInsets.only(left: 22,right: 22),
-                  child: Text('Agregue imagenes del lugar'),
-                ),*/
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -171,8 +165,9 @@ class FichaPage extends StatelessWidget {
                     ),
                     child: MaterialButton(
                       onPressed: (){
-                        print('Guardando');
-                        _.saveFicha();
+                        
+                        _.validarRequerimientos();
+                        //_.saveFicha();
                       },
                       child: Center(
                         child: Text(

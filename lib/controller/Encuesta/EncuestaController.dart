@@ -85,6 +85,9 @@ class EncuestaController extends GetxController{
   List<PreguntaModel> _listPregunta = [];
   List<PreguntaModel> get listPregunta => _listPregunta;
 
+  bool haypreguntas = false;
+  
+
   List<FichasModel> _listFichas = [];
   List<FichasModel> get listFichas => _listFichas;
 
@@ -132,17 +135,20 @@ class EncuestaController extends GetxController{
 
   loadData(EncuestaModel encuesta)async{
 
-    _listFichas               = [];
-    _imagePortada             = encuesta.logo;
-    _descripcion              = encuesta.descripcion;
-    _titulo                   = encuesta.titulo;
-    _fechaFin                 = encuesta.fechaFin;
-    _fechaInicio              = encuesta.fechaInicio;
-    _idEncuesta               = encuesta.idEncuesta.toString();
-    encuestaSourceMultimedia  = encuesta.sourceMultimedia;
-    
+    _listFichas                   = [];
+    _imagePortada                 = encuesta.logo;
+    _descripcion                  = encuesta.descripcion;
+    _titulo                       = encuesta.titulo;
+    _fechaFin                     = encuesta.fechaFin;
+    _fechaInicio                  = encuesta.fechaInicio;
+    _idEncuesta                   = encuesta.idEncuesta.toString();
+    encuestaSourceMultimedia      = encuesta.sourceMultimedia;
+    var encuestaRequeObservacion  = encuesta.requeridoObservacion;
+    var encuestaRequeMultimedia   = encuesta.requeridoMultimedia;
     SharedPreferences preferences   = await SharedPreferences.getInstance();
     await preferences.setString('multimedia', encuestaSourceMultimedia);
+    await preferences.setString('requeridoObservacion', encuestaRequeObservacion);
+    await preferences.setString('requeridoMultimedia', encuestaRequeMultimedia);
     
     _listFichas = await DBProvider.db.fichasPendientes("P");
 
@@ -165,8 +171,8 @@ class EncuestaController extends GetxController{
               nombreEncuestado  : nombreEncuestado,
               nombreEncuesta    : item["titulo"],
               fechaInicio       : item["fechaInicio"],
-              
-              idFicha           : element.idFicha.toString() 
+              idFicha           : element.idFicha.toString(),
+              esRetomado        : item["esRetomado"].toString()  
 
             )
           );
@@ -238,7 +244,7 @@ class EncuestaController extends GetxController{
 
       });
 
-      
+      _totalPreguntas = _listPregunta.length.toString();
 
     }else{
 
@@ -247,7 +253,7 @@ class EncuestaController extends GetxController{
       _listPregunta = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
        
       print(_listPregunta.length);
-      
+      _totalPreguntas = _listPregunta.length.toString();
 
     }
 
@@ -308,20 +314,42 @@ class EncuestaController extends GetxController{
               ),
             ),
             SizedBox(height: 12,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FlatButton.icon(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  onPressed: (){
 
-            FlatButton.icon(
-              color: Color.fromRGBO(0, 102, 84, 1),
-              onPressed: (){
+                    searchEncuestado();
 
-                searchEncuestado();
+                  }, 
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  label: Text('Buscar',style: TextStyle(color: Colors.white),)
+                ),
 
-              }, 
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              label: Text('Buscar',style: TextStyle(color: Colors.white),)
-            )
+                 FlatButton.icon(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  onPressed: (){
+
+                    //searchEncuestado();
+                    getAllEncuestados();
+
+                  }, 
+                  icon: Icon(
+                    Icons.list,
+                    color: Colors.white,
+                  ),
+                  label: Text('Todos',style: TextStyle(color: Colors.white),)
+                ),
+              ],
+            ),
+
+            
+           
 
 
           ],
@@ -413,7 +441,7 @@ class EncuestaController extends GetxController{
         }else{
           
           Get.back();
-          messageInfo('El encuestado no se encuentra registrado');
+          messageInfo('No se encontro ninguna coincidencia ');
 
         }
 
@@ -422,6 +450,67 @@ class EncuestaController extends GetxController{
       
 
     }
+
+  }
+  getAllEncuestados()async{
+    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
+    if(response.length > 0){
+      print(response);
+      Get.back(); 
+      showTodosEncuestados(response);
+    }else{
+      Get.back();
+      messageInfo('Usted no tiene ningún encuestado asignado');
+    }
+    
+  }
+
+  showTodosEncuestados(List<EncuestadoModel> response)async{
+    Get.dialog(
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text('Encuestados encontrados'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 500,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: response.length,
+                  itemBuilder: (context,i){
+                    var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
+                    var foto            = response[i].foto;
+                    if(foto != null){
+                      _photoBase64        = base64Decode(foto);
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage:  foto == "" || foto == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
+                        ),
+                        title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
+                        onTap: (){
+                          Get.back();
+                          showEncuestadoModalFinal(response[i]);
+                        },
+                      ),
+                    );
+                  }
+                ),
+              )
+            ],
+          ),
+
+        )
+    );
 
   }
 
@@ -437,9 +526,41 @@ class EncuestaController extends GetxController{
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+
+              /*ListView.builder(
+                  //scrollDirection: Axis.vertical,
+                  itemCount: response.length,
+                  itemBuilder: (context,i){
+                    var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
+                    var foto            = response[i].foto;
+                    if(foto != null){
+                      _photoBase64        = base64Decode(foto);
+                    }
+                    
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage:  foto == "" || foto == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
+                        ),
+                        title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
+                        onTap: (){
+                          Get.back();
+                          showEncuestadoModalFinal(response[i]);
+
+                        },
+                      ),
+                    );
+                  }
+                ),*/
+
               Container(
-                height: 400,
+                height: 500,
                 child: ListView.builder(
+                  scrollDirection: Axis.vertical,
                   itemCount: response.length,
                   itemBuilder: (context,i){
                     var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
@@ -824,7 +945,8 @@ class EncuestaController extends GetxController{
               nombreEncuestado  : nombreEncuestado,
               nombreEncuesta    : item["titulo"],
               fechaInicio       : item["fechaInicio"],
-              idFicha           : element.idFicha.toString() 
+              idFicha           : element.idFicha.toString(),
+              esRetomado        : item["esRetomado"].toString() 
 
             )
           );
@@ -855,8 +977,11 @@ class EncuestaController extends GetxController{
     var fecha = part[0].toString();
     var hora =part[1].toString();
     String fecha_retorno =fecha + "T" + hora;
-    //print(fecha_retorno);
-    List<FichasModel> listFichas =  await DBProvider.db.updateFechaRetorno( idFicha, fecha_retorno);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String latitud = position.latitude.toString();
+    String longitud = position.longitude.toString();
+
+    List<FichasModel> listFichas =  await DBProvider.db.updateFechaRetorno( idFicha, fecha_retorno,latitud,longitud);
     print(listFichas);
 
     var data = {

@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
@@ -88,8 +89,20 @@ class EncuestaPage extends StatelessWidget {
                             onPressed: (){
 
                               //_.navigateToQuiz();
-                              _.showModalSearch();
+                              if(_.listPregunta.length == 0){
+                                Get.dialog(
+                                  AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    title: Text('Notificación'),
+                                    content: Text('Esta encuesta no contiene preguntas'),
+                                  )
+                                );
 
+                              }else{
+                                _.showModalSearch();
+                              }
                             },
                             child: Text(
                               'Iniciar Encuesta',
@@ -180,10 +193,24 @@ class EncuestaPage extends StatelessWidget {
                                       color: Colors.yellow[800],
                                       onTap: (){
 
-                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha.toString(), _.listEncuesta[index].idEncuesta.toString(), _.listEncuesta[index].nombreEncuesta ) ;
+                                        if(_.listEncuesta[index].esRetomado == "true"){
+                                           _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha.toString(), _.listEncuesta[index].idEncuesta.toString(), _.listEncuesta[index].nombreEncuesta );
+                                        }else{
+                                          Get.dialog(
+                                            AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              title: Text('Notificación'),
+                                              content: Text('Esta encuesta no puede ser retomada'),
+                                            )
+                                          );
+                                        }
+
+                                       
 
                                       },
-                                      //icon: Icons.edit,
+                                      
                                   ),
 
                                   
@@ -437,7 +464,13 @@ class EncuestaPage extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'Poppins'
                                 ),
-                              ) :CircularProgressIndicator() ,
+                              ) : _.listPregunta.length == 0 ? Text(
+                                '0',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins'
+                                ),
+                              ) :Container()  //CircularProgressIndicator() ,
                             ),
                             SizedBox(height: 8,),
                             Text(

@@ -50,6 +50,11 @@ class ParcelaController extends GetxController{
   Set<Polygon> _polygons = Set<Polygon>();
   Set<Polygon> get polygons => _polygons;
 
+  bool showCard = false;
+  String latitud = "";
+  String longitud = "";
+  String punto = "";
+
   //Set<Marker> _markers = Set<Marker>();
   //Set<Marker> get markers => _markers;
 
@@ -300,10 +305,17 @@ class ParcelaController extends GetxController{
     final marker = Marker(
       markerId: markerId,
       position: LatLng(position.latitude,position.longitude),
-      infoWindow:  InfoWindow(
+      /*infoWindow:  InfoWindow(
           title: 'Punto ${(_markers.length + 1).toString()}',
           snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
-      ),
+      ),*/
+      onTap: (){
+        showCard = true;
+        latitud = position.latitude.toString();
+        longitud = position.longitude.toString();
+        punto = markerId.value.toString();
+        update();
+      }
     );
     _markers[markerId] = marker;
     polylineCoordinate.add(
@@ -314,6 +326,18 @@ class ParcelaController extends GetxController{
     i = i+1;
 
     update();
+  }
+
+  close(){
+     showCard = false;
+    update();
+  }
+
+  deleteMarker(){
+
+    
+
+    //controllerInput.removeWhere((item) => item.controller.text == "");
   }
 
 

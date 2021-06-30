@@ -272,7 +272,7 @@ class RetommarController extends GetxController{
         var numPregunta = z + 1;
         if(_preguntas[z].tipo_pregunta == "integer" || _preguntas[z].tipo_pregunta == "decimmal" || _preguntas[z].tipo_pregunta == "text"){
           
-          for (var x = 0; x <= controllerInput.length ; x++) {
+          //for (var x = 0; x <= controllerInput.length ; x++) {
             //Si devuelve -1 es por que no existe el valor que se requier encontrar
             if( controllerInput[z].idPregunta.toString()  == _preguntas[z].id_pregunta.toString() && controllerInput[z].controller.text == ""  ){
 
@@ -309,9 +309,9 @@ class RetommarController extends GetxController{
               
             }
           
-          }
+          //}
 
-        }else{
+        }/*else{
 
           List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,_preguntas[z].id_pregunta.toString());
 
@@ -340,7 +340,7 @@ class RetommarController extends GetxController{
 
           } 
 
-        }     
+        }*/     
 
       }
 

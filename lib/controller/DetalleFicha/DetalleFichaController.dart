@@ -376,8 +376,10 @@ class DetalleFichaController extends GetxController{
     sendFicha["longitud"]       = longitud;
     sendFicha["observacion"]    = observacionFicha;
     sendFicha["ubigeo"]         = ubigeoFicha;
-    sendFicha["fecha_retorno"]  = _listFichasDb[0].fecha_retorno.toString();
-    sendFicha["fecha_envio"]    = fecha_envio;
+    sendFicha["fechaRetomo"]    = listFichas[0].fecha_retorno == null || listFichas[0].fecha_retorno == "null" ?  "" : listFichas[0].fecha_retorno.toString();
+    sendFicha["latitudRetomo"]  = _listFichasDb[0].latitud_retorno;
+    sendFicha["longitudRetomo"] = _listFichasDb[0].longitud_retorno;
+    sendFicha["fechaEnvio"]    = fecha_envio;
     var encuesta = {};
     encuesta["idEncuesta"]      = idEncuestaSend;
     sendFicha['encuesta']       = encuesta;

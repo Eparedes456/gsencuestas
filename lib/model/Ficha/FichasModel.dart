@@ -25,6 +25,8 @@ class FichasModel {
   int     idEncuestado;
   String  latitud;
   String  longitud;
+  String  latitud_retorno;
+  String  longitud_retorno;
   String  fecha_inicio;
   String  fecha_fin;
   String  fecha_retorno;
@@ -37,7 +39,7 @@ class FichasModel {
    
     FichasModel({
 
-      this.idFicha,this.idEncuesta,this.idUsuario,this.idEncuestado,this.latitud,this.longitud,
+      this.idFicha,this.idEncuesta,this.idUsuario,this.idEncuestado,this.latitud,this.longitud,this.latitud_retorno,this.longitud_retorno,
       this.fecha_inicio,this.fecha_fin, this.fecha_retorno ,this.fecha_envio ,this.ubigeo ,this.estado,this.createdAt ,this.updatedAt,this.observacion
       
     });
@@ -53,6 +55,8 @@ class FichasModel {
     idEncuestado    : json['idEncuestado'],
     latitud         : json['latitud'],
     longitud        : json['longitud'],
+    latitud_retorno : json['latitud_retorno'],
+    longitud_retorno: json['longitud_retorno'],
     fecha_inicio    : json['fecha_inicio'],
     fecha_fin       : json['fecha_fin'],
     fecha_retorno   : json['fecha_retorno'],
@@ -73,21 +77,23 @@ class FichasModel {
 
     return {
 
-      'id_ficha'      : idFicha,      
-      'id_encuesta'   : idEncuesta,     
-      'id_usuario'    : idUsuario,      
-      'id_encuestado' : idEncuestado,   
-      'latitud'       : latitud,         
-      'longitud'      : longitud,      
-      'fecha_inicio'  : fecha_inicio,    
-      'fecha_fin'     : fecha_fin,
-      'fecha_retorno' : fecha_retorno,
-      'fecha_envio'   : fecha_envio,
-      'ubigeo'        : ubigeo,       
-      'estado'        : estado, 
-      'createdAt'     : createdAt, 
-      'updatedAt'     : updatedAt,
-      'observacion'   : observacion
+      'id_ficha'        : idFicha,      
+      'id_encuesta'     : idEncuesta,     
+      'id_usuario'      : idUsuario,      
+      'id_encuestado'   : idEncuestado,   
+      'latitud'         : latitud,         
+      'longitud'        : longitud,
+      'latitud_retorno' : latitud_retorno,
+      'longitud_retorno': longitud_retorno,      
+      'fecha_inicio'    : fecha_inicio,    
+      'fecha_fin'       : fecha_fin,
+      'fecha_retorno'   : fecha_retorno,
+      'fecha_envio'     : fecha_envio,
+      'ubigeo'          : ubigeo,       
+      'estado'          : estado, 
+      'createdAt'       : createdAt, 
+      'updatedAt'       : updatedAt,
+      'observacion'     : observacion
 
 
     };

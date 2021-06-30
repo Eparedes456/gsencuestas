@@ -76,14 +76,18 @@ class ConfigController extends GetxController{
       String fechaFin   = fecha + "T" + hora;
 
       var sendFicha = {};
-      sendFicha['idficha']      = listFichas[i].idFicha;
-      sendFicha['fechaFin']     = fechaFin;
-      sendFicha['fechaInicio']  = listFichas[i].fecha_inicio;
-      sendFicha['idUsuario']    = listFichas[i].idUsuario;
-      sendFicha["latitud"]      = listFichas[i].latitud;
-      sendFicha["longitud"]     = listFichas[i].longitud;
-      sendFicha["observacion"]  = listFichas[i].observacion;
-      sendFicha["ubigeo"]       = listFichas[i].ubigeo;
+      sendFicha['idficha']        = listFichas[i].idFicha;
+      sendFicha['fechaFin']       = fechaFin;
+      sendFicha['fechaInicio']    = listFichas[i].fecha_inicio;
+      sendFicha['idUsuario']      = listFichas[i].idUsuario;
+      sendFicha["latitud"]        = listFichas[i].latitud;
+      sendFicha["longitud"]       = listFichas[i].longitud;
+      sendFicha["observacion"]    = listFichas[i].observacion;
+      sendFicha["ubigeo"]         = listFichas[i].ubigeo;
+      sendFicha["fechaRetomo"]    = listFichas[i].fecha_retorno == null || listFichas[i].fecha_retorno == "null" ?  "" : listFichas[i].fecha_retorno.toString();
+      sendFicha["latitudRetomo"]  = listFichas[i].latitud_retorno == null ? "" :listFichas[i].latitud_retorno ;
+      sendFicha["longitudRetomo"] = listFichas[i].longitud_retorno == null ? "" : listFichas[i].longitud_retorno;
+      sendFicha["fechaEnvio"]     = fechaFin;
       var encuesta = {};
       encuesta["idEncuesta"]   = listFichas[i].idEncuesta;
       sendFicha['encuesta'] = encuesta;
@@ -425,14 +429,21 @@ class ConfigController extends GetxController{
 
   deleteAllMasterTable()async{
 
-    await DBProvider.db.deleteAllUsuario();
-    await DBProvider.db.deleteAllUbigeo();
-    await DBProvider.db.deleteAllParcelas();
-    await DBProvider.db.deleteallEncuestas();
-    await DBProvider.db.deleteallProyectos();
-    await DBProvider.db.deleteallEncuestados();
-    await DBProvider.db.deleteallPreguntas();
-    await DBProvider.db.deleteallOpciones();
+    await DBProvider.db.deleteAllUsuario(); //  usuario table
+    await DBProvider.db.deleteAllUbigeo();  // ubigeo table
+    await DBProvider.db.deleteAllParcelas(); // parcelas table
+    await DBProvider.db.deleteallEncuestas(); // encuestas table
+    await DBProvider.db.deleteallProyectos(); //proyectos table
+    await DBProvider.db.deleteallEncuestados(); //encuestados table
+    await DBProvider.db.deleteallPreguntas(); // preguntas table
+    await DBProvider.db.deleteallOpciones(); //opciones table
+    await DBProvider.db.deletAllBloque(); // bloque table
+    await DBProvider.db.deletAllFichas(); // fichas table
+    await DBProvider.db.deletAllRespuesta(); // respuestas table
+    await DBProvider.db.deletAllTracking(); // tracking table
+    await DBProvider.db.deletAllMultimedia(); // multimedia table
+    await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
+    
     return 1;
   }
 
@@ -522,7 +533,7 @@ class ConfigController extends GetxController{
         //_isLoading = false;
         //_hayData = false;
         var insertDataLocal = "Si";
-        //preferences.setString('primeraCarga', insertDataLocal);
+        preferences.setString('primeraCarga', insertDataLocal);
         //update();
         
         //return;
@@ -559,22 +570,25 @@ class ConfigController extends GetxController{
         listEncuestaApi.forEach((item){
           _encuestas.add(
             EncuestaModel(
-              idEncuesta        : item["idEncuesta"],
-              idProyecto        : idProyecto.toString(),
-              titulo            : item["titulo"],
-              descripcion       : item["descripcion"],
-              url_guia          : item["url_guia"],
-              expira            : item["expira"].toString(),
-              fechaInicio       : item["fechaInicio"],
-              fechaFin          : item["fechaFin"],
-              logo              : item["logo"],
-              dinamico          : item["dinamico"].toString(),
-              esquema           : item["esquema"],
-              estado            : item["estado"].toString(),
-              sourceMultimedia  : item["sourceMultimedia"],
-              publicado         : item['publicado'].toString(),
-              createdAt         : item["createdAt"],
-              updatedAt         : item["updatedAt"]
+              idEncuesta            : item["idEncuesta"],
+              idProyecto            : idProyecto.toString(),
+              titulo                : item["titulo"],
+              descripcion           : item["descripcion"],
+              url_guia              : item["url_guia"],
+              expira                : item["expira"].toString(),
+              fechaInicio           : item["fechaInicio"],
+              fechaFin              : item["fechaFin"],
+              logo                  : item["logo"],
+              dinamico              : item["dinamico"].toString(),
+              esquema               : item["esquema"],
+              estado                : item["estado"].toString(),
+              sourceMultimedia      : item["sourceMultimedia"],
+              publicado             : item['publicado'].toString(),
+              requeridoObservacion  : item['requeridoObservacion'].toString(),
+              requeridoMultimedia   : item['requeridoMultimedia'].toString(),
+              esRetomado            : item['esRetomado'],
+              createdAt             : item["createdAt"],
+              updatedAt             : item["updatedAt"]
 
 
             )

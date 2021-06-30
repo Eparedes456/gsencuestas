@@ -68,6 +68,9 @@ class DBProvider{
             esquema TEXT,
             sourceMultimedia TEXT,
             publicado TEXT,
+            requeridoObservacion TEXT,
+            requeridoMultimedia TEXT,
+            esRetomado TEXT,
             estado  TEXT,
             createdAt TEXT,
             updatedAt TEXT
@@ -169,6 +172,8 @@ class DBProvider{
             idEncuestado INTEGER,
             latitud TEXT,
             longitud TEXT,
+            latitud_retorno TEXT,
+            longitud_retorno TEXT,
             fecha_inicio TEXT,
             fecha_fin TEXT,
             fecha_retorno TEXT,
@@ -722,6 +727,76 @@ class DBProvider{
     return respuesta;
   }
 
+  /*Eliminar bloque */
+  deletAllBloque()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM bloque
+      '''
+    );
+    return respuesta;
+  }
+  /* Eliminar fichas*/
+  deletAllFichas()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM ficha
+      '''
+    );
+    return respuesta;
+  }
+
+  /*Eliminar respuestas */
+  deletAllRespuesta()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM respuesta
+      '''
+    );
+    return respuesta;
+  }
+
+  /*Eliminar todos los tracking */
+  deletAllTracking()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM tracking
+      '''
+    );
+    return respuesta;
+  }
+
+  /*Eliminar todas las multimedias */
+  deletAllMultimedia()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM multimedia
+      '''
+    );
+    return respuesta;
+
+  }
+
+  /* Eliminar todas las parcelas con coordenadas */
+
+  deletAllParcelaCoordenadas()async{
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''
+      DELETE FROM parcelaCoordenadas
+      '''
+    );
+    return respuesta;
+
+  }
+
+
+
   /* insertar y creaciòn  de nueva ficha */
 
   insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio, String latitud, String longitud,String ubigeo)async{
@@ -829,12 +904,12 @@ class DBProvider{
 
   /* Actualizar ficha el campo retorno */
 
-  updateFechaRetorno( String idFicha, String fecha_retorno)async{
+  updateFechaRetorno( String idFicha, String fecha_retorno, String latitud, String longitud)async{
 
     final db = await database;
     var response = await db.rawQuery(
       '''
-      UPDATE ficha SET fecha_retorno = '$fecha_retorno' WHERE idFicha = '$idFicha'
+      UPDATE ficha SET fecha_retorno = '$fecha_retorno', latitud_retorno = '$latitud', longitud_retorno = '$longitud' WHERE idFicha = '$idFicha'
       '''
     );
     var response1 = await db.query('ficha');

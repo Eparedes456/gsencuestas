@@ -54,6 +54,8 @@ class FichaController extends GetxController{
   
   String _sourceMultimedia = "";
   String get sourceMultimedia => _sourceMultimedia;
+  String requeObservacion = "";
+  String requeMultimedia = "";
 
   File _imagePath;
   File get imagepath => _imagePath;
@@ -61,7 +63,10 @@ class FichaController extends GetxController{
 
   loadData()async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    _sourceMultimedia =  await preferences.getString('multimedia');
+    _sourceMultimedia = await preferences.getString('multimedia');
+    requeObservacion  = await preferences.getString('requeridoObservacion');
+    requeMultimedia  = await preferences.getString('requeridoMultimedia');
+
     update();
   }
 
@@ -204,14 +209,63 @@ class FichaController extends GetxController{
 
   }
 
+  showMessage(String message){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text('Notificación'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
+            Text(message),
+          ],
+        ),
+      )
+    );
+  }
+
+  validarRequerimientos()async{
+    if(requeObservacion == "true" && requeMultimedia == "true"){
+
+      if(controllerobservacion.text == "" && listMultimedia.length == 0){
+        showMessage("El campo observación y las imágenes son requeridas.");
+      }else if(controllerobservacion.text == ""){
+        showMessage("El campo observación es requerida.");
+      }else if(listMultimedia.length == 0){
+        showMessage("Las imágenes son requeridas.");
+      }else{
+        saveFicha();
+      }
+
+    }else if(requeObservacion == "true" && requeMultimedia == "false"){
+
+      if(controllerobservacion.text == ""){
+        showMessage("El campo observación es requerida.");
+      }else{
+        saveFicha();
+      }
+    } else if(requeObservacion == "false" && requeMultimedia == "true"){
+      if(listMultimedia.length == 0){
+        showMessage("Las imágenes son requeridas.");
+      }else{
+        saveFicha();
+      }
+    }else if(requeObservacion == "false" && requeMultimedia == "false"){
+      saveFicha();
+    }
+
+  }
+
   saveFicha()async{
-    
-    
+
     DateTime now = DateTime.now();
     String formatDate = DateFormat('yyyy-MM-dd').format(now);
     String hourFormat = DateFormat('HH:mm:ss').format(now);
 
-    String formattedDate = formatDate + "T" + hourFormat + ".0Z";
+    //String formattedDate = formatDate + "T" + hourFormat + ".0Z";
     String observa = _controllerObservacion.text;
 
     var utc = now.toUtc();    
@@ -219,6 +273,7 @@ class FichaController extends GetxController{
     var fecha = part[0].toString();
     var hora =part[1].toString();
     print(part[1]);
+    String formattedDate = fecha + "T" + hora;
     String fecha_retorno =fecha + "T" + hora;
 
     List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F", fecha_retorno);
