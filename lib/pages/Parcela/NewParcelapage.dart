@@ -30,6 +30,7 @@ class NewParcelaPage extends StatelessWidget {
               onMapCreated: (GoogleMapController controller){
                 _.controller.complete(controller);
               },
+              //onTap: _.tapMap(),
             ),
             
             
@@ -56,7 +57,9 @@ class NewParcelaPage extends StatelessWidget {
                   ),
                   child: MaterialButton(
                     onPressed: (){
-                      _.addMarker();
+                      //_.addMarker();
+                      _.tapMap();
+                      
                     },
                     child: Text(
                       'Agregar puntos',

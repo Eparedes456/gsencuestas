@@ -50,8 +50,12 @@ class ParcelaController extends GetxController{
   Set<Polygon> _polygons = Set<Polygon>();
   Set<Polygon> get polygons => _polygons;
 
-  Set<Marker> _markers = Set<Marker>();
-  Set<Marker> get markers => _markers;
+  //Set<Marker> _markers = Set<Marker>();
+  //Set<Marker> get markers => _markers;
+
+  final Map<MarkerId,Marker> _markers ={};
+  Set<Marker> get markers =>_markers.values.toSet();
+
   LatLng miubicacion;
   Position position;
   bool load = true;
@@ -110,7 +114,7 @@ class ParcelaController extends GetxController{
     update();
   }
 
-  showMarker(){
+  /*showMarker(){
 
     _markers.add(
       Marker(
@@ -122,14 +126,14 @@ class ParcelaController extends GetxController{
 
     update();
 
-  }
+  }*/
 
   addMarker()async{
     i = 1;
     print("añadiento nuevo punto");
     position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position);
-    _markers.add(
+    /*_markers.add(
       Marker(
         markerId: MarkerId(i.toString()),
         position: LatLng(position.latitude, position.longitude),
@@ -139,7 +143,14 @@ class ParcelaController extends GetxController{
         ),
         icon: BitmapDescriptor.defaultMarker
       )
+    );*/
+    final markerid = MarkerId(i.toString());
+    final marker = Marker(
+      markerId: markerid,
+      position: LatLng(position.latitude, position.longitude),
     );
+    _markers[markerid] = marker;
+
     polylineCoordinate.add(
       LatLng(position.latitude, position.longitude)
     ); 
@@ -282,6 +293,28 @@ class ParcelaController extends GetxController{
     return input * Math.pi/180;
   }
 
+  tapMap(/*LatLng position*/)async{
+    i = 1;
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    final markerId = MarkerId(  (_markers.length + 1).toString());
+    final marker = Marker(
+      markerId: markerId,
+      position: LatLng(position.latitude,position.longitude),
+      infoWindow:  InfoWindow(
+          title: 'Punto ${(_markers.length + 1).toString()}',
+          snippet: 'Latitud: ${position.latitude} , Longitud: ${position.longitude}'
+      ),
+    );
+    _markers[markerId] = marker;
+    polylineCoordinate.add(
+      LatLng(position.latitude, position.longitude)
+    ); 
+  
+    setPolyline(i);
+    i = i+1;
+
+    update();
+  }
 
 
 
