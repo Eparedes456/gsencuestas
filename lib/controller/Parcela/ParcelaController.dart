@@ -333,10 +333,14 @@ class ParcelaController extends GetxController{
     update();
   }
 
-  deleteMarker(){
-
-    
-
+  deleteMarker(String numeroMarker){
+    _markers.removeWhere((key, value) => key.value == numeroMarker);
+    print(_markers.length);
+    showCard = false;
+    if(_markers.length == 0){
+      polylineCoordinate =  [];
+    }
+    update();
     //controllerInput.removeWhere((item) => item.controller.text == "");
   }
 

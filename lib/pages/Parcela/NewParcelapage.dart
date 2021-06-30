@@ -143,12 +143,14 @@ class NewParcelaPage extends StatelessWidget {
                   SizedBox(height: 5,),
                   Center(
                     child: Container(
-                      color: Colors.blue,
+                      color: Color.fromRGBO(0, 102, 84, 1),
                       height: 30,
                       width: 150,
                       child: MaterialButton(
-                        child: Text('Eliminar punto'),
-                        onPressed: (){},
+                        child: Text('Eliminar punto',style: TextStyle(color: Colors.white),),
+                        onPressed: (){
+                          _.deleteMarker(_.punto);
+                        },
                       ),
                     ),
                   )
