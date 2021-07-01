@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
 import 'package:gsencuesta/pages/Parcela/ParcelasPage.dart';
 import 'package:gsencuesta/pages/Perfil/EditProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math' as math;
+
 
 class ProfileController extends GetxController{
 
@@ -24,11 +27,13 @@ class ProfileController extends GetxController{
 
     var argument = Get.arguments;
     print('Dato recibido $argument');
+    
     this.loadData();
 
 
-  }
 
+  }
+  
 
   @override
   void onReady() {
@@ -43,6 +48,7 @@ class ProfileController extends GetxController{
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
 
+ 
   loadData()async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -72,8 +78,16 @@ class ProfileController extends GetxController{
       _encuestasFinalizadas = listMisEncuestas.length.toString();
     }
 
+    Parser p = new Parser();
+    Expression exp = p.parse("5+5+5");
+    print(exp);
+    
     update();
 
+  }
+
+  dothing(_){
+    print("5+4");
   }
 
   navigateToEditProfile()async{

@@ -45,7 +45,7 @@ class AboutPage extends StatelessWidget {
                       ),
                       SizedBox(height: 8,),
                       Text(
-                        'Aplicativo para la toma de muestras de campo en tiempo real, rápida y flexible; no requiere conexión a internet.Permite crear encuestas de diferentes estructuras y tipos de datos, incorporando características como la georreferenciación.',
+                        'Aplicativo para la toma de muestras de campo en tiempo real, rápida y flexible; no requiere conexión a internet,permite crear encuestas de diferentes estructuras y tipos de datos, incorporando características como la georreferenciación.',
                         textAlign: TextAlign.justify,
                       )
                     ],

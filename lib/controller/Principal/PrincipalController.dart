@@ -202,8 +202,9 @@ class PrincipalController extends GetxController{
             await cargarEncuestados();
             await cargarUsuarios();
             await cargarParcelas();
-            await cargarUbigeo();
             await cargarProyectosEncuesta();
+            await cargarUbigeo();
+            
             
             
 
@@ -714,7 +715,7 @@ class PrincipalController extends GetxController{
     }
     List<UbigeoModel> ubigeos  = await DBProvider.db.getAllUbigeo();
     
-    //Get.back();
+    Get.back();
   }
 
   loadingUbigeo(){

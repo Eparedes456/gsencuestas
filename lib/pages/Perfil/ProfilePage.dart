@@ -82,7 +82,7 @@ class ProfilePage extends StatelessWidget {
                     GestureDetector(
                       onTap: (){
 
-                        Get.to(MisEncuestas());
+                        //Get.to(MisEncuestas());
 
                       },
                       child: Container(
