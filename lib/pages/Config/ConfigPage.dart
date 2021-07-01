@@ -89,7 +89,8 @@ buildCard(String contenido,String subtitle ,IconData icon, bool upload,ConfigCon
                 _.navigateToParcela();
               }else{
                 print('hola');
-                _.downloadAllDataToServer();
+                //_.downloadAllDataToServer();
+                _.mostrarMensajeModal();
               }
 
               

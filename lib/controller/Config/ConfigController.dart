@@ -364,17 +364,18 @@ class ConfigController extends GetxController{
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
         ),
+
         title: Text('Descargando datos..'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Tiempo estimado de descarga 3 min'),
             SizedBox(height: 20,),
-            CircularProgressIndicator(),
-            
+            CircularProgressIndicator(), 
           ],
         ),
-      )
+      ),
+      barrierDismissible: false,
     );
   }
 
@@ -401,10 +402,61 @@ class ConfigController extends GetxController{
 
   }
   
+  mostrarMensajeModal(){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        title: Center(child: Text('¡Importante!')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Usted esta a punto de truncar (eliminar) los datos que se encuentra en el dispositivo movil, para actualizar con los nuevos datos del servidor.'),
+            SizedBox(height: 12,),
+            Text('¿Está seguro de querer realizar la acción?')
+          ],
+        ),
+        actions: [
+          Container(
+            height: 40,
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
+              color: Color.fromRGBO(0, 102, 84, 1),
+              onPressed: (){
+                //deleteFicha(idFicha);
+                Get.back();
+                downloadAllDataToServer();
+              },
+              child: Text('Si'),
+              ),
+          ),
+          
+          Container(
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromRGBO(0, 102, 84, 1),
+              ),
+              borderRadius: BorderRadius.circular(10)
+            ),
+            child: MaterialButton(
+              onPressed: (){
+                //Get.back();
+              },
+              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
+            ),
+          )
+        ],
+      )
+    );
+  }
 
   downloadAllDataToServer()async{
     modalLoadingDescargar();
-
+      //mostrarMensajeModal();
     var response = await deleteAllMasterTable();
     if(response == 1){
       var response2 = await loadDataToServer();
@@ -556,6 +608,22 @@ class ConfigController extends GetxController{
         );
       });
 
+      _proyectos.add(
+        ProyectoModel(
+          idProyecto: 3000,
+          nombre: "Encuestas estáticas",
+          logo: "",
+          abreviatura: "",
+          nombreResponsable: "",
+          latitud: "",
+          longitud: "",
+          idUsuario: "",
+          estado: "",
+          createdAt: "",
+          updatedAt: "",
+        )
+      );
+
       for (var x = 0; x < _proyectos.length ; x++) {
         var data = await DBProvider.db.getAllProyectos();
         print(data);
@@ -586,7 +654,7 @@ class ConfigController extends GetxController{
               publicado             : item['publicado'].toString(),
               requeridoObservacion  : item['requeridoObservacion'].toString(),
               requeridoMultimedia   : item['requeridoMultimedia'].toString(),
-              esRetomado            : item['esRetomado'],
+              esRetomado            : item['esRetomado'].toString(),
               createdAt             : item["createdAt"],
               updatedAt             : item["updatedAt"]
 

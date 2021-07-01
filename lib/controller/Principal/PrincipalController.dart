@@ -233,6 +233,13 @@ class PrincipalController extends GetxController{
               )
             );
           });
+          _proyectos.add(
+            ProyectoModel(
+              idProyecto: 3000,
+              nombre: "Encuestas estáticas",
+              logo: "",
+            )
+          );
           if(_proyectos.length > 0 ){
             _isLoading = false;
             _hayData = true;
@@ -501,6 +508,21 @@ class PrincipalController extends GetxController{
           )
         );
       });
+      _proyectos.add(
+        ProyectoModel(
+          idProyecto: 3000,
+          nombre: "Encuestas estáticas",
+          logo: "",
+          abreviatura: "",
+          nombreResponsable: "",
+          latitud: "",
+          longitud: "",
+          idUsuario: "",
+          estado: "",
+          createdAt: "",
+          updatedAt: "",
+        )
+      );
 
       for (var x = 0; x < _proyectos.length ; x++) {
         var data = await DBProvider.db.getAllProyectos();
