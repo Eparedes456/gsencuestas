@@ -128,7 +128,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
 
-                    GestureDetector(
+                    /*GestureDetector(
                       onTap: (){
 
                         _.navigateToEditProfile();
@@ -166,19 +166,11 @@ class ProfilePage extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                    ),*/
 
                     GestureDetector(
                       onTap: (){
-
-                        /*Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (BuildContext context) => LoginPage()), 
-                          (route) => false
-                        );*/
-
                         _.logout();
-
                       },
                       child: Container(
                         height: 80,

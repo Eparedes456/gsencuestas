@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
@@ -91,13 +92,55 @@ class ProfileController extends GetxController{
     SharedPreferences preferences = await  SharedPreferences.getInstance();
 
     //preferences.clear();
+    List<FichasModel> listPendientes    = await DBProvider.db.fichasPendientes('P');
+    List<FichasModel> listFinalizadas   = await DBProvider.db.fichasPendientes('F');
+
+    if(listFinalizadas.length > 0 || listPendientes.length > 0){
+      Get.dialog(
+        AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: Text('Notificación'),
+          content: Text('Se encontró encuestas pendientes de subir servidor, no podrá cerrar sesión si no sincroniza las fichas faltantes.'),
+          actions: [
+            Container(
+              height: 40,
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                color: Color.fromRGBO(0, 102, 84, 1),
+                onPressed: ()async{
+                  Get.back();
+                },
+                child: Text('Ok'),
+              ),
+            ),
+          ],
+        )
+      );
+    }else{
+
+      preferences.remove('primeraCarga');
+      preferences.remove('nombreUser');
+      preferences.remove('idUsuario');
+
+
+      Get.offAll(
+        LoginPage()
+      );
+
+    }
+
+    /*preferences.remove('primeraCarga');
     preferences.remove('nombreUser');
     preferences.remove('idUsuario');
 
 
     Get.offAll(
       LoginPage()
-    );
+    );*/
 
 
   }

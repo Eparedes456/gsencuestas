@@ -225,10 +225,7 @@ class LoginController extends GetxController{
   }
 
   loginApi()async{
-
-    
-    
-      
+  
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var resultado = await apiConexion.ingresar(_username.text, _password.text);
 
@@ -247,7 +244,7 @@ class LoginController extends GetxController{
 
 
     }else{
-
+      Get.back();
       var token         = resultado["token"] ;
       var idUsuario     = resultado["user"]["id"];
       var nombreUser    = resultado["user"]["nombreCompleto"];

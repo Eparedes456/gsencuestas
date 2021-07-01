@@ -444,7 +444,7 @@ class ConfigController extends GetxController{
             ),
             child: MaterialButton(
               onPressed: (){
-                //Get.back();
+                Get.back();
               },
               child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
             ),
@@ -490,10 +490,10 @@ class ConfigController extends GetxController{
     await DBProvider.db.deleteallPreguntas(); // preguntas table
     await DBProvider.db.deleteallOpciones(); //opciones table
     await DBProvider.db.deletAllBloque(); // bloque table
-    await DBProvider.db.deletAllFichas(); // fichas table
+    //await DBProvider.db.deletAllFichas() // fichas table
     await DBProvider.db.deletAllRespuesta(); // respuestas table
-    await DBProvider.db.deletAllTracking(); // tracking table
-    await DBProvider.db.deletAllMultimedia(); // multimedia table
+    //await DBProvider.db.deletAllTracking(); // tracking table
+    //await DBProvider.db.deletAllMultimedia(); // multimedia table
     await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
     
     return 1;

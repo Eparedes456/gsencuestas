@@ -136,7 +136,13 @@ class DetalleFichaController extends GetxController{
       final dateTime = DateTime.parse(_listFichasDb[0].fecha_retorno);
       final format = DateFormat('dd-MM-yyyy').format(dateTime);
       String hourFormat = DateFormat('HH:mm:ss').format(dateTime);
-      hora_retorno = hourFormat;
+
+      /* UTC TO DATETIME*/ 
+      var strToDateTime = DateTime.parse(_listFichasDb[0].fecha_retorno); //DateTime.parse(utc.toString());
+      final convertLocal = strToDateTime.toLocal();
+      var newFormat = DateFormat("hh:mm:ss aaa");
+      String updatedDt = newFormat.format(convertLocal);
+      hora_retorno = updatedDt;
       fecha_retorno     =  format;
     }
 
@@ -144,9 +150,17 @@ class DetalleFichaController extends GetxController{
     final format = DateFormat('dd-MM-yyyy');
     String hourFormat = DateFormat('HH:mm:ss').format(dateTime);
     final clockString = format.format(dateTime); 
-    hora_inicio = hourFormat;
+    //hora_inicio = hourFormat;
+
+    /* UTC TO DATETIME */
+    var strToDateTime = DateTime.parse(_listFichasDb[0].fecha_inicio); //DateTime.parse(utc.toString());
+    final convertLocal = strToDateTime.toLocal();
+    var newFormat = DateFormat("hh:mm:ss aaa");
+    String updatedDt = newFormat.format(convertLocal);
+    hora_inicio = updatedDt;
     _fechaInicio =  clockString;
     fechaInicioSend = _listFichasDb[0].fecha_inicio;
+
 
     dynamic dateTime2;
 
@@ -174,7 +188,14 @@ class DetalleFichaController extends GetxController{
       
       fechaFinSend = fecha + "T" + hora;
       _fechaFin = clockString2;
-      hora_fin = hourFormat;
+
+      /* UTC TO DATETIME */
+      var strToDateTime = DateTime.parse(_listFichasDb[0].fecha_fin); //DateTime.parse(utc.toString());
+      final convertLocal = strToDateTime.toLocal();
+      var newFormat = DateFormat("hh:mm:ss aaa");
+      String updatedDt = newFormat.format(convertLocal);
+
+      hora_fin = updatedDt;
 
     }
 

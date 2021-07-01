@@ -136,7 +136,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                   Expanded(child: Text('F.Fin:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
                                   Expanded(child: Text('${_.fechaFin}',style: TextStyle(fontSize: 12))),
                                   Expanded(child: Text('H.Fin:',style: TextStyle(color: Colors.green[700],fontWeight: FontWeight.bold))),
-                                  Expanded(child: Text('${_.hora_inicio}')),
+                                  Expanded(child: Text('${_.hora_fin}')),
                                 ],
                               ),
                               SizedBox(height: 5,),
@@ -512,14 +512,13 @@ class DetailMiEncuestaPage extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8,top: 4),
                           child: Text(
-                            'Datos adicionales',
+                            'Datos ADICIONALES',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold
                             ),
                           ),
                         ),
-                      
                     ),
                   )
 

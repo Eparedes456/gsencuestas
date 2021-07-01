@@ -91,6 +91,8 @@ class PrincipalController extends GetxController{
   navigateToProfile(){
     Get.to(ProfilePage());
   }
+
+  
   
   validarCarga()async{
 
@@ -190,17 +192,15 @@ class PrincipalController extends GetxController{
             await DBProvider.db.deleteallPreguntas(); // preguntas table
             await DBProvider.db.deleteallOpciones(); //opciones table
             await DBProvider.db.deletAllBloque(); // bloque table
-            await DBProvider.db.deletAllFichas(); // fichas table
-            await DBProvider.db.deletAllRespuesta(); // respuestas table
-            await DBProvider.db.deletAllTracking(); // tracking table
-            await DBProvider.db.deletAllMultimedia(); // multimedia table
+            //await DBProvider.db.deletAllFichas(); // fichas table
+            //await DBProvider.db.deletAllRespuesta(); // respuestas table
+            //await DBProvider.db.deletAllTracking(); // tracking table
+            //await DBProvider.db.deletAllMultimedia(); // multimedia table
             await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
-
-            var data = await DBProvider.db.getAllPreguntas();
-            var data1 = await DBProvider.db.getAllOpciones();
             
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"], idInstitucion, response["ultimaActualizacionUsuario"]);
             await cargarEncuestados();
+            await cargarUsuarios();
             await cargarParcelas();
             await cargarUbigeo();
             await cargarProyectosEncuesta();
@@ -281,7 +281,24 @@ class PrincipalController extends GetxController{
     if(flag == "Si"){
       print("Consulto a la base de datos a la tabla proyecto");
     }else{
-      await DBProvider.db.deleteAllUsuario();
+      /*E liminar las data */
+            await DBProvider.db.deleteAllUsuario(); //  usuario table
+            await DBProvider.db.deleteAllUbigeo();  // ubigeo table
+            await DBProvider.db.deleteAllParcelas(); // parcelas table
+            await DBProvider.db.deleteallEncuestas(); // encuestas table
+            await DBProvider.db.deleteallProyectos(); //proyectos table
+            await DBProvider.db.deleteallEncuestados(); //encuestados table
+            await DBProvider.db.deleteallPreguntas(); // preguntas table
+            await DBProvider.db.deleteallOpciones(); //opciones table
+            await DBProvider.db.deletAllBloque(); // bloque table
+            //await DBProvider.db.deletAllFichas(); // fichas table
+            await DBProvider.db.deletAllRespuesta(); // respuestas table
+            //await DBProvider.db.deletAllTracking(); // tracking table
+            //await DBProvider.db.deletAllMultimedia(); // multimedia table
+            await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
+
+      /* Cargar data  */
+
       await cargarUsuarios();
       await cargarEncuestados();
       
@@ -668,7 +685,7 @@ class PrincipalController extends GetxController{
           )
         );
       });
-      print(_usuarios);
+      
     for (var i = 0; i < _usuarios.length ; i++) {
       await DBProvider.db.insertUsuarios(_usuarios[i]);  
     }
@@ -690,14 +707,14 @@ class PrincipalController extends GetxController{
       );
     });
 
-    print(_listUbigeos.length);
+    
 
     for (var x = 0; x < _listUbigeos.length; x++) {
       await DBProvider.db.insertUbigeo(_listUbigeos[x]);
     }
     List<UbigeoModel> ubigeos  = await DBProvider.db.getAllUbigeo();
-    print(ubigeos.length);
-    Get.back();
+    
+    //Get.back();
   }
 
   loadingUbigeo(){

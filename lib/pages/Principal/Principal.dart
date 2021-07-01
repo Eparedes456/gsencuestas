@@ -108,7 +108,7 @@ class PrincipalPage extends StatelessWidget {
                 SizedBox(height: 10,),
 
                 Container(
-                  height: 100,//size.height*0.17,
+                  height: size.height*0.22,
                   //color: Colors.black,
                   child:  Padding(
                     padding:  EdgeInsets.only(right: 5),
@@ -155,7 +155,7 @@ class PrincipalPage extends StatelessWidget {
                                         duration: Duration(seconds: 1),
                                         child: Container(
                                           height: 170,
-                                          width: size.width*0.5,
+                                          width: size.width*0.55,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(9.6),
                                             //color: Colors.black87,

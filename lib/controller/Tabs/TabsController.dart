@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,33 @@ class TabsController extends GetxController{
   ApiServices apiConexion = new ApiServices();
 
   checkConecction()async{
+
+    /*Timer.periodic(Duration(seconds: 60), (timer) async{ 
+      print('hola');
+      List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
+      var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
+      
+      print(result);
+      if(result == ConnectivityResult.wifi || result  == ConnectivityResult.mobile){
+        
+        if(listFichas.length > 0){
+          print('hago la sincronización, envio las fichas al servidor');
+          print(listFichas.length);
+          await uploadData(listFichas);
+        }else{
+          print('No hay fichas para sincronizar');
+        }
+
+        print('estoy  conectado a internet');
+
+      }else{
+
+      }
+      
+    });
+
+    });*/
+
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
     var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
       
@@ -158,9 +187,10 @@ class TabsController extends GetxController{
 
     if(data.length > 0){
       int contador = 0;
-      //loadingmodal();
+      loadingmodal();
       for (var x = 0; x < data.length; x++) {
         var response  = await apiConexion.sendFichaToServer(data[x]);
+        Get.back();
         if(response == 2){
           Get.back();
               Get.dialog(
@@ -203,7 +233,7 @@ class TabsController extends GetxController{
               );
 
         }else if(response == 1){
-
+          Get.back();
         }else if(response != null){
           var _estado = "S";
           await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado,"");
@@ -228,7 +258,7 @@ class TabsController extends GetxController{
                     ],
                   ),
                 ),
-                barrierDismissible: false
+                //barrierDismissible: false
               );
                Future.delayed(Duration(seconds: 2),(){
                 Get.back();
@@ -255,6 +285,7 @@ class TabsController extends GetxController{
   loadingmodal()async{
     Get.dialog(
       AlertDialog(
+        
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
         ),
@@ -265,7 +296,8 @@ class TabsController extends GetxController{
             CircularProgressIndicator()
           ],
         ),
-      )
+      ),
+      barrierDismissible: false
     );
   }
 

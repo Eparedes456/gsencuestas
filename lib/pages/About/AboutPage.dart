@@ -593,7 +593,7 @@ class AboutPage extends StatelessWidget {
                       children: [
                         Icon(FontAwesomeIcons.android,color: Colors.green,),
                         Text('Android'),
-                        Text('1.0.3')
+                        Text('1.0.4')
                       ],
                     ),
                   ),
