@@ -13,9 +13,9 @@ import 'package:gsencuesta/pages/Login/LoginPage.dart';
 import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
 import 'package:gsencuesta/pages/Parcela/ParcelasPage.dart';
 import 'package:gsencuesta/pages/Perfil/EditProfilePage.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
-
 
 class ProfileController extends GetxController{
 
@@ -78,17 +78,16 @@ class ProfileController extends GetxController{
       _encuestasFinalizadas = listMisEncuestas.length.toString();
     }
 
-    Parser p = new Parser();
-    Expression exp = p.parse("5+5+5");
-    print(exp);
-    
+    Parser p = Parser();
+    Expression exp = p.parse('5.5 +2');
+    print(exp); //( 5.0 +2.0)
+     String result = exp.evaluate(EvaluationType.REAL, null).toString();  // if context is not available replace it with null.
+    print(result); // 7 esto funcionan con dart v 2.12.3
     update();
 
   }
 
-  dothing(_){
-    print("5+4");
-  }
+ 
 
   navigateToEditProfile()async{
 

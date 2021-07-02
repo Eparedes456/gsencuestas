@@ -13,6 +13,7 @@ import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 import 'package:intl/intl.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class RetommarController extends GetxController{
 
@@ -399,156 +400,35 @@ class RetommarController extends GetxController{
 
   calcular(){
       tempList =  _preguntas.where((element) => element.tipo_pregunta.contains("note")).toList();
-      //print(tempList);
+      print(tempList);
       List<PreguntaModel> filtered2 =  _preguntas.where((element) => element.tipo_pregunta.contains("integer") || element.tipo_pregunta.contains("decimal")).toList();
+      String formula = "";
+      Parser p = Parser();
+      Expression exp;
+      print(filtered2);
       if(tempList.length > 0){
-        //print('si hay');
-        tempList.forEach((item) {
-          var oper1 = item.calculation.indexOf('+');
-          if(oper1 != -1){
-            operaSum(filtered2,item);
-            
-          }else if(oper1  == -1){
-            var oper2 = item.calculation.indexOf('-');
-            if(oper2 != -1){
-              operaResta(filtered2,item);
-              
-            }else if(oper2 == -1){
-              var oper3 = item.calculation.indexOf('*');
-              if(oper3 != -1){
-                operaMultiplicacion(filtered2, item);
-              }else if(oper3 == -1){
-                var oper4 = item.calculation.indexOf('/');
-                if(oper4 != -1){
-                  //operaMultiplicacion(filtered2, item);
-                }
+        tempList.asMap().forEach((index,element) { 
+          formula = element.calculation;
+          _preguntas.asMap().forEach((index, value) {
+            if(_preguntas[index].bind_name == controllerInput[index].name){
+              var value1  = controllerInput[index].controller.text;
+              print(value1);
+              if(value1 != null || value1 != "" || value1 != "null"){
+                formula = formula.replaceAll(_preguntas[index].bind_name, value1);
+                exp = p.parse(formula);
               }
             }
-          }
-          
+          });
+          List<InputTextfield> templistController =  controllerInput.where((element) => element.tipo_pregunta.contains("note")).toList();
+          String result = exp.evaluate(EvaluationType.REAL, null).toString();  // if context is not available replace it with null.
+          controllerInput.asMap().forEach((key, value) {
+            if(templistController[index].calculation == value.calculation){
+              value.controller.text = result.toString();
+            }
+          });
         });
       }
-
-
   }
-
-  operaSum(List<PreguntaModel> filtered3,PreguntaModel item){
-
-    var part = item.calculation.split('+');
-    var total  = 0;
-    part.forEach((partes) {
-      print(partes);
-      /*List<PreguntaModel> filtered2 = _preguntas.where((element) => element.bind_name ==  partes).toList();
-      print(filtered2);*/
-      List<PreguntaModel> filtered1 = _preguntas.where((element) => element.bind_name.contains(partes)).toList();
-      //print(filtered2);
-      _preguntas.asMap().forEach((index,element) { 
-        if(filtered1[0].bind_name == controllerInput[index].name){
-          var value1  = controllerInput[index].controller.text;
-          if( value1 == "" || value1 == null){
-          }else{
-            total = int.parse(value1)  + total;
-            print("Resultaod de la suma : $total");
-
-          }
-          List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("+")).toList();
-          print(tempController);
-          controllerInput.asMap().forEach((index,element) { 
-            if(tempController[0].calculation == element.calculation){
-              element.controller.text = total.toString();
-            }
-          });
-
-                
-        }else{
-          //print('No es ${controllerInput[index].name}');
-        }
-
-      }); 
-           
-            
-    });
-    //update();
-  }
-
-  operaResta(List<PreguntaModel> filtered2,PreguntaModel item){
-    var part = item.calculation.split('-');
-    var total2 = 0;
-    part.asMap().forEach((index,partes) {
-            
-      List<PreguntaModel> filtered1 = _preguntas.where((data) => data.bind_name.contains(partes)).toList();
-      _preguntas.asMap().forEach((index,element) { 
-        if(filtered1[0].bind_name == controllerInput[index].name){
-          var value1  = controllerInput[index].controller.text;
-          if( value1 == "" || value1 == null){
-          }else{
-            total2 = int.parse(value1)  - total2;
-            if(total2 > 0){
-
-            }else{
-              total2 = total2 *-1;
-            }
-            print("Resultaod de la resta : $total2");
-
-          }
-           List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("-")).toList();
-          print(tempController);
-          controllerInput.asMap().forEach((index,element) { 
-            if(tempController[0].calculation == element.calculation){
-              element.controller.text = total2.toString();
-            }
-          });
-
-                
-        }else{
-          //print('No es ${controllerInput[index].name}');
-        }
-
-      }); 
-           
-            
-    });
-    //update();
-
-
-  }
-
-  operaMultiplicacion(List<PreguntaModel> filtered2,PreguntaModel item){
-    var part = item.calculation.split('*');
-    var total3 = 1;
-    part.asMap().forEach((index,partes) {
-            
-      List<PreguntaModel> filtered1 = _preguntas.where((data) => data.bind_name.contains(partes)).toList();
-      _preguntas.asMap().forEach((index,element) { 
-        if(filtered1[0].bind_name == controllerInput[index].name){
-          var value1  = controllerInput[index].controller.text;
-          if( value1 == "" || value1 == null){
-          }else{
-            total3 = int.parse(value1)  * total3;
-            
-            print("Resultaod de la multiplicacion : $total3");
-
-          }
-           List<InputTextfield> tempController =  controllerInput.where((element) => element.calculation.contains("*")).toList();
-          print(tempController);
-          controllerInput.asMap().forEach((index,element) { 
-            if(tempController[0].calculation == element.calculation){
-              element.controller.text = total3.toString();
-            }
-          });
-
-                
-        }else{
-          //print('No es ${controllerInput[index].name}');
-        }
-
-      }); 
-           
-            
-    });
-    //update();
-  }
-
   pauseQuiz()async{
 
       Get.dialog(

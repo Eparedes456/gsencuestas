@@ -33,7 +33,7 @@ dependencies:
   geolocator: ^6.2.1
   image_picker:
   sqflite:
-  math_expressions: ^0.4.0
+  math_expressions:
   shared_preferences:
   data_connection_checker:
   flutter_string_encryption:

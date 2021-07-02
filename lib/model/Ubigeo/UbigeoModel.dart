@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 UbigeoModel trackingFromJson(String str){
 
   final jsonData = json.decode(str);
-  return UbigeoModel.fromMap(jsonData);
+  return UbigeoModel.fromJson(jsonData);
 
 }
 
@@ -35,16 +35,24 @@ class UbigeoModel {
 
 
 
-  factory UbigeoModel.fromMap(Map<String, dynamic> json) => UbigeoModel(
+  /*factory UbigeoModel.fromMap(Map<String, dynamic> json) => UbigeoModel(
 
     idUbigeo              : json["id"],
     codigoDepartamento    : json["codigoDepartamento"]  ,
     codigoProvincia       : json["codigoProvincia"],
     codigoDistrito        : json['codigoDistrito'],
     descripcion           : json['descripcion'],
-  );
+  );*/
 
-
+  factory UbigeoModel.fromJson(Map<String, dynamic> json){
+    return UbigeoModel(
+      idUbigeo              : json["id"],
+      codigoDepartamento    : json["codigoDepartamento"]  ,
+      codigoProvincia       : json["codigoProvincia"],
+      codigoDistrito        : json['codigoDistrito'],
+      descripcion           : json['descripcion'],
+    );
+  }
 
 
   Map<String,dynamic> toMap(){

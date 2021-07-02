@@ -694,9 +694,17 @@ class PrincipalController extends GetxController{
 
   cargarUbigeo()async{
     var response = await rootBundle.loadString("assets/ubigeo.json");
-    final data = await json.decode(response);
-    
-    data.forEach((element){
+    var data = json.decode(response);
+    print(data.runtimeType);
+
+    List<UbigeoModel> data1 = (data as List)
+          .map((e) => UbigeoModel.fromJson(e))
+          .toList();
+    print(data1);
+    /*var ubi = UbigeoModel.fromMap(data);
+    print(ubi);*/
+
+    /*data.forEach((element){
       _listUbigeos.add(
         UbigeoModel(
           idUbigeo            : element["id"],
@@ -706,12 +714,12 @@ class PrincipalController extends GetxController{
           descripcion         : element["descripcion"] 
         )
       );
-    });
+    });*/
 
     
 
-    for (var x = 0; x < _listUbigeos.length; x++) {
-      await DBProvider.db.insertUbigeo(_listUbigeos[x]);
+    for (var x = 0; x < data1.length; x++) {
+      await DBProvider.db.insertUbigeo(data1[x]);
     }
     List<UbigeoModel> ubigeos  = await DBProvider.db.getAllUbigeo();
     

@@ -120,9 +120,23 @@ class QuizPage extends StatelessWidget {
                                           decoration: InputDecoration(
                                             hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
                                           ),
-                                          keyboardType: typeData == "number" || typeData == "decimal"? TextInputType.phone  : TextInputType.text,
-                                          inputFormatters: typeData == "number" || typeData == "decimal"?  <TextInputFormatter>[
-                                            FilteringTextInputFormatter.digitsOnly
+                                          keyboardType: typeData == "number" || typeData == "decimal"? TextInputType.numberWithOptions(
+                                            decimal: true,
+                                            
+                                          )  : TextInputType.text,
+                                          inputFormatters: typeData == "number" ?  <TextInputFormatter>[
+                                            FilteringTextInputFormatter.digitsOnly, //.digitsOnly
+                                          ] : typeData == "decimal" ?  <TextInputFormatter>[
+                                            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")), //.digitsOnly
+                                            TextInputFormatter.withFunction((oldValue, newValue) {
+                                              try {
+                                                final text = newValue.text;
+                                                if (text.isNotEmpty) double.parse(text);
+                                                return newValue;
+                                              } catch (e) {}
+                                              return oldValue;
+                                            }),
+                                            
                                           ] : null,
                                           onChanged: (value){
                                             _.calcular();

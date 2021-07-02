@@ -1328,6 +1328,14 @@ class DBProvider{
       var respuesta = await db.insert("ubigeo", nuevoUbigeo.toMap());
       return respuesta;
     }
+
+    insertUbigeoBloque(UbigeoModel nuevoUbigeo)async{
+
+      final db  = await database;
+      var respuesta = await db.("ubigeo", nuevoUbigeo.toMap());
+      return respuesta;
+    }
+
     getAllUbigeo()async{
       final db = await database;
       var respuesta = await db.rawQuery(
@@ -1335,7 +1343,7 @@ class DBProvider{
         SELECT * FROM ubigeo LIMIT 20
         '''
       );
-      List<UbigeoModel> listUbigeo = respuesta.isNotEmpty ? respuesta.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      List<UbigeoModel> listUbigeo = respuesta.isNotEmpty ? respuesta.map((e) => UbigeoModel.fromJson(e)).toList() : [];
       return listUbigeo;
     }
 
@@ -1372,7 +1380,7 @@ class DBProvider{
         AND codigoProvincia = '00' AND codigoDistrito = '00'
         '''
       );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
       return listDepartamento; 
     }
     
@@ -1384,7 +1392,7 @@ class DBProvider{
         AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '00'
         '''
       );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
       return listDepartamento; 
     }
 
@@ -1396,7 +1404,7 @@ class DBProvider{
         AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
         '''
       );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromMap(e)).toList() : [];
+      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
       return listDepartamento; 
     }
 
