@@ -25,8 +25,7 @@ import '../../model/Tracking/TrackingModal.dart';
 import '../../services/apiServices.dart';
 import '../../services/apiServices.dart';
 
-class ConfigController extends GetxController{
-
+class ConfigController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
@@ -40,87 +39,87 @@ class ConfigController extends GetxController{
     super.onReady();
   }
 
-  String _cantidadFinalizadas  = "";
+  String _cantidadFinalizadas = "";
   String get cantidadFinalizadas => _cantidadFinalizadas;
   ApiServices apiConexion = new ApiServices();
 
-  loadData()async{
-
+  loadData() async {
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
 
     _cantidadFinalizadas = listFichas.length.toString();
     update();
-
   }
 
-  sendDataToServer()async{
-
+  sendDataToServer() async {
     Get.back();
     List data = [];
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
     ApiServices apiConexion = new ApiServices();
-    
 
-     for (var i = 0; i < listFichas.length; i++){
-       
-      
-      List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha.toString());
-      List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
-      List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(listFichas[i].idFicha.toString());
+    for (var i = 0; i < listFichas.length; i++) {
+      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db
+          .getAllRespuestasxFicha(listFichas[i].idFicha.toString());
+      List<TrackingModel> listTracking = await DBProvider.db
+          .getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
+      List<MultimediaModel> listMultimedia = await DBProvider.db
+          .getAllMultimediaxFicha(listFichas[i].idFicha.toString());
 
-      DateTime now      = DateTime.now();
-      var utc           = now.toUtc();
-      var part          = utc.toString().split(" ");
-      var fecha         = part[0].toString();
-      var hora          = part[1].toString();
-      String fechaFin   = fecha + "T" + hora;
+      DateTime now = DateTime.now();
+      var utc = now.toUtc();
+      var part = utc.toString().split(" ");
+      var fecha = part[0].toString();
+      var hora = part[1].toString();
+      String fechaFin = fecha + "T" + hora;
 
       var sendFicha = {};
-      sendFicha['idficha']        = listFichas[i].idFicha;
-      sendFicha['fechaFin']       = fechaFin;
-      sendFicha['fechaInicio']    = listFichas[i].fecha_inicio;
-      sendFicha['idUsuario']      = listFichas[i].idUsuario;
-      sendFicha["latitud"]        = listFichas[i].latitud;
-      sendFicha["longitud"]       = listFichas[i].longitud;
-      sendFicha["observacion"]    = listFichas[i].observacion;
-      sendFicha["ubigeo"]         = listFichas[i].ubigeo;
-      sendFicha["fechaRetomo"]    = listFichas[i].fecha_retorno == null || listFichas[i].fecha_retorno == "null" ?  "" : listFichas[i].fecha_retorno.toString();
-      sendFicha["latitudRetomo"]  = listFichas[i].latitud_retorno == null ? "" :listFichas[i].latitud_retorno ;
-      sendFicha["longitudRetomo"] = listFichas[i].longitud_retorno == null ? "" : listFichas[i].longitud_retorno;
-      sendFicha["fechaEnvio"]     = fechaFin;
+      sendFicha['idficha'] = listFichas[i].idFicha;
+      sendFicha['fechaFin'] = fechaFin;
+      sendFicha['fechaInicio'] = listFichas[i].fecha_inicio;
+      sendFicha['idUsuario'] = listFichas[i].idUsuario;
+      sendFicha["latitud"] = listFichas[i].latitud;
+      sendFicha["longitud"] = listFichas[i].longitud;
+      sendFicha["observacion"] = listFichas[i].observacion;
+      sendFicha["ubigeo"] = listFichas[i].ubigeo;
+      sendFicha["fechaRetomo"] = listFichas[i].fecha_retorno == null ||
+              listFichas[i].fecha_retorno == "null"
+          ? ""
+          : listFichas[i].fecha_retorno.toString();
+      sendFicha["latitudRetomo"] = listFichas[i].latitud_retorno == null
+          ? ""
+          : listFichas[i].latitud_retorno;
+      sendFicha["longitudRetomo"] = listFichas[i].longitud_retorno == null
+          ? ""
+          : listFichas[i].longitud_retorno;
+      sendFicha["fechaEnvio"] = fechaFin;
       var encuesta = {};
-      encuesta["idEncuesta"]   = listFichas[i].idEncuesta;
+      encuesta["idEncuesta"] = listFichas[i].idEncuesta;
       sendFicha['encuesta'] = encuesta;
 
       var encuestado = {};
       encuestado["idEncuestado"] = listFichas[i].idEncuestado;
-      sendFicha['encuestado']   = encuestado;
+      sendFicha['encuestado'] = encuestado;
 
-      var respuesta ={};
+      var respuesta = {};
       List<Map> listRespuestaMap = new List();
 
       var pregunta = {};
 
       for (var i = 0; i < listRespuestaDBlocal.length; i++) {
-
         bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
         pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
 
-        respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
-        respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
-        respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
-        respuesta["estado"]       =   b; //listRespuestaDBlocal[i].estado;
-        respuesta["pregunta"]     =   pregunta;
-          
-        listRespuestaMap.add(
-          respuesta
-        );
+        respuesta["idRespuesta"] = listRespuestaDBlocal[i].idRespuesta.toInt();
+        respuesta["idsOpcion"] = listRespuestaDBlocal[i].idsOpcion;
+        respuesta["valor"] = listRespuestaDBlocal[i].valor;
+        respuesta["estado"] = b; //listRespuestaDBlocal[i].estado;
+        respuesta["pregunta"] = pregunta;
 
-        sendFicha['respuesta']  = listRespuestaMap;
-        
-        respuesta ={};
+        listRespuestaMap.add(respuesta);
+
+        sendFicha['respuesta'] = listRespuestaMap;
+
+        respuesta = {};
         pregunta = {};
-        
       }
 
       var tracking = {};
@@ -129,249 +128,230 @@ class ConfigController extends GetxController{
       for (var i = 0; i < listTracking.length; i++) {
         bool b = listTracking[i].estado.toLowerCase() == 'true';
 
-        tracking["idTracking"]      =   listTracking[i].idTracking;
-        tracking["latitud"]         =   listTracking[i].latitud;
-        tracking["longitud"]        =   listTracking[i].longitud;
-        tracking["estado"]          =   b;   //listTracking[x].estado;
-          
-        listTrackingMap.add(
-          tracking
-        );
+        tracking["idTracking"] = listTracking[i].idTracking;
+        tracking["latitud"] = listTracking[i].latitud;
+        tracking["longitud"] = listTracking[i].longitud;
+        tracking["estado"] = b; //listTracking[x].estado;
 
-        sendFicha['tracking']  = listTrackingMap;
-        tracking ={};
+        listTrackingMap.add(tracking);
+
+        sendFicha['tracking'] = listTrackingMap;
+        tracking = {};
       }
 
       var multimedia = {};
       List<Map> listMultimediaMap = new List();
 
       for (var z = 0; z < listMultimedia.length; z++) {
+        multimedia["idMultimedia"] = listMultimedia[z].idMultimedia;
+        multimedia["latitud"] = listMultimedia[z].latitud;
+        multimedia["longitud"] = listMultimedia[z].longitud;
+        multimedia["url"] = listMultimedia[z].tipo;
 
-        multimedia["idMultimedia"]    =   listMultimedia[z].idMultimedia;
-        multimedia["latitud"]         =   listMultimedia[z].latitud;
-        multimedia["longitud"]        =   listMultimedia[z].longitud;
-        multimedia["url"]             =   listMultimedia[z].tipo;
-      
-        listMultimediaMap.add(
-          multimedia
-        );
+        listMultimediaMap.add(multimedia);
 
-        sendFicha['multimedia']  = listMultimediaMap;
-        multimedia ={};
-        
+        sendFicha['multimedia'] = listMultimediaMap;
+        multimedia = {};
       }
 
       data.add(sendFicha);
+    }
+    ;
 
-    };
+    ConnectivityResult conectivityResult =
+        await Connectivity().checkConnectivity();
 
-    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
-
-    if(data.length > 0){
-
+    if (data.length > 0) {
       int contador = 0;
-      
-      if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
-        modal(true,false);
+
+      if (conectivityResult == ConnectivityResult.wifi ||
+          conectivityResult == ConnectivityResult.mobile) {
+        modal(true, false);
 
         for (var x = 0; x < data.length; x++) {
+          var response = await apiConexion.sendFichaToServer(data[x]);
 
-          
-          var response  = await apiConexion.sendFichaToServer(data[x]);
-
-          if( response != null || response != 1 || response  != 2 || response  !=3 ){
-
+          if (response != null ||
+              response != 1 ||
+              response != 2 ||
+              response != 3) {
             var _estado = "S";
 
-            
-            await DBProvider.db.updateFicha( data[x]['idficha'].toString(), data[x]['observacion'], data[x]['fechaFin'],_estado,"");
+            await DBProvider.db.updateFicha(data[x]['idficha'].toString(),
+                data[x]['observacion'], data[x]['fechaFin'], _estado, "");
             contador++;
-            if(contador == data.length){
-
+            if (contador == data.length) {
               Get.back();
 
               Get.dialog(
-                AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
+                  AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    //title: Text('Notificación'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                          size: 60,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'Los datos se subieron exitosamente.',
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ),
                   ),
-                  //title: Text('Notificación'),
-                  content:  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
-                      SizedBox(height: 8,),
-                      Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
-                    ],
-                  ),
-                ),
-                barrierDismissible: false
-              );
-               Future.delayed(Duration(seconds: 2),(){
-
+                  barrierDismissible: false);
+              Future.delayed(Duration(seconds: 2), () {
                 _cantidadFinalizadas = "0";
 
                 Get.back();
                 update();
               });
-              
             }
-
-            
-
-          }else{
-
-            Get.dialog(
-                AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)
-                  ),
-                  title: Text('Notificación'),
-                  content: Text('No se pudo subir los datos, error inesperado.'),
-                )
-            );
-
-          }
-
-        
-        
-      }
-      //aca el else
-      }else{
-
-          Get.dialog(
-            AlertDialog(
+          } else {
+            Get.dialog(AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15)
-              ),
+                  borderRadius: BorderRadius.circular(15)),
               title: Text('Notificación'),
-              content: Text('Usted no cuenta con conexión a internet, vuelva intentarlo más tarde'),
-            )
-          );
-
+              content: Text('No se pudo subir los datos, error inesperado.'),
+            ));
+          }
         }
+        //aca el else
+      } else {
+        Get.dialog(AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text('Notificación'),
+          content: Text(
+              'Usted no cuenta con conexión a internet, vuelva intentarlo más tarde'),
+        ));
+      }
     }
-
   }
 
-  modal(bool isLoading,bool hayFinalizadas){
+  modal(bool isLoading, bool hayFinalizadas) {
     Get.dialog(
       AlertDialog(
-        title:  isLoading ? Text('Sincronizando los datos') : Text('Notificación'),
+        title:
+            isLoading ? Text('Sincronizando los datos') : Text('Notificación'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            isLoading ? CircularProgressIndicator() :  hayFinalizadas ? Text('¿Desea subir las $_cantidadFinalizadas fichas finalizadas?') : Text('No tiene encuestas que sincronizar.')
+            isLoading
+                ? CircularProgressIndicator()
+                : hayFinalizadas
+                    ? Text(
+                        '¿Desea subir las $_cantidadFinalizadas fichas finalizadas?')
+                    : Text('No tiene encuestas que sincronizar.')
           ],
         ),
-        actions: isLoading ? [] : hayFinalizadas ? [
+        actions: isLoading
+            ? []
+            : hayFinalizadas
+                ? [
+                    Container(
+                      height: 40,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Color.fromRGBO(0, 102, 84, 1),
+                        onPressed: () {
+                          sendDataToServer();
+                        },
+                        child: Text('Subir'),
+                      ),
+                    ),
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color.fromRGBO(0, 102, 84, 1),
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            color: Color.fromRGBO(0, 102, 84, 1),
+                          ),
+                        ),
+                      ),
+                    )
+                  ]
+                : [],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+    );
+  }
 
-          Container(
-            height: 40,
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-              color: Color.fromRGBO(0, 102, 84, 1),
-              onPressed: (){
-                sendDataToServer();
-              },
-              child: Text('Subir'),
-              ),
+  exit() {
+    Get.dialog(AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      title: Text('Notificación'),
+      content: Text('¿Está seguro de cerrar la aplicación?'),
+      actions: [
+        Container(
+          height: 40,
+          child: MaterialButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: Color.fromRGBO(0, 102, 84, 1),
+            onPressed: () async {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            },
+            child: Text('Si'),
           ),
-
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
+        ),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
               border: Border.all(
                 color: Color.fromRGBO(0, 102, 84, 1),
               ),
-              borderRadius: BorderRadius.circular(10)
-            ),
-            child: MaterialButton(
-              onPressed: (){
-                Get.back();
-              },
-              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
-            ),
-          )
-
-        ]: [],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)
-        ),
-      ),
-      
-    );
-  }
-
-  exit(){
-    Get.dialog(
-        AlertDialog(  
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)
-          ),
-          title: Text('Notificación'),
-          content: Text('¿Está seguro de cerrar la aplicación?'),
-          actions: [
-
-            Container(
-              height: 40,
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                ),
+              borderRadius: BorderRadius.circular(10)),
+          child: MaterialButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Continuar',
+              style: TextStyle(
                 color: Color.fromRGBO(0, 102, 84, 1),
-                onPressed: ()async{
-                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                },
-                child: Text('Si'),
               ),
             ),
-
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color.fromRGBO(0, 102, 84, 1),
-                ),
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: MaterialButton(
-                onPressed: (){
-                  Get.back();
-                },
-                child: Text('Continuar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
-              ),
-            )
-
-          ],
-
+          ),
         )
-
-      );
+      ],
+    ));
   }
 
-  navigateToParcela()async{
-    Get.to(
-      ParcelaPage()
-    );
+  navigateToParcela() async {
+    Get.to(ParcelaPage());
   }
 
-  modalLoadingDescargar(){
+  modalLoadingDescargar() {
     Get.dialog(
       AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
-
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text('Descargando datos..'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Tiempo estimado de descarga 3 min'),
-            SizedBox(height: 20,),
-            CircularProgressIndicator(), 
+            SizedBox(
+              height: 20,
+            ),
+            CircularProgressIndicator(),
           ],
         ),
       ),
@@ -379,110 +359,116 @@ class ConfigController extends GetxController{
     );
   }
 
-  loadingStatus(String message , String status){
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
-        title: Text('Notificación'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('$message'),
-            SizedBox(height: 20,),
-            status == "Success"  ? Icon(Icons.check_circle_outline,color: Colors.green,size: 60,)  
-            :
-            Icon(Icons.cancel,color: Colors.redAccent,size: 60,) 
-
-          ],
-        ),
-      )
-    );
-
-  }
-  
-  mostrarMensajeModal(){
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
-        title: Center(child: Text('¡Importante!')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Usted esta a punto de truncar (eliminar) los datos que se encuentra en el dispositivo movil, para actualizar con los nuevos datos del servidor.'),
-            SizedBox(height: 12,),
-            Text('¿Está seguro de querer realizar la acción?')
-          ],
-        ),
-        actions: [
-          Container(
-            height: 40,
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-              color: Color.fromRGBO(0, 102, 84, 1),
-              onPressed: (){
-                //deleteFicha(idFicha);
-                Get.back();
-                downloadAllDataToServer();
-              },
-              child: Text('Si'),
-              ),
+  loadingStatus(String message, String status) {
+    Get.dialog(AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      title: Text('Notificación'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('$message'),
+          SizedBox(
+            height: 20,
           ),
-          
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
+          status == "Success"
+              ? Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                  size: 60,
+                )
+              : Icon(
+                  Icons.cancel,
+                  color: Colors.redAccent,
+                  size: 60,
+                )
+        ],
+      ),
+    ));
+  }
+
+  mostrarMensajeModal() {
+    Get.dialog(AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      title: Center(child: Text('¡Importante!')),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              'Usted esta a punto de truncar (eliminar) los datos que se encuentra en el dispositivo movil, para actualizar con los nuevos datos del servidor.'),
+          SizedBox(
+            height: 12,
+          ),
+          Text('¿Está seguro de querer realizar la acción?')
+        ],
+      ),
+      actions: [
+        Container(
+          height: 40,
+          child: MaterialButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: Color.fromRGBO(0, 102, 84, 1),
+            onPressed: () {
+              //deleteFicha(idFicha);
+              Get.back();
+              downloadAllDataToServer();
+            },
+            child: Text('Si'),
+          ),
+        ),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
               border: Border.all(
                 color: Color.fromRGBO(0, 102, 84, 1),
               ),
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10)),
+          child: MaterialButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Cancelar',
+              style: TextStyle(
+                color: Color.fromRGBO(0, 102, 84, 1),
+              ),
             ),
-            child: MaterialButton(
-              onPressed: (){
-                Get.back();
-              },
-              child: Text('Cancelar',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1), ),),
-            ),
-          )
-        ],
-      )
-    );
+          ),
+        )
+      ],
+    ));
   }
 
-  downloadAllDataToServer()async{
+  downloadAllDataToServer() async {
     modalLoadingDescargar();
-      //mostrarMensajeModal();
+    //mostrarMensajeModal();
     var response = await deleteAllMasterTable();
-    if(response == 1){
+    if (response == 1) {
       var response2 = await loadDataToServer();
-      if(response2 == 1){
+      if (response2 == 1) {
         Get.back();
-        loadingStatus("Se descargo toda la data exitosamente","Success");
-      }else{
+        loadingStatus("Se descargo toda la data exitosamente", "Success");
+      } else {
         Get.back();
-        loadingStatus("Error al momento de descargar los datos, comuniquese con el encargado del sistema","CANCEL");
+        loadingStatus(
+            "Error al momento de descargar los datos, comuniquese con el encargado del sistema",
+            "CANCEL");
       }
-
-    }else{
+    } else {
       Get.back();
-      loadingStatus("Error al momento de eliminar las tablas maestras de la aplicación, comuniquese con el encargado del sistema","CANCEL");
+      loadingStatus(
+          "Error al momento de eliminar las tablas maestras de la aplicación, comuniquese con el encargado del sistema",
+          "CANCEL");
     }
 
     //loadingStatus("Se descargo toda la data exitosamente","Cancel");
 
     //Get.back();
-
   }
 
-  deleteAllMasterTable()async{
-
+  deleteAllMasterTable() async {
     await DBProvider.db.deleteAllUsuario(); //  usuario table
-    await DBProvider.db.deleteAllUbigeo();  // ubigeo table
+    await DBProvider.db.deleteAllUbigeo(); // ubigeo table
     await DBProvider.db.deleteAllParcelas(); // parcelas table
     await DBProvider.db.deleteallEncuestas(); // encuestas table
     await DBProvider.db.deleteallProyectos(); //proyectos table
@@ -494,74 +480,74 @@ class ConfigController extends GetxController{
     await DBProvider.db.deletAllRespuesta(); // respuestas table
     //await DBProvider.db.deletAllTracking(); // tracking table
     //await DBProvider.db.deletAllMultimedia(); // multimedia table
-    await DBProvider.db.deletAllParcelaCoordenadas(); // parcela coordenadas table
-    
+    await DBProvider.db
+        .deletAllParcelaCoordenadas(); // parcela coordenadas table
+
     return 1;
   }
 
-  loadDataToServer()async{
+  loadDataToServer() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+    ConnectivityResult conectivityResult =
+        await Connectivity().checkConnectivity();
 
-    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    if (conectivityResult == ConnectivityResult.wifi ||
+        conectivityResult == ConnectivityResult.mobile) {
       print('hay conexion a internet');
 
       await loadUsers();
       await loadUbigeo();
       await loadEncuestados();
       await cargarProyectosEncuesta();
-      var response =  await loadParcelas();
-      if(response == 1){
+      var response = await loadParcelas();
+      if (response == 1) {
         return 1;
-      }else{
+      } else {
         return 2;
       }
-    }else{
+    } else {
       Get.back();
-      loadingStatus("Usted no cuenta con servicio a internet, intentelo más tarde","CANCEL");
+      loadingStatus(
+          "Usted no cuenta con servicio a internet, intentelo más tarde",
+          "CANCEL");
     }
   }
 
-  loadUsers()async{
+  loadUsers() async {
     List<UsuarioModel> _usuarios = [];
     var listUserApi = await apiConexion.getAllUsers();
-    listUserApi.forEach((item){
-      _usuarios.add(
-        UsuarioModel(
-          idUsuario       : item["idUsuario"],
-          nombre          : item["nombre"],
-          apellidoPaterno : item["apellidoPaterno"],
-          apellidoMaterno : item["apellidoMaterno"],
-          dni             : item["dni"],
-          email           : item["email"],
-          username        : item["login"],
-          password        : item["password"],
-          foto            : item["foto"],
-          estado          : item["estado"].toString(),
-          createdAt       : item["createdAt"],
-        )
-      );
+    listUserApi.forEach((item) {
+      _usuarios.add(UsuarioModel(
+        idUsuario: item["idUsuario"],
+        nombre: item["nombre"],
+        apellidoPaterno: item["apellidoPaterno"],
+        apellidoMaterno: item["apellidoMaterno"],
+        dni: item["dni"],
+        email: item["email"],
+        username: item["login"],
+        password: item["password"],
+        foto: item["foto"],
+        estado: item["estado"].toString(),
+        createdAt: item["createdAt"],
+      ));
     });
-    for (var i = 0; i < _usuarios.length ; i++) {
-      await DBProvider.db.insertUsuarios(_usuarios[i]);  
+    for (var i = 0; i < _usuarios.length; i++) {
+      await DBProvider.db.insertUsuarios(_usuarios[i]);
     }
     print('Todos los usuarios fueron descargados');
   }
 
-  loadUbigeo()async{
+  loadUbigeo() async {
     var response = await rootBundle.loadString("assets/ubigeo.json");
     final data = await json.decode(response);
     List<UbigeoModel> _listUbigeos = [];
-    data.forEach((element){
-      _listUbigeos.add(
-        UbigeoModel(
-          idUbigeo            : element["id"],
-          codigoDepartamento  : element["codigoDepartamento"],
-          codigoProvincia     : element["codigoProvincia"],
-          codigoDistrito      : element["codigoDistrito"],
-          descripcion         : element["descripcion"] 
-        )
-      );
+    data.forEach((element) {
+      _listUbigeos.add(UbigeoModel(
+          idUbigeo: element["id"],
+          codigoDepartamento: element["codigoDepartamento"],
+          codigoProvincia: element["codigoProvincia"],
+          codigoDistrito: element["codigoDistrito"],
+          descripcion: element["descripcion"]));
     });
 
     print(_listUbigeos.length);
@@ -572,27 +558,26 @@ class ConfigController extends GetxController{
     print('Todos los ubigeos fueron descargados');
   }
 
-  cargarProyectosEncuesta()async{
+  cargarProyectosEncuesta() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<ProyectoModel> _proyectos          = [];
-    List<EncuestaModel> _encuestas          = [];
-    List<PreguntaModel> _preguntas          = [];
-    List<OpcionesModel> _opcionesPreguntas  = [];
+    List<ProyectoModel> _proyectos = [];
+    List<EncuestaModel> _encuestas = [];
+    List<PreguntaModel> _preguntas = [];
+    List<OpcionesModel> _opcionesPreguntas = [];
     var listProyecto = await apiConexion.getProyectos();
-    if(listProyecto != 1 && listProyecto != 2 && listProyecto  != 3 ){
-      if(listProyecto.length  == 0){
+    if (listProyecto != 1 && listProyecto != 2 && listProyecto != 3) {
+      if (listProyecto.length == 0) {
         print('no hay proyectos');
         //_isLoading = false;
         //_hayData = false;
         var insertDataLocal = "Si";
         preferences.setString('primeraCarga', insertDataLocal);
         //update();
-        
+
         //return;
       }
-      listProyecto.forEach((item){
-        _proyectos.add(
-          ProyectoModel(
+      listProyecto.forEach((item) {
+        _proyectos.add(ProyectoModel(
             idProyecto: item["idProyecto"],
             nombre: item["nombre"],
             abreviatura: item["abreviatura"],
@@ -603,28 +588,24 @@ class ConfigController extends GetxController{
             idUsuario: preferences.getString('idUsuario'),
             estado: item["estado"].toString(),
             createdAt: item["createdAt"],
-            updatedAt: item["updatedAt"]
-          )
-        );
+            updatedAt: item["updatedAt"]));
       });
 
-      _proyectos.add(
-        ProyectoModel(
-          idProyecto: 3000,
-          nombre: "Encuestas estáticas",
-          logo: "",
-          abreviatura: "",
-          nombreResponsable: "",
-          latitud: "",
-          longitud: "",
-          idUsuario: "",
-          estado: "",
-          createdAt: "",
-          updatedAt: "",
-        )
-      );
+      _proyectos.add(ProyectoModel(
+        idProyecto: 3000,
+        nombre: "Encuestas estáticas",
+        logo: "",
+        abreviatura: "",
+        nombreResponsable: "",
+        latitud: "",
+        longitud: "",
+        idUsuario: "",
+        estado: "",
+        createdAt: "",
+        updatedAt: "",
+      ));
 
-      for (var x = 0; x < _proyectos.length ; x++) {
+      for (var x = 0; x < _proyectos.length; x++) {
         var data = await DBProvider.db.getAllProyectos();
         print(data);
         await DBProvider.db.insertProyectos(_proyectos[x]);
@@ -633,166 +614,151 @@ class ConfigController extends GetxController{
       }
 
       for (var j = 0; j < _proyectos.length; j++) {
-        var listEncuestaApi = await apiConexion.getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
+        var listEncuestaApi = await apiConexion
+            .getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
         var idProyecto = _proyectos[j].idProyecto.toString();
-        listEncuestaApi.forEach((item){
-          _encuestas.add(
-            EncuestaModel(
-              idEncuesta            : item["idEncuesta"],
-              idProyecto            : idProyecto.toString(),
-              titulo                : item["titulo"],
-              descripcion           : item["descripcion"],
-              url_guia              : item["url_guia"],
-              expira                : item["expira"].toString(),
-              fechaInicio           : item["fechaInicio"],
-              fechaFin              : item["fechaFin"],
-              logo                  : item["logo"],
-              dinamico              : item["dinamico"].toString(),
-              esquema               : item["esquema"],
-              estado                : item["estado"].toString(),
-              sourceMultimedia      : item["sourceMultimedia"],
-              publicado             : item['publicado'].toString(),
-              requeridoObservacion  : item['requeridoObservacion'].toString(),
-              requeridoMultimedia   : item['requeridoMultimedia'].toString(),
-              esRetomado            : item['esRetomado'].toString(),
-              createdAt             : item["createdAt"],
-              updatedAt             : item["updatedAt"]
-
-
-            )
-          );
-        });        
+        listEncuestaApi.forEach((item) {
+          _encuestas.add(EncuestaModel(
+              idEncuesta: item["idEncuesta"],
+              idProyecto: idProyecto.toString(),
+              titulo: item["titulo"],
+              descripcion: item["descripcion"],
+              url_guia: item["url_guia"],
+              expira: item["expira"].toString(),
+              fechaInicio: item["fechaInicio"],
+              fechaFin: item["fechaFin"],
+              logo: item["logo"],
+              dinamico: item["dinamico"].toString(),
+              esquema: item["esquema"],
+              estado: item["estado"].toString(),
+              sourceMultimedia: item["sourceMultimedia"],
+              publicado: item['publicado'].toString(),
+              requeridoObservacion: item['requeridoObservacion'].toString(),
+              requeridoMultimedia: item['requeridoMultimedia'].toString(),
+              esRetomado: item['esRetomado'].toString(),
+              encuestadoIngresoManual:
+                  item['encuestadoIngresoManual'].toString(),
+              createdAt: item["createdAt"],
+              updatedAt: item["updatedAt"]));
+        });
       }
-      for (var m = 0; m < _encuestas.length ; m++) {
-       await DBProvider.db.insertEncuestasxProyecto(_encuestas[m]);
+      for (var m = 0; m < _encuestas.length; m++) {
+        await DBProvider.db.insertEncuestasxProyecto(_encuestas[m]);
       }
       List listPreguntas = [];
       for (var n = 0; n < _encuestas.length; n++) {
         var idEncuesta = _encuestas[n].idEncuesta.toString();
-        var listPreguntasxEncuesta = await apiConexion.getPreguntasxEncuesta(idEncuesta);
+        var listPreguntasxEncuesta =
+            await apiConexion.getPreguntasxEncuesta(idEncuesta);
         listPreguntas = listPreguntasxEncuesta["pregunta"];
-        listPreguntas.asMap().forEach((index,item)async{
+        listPreguntas.asMap().forEach((index, item) async {
           int idPregunta = item["idPregunta"];
           _preguntas.add(
             PreguntaModel(
-              id_pregunta             : item["idPregunta"],
-              id_bloque               : item["id_bloque"],
-              idEncuesta              :  int.parse(idEncuesta),
-              enunciado               : item["enunciado"],
-              tipo_pregunta           : item["tipoPregunta"]["questionType"],
-              apariencia              :  "",//item["apariencia"],
-              requerido               : item["requerido"].toString(),
-              requerido_msj           : item["requerido_msj"],
-              readonly                : item["readonly"].toString(),
-              defecto                 : item["defecto"],
-              calculation             : item["calculation"],
-              restriccion             : item["restriccion"].toString(),
-              restriccion_msj         : item["restriccion_msj"],
-              relevant                : item["relevant"],
-              choice_filter           : item["choice_filter"], 
-              bind_name               : item["name"],
-              bind_type               : item["bindType"],
-              bind_field_length       : item["bindFieldLength"].toString(),
-              bind_field_placeholder  : item["bindFieldPlaceholder"],
-              orden                   : item["orden"],
-              estado                  : item["estado"].toString(),
-              updated_at              : item["updatedAt"],
-              created_at              : item["createdAt"],
-              index1                  : index                
-            ),
+                id_pregunta: item["idPregunta"],
+                id_bloque: item["id_bloque"],
+                idEncuesta: int.parse(idEncuesta),
+                enunciado: item["enunciado"],
+                tipo_pregunta: item["tipoPregunta"]["questionType"],
+                apariencia: "", //item["apariencia"],
+                requerido: item["requerido"].toString(),
+                requerido_msj: item["requerido_msj"],
+                readonly: item["readonly"].toString(),
+                defecto: item["defecto"],
+                calculation: item["calculation"],
+                restriccion: item["restriccion"].toString(),
+                restriccion_msj: item["restriccion_msj"],
+                relevant: item["relevant"],
+                choice_filter: item["choice_filter"],
+                bind_name: item["name"],
+                bind_type: item["bindType"],
+                bind_field_length: item["bindFieldLength"].toString(),
+                bind_field_placeholder: item["bindFieldPlaceholder"],
+                orden: item["orden"],
+                estado: item["estado"].toString(),
+                updated_at: item["updatedAt"],
+                created_at: item["createdAt"],
+                index1: index),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
-          if(preguOpcion.length > 0){
-            int idPreguOpcion =  preguOpcion[0]["idPreguntaGrupoOpcion"];
-            var listOpciones =  preguOpcion[0]["grupoOpcion"]["opcion"];
-            listOpciones.forEach((item2){
-              _opcionesPreguntas.add(
-                OpcionesModel(
-                  idOpcion                : item2["idOpcion"],
-                  idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
-                  idPregunta              : idPregunta,
-                  valor                   : item2["valor"],
-                  label                   : item2["label"], 
-                  orden                   : item2["orden"],
-                  estado                  : item2["estado"].toString(),
-                  createdAt               : item2["createdAt"],
-                  updated_at              : item2["updatedAt"], 
-                )
-              );
+          if (preguOpcion.length > 0) {
+            int idPreguOpcion = preguOpcion[0]["idPreguntaGrupoOpcion"];
+            var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+            listOpciones.forEach((item2) {
+              _opcionesPreguntas.add(OpcionesModel(
+                idOpcion: item2["idOpcion"],
+                idPreguntaGrupoOpcion: idPreguOpcion.toString(),
+                idPregunta: idPregunta,
+                valor: item2["valor"],
+                label: item2["label"],
+                orden: item2["orden"],
+                estado: item2["estado"].toString(),
+                createdAt: item2["createdAt"],
+                updated_at: item2["updatedAt"],
+              ));
             });
           }
         });
-        
       }
       for (var e = 0; e < _preguntas.length; e++) {
         await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
       }
       for (var r = 0; r < _opcionesPreguntas.length; r++) {
         await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
-      } 
-      if(_proyectos.length > 0 ){
+      }
+      if (_proyectos.length > 0) {
         /*_isLoading = false;
         _hayData = true;
         update();*/
       }
-    }else if( listProyecto == 1){
+    } else if (listProyecto == 1) {
       print('Error de servidor');
-    }else if(listProyecto == 2){
+    } else if (listProyecto == 2) {
       print(' eRROR DE TOKEN');
-    }else{
+    } else {
       print('Error, no existe la pagina 404');
     }
     //var insertDataLocal = "Si";
     //_proyectos = [];
-    //preferences.setString('primeraCarga', insertDataLocal);      
-    
+    //preferences.setString('primeraCarga', insertDataLocal);
+
     print('Los proyectos, encuestas y preguntas se descargaron exitosamente');
-
-
-    
-    
   }
 
-  loadEncuestados()async{
-    List<EncuestadoModel> _encuestadosLista  = [];
+  loadEncuestados() async {
+    List<EncuestadoModel> _encuestadosLista = [];
     var listEncuestados = await apiConexion.getAllEncuestado();
-    if( listEncuestados != 1 && listEncuestados != 2 && listEncuestados  != 3 ){
-
-        listEncuestados.forEach((element){
-
-          _encuestadosLista.add(
-            EncuestadoModel(
-              idEncuestado    : element["idEncuestado"].toString(),
-              documento       : element["documento"],
-              nombre          : element["nombre"],
-              apellidoPaterno : element["apellidoPaterno"],
-              apellidoMaterno : element["apellidoMaterno"],
-              sexo            : element["sexo"],
-              estadoCivil     : element["estadoCivil"],
-              direccion       : element["direccion"],
-              telefono        : element["telefono"],
-              email           : element["email"],
-              idUbigeo        : element["idUbigeo"],
-              estado          : element["estado"].toString() ,
-              foto            : element["foto"] 
-            )
-          );
-
-        });
-
+    if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
+      listEncuestados.forEach((element) {
+        _encuestadosLista.add(EncuestadoModel(
+            idEncuestado: element["idEncuestado"].toString(),
+            documento: element["documento"],
+            nombre: element["nombre"],
+            apellidoPaterno: element["apellidoPaterno"],
+            apellidoMaterno: element["apellidoMaterno"],
+            sexo: element["sexo"],
+            estadoCivil: element["estadoCivil"],
+            direccion: element["direccion"],
+            telefono: element["telefono"],
+            email: element["email"],
+            idUbigeo: element["idUbigeo"],
+            estado: element["estado"].toString(),
+            foto: element["foto"]));
+      });
     }
-    for (var e = 0; e < _encuestadosLista.length ; e++) {
-      await DBProvider.db.insertEncuestados(_encuestadosLista[e]);      
+    for (var e = 0; e < _encuestadosLista.length; e++) {
+      await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
     }
     print('Se descargaron los encuestados exitosamente');
   }
 
-  loadParcelas()async{
-    List<ParcelaModel> _listParcelas =[];
+  loadParcelas() async {
+    List<ParcelaModel> _listParcelas = [];
     List<ParcelaCoordenadasModel> _listParcelaCoordenada = [];
     var listParcelas = await apiConexion.getAllParcelas();
     for (var i = 0; i < listParcelas.length; i++) {
-      List<EncuestadoModel> beneficiario = await DBProvider.db.getOneEncuestado(listParcelas[i]["idSeccion"].toString());
+      List<EncuestadoModel> beneficiario = await DBProvider.db
+          .getOneEncuestado(listParcelas[i]["idSeccion"].toString());
 
       /*var foto = beneficiario[0].foto;
       Uint8List _photoBase64 = base64Decode(foto);
@@ -810,38 +776,32 @@ class ConfigController extends GetxController{
           updatedAt       : listParcelas[i]["updatedAt"]
         )
       );*/
-      if(beneficiario.length > 0){
+      if (beneficiario.length > 0) {
         var foto = beneficiario[0].foto;
         Uint8List _photoBase64 = base64Decode(foto);
-        _listParcelas.add(
-          ParcelaModel(
-            idParcela       : listParcelas[i]["idParcela"],
-            descripcion     : listParcelas[i]["descripcion"],
-            idSeccion       : listParcelas[i]["idSeccion"],
-            seccion         : listParcelas[i]["seccion"],
-            area            : listParcelas[i]["area"],
-            ubigeo          : listParcelas[i]["ubigeo"],
-            foto            : _photoBase64,
-            nombreCompleto  : beneficiario[0].nombre + " " + beneficiario[0].apellidoPaterno + " " + beneficiario[0].apellidoMaterno,    
-            createdAt       : listParcelas[i]["createdAt"],
-            updatedAt       : listParcelas[i]["updatedAt"]
-          )
-        );
+        _listParcelas.add(ParcelaModel(
+            idParcela: listParcelas[i]["idParcela"],
+            descripcion: listParcelas[i]["descripcion"],
+            idSeccion: listParcelas[i]["idSeccion"],
+            seccion: listParcelas[i]["seccion"],
+            area: listParcelas[i]["area"],
+            ubigeo: listParcelas[i]["ubigeo"],
+            foto: _photoBase64,
+            nombreCompleto: beneficiario[0].nombre +
+                " " +
+                beneficiario[0].apellidoPaterno +
+                " " +
+                beneficiario[0].apellidoMaterno,
+            createdAt: listParcelas[i]["createdAt"],
+            updatedAt: listParcelas[i]["updatedAt"]));
       }
 
-      for (var x = 0; x < listParcelas[i]["parcelaCoordenada"].length; x++){
-
-        _listParcelaCoordenada.add(
-          ParcelaCoordenadasModel(
-            idParcela             : listParcelas[i]["idParcela"],
-            idBeneficiario        : listParcelas[i]["idSeccion"],
-            latitud               : listParcelas[i]["parcelaCoordenada"][x]["latitud"],
-            longitud              : listParcelas[i]["parcelaCoordenada"][x]["longitud"]   
-          )
-        );
-
-        
-
+      for (var x = 0; x < listParcelas[i]["parcelaCoordenada"].length; x++) {
+        _listParcelaCoordenada.add(ParcelaCoordenadasModel(
+            idParcela: listParcelas[i]["idParcela"],
+            idBeneficiario: listParcelas[i]["idSeccion"],
+            latitud: listParcelas[i]["parcelaCoordenada"][x]["latitud"],
+            longitud: listParcelas[i]["parcelaCoordenada"][x]["longitud"]));
       }
     }
     for (var i = 0; i < _listParcelas.length; i++) {

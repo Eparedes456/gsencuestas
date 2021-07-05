@@ -22,37 +22,25 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
 
-class DBProvider{
-
-
+class DBProvider {
   DBProvider._();
 
   static final DBProvider db = DBProvider._();
   static Database _database;
 
   Future<Database> get database async {
-
-    if(_database != null)
-
-    return _database;
+    if (_database != null) return _database;
 
     _database = await initDB();
     return _database;
-
   }
 
   //creamos la base de datos y las tablas correspondiente a la base de datos de  Encuestas
 
-  initDB() async{
-
-    return await openDatabase(
-
-      join(await getDatabasesPath(),'gsencuesta2.db'),
-
-      onCreate: (db,version)async{
-        
-        await db.execute(
-          '''
+  initDB() async {
+    return await openDatabase(join(await getDatabasesPath(), 'gsencuesta2.db'),
+        onCreate: (db, version) async {
+      await db.execute('''
           CREATE TABLE encuesta(
 
             idEncuesta INTEGER PRIMARY KEY,
@@ -71,17 +59,16 @@ class DBProvider{
             requeridoObservacion TEXT,
             requeridoMultimedia TEXT,
             esRetomado TEXT,
+            encuestadoIngresoManual TEXT,
             estado  TEXT,
             createdAt TEXT,
             updatedAt TEXT
           )
         
         
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           
           CREATE TABLE bloque(
 
@@ -95,13 +82,9 @@ class DBProvider{
 
           )
           
-          '''
-          
-        );
+          ''');
 
-        await db.execute(
-
-          '''
+      await db.execute('''
           CREATE TABLE pregunta(
 
             idPregunta INTEGER PRIMARY KEY,
@@ -133,13 +116,9 @@ class DBProvider{
 
           )
 
-          '''
+          ''');
 
-        );
-
-        await db.execute(
-
-          '''
+      await db.execute('''
         
           CREATE TABLE opcion(
 
@@ -155,14 +134,9 @@ class DBProvider{
             updated_at TEXT
             
 
-          )'''
+          )''');
 
-        );
-
-
-        await db.execute(
-
-          '''
+      await db.execute('''
 
           CREATE TABLE ficha(
 
@@ -185,13 +159,9 @@ class DBProvider{
           
           )
 
-          '''
+          ''');
 
-        );
-
-        await db.execute(
-
-          '''
+      await db.execute('''
           CREATE TABLE respuesta(
 
             idRespuesta INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -202,12 +172,9 @@ class DBProvider{
             estado TEXT         
           )
 
-          '''
+          ''');
 
-        );
-
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE usuario(
 
             idUsuario INTEGER PRIMARY KEY,
@@ -225,11 +192,9 @@ class DBProvider{
 
           )
 
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE proyecto(
             idProyecto INTEGER PRIMARY KEY,
             nombre TEXT,
@@ -244,11 +209,9 @@ class DBProvider{
             updatedAt TEXT
           )
 
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE tracking(
             idTracking INTEGER PRIMARY KEY AUTOINCREMENT,
             idFicha INTEGER,
@@ -258,11 +221,9 @@ class DBProvider{
 
           )
 
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE multimedia(
             idMultimedia INTEGER PRIMARY KEY AUTOINCREMENT,
             idFicha INTEGER,
@@ -274,11 +235,9 @@ class DBProvider{
 
           )
 
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE encuestado(
             idEncuestado INTEGER PRIMARY KEY AUTOINCREMENT,
             documento TEXT,
@@ -296,33 +255,27 @@ class DBProvider{
 
           )
 
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE parametro(
             idParametro INTEGER PRIMARY KEY AUTOINCREMENT,
             ultiimaActualizacionUsuario TEXT,
             idInstitucion INTEGER,
             ultimaActualizacion TEXT
           )
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE departamento(
             idDepartamento INTEGER PRIMARY KEY AUTOINCREMENT,
             codigoDepartamento TEXT,
             descripcion TEXT,
             estado TEXT
           )
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE provincia(
             idProvincia INTEGER PRIMARY KEY AUTOINCREMENT,
             codigoDepartamento TEXT,
@@ -330,11 +283,9 @@ class DBProvider{
             descripcion TEXT,
             estado TEXT
           )
-          '''
-        );
+          ''');
 
-        await db.execute(
-          '''
+      await db.execute('''
           CREATE TABLE distrito(
             idDistrito INTEGER PRIMARY KEY AUTOINCREMENT,
             codigoDepartamento TEXT,
@@ -343,10 +294,8 @@ class DBProvider{
             descripcion TEXT,
             estado TEXT
           )
-          '''
-        );
-        await db.execute(
-          '''
+          ''');
+      await db.execute('''
           CREATE TABLE parcelaCoordenadas(
             idParcelaCoordenada INTEGER PRIMARY KEY AUTOINCREMENT,
             idParcela INTEGER,
@@ -354,21 +303,18 @@ class DBProvider{
             latitud TEXT,
             longitud TEXT
           )
-          '''
-        );
-        await db.execute(
-          '''
+          ''');
+      await db.execute('''
           CREATE TABLE ubigeo(
             idUbigeo INTEGER PRIMARY KEY AUTOINCREMENT,
             codigoDepartamento TEXT,
             codigoProvincia TEXT,
             codigoDistrito TEXT,
+            codigoCentroPoblado TEXT,
             descripcion TEXT
           )
-          '''
-        );
-        await db.execute(
-          '''
+          ''');
+      await db.execute('''
           CREATE TABLE parcelas(
             idParcela INTEGER PRIMARY KEY AUTOINCREMENT,
             descripcion TEXT,
@@ -381,1129 +327,1010 @@ class DBProvider{
             createdAt TEXT,
             updatedAt TEXT
           )
-          '''
-        );
-      },
-      version: 10
-
-    ); 
-
-
+          ''');
+    }, version: 10);
   }
-
 
   //CREACION DE   LAS CONSULTAS SQL LOCAL
 
   /*Consulta traer todos los usuarios */
-  getAllUsuarios()async{
-
+  getAllUsuarios() async {
     final db = await database;
     var respuesta = await db.query("usuario");
 
-    List<UsuarioModel> listUser = respuesta.isNotEmpty ? 
-      respuesta.map((e) => UsuarioModel.fromMap(e)).toList() :[];
+    List<UsuarioModel> listUser = respuesta.isNotEmpty
+        ? respuesta.map((e) => UsuarioModel.fromMap(e)).toList()
+        : [];
 
     return listUser;
-    
-
   }
 
   /*Consulta insertar todos los usuarios */
 
-  insertUsuarios(UsuarioModel nuevoUsuario)async{
-
-    final db  = await database;
+  insertUsuarios(UsuarioModel nuevoUsuario) async {
+    final db = await database;
     var respuesta = await db.insert("usuario", nuevoUsuario.toMap());
     return respuesta;
-
   }
-
-  
 
   /* Consulta de eliminar a todos los usuarios TRUNCATE TABLE usuario */
 
-  deleteAllUsuario()async{
-
+  deleteAllUsuario() async {
     final db = await database;
     var respuesta = await db.delete("usuario");
-
   }
 
   /* Consulta de login  */
-  consultLogueo(String username, String pass)async{
-
+  consultLogueo(String username, String pass) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM usuario WHERE username = '$username'
-      '''
-    );
+      ''');
 
     //print(respuesta);
 
-    List<UsuarioModel> listUser = respuesta.isNotEmpty ? 
-      respuesta.map((e) => UsuarioModel.fromMap(e)).toList() :[];
+    List<UsuarioModel> listUser = respuesta.isNotEmpty
+        ? respuesta.map((e) => UsuarioModel.fromMap(e)).toList()
+        : [];
 
     return listUser;
-
   }
 
-  dataUser(String value)async{
+  dataUser(String value) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM usuario WHERE username = '$value'
-      '''
-    );
-    List<UsuarioModel> dataUser = response.isNotEmpty ? response.map((e) => UsuarioModel.fromMap(e)).toList() : [];
+      ''');
+    List<UsuarioModel> dataUser = response.isNotEmpty
+        ? response.map((e) => UsuarioModel.fromMap(e)).toList()
+        : [];
     return dataUser;
-
   }
 
-  
   /*Consulta de insertar los proyectos */
-  
-  insertProyectos(ProyectoModel nuevoProyecto)async{
 
-    final db  = await database;
+  insertProyectos(ProyectoModel nuevoProyecto) async {
+    final db = await database;
     var respuesta = await db.insert("proyecto", nuevoProyecto.toMap());
     return respuesta;
   }
 
   /* Consultar todos los proyectos  */
 
-  getAllProyectos1(var idUsuario)async{
-
+  getAllProyectos1(var idUsuario) async {
     final db = await database;
-    
+
     //var respuesta = await db.query("proyecto");
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM proyecto WHERE idUsuario = $idUsuario
-      '''
-    );
-    List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
-      respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+      ''');
+    List<ProyectoModel> listProyectos = respuesta.isNotEmpty
+        ? respuesta.map((e) => ProyectoModel.fromMap(e)).toList()
+        : [];
     return listProyectos;
   }
 
-  getAllProyectos()async{
-
+  getAllProyectos() async {
     final db = await database;
-    
+
     var respuesta = await db.query("proyecto");
-    
-    List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
-      respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+
+    List<ProyectoModel> listProyectos = respuesta.isNotEmpty
+        ? respuesta.map((e) => ProyectoModel.fromMap(e)).toList()
+        : [];
     return listProyectos;
   }
 
   /* Consultar un proyecto */
 
-  getOneProyecto( String idProyecto)async{
-
+  getOneProyecto(String idProyecto) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM proyecto WHERE idProyecto = $idProyecto
 
-      '''
-    );
+      ''');
 
-    List<ProyectoModel> listProyectos = response.isNotEmpty ? 
-      response.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+    List<ProyectoModel> listProyectos = response.isNotEmpty
+        ? response.map((e) => ProyectoModel.fromMap(e)).toList()
+        : [];
 
     return listProyectos;
-
-
   }
 
   /*Eliminar todos los proyectos */
-  deleteallProyectos()async{
+  deleteallProyectos() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM proyecto
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /*Consulta de insertar las encuestas por proyecto */
-  
-  insertEncuestasxProyecto(EncuestaModel nuevoEncuesta)async{
 
-    final db  = await database;
+  insertEncuestasxProyecto(EncuestaModel nuevoEncuesta) async {
+    final db = await database;
     var respuesta = await db.insert("encuesta", nuevoEncuesta.toMap());
     return respuesta;
   }
 
   /* Traer todas las encuestas  */
 
-  getAllEncuestas() async{
-
+  getAllEncuestas() async {
     final db = await database;
     var respuesta = await db.query("encuesta");
 
-    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
-      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty
+        ? respuesta.map((e) => EncuestaModel.fromMap(e)).toList()
+        : [];
 
     return listEncuesta;
   }
 
-  getOneEncuesta(String idEncuesta)async{
-
+  getOneEncuesta(String idEncuesta) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM encuesta WHERE idEncuesta = '$idEncuesta'
-      '''
-    );
+      ''');
 
-    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
-      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty
+        ? respuesta.map((e) => EncuestaModel.fromMap(e)).toList()
+        : [];
 
     return listEncuesta;
-    
-
   }
 
-  getOnesEncuesta(String idEncuesta)async{
-
+  getOnesEncuesta(String idEncuesta) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM encuesta WHERE idEncuesta = '$idEncuesta'
-      '''
-    );
+      ''');
 
     /*List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
       respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];*/
 
     //return listEncuesta;
     return respuesta;
-
   }
+
   /*Eliminar encuestas */
-  deleteallEncuestas()async{
+  deleteallEncuestas() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM encuesta
-      '''
-    );
+      ''');
     return respuesta;
   }
 
-
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
-  consultEncuestaxProyecto(String idProyecto)async{
-
+  consultEncuestaxProyecto(String idProyecto) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM encuesta WHERE idProyecto = '$idProyecto'
-      '''
-    );
+      ''');
 
-    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty ? 
-      respuesta.map((e) => EncuestaModel.fromMap(e)).toList() :[];
+    List<EncuestaModel> listEncuesta = respuesta.isNotEmpty
+        ? respuesta.map((e) => EncuestaModel.fromMap(e)).toList()
+        : [];
 
     return listEncuesta;
-
   }
 
   /* CONSULTA DE INSERCIÓN DE LA TABLA PREGUNTAS */
 
   /*Consulta de insertar las encuestas por proyecto */
-  
-  insertPreguntasxEncuestas(PreguntaModel nuevaPregunta)async{
 
-    final db  = await database;
+  insertPreguntasxEncuestas(PreguntaModel nuevaPregunta) async {
+    final db = await database;
     var respuesta = await db.insert("pregunta", nuevaPregunta.toMap());
     return respuesta;
-
   }
 
   /* Traer todas las preguntas  */
 
-  getAllPreguntas() async{
-
+  getAllPreguntas() async {
     final db = await database;
     var respuesta = await db.query("pregunta");
 
-    List<PreguntaModel> listPregunta = respuesta.isNotEmpty ? 
-      respuesta.map((e) => PreguntaModel.fromMap(e)).toList() :[];
+    List<PreguntaModel> listPregunta = respuesta.isNotEmpty
+        ? respuesta.map((e) => PreguntaModel.fromMap(e)).toList()
+        : [];
 
     return listPregunta;
   }
 
   /* Eliminar todas las preguntas */
 
-  deleteallPreguntas()async{
+  deleteallPreguntas() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM pregunta
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /* Consulta de traer encuestas relacionados a un proyecto en especifico*/
-  consultPreguntaxEncuesta(String idEncuesta)async{
-
+  consultPreguntaxEncuesta(String idEncuesta) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM pregunta WHERE idEncuesta = '$idEncuesta' ORDER BY orden ASC
-      '''
-    );
+      ''');
 
-    List<PreguntaModel> listPreguntas = respuesta.isNotEmpty ? 
-      respuesta.map((e) => PreguntaModel.fromMap(e)).toList() :[];
+    List<PreguntaModel> listPreguntas = respuesta.isNotEmpty
+        ? respuesta.map((e) => PreguntaModel.fromMap(e)).toList()
+        : [];
 
     return listPreguntas;
-
   }
 
   /*Consulta de insertar las opciones por pregunta */
-  
-  insertOpcionesxPregunta(OpcionesModel nuevaOpcion)async{
 
-    final db  = await database;
+  insertOpcionesxPregunta(OpcionesModel nuevaOpcion) async {
+    final db = await database;
     var respuesta = await db.insert("opcion", nuevaOpcion.toMap());
     return respuesta;
-
   }
 
   /* Traer todas las opciones  */
 
-  getAllOpciones() async{
-
+  getAllOpciones() async {
     final db = await database;
     var respuesta = await db.query("opcion");
 
-    List<OpcionesModel> listOpciones = respuesta.isNotEmpty ? 
-      respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];
+    List<OpcionesModel> listOpciones = respuesta.isNotEmpty
+        ? respuesta.map((e) => OpcionesModel.fromMap(e)).toList()
+        : [];
 
     return listOpciones;
   }
 
   /* Traer Opciones por pregunta */
 
-  getOpcionesxPregunta(String idPregunta)async{
-
+  getOpcionesxPregunta(String idPregunta) async {
     final db = await database;
 
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM opcion WHERE idPregunta = $idPregunta
       
-      '''
-    );
+      ''');
 
     /*List<OpcionesModel> listOpcionesxPregunta = respuesta.isNotEmpty ? 
       respuesta.map((e) => OpcionesModel.fromMap(e)).toList() :[];*/
 
     return respuesta;
-
   }
+
   /* Eliminar todas las opciones */
-  deleteallOpciones()async{
+  deleteallOpciones() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM opcion
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /*Eliminar bloque */
-  deletAllBloque()async{
+  deletAllBloque() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM bloque
-      '''
-    );
+      ''');
     return respuesta;
   }
+
   /* Eliminar fichas*/
-  deletAllFichas()async{
+  deletAllFichas() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM ficha
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /*Eliminar respuestas */
-  deletAllRespuesta()async{
+  deletAllRespuesta() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM respuesta
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /*Eliminar todos los tracking */
-  deletAllTracking()async{
+  deletAllTracking() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM tracking
-      '''
-    );
+      ''');
     return respuesta;
   }
 
   /*Eliminar todas las multimedias */
-  deletAllMultimedia()async{
+  deletAllMultimedia() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM multimedia
-      '''
-    );
+      ''');
     return respuesta;
-
   }
 
   /* Eliminar todas las parcelas con coordenadas */
 
-  deletAllParcelaCoordenadas()async{
+  deletAllParcelaCoordenadas() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM parcelaCoordenadas
-      '''
-    );
+      ''');
     return respuesta;
-
   }
-
-
 
   /* insertar y creaciòn  de nueva ficha */
 
-  insertNewFicha(int  idEncuesta,int  idEncuestado  , String fechaInicio, String latitud, String longitud,String ubigeo)async{
-
+  insertNewFicha(int idEncuesta, int idEncuestado, String fechaInicio,
+      String latitud, String longitud, String ubigeo) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    int idUsuario = int.parse(preferences.getString('idUsuario')); 
+    int idUsuario = int.parse(preferences.getString('idUsuario'));
 
     final db = await database;
-    
-    return  await db.rawQuery(
-      
-      '''
+
+    return await db.rawQuery('''
       INSERT INTO ficha(idEncuesta, idUsuario, idEncuestado, latitud, longitud, fecha_inicio,
       fecha_fin, observacion, ubigeo ,estado , updated_at) VALUES('$idEncuesta', '$idUsuario', '$idEncuestado', '$latitud', '$longitud' , '$fechaInicio' , 'NO REGISTRA', 'NO REGISTRA' ,'$ubigeo' ,'P' , 'NO REGISTRA')
 
-      '''
-    );
-
+      ''');
   }
 
   /* Traer todas las fichas insertadas */
 
-  getAllFichas( var idUsuario)async{
-
+  getAllFichas(var idUsuario) async {
     final db = await database;
     //var response = await db.query('ficha',orderBy: 'DESC',);
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM ficha WHERE idUsuario = $idUsuario ORDER BY idFicha DESC
-      '''
-    );
+      ''');
     print(response);
-    List<FichasModel> listFichas  = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() :[];
+    List<FichasModel> listFichas = response.isNotEmpty
+        ? response.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
     return listFichas;
   }
 
   /* Traer la ultima ficha insertada */
 
-  getLastFicha()async{
-
+  getLastFicha() async {
     final db = await database;
-    var response1 = await db.rawQuery(
-      '''
+    var response1 = await db.rawQuery('''
       SELECT MAX(idFicha) as idFicha from ficha
 
-      '''
-    );
+      ''');
     return response1;
   }
 
   /* Traer una ficha especifica */
 
-  oneFicha(String idFicha)async{
-
-    final db = await  database;
-    var response = await db.rawQuery(
-      '''
+  oneFicha(String idFicha) async {
+    final db = await database;
+    var response = await db.rawQuery('''
       SELECT * FROM ficha WHERE  idFicha = $idFicha
-      '''
-    );
-    List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+      ''');
+    List<FichasModel> fichaList = response.isNotEmpty
+        ? response.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
     return fichaList;
-
   }
 
-  fichasPendientes(String valor)async {
+  fichasPendientes(String valor) async {
     final db = await database;
 
-    var response =  await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM ficha WHERE estado = '$valor'
       
-      '''
-    );
-    List<FichasModel> fichaList = response.isNotEmpty ? response.map((e) => FichasModel.fromMap(e)).toList() : [];
+      ''');
+    List<FichasModel> fichaList = response.isNotEmpty
+        ? response.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
     return fichaList;
   }
 
   /* Actualizar FICHA */
 
-  updateFicha(String idFicha,String observa, String fechafinal,String estado,String fecha_retorno)async{
-
+  updateFicha(String idFicha, String observa, String fechafinal, String estado,
+      String fecha_retorno) async {
     final db = await database;
-    var response2 = await db.rawQuery(
-      
-      '''
+    var response2 = await db.rawQuery('''
       UPDATE ficha SET  estado = "$estado",observacion = '$observa', fecha_fin = "$fechafinal"
        WHERE idFicha = "$idFicha"
 
-      '''
-    );
+      ''');
 
-    
     var response1 = await db.query('ficha');
 
-    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+    List<FichasModel> listFichas = response1.isNotEmpty
+        ? response1.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
 
     print(listFichas);
     return listFichas;
     //return response;
-
-
   }
 
   /* Actualizar ficha el campo retorno */
 
-  updateFechaRetorno( String idFicha, String fecha_retorno, String latitud, String longitud)async{
-
+  updateFechaRetorno(String idFicha, String fecha_retorno, String latitud,
+      String longitud) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       UPDATE ficha SET fecha_retorno = '$fecha_retorno', latitud_retorno = '$latitud', longitud_retorno = '$longitud' WHERE idFicha = '$idFicha'
-      '''
-    );
+      ''');
     var response1 = await db.query('ficha');
 
-    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+    List<FichasModel> listFichas = response1.isNotEmpty
+        ? response1.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
 
     print(listFichas);
     return listFichas;
-
   }
-
 
   /* Actualizar ficha el campo retorno */
 
-  updateFechaEnvio( String idFicha, String fecha_envio)async{
-
+  updateFechaEnvio(String idFicha, String fecha_envio) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       UPDATE ficha SET fecha_envio = '$fecha_envio' WHERE idFicha = '$idFicha'
-      '''
-    );
+      ''');
     var response1 = await db.query('ficha');
 
-    List<FichasModel> listFichas  = response1.isNotEmpty ? response1.map((e) => FichasModel.fromMap(e)).toList() :[];
+    List<FichasModel> listFichas = response1.isNotEmpty
+        ? response1.map((e) => FichasModel.fromMap(e)).toList()
+        : [];
 
     print(listFichas);
     return listFichas;
-
   }
 
   /* Eliminar una ficha */
 
-
-  deleteOneFicha(String idFicha)async{
-
+  deleteOneFicha(String idFicha) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       DELETE FROM ficha WHERE idFicha = $idFicha
 
-      '''
-    );
+      ''');
 
     return response;
-
-
   }
 
   /* Consulta traer todos los trackings de las fichas */
 
-  getAllTrackings()async{
-
+  getAllTrackings() async {
     final db = await database;
 
     var response = await db.query('tracking');
 
-    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => TrackingModel.fromMap(e)).toList() : [];
+    List<TrackingModel> trackingList = response.isNotEmpty
+        ? response.map((e) => TrackingModel.fromMap(e)).toList()
+        : [];
 
     return trackingList;
-
   }
 
   /* Traer todos los registros de tracking de una encuesta especifica */
 
-  getAllTrackingOfOneSurvery(String idFicha)async{
-
+  getAllTrackingOfOneSurvery(String idFicha) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM tracking WHERE idFicha = $idFicha
       
-      '''
-    );
+      ''');
 
-    List<TrackingModel> trackingList = response.isNotEmpty ? response.map((e) => TrackingModel.fromMap(e)).toList() : [];
+    List<TrackingModel> trackingList = response.isNotEmpty
+        ? response.map((e) => TrackingModel.fromMap(e)).toList()
+        : [];
 
     return trackingList;
-
   }
 
   /* Consulta de insertar los trackings de las fichas  */
 
-  insertTracking(String idFicha, String latitud, String longitud, String estado)async{
-
+  insertTracking(
+      String idFicha, String latitud, String longitud, String estado) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       
       INSERT INTO tracking(idFicha,latitud,longitud,estado) VALUES('$idFicha','$latitud','$longitud','$estado')
       
-      '''
-    );
-
-
+      ''');
   }
-
 
   /* Insertar Respuesta  */
 
-  insertRespuesta(String idPregunta, String idFicha, String idsOpcion, String valor)async{
-
+  insertRespuesta(
+      String idPregunta, String idFicha, String idsOpcion, String valor) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$valor','TRUE')
       
-      '''
-    );
-
+      ''');
   }
 
   /* Traer todos las respuestas de una ficha */
 
-  getAllRespuestasxFicha(String idFicha)async{
-
+  getAllRespuestasxFicha(String idFicha) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       
       SELECT * FROM respuesta WHERE idFicha = '$idFicha'
       
-      '''
-    );
+      ''');
 
-    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
 
     return listRespuesta;
-
   }
 
   /* Traer todos las respuestas */
 
-  getAllRespuestas()async{
-
+  getAllRespuestas() async {
     final db = await database;
 
     var response = await db.query('respuesta');
 
-    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
 
     return listRespuesta;
-
   }
 
-  eliminarUnaRespuesta(String idPregunta,String idFicha, String idsOpcion)async{
-
+  eliminarUnaRespuesta(
+      String idPregunta, String idFicha, String idsOpcion) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       
       DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha AND idsOpcion = $idsOpcion
 
-      '''
-    );
-
-
+      ''');
   }
 
-  eliminarRespuestasxFicha(String idPregunta,String idFicha)async{
-
+  eliminarRespuestasxFicha(String idPregunta, String idFicha) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       
       DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha 
 
-      '''
-    );
-
-
+      ''');
   }
 
-  actualizarRespuestaxFicha(String idPregunta,String idFicha,String valor)async{
+  actualizarRespuestaxFicha(
+      String idPregunta, String idFicha, String valor) async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       UPDATE respuesta SET valor = '$valor' WHERE idPregunta = $idPregunta AND idFicha = $idFicha
-      '''
-    );
+      ''');
 
     return 1;
-
   }
 
-  unaRespuestaFicha(String idFicha, String idPregunta)async{
-
+  unaRespuestaFicha(String idFicha, String idPregunta) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM respuesta WHERE idFicha = $idFicha AND idPregunta = $idPregunta 
       
-      '''
-    );
+      ''');
 
-    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
 
     return listRespuesta;
-
   }
 
   /* Traer todas las respuesta de una ficha y una encuesta especiffica */
-  
-  getAllRespuestasxEncuesta(String idFicha, String idEncuesta)async{
 
+  getAllRespuestasxEncuesta(String idFicha, String idEncuesta) async {
     final db = await database;
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM respuesta WHERE idFicha = $idFicha
       
-      '''
-    );
+      ''');
 
-    List<RespuestaModel> listRespuesta = response.isNotEmpty? response.map((e) => RespuestaModel.fromMap(e)).toList():[];
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
 
     return listRespuesta;
-
   }
-
-
-  
 
   /*Consulta insertar todos los encuestados */
 
-  insertEncuestados(EncuestadoModel nuevoEncuestado)async{
-
-    final db  = await database;
+  insertEncuestados(EncuestadoModel nuevoEncuestado) async {
+    final db = await database;
     var respuesta = await db.insert("encuestado", nuevoEncuestado.toMap());
     return respuesta;
-
   }
 
   /* Buscar al encuestado  */
 
-  searchEncuestado(String valor)async{
-
+  searchEncuestado(String valor) async {
     final db = await database;
     //var respuesta = await db.query("encuestado",where: 'documento = ?', whereArgs: [valor]);
     var buscar = valor;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM encuestado  WHERE (documento  LIKE "%$buscar%" OR nombre LIKE  "%$buscar%")
-      '''
-    );
+      ''');
 
-    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList():[];
+    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty
+        ? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList()
+        : [];
 
     return listEncuestado;
     //return respuesta; //.toList();
-
   }
 
   /* Obtener los encuestados */
 
-  getOneEncuestado(String idEncuestado)async{
+  getOneEncuestado(String idEncuestado) async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       SELECT * FROM encuestado WHERE idEncuestado = '$idEncuestado'
-      '''
-    );
-    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty ? 
-      respuesta.map((e) => EncuestadoModel.fromMap(e)).toList() :[];
+      ''');
+    List<EncuestadoModel> listEncuestado = respuesta.isNotEmpty
+        ? respuesta.map((e) => EncuestadoModel.fromMap(e)).toList()
+        : [];
 
     return listEncuestado;
-
   }
 
-  getAllEncuestado()async{
-
+  getAllEncuestado() async {
     final db = await database;
-  
-    var response = await db.rawQuery(
-      '''
+
+    var response = await db.rawQuery('''
       SELECT * FROM encuestado 
-      '''
-    );
+      ''');
     print(response);
-    List<EncuestadoModel> encuestados  = response.isNotEmpty ? response.map((e) => EncuestadoModel.fromMap(e)).toList() :[];
+    List<EncuestadoModel> encuestados = response.isNotEmpty
+        ? response.map((e) => EncuestadoModel.fromMap(e)).toList()
+        : [];
     return encuestados;
   }
 
   /*Eliminara todos los encuestados */
-  deleteallEncuestados()async{
+  deleteallEncuestados() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-      '''
+    var respuesta = await db.rawQuery('''
       DELETE FROM encuestado
-      '''
-    );
+      ''');
     return respuesta;
   }
 
-
   /* Traer todos los registros de multimedia de una ficha especifica */
 
-  getAllMultimediaxFicha(String idFicha)async{
-
+  getAllMultimediaxFicha(String idFicha) async {
     print(idFicha);
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM multimedia WHERE idFicha = $idFicha
       
-      '''
-    );
+      ''');
 
-    List<MultimediaModel> multimediaList = response.isNotEmpty ? response.map((e) => MultimediaModel.fromMap(e)).toList() : [];
+    List<MultimediaModel> multimediaList = response.isNotEmpty
+        ? response.map((e) => MultimediaModel.fromMap(e)).toList()
+        : [];
 
     return multimediaList;
-
   }
 
   /*Consulta insertar todas las multimedias */
 
-  insertMultimedia(String idFicha, String tipo, String  fecha_captura)async{
-
+  insertMultimedia(String idFicha, String tipo, String fecha_captura) async {
     final db = await database;
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     String latitud = position.latitude.toString();
     String longitud = position.longitude.toString();
 
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       INSERT INTO multimedia(idFicha,tipo,latitud,longitud,fecha_captura,estado) VALUES('$idFicha','$tipo','$latitud','$longitud','$fecha_captura','TRUE')
       
-      '''
-    );
+      ''');
     return response;
-
   }
 
-  deletemultimedia(String idMultimedia)async{
-
+  deletemultimedia(String idMultimedia) async {
     final db = await database;
-    var  response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       DELETE FROM multimedia WHERE idMultimedia = "$idMultimedia"
-      '''
-    );
+      ''');
 
     print(response);
     return response;
-
   }
 
-  searchProyecto(String value)async{
+  searchProyecto(String value) async {
     final db = await database;
-    if(value == "" || value == null){
+    if (value == "" || value == null) {
       var respuesta = await db.query("proyecto");
 
-      List<ProyectoModel> listProyectos = respuesta.isNotEmpty ? 
-        respuesta.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+      List<ProyectoModel> listProyectos = respuesta.isNotEmpty
+          ? respuesta.map((e) => ProyectoModel.fromMap(e)).toList()
+          : [];
 
       return listProyectos;
-      
-    }else{
-      var buscar = "%"+value+"%";
-      var response = await db.rawQuery(
-        '''
+    } else {
+      var buscar = "%" + value + "%";
+      var response = await db.rawQuery('''
         SELECT * FROM proyecto WHERE nombre LIKE "$buscar"
-        '''
-      );
+        ''');
 
-      List<ProyectoModel> listProyectos = response.isNotEmpty ? 
-        response.map((e) => ProyectoModel.fromMap(e)).toList() :[];
+      List<ProyectoModel> listProyectos = response.isNotEmpty
+          ? response.map((e) => ProyectoModel.fromMap(e)).toList()
+          : [];
 
       return listProyectos;
-    
     }
   }
 
   /* Parametro */
-  
-  insertParametros(ParametroModel nuevoParametro)async{
 
-    final db  = await database;
+  insertParametros(ParametroModel nuevoParametro) async {
+    final db = await database;
     var respuesta = await db.insert("parametro", nuevoParametro.toMap());
     return respuesta;
   }
-  updateParametros(String ultimaActualizacion , int idInstitucion, String ultimaActuaUsuario)async{
+
+  updateParametros(String ultimaActualizacion, int idInstitucion,
+      String ultimaActuaUsuario) async {
     final db = await database;
-    var respuestas = await db.rawUpdate(
-      '''
+    var respuestas = await db.rawUpdate('''
       UPDATE parametro SET idInstitucion = $idInstitucion , ultimaActualizacion = '$ultimaActualizacion', ultiimaActualizacionUsuario = '$ultimaActuaUsuario' WHERE idParametro = 1
-      '''
-    );
+      ''');
     return respuestas;
   }
 
-  getParametros()async{
+  getParametros() async {
     final db = await database;
-    var response = await db.rawQuery(
-      '''
+    var response = await db.rawQuery('''
       SELECT * FROM parametro
       
-      '''
-    );
+      ''');
 
-    List<ParametroModel> parametroData = response.isNotEmpty ? response.map((e) => ParametroModel.fromMap(e)).toList() : [];
+    List<ParametroModel> parametroData = response.isNotEmpty
+        ? response.map((e) => ParametroModel.fromMap(e)).toList()
+        : [];
 
     return parametroData;
   }
 
   /* Ubigeo */
-    insertUbigeo(UbigeoModel nuevoUbigeo)async{
+  insertUbigeo(UbigeoModel nuevoUbigeo) async {
+    final db = await database;
+    var respuesta = await db.insert("ubigeo", nuevoUbigeo.toMap());
+    return respuesta;
+  }
 
-      final db  = await database;
-      var respuesta = await db.insert("ubigeo", nuevoUbigeo.toMap());
-      return respuesta;
-    }
-
-    insertUbigeoBloque(UbigeoModel nuevoUbigeo)async{
-
-      final db  = await database;
-      var respuesta = await db.("ubigeo", nuevoUbigeo.toMap());
-      return respuesta;
-    }
-
-    getAllUbigeo()async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
+  getAllUbigeo() async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
         SELECT * FROM ubigeo LIMIT 20
-        '''
-      );
-      List<UbigeoModel> listUbigeo = respuesta.isNotEmpty ? respuesta.map((e) => UbigeoModel.fromJson(e)).toList() : [];
-      return listUbigeo;
-    }
+        ''');
+    List<UbigeoModel> listUbigeo = respuesta.isNotEmpty
+        ? respuesta.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listUbigeo;
+  }
 
-    deleteAllUbigeo()async{
-      final db = await database;
-      var respuesta = await db.delete("ubigeo");
-     
-    }
+  deleteAllUbigeo() async {
+    final db = await database;
+    var respuesta = await db.delete("ubigeo");
+  }
 
-    /* */
+  /* */
 
-    insertDepartamentos(DepartamentoModel nuevoDepartamento)async{
-      final db = await database;
-      var respuesta = await db.insert("departamento", nuevoDepartamento.toMap());
-      return respuesta;
-    }
+  insertDepartamentos(DepartamentoModel nuevoDepartamento) async {
+    final db = await database;
+    var respuesta = await db.insert("departamento", nuevoDepartamento.toMap());
+    return respuesta;
+  }
 
-    insetProvincias(ProvinciaModel nuevoProvincia)async{
-      final db  = await database;
-      var respuesta = await db.insert("provincia", nuevoProvincia.toMap());
-      return respuesta;
-    }
+  insetProvincias(ProvinciaModel nuevoProvincia) async {
+    final db = await database;
+    var respuesta = await db.insert("provincia", nuevoProvincia.toMap());
+    return respuesta;
+  }
 
-    insertDistritos(DistritoModel nuevoDistrito)async{
-      final db  = await database;
-      var respuesta = await db.insert("distrito", nuevoDistrito.toMap());
-      return respuesta;
-    }
-    getDepartamentos1(String codDepartamento)async{
-      final db = await database;
-      var response = await db.rawQuery(
-        '''
+  insertDistritos(DistritoModel nuevoDistrito) async {
+    final db = await database;
+    var respuesta = await db.insert("distrito", nuevoDistrito.toMap());
+    return respuesta;
+  }
+
+  getDepartamentos1(String codDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
         SELECT codigoDepartamento,descripcion FROM ubigeo WHERE codigoDepartamento = '$codDepartamento' 
         AND codigoProvincia = '00' AND codigoDistrito = '00'
-        '''
-      );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
-      return listDepartamento; 
-    }
-    
-    getProvincia1(String codigoProvincia, String codigoDepartamento)async{
-      final db = await database;
-      var response = await db.rawQuery(
-        '''
+        ''');
+    List<UbigeoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listDepartamento;
+  }
+
+  getProvincia1(String codigoProvincia, String codigoDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
         AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '00'
-        '''
-      );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
-      return listDepartamento; 
-    }
+        ''');
+    List<UbigeoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listDepartamento;
+  }
 
-    getDistrito1(String codigoProvincia, String codigoDepartamento, String codigoDistrito)async{
-      final db = await database;
-      var response = await db.rawQuery(
-        '''
+  getAllProvincias(String codigoDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoDistrito = '00'
+        ''');
+    List<UbigeoModel> listProvincias = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listProvincias;
+  }
+
+  getDistrito1(String codigoProvincia, String codigoDepartamento,
+      String codigoDistrito) async {
+    final db = await database;
+    var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
         AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
-        '''
-      );
-      List<UbigeoModel> listDepartamento = response.isNotEmpty ? response.map((e) => UbigeoModel.fromJson(e)).toList() : [];
-      return listDepartamento; 
-    }
+        ''');
+    List<UbigeoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listDepartamento;
+  }
 
-    getDepartamentos(String codDepartamento)async{
-      final db = await database;
-      var response = await db.rawQuery(
-        '''
+  getAllDistritos(String codigoProvincia, String codigoDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoProvincia = '$codigoProvincia'
+        ''');
+    List<UbigeoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listDepartamento;
+  }
+
+  getAllCentrosPoblados(String codigoProvincia, String codigoDepartamento,
+      String codigoDistrito) async {
+    final db = await database;
+    var response = await db.rawQuery('''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
+        ''');
+    List<UbigeoModel> listCentroPoblados = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listCentroPoblados;
+  }
+
+  getDepartamentos(String codDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
         SELECT DISTINCT codigoDepartamento,descripcion FROM departamento WHERE codigoDepartamento = '$codDepartamento'
-        '''
-      );
-      List<DepartamentoModel> listDepartamento = response.isNotEmpty ? response.map((e) => DepartamentoModel.fromMap(e)).toList() : [];
-      return listDepartamento;
-    }
+        ''');
+    List<DepartamentoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => DepartamentoModel.fromMap(e)).toList()
+        : [];
+    return listDepartamento;
+  }
 
-    getProvincia()async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
+  getProvincia() async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
         SELECT * FROM provincia
-        '''
-      );
-      List<ProvinciaModel> listProvincia = respuesta.isNotEmpty ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList() : [];
-      return listProvincia;
-    }
-    getOneProvincia(String codigoProvincia, String codigoDepartamento)async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
-        SELECT * FROM provincia WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento'
-        '''
-      );
-      List<ProvinciaModel> listProvincia = respuesta.isNotEmpty ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList() : [];
-      return listProvincia;
-    }
-    getDistritos(String codigoProvincia, String codigoDepartamento, String codigoDistrito)async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
-        SELECT * FROM distrito WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento' AND codigoDistrito = '$codigoDistrito'
-        '''
-      );
-      List<DistritoModel> listDistrito = respuesta.isNotEmpty ? respuesta.map((e) => DistritoModel.fromMap(e)).toList() : [];
-      return listDistrito;
-    }
+        ''');
+    List<ProvinciaModel> listProvincia = respuesta.isNotEmpty
+        ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList()
+        : [];
+    return listProvincia;
+  }
 
+  getOneProvincia(String codigoProvincia, String codigoDepartamento) async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
+        SELECT * FROM provincia WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento'
+        ''');
+    List<ProvinciaModel> listProvincia = respuesta.isNotEmpty
+        ? respuesta.map((e) => ProvinciaModel.fromMap(e)).toList()
+        : [];
+    return listProvincia;
+  }
+
+  getDistritos(String codigoProvincia, String codigoDepartamento,
+      String codigoDistrito) async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
+        SELECT * FROM distrito WHERE codigoProvincia = '$codigoProvincia' AND codigoDepartamento = '$codigoDepartamento' AND codigoDistrito = '$codigoDistrito'
+        ''');
+    List<DistritoModel> listDistrito = respuesta.isNotEmpty
+        ? respuesta.map((e) => DistritoModel.fromMap(e)).toList()
+        : [];
+    return listDistrito;
+  }
 
   /* */
 
   /* Parcelassssssss  ªªªª   Coordenadas    */
 
-  insertParcelaCoordenadas(ParcelaCoordenadasModel nuevaParcela)async{
-
-    final db  = await database;
+  insertParcelaCoordenadas(ParcelaCoordenadasModel nuevaParcela) async {
+    final db = await database;
     var respuesta = await db.insert("parcelaCoordenadas", nuevaParcela.toMap());
     return respuesta;
-
   }
-  insertParcela(ParcelaModel nuevaParcela)async{
 
-    final db  = await database;
+  insertParcela(ParcelaModel nuevaParcela) async {
+    final db = await database;
     var respuesta = await db.insert("parcelas", nuevaParcela.toMap());
     return respuesta;
-
   }
 
-  getParcela()async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
+  getParcela() async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
         SELECT DISTINCT idParcela, descripcion, idSeccion, seccion, area, foto, nombreCompleto ,
           ubigeo, createdAt, updatedAt  FROM parcelas
-        '''
-      );
-      List<ParcelaModel> listParcela = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList() : [];
-      return listParcela;
+        ''');
+    List<ParcelaModel> listParcela = respuesta.isNotEmpty
+        ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList()
+        : [];
+    return listParcela;
   }
 
-  getParcelaCoordenadas()async{
-      final db = await database;
-      var respuesta = await db.rawQuery(
-        '''
-        SELECT * FROM parcelaCoordenadas
-        '''
-      );
-      List<ParcelaCoordenadasModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaCoordenadasModel.fromMap(e)).toList() : [];
-      return listParceCoorde;
-  }
-  getBeneParcelas(String idBeneficiario)async{
+  getParcelaCoordenadas() async {
     final db = await database;
-    var respuesta = await db.rawQuery(
-        '''
-        SELECT * FROM parcelas WHERE idSeccion = '$idBeneficiario'
-        '''
-    );
-    List<ParcelaModel> listParceCoorde = respuesta.isNotEmpty ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList() : [];
+    var respuesta = await db.rawQuery('''
+        SELECT * FROM parcelaCoordenadas
+        ''');
+    List<ParcelaCoordenadasModel> listParceCoorde = respuesta.isNotEmpty
+        ? respuesta.map((e) => ParcelaCoordenadasModel.fromMap(e)).toList()
+        : [];
     return listParceCoorde;
   }
 
-  deleteAllParcelas()async{
+  getBeneParcelas(String idBeneficiario) async {
+    final db = await database;
+    var respuesta = await db.rawQuery('''
+        SELECT * FROM parcelas WHERE idSeccion = '$idBeneficiario'
+        ''');
+    List<ParcelaModel> listParceCoorde = respuesta.isNotEmpty
+        ? respuesta.map((e) => ParcelaModel.fromMap(e)).toList()
+        : [];
+    return listParceCoorde;
+  }
+
+  deleteAllParcelas() async {
     final db = await database;
     var respuesta = await db.delete("parcelas");
   }
