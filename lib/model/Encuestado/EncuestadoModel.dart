@@ -36,13 +36,15 @@ class EncuestadoModel{
   String representanteLegal;
   String idUbigeo;
   String observacion;
+  String idTecnico;
+  String validadoReniec;
   String createdAt;
   String updatedAt;
 
   EncuestadoModel(
     {
       this.idEncuestado, this.documento, this.nombre, this.apellidoPaterno, this.apellidoMaterno, this.sexo, this.estadoCivil, this.direccion, this.telefono, this.email, this.foto, this.estado, this.tipoPersona,
-      this.tipoDocumento, this.representanteLegal, this.idUbigeo, this.observacion, this.createdAt, this.updatedAt
+      this.tipoDocumento, this.representanteLegal, this.idUbigeo, this.observacion, this.validadoReniec, this.idTecnico,this.createdAt, this.updatedAt
     }
   );
   
@@ -60,6 +62,8 @@ class EncuestadoModel{
     email                   : json['email'],
     foto                    : json['foto'],
     idUbigeo                : json["idUbigeo"].toString(),
+    validadoReniec          : json["validadoReniec"].toString(),
+    idTecnico               : json["idTecnico"].toString(),
     estado                  : json['estado'],
   );
   //  El toJson es para insertar los datos a la base de dato local
@@ -78,6 +82,8 @@ class EncuestadoModel{
       'email'                       : email,
       'foto'                        : foto,
       'idUbigeo'                    : idUbigeo,
+      'validadoReniec'              : validadoReniec,
+      'idTecnico'                   : idTecnico,
       'estado'                      : estado,
     };
   }

@@ -26,6 +26,14 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_moment/simple_moment.dart';
 
+import '../../database/database.dart';
+import '../../database/database.dart';
+import '../../database/database.dart';
+import '../../model/Encuesta/EncuestaModel.dart';
+import '../../model/Encuesta/EncuestaModel.dart';
+import '../../model/Encuestado/EncuestadoModel.dart';
+import '../../model/Encuestado/EncuestadoModel.dart';
+
 class EncuestaController extends GetxController {
   @override
   void onReady() {
@@ -128,9 +136,13 @@ class EncuestaController extends GetxController {
   String _valueDistrito;
   String get valueDistrito => _valueDistrito;
 
+  String _valueCentroPoblado;
+  String get valueCentroPoblado => _valueCentroPoblado;
+
   String _selectCodDepartamento = "";
   String _selectCodProvincia = "";
   String _selectCodDistrito = "";
+  String _selectCodCentroPoblado = "";
 
   /** */
 
@@ -858,8 +870,7 @@ class EncuestaController extends GetxController {
     update();
   }
 
-  navigateToRetomarEncuesta(
-      String idFicha, String idEncuesta, String encuestaName) async {
+  navigateToRetomarEncuesta( String idFicha, String idEncuesta, String encuestaName) async {
     DateTime now = DateTime.now();
     var utc = now.toUtc();
     var part = utc.toString().split(" ");
@@ -935,7 +946,131 @@ class EncuestaController extends GetxController {
     if (conectivityResult == ConnectivityResult.wifi ||
         conectivityResult == ConnectivityResult.mobile) {
       searchModalReniec();
+    }else{
+      modalDeRegistro();
     }
+  }
+  TextEditingController _nombreController     = new TextEditingController();
+  TextEditingController _apellidoPaController = new TextEditingController();
+  TextEditingController _apellidoMaController = new TextEditingController();
+  TextEditingController _documentoController  = new TextEditingController();
+
+  modalDeRegistro()async{
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        title: Text('Registrar encuestado'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Nombre'),
+              SizedBox(height: 8,),
+              Container(
+                height: 40,
+                child: Padding(
+                  padding:  EdgeInsets.only(right: 8),
+                  child: TextField(
+                    style: TextStyle(fontSize: 13),
+                    controller: _nombreController,
+                    decoration: InputDecoration(
+                      hintText: 'Ingresar nombre',
+                      hintStyle: TextStyle(fontSize: 13)
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8,),
+              Text('Apellido Paterno'),
+              SizedBox(height: 8,),
+              Container(
+                height: 40,
+                child: Padding(
+                  padding:  EdgeInsets.only(right: 8),
+                  child: TextField(
+                    style: TextStyle(fontSize: 13),
+                    controller: _apellidoPaController,
+                    decoration: InputDecoration(
+                      hintText: 'Ingresar apellido paterno',
+                      hintStyle: TextStyle(fontSize: 13)
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8,),
+              Text('Apellido Materno'),
+              SizedBox(height: 8,),
+              Container(
+                height: 40,
+                child: Padding(
+                  padding:  EdgeInsets.only(right: 8),
+                  child: TextField(
+                    style: TextStyle(fontSize: 13),
+                    controller: _apellidoMaController,
+                    decoration: InputDecoration(
+                      hintText: 'Ingresar apellido materno',
+                      hintStyle: TextStyle(fontSize: 13)
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8,),
+              Text('Nº de documento'),
+              SizedBox(height: 8,),
+              Container(
+                height: 40,
+                child: Padding(
+                  padding:  EdgeInsets.only(right: 8),
+                  child: TextField(
+                    style: TextStyle(fontSize: 13),
+                    controller: _documentoController,
+                    decoration: InputDecoration(
+                      hintText: 'Ingrese el número de documento',
+                      hintStyle: TextStyle(fontSize: 13)
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              MaterialButton(
+                color: Color.fromRGBO(0, 102, 84, 1),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.save, color: Colors.white),
+                    SizedBox(width: 12,),
+                    Text('Guardar', style: TextStyle(color: Colors.white))
+                  ],
+                ),
+                onPressed: () async {
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
+                  encuestadoData["apellidoMaterno"] = _apellidoMaController.text;
+                  encuestadoData["apellidoPaterno"] = _apellidoPaController.text;
+                  encuestadoData["nombre"] = _nombreController.text;
+                  encuestadoData["documento"] = _documentoController.text;
+                  encuestadoData["email"] = "";
+                  encuestadoData["direccion"] = "";
+                  encuestadoData["estadoCivil"] = "";
+                  encuestadoData["foto"] = "";
+                  encuestadoData["representanteLegal"] = "";
+                  encuestadoData["sexo"] = "";
+                  encuestadoData["telefono"] = "";
+                  encuestadoData["tipoDocumento"] = "";
+                  encuestadoData["tipoPersona"] = "NATURAL";
+                  encuestadoData["idTecnico"] = preferences.getString('idUsuario');
+                  Get.back();
+                  modalAmbitodeIntervencion(encuestadoData,false);
+                }
+              )
+            ],
+          ),
+        ),
+      )
+    );
   }
 
   searchModalReniec() {
@@ -973,6 +1108,7 @@ class EncuestaController extends GetxController {
   }
 
   Map encuestadoData = {};
+  List<EncuestadoModel> dataEncuestado = [];
 
   showInfoReniecModal(var dataReniec) async {
     var nombreCompletoReniec = dataReniec["prenombres"];
@@ -1040,8 +1176,8 @@ class EncuestaController extends GetxController {
                         child: Text('Siguiente',
                             style: TextStyle(color: Colors.white)),
                         onPressed: () async {
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
+                          SharedPreferences preferences = await SharedPreferences.getInstance();
+                          
                           encuestadoData["apellidoMaterno"] = apellidoMaterno;
                           encuestadoData["apellidoPaterno"] = apellidoPaterno;
                           encuestadoData["nombre"] = nombreCompletoReniec;
@@ -1055,11 +1191,12 @@ class EncuestaController extends GetxController {
                           encuestadoData["sexo"] = "";
                           encuestadoData["telefono"] = "";
                           encuestadoData["tipoDocumento"] = "";
-                          encuestadoData["tipoPersona"] = "";
+                          encuestadoData["tipoPersona"] = "NATURAL";
                           encuestadoData["idTecnico"] =
                               preferences.getString('idUsuario');
+                          
                           Get.back();
-                          modalAmbitodeIntervencion();
+                          modalAmbitodeIntervencion(encuestadoData,true);
                         }),
                   ),
                   Container(
@@ -1084,12 +1221,20 @@ class EncuestaController extends GetxController {
             ])));
   }
 
-  modalAmbitodeIntervencion() async {
+  modalAmbitodeIntervencion(var dataEncuestados, bool isValidadoReniec) async {
     listCodDep = [];
     listcodProvincia = [];
     liscodDistrito = [];
     _listprovincias = [];
     _listDistritos = [];
+    String ubigeo;
+
+    /* Datos del encuestado de reniec */
+    print('hola');
+    print(dataEncuestados["nombre"]);
+
+
+    /* */
     List<UbigeoModel> showDepartamentos = [];
 
     List<UbigeoModel> dataDepartamento =
@@ -1115,6 +1260,7 @@ class EncuestaController extends GetxController {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text('DEPARTAMENTO'),
           DropDownDepartamento(
             showDepartamentos: showDepartamentos,
             //dataUbi: dataUbi,
@@ -1137,7 +1283,10 @@ class EncuestaController extends GetxController {
             height: 8,
           ),
           Text('CENTRO POBLADO'),
-          CentroPoblado(),
+          CentroPoblado(
+            showCentroPoblado: _listCentrosPoblados,
+            isManual: true,
+          ),
           SizedBox(
             height: 8,
           ),
@@ -1148,14 +1297,40 @@ class EncuestaController extends GetxController {
                   borderRadius: BorderRadius.circular(10)),
               height: 45,
               child: MaterialButton(
-                onPressed: () {
-                  String ubigeo =
-                      "22" + _selectCodProvincia + _selectCodDistrito;
-                  //idEncuestado = idEncuestado2.toString();
+                onPressed: () async{
+                  dataEncuestado = [];
+                  //await DBProvider.db.insertEncuestados(nuevoEncuestado);
+                  ubigeo = "22" + _selectCodProvincia + _selectCodDistrito + _selectCodCentroPoblado;
+                  
+                  dataEncuestado.add(
+                    EncuestadoModel(
+                      documento: searchReniecController.text == "" ? dataEncuestados["documento"] : searchReniecController.text,
+                      nombre: dataEncuestados["nombre"],
+                      apellidoMaterno: dataEncuestados["apellidoMaterno"],
+                      apellidoPaterno: dataEncuestados["apellidoPaterno"],
+                      sexo: "",
+                      email: "",
+                      direccion: "",
+                      estadoCivil: dataEncuestados["estadoCivil"],
+                      foto: dataEncuestados["foto"],
+                      representanteLegal: "",
+                      telefono: "",
+                      tipoDocumento: "DNI",
+                      tipoPersona: "NATURAL",
+                      validadoReniec: isValidadoReniec.toString(),
+                      idTecnico: dataEncuestados["idTecnico"],
+                      idUbigeo: ubigeo
+                    )
+                  );
+                  print(dataEncuestado);
+                  await DBProvider.db.insertEncuestados(dataEncuestado[0]);
+                  List<EncuestadoModel> respuesta = await DBProvider.db.getLastEncuestado();
+                  print(respuesta);
+
                   print(idEncuestado);
                   print(ubigeo);
 
-                  //confirmationModal(idEncuestado, ubigeo);
+                  confirmationModal(respuesta[0].idEncuestado, ubigeo);
 
                   //Get.to(Practica());
                 },
@@ -1204,7 +1379,19 @@ class EncuestaController extends GetxController {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
     _selectCodDistrito = value.codigoDistrito;
+    update(['centroPoblado']);
+
   }
+
+  selectedCentroPoblado(UbigeoModel value) {
+    _selectCodCentroPoblado = value.codigoCentroPoblado;
+  }
+  
+  changeCentroPoblado(String valor){
+    _valueCentroPoblado = valor;
+    update(['centroPoblado']);
+  }
+
 
   /* */
 
@@ -1410,7 +1597,7 @@ class DropDownProvincia extends StatelessWidget {
           ),
           hint: Padding(
             padding: EdgeInsets.only(left: 8),
-            child: Text('Seleccione un departamento'),
+            child: Text('Seleccione una provincia'),
           ),
           isExpanded: true,
           value: _.valueprovincia,
@@ -1531,8 +1718,8 @@ class CentroPoblado extends StatelessWidget {
             child: Text('Seleccione un centro poblado'),
           ),
           isExpanded: true,
-          value: _.valueDistrito,
-          items: _.listDistrito.map((value) {
+          value: _.valueCentroPoblado,
+          items: _._listCentrosPoblados.map((value) {
             return DropdownMenuItem(
               value: value.descripcion,
               child: Padding(
@@ -1544,6 +1731,7 @@ class CentroPoblado extends StatelessWidget {
               ),
               onTap: () async {
                 if (isManual == true) {
+                  _.selectedCentroPoblado(value);
                 } else {
                   //_.selectedDistrito(value);
                 }
@@ -1551,7 +1739,7 @@ class CentroPoblado extends StatelessWidget {
             );
           }).toList(),
           onChanged: (valor) {
-            //_.changeDistrito(valor);
+            _.changeCentroPoblado(valor);
           },
         ),
       ),

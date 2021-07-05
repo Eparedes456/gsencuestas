@@ -17,6 +17,8 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
 
+import '../../database/database.dart';
+
 class ProfileController extends GetxController{
 
 
@@ -134,7 +136,7 @@ class ProfileController extends GetxController{
         )
       );
     }else{
-
+      await DBProvider.db.deleteParametros();
       preferences.remove('primeraCarga');
       preferences.remove('nombreUser');
       preferences.remove('idUsuario');

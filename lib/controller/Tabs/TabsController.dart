@@ -62,7 +62,7 @@ class TabsController extends GetxController{
     });*/
 
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
-    var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
+    /*var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
       
       print(result);
       if(result == ConnectivityResult.wifi || result  == ConnectivityResult.mobile){
@@ -79,11 +79,11 @@ class TabsController extends GetxController{
 
       }
       
-    });
+    });*/
 
   }
 
-  uploadData(List<FichasModel> dataFichas)async{
+  /*uploadData(List<FichasModel> dataFichas)async{
     List data = [];
     for (var i = 0; i < dataFichas.length; i++) {
       List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(dataFichas[i].idFicha.toString());
@@ -280,9 +280,9 @@ class TabsController extends GetxController{
     }
     }
 
-  }
+  }*/
 
-  loadingmodal()async{
+  /*loadingmodal()async{
     Get.dialog(
       AlertDialog(
         
@@ -299,7 +299,7 @@ class TabsController extends GetxController{
       ),
       barrierDismissible: false
     );
-  }
+  }*/
 
 
   @override

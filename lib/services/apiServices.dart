@@ -178,12 +178,20 @@ class ApiServices {
   }
 
   getAllUsers() async {
-    Response response = await dio.get(base_url_dev + "usuario");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+    var response = await http.get(base_url_dev + "usuario", headers: {
+      'Content-Type': 'application/json',
+      //'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+    
     if (response.statusCode == 200) {
       print('Respuesta de servidor exitosa!');
-      print(response.data);
-
-      return response.data;
+      print(response);
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      return decodedData;
     } else if (response.statusCode == 500) {
       print('Error de servidor,consulte con el encargado del sistema');
 

@@ -468,7 +468,7 @@ class ConfigController extends GetxController {
 
   deleteAllMasterTable() async {
     await DBProvider.db.deleteAllUsuario(); //  usuario table
-    await DBProvider.db.deleteAllUbigeo(); // ubigeo table
+    //await DBProvider.db.deleteAllUbigeo(); // ubigeo table
     await DBProvider.db.deleteAllParcelas(); // parcelas table
     await DBProvider.db.deleteallEncuestas(); // encuestas table
     await DBProvider.db.deleteallProyectos(); //proyectos table
@@ -496,7 +496,10 @@ class ConfigController extends GetxController {
       print('hay conexion a internet');
 
       await loadUsers();
-      await loadUbigeo();
+      var ubigeo = preferences.getString('ubigeoCargo');
+      if(ubigeo != "si"){
+        await loadUbigeo();
+      }
       await loadEncuestados();
       await cargarProyectosEncuesta();
       var response = await loadParcelas();
@@ -538,24 +541,25 @@ class ConfigController extends GetxController {
   }
 
   loadUbigeo() async {
-    var response = await rootBundle.loadString("assets/ubigeo.json");
-    final data = await json.decode(response);
-    List<UbigeoModel> _listUbigeos = [];
-    data.forEach((element) {
-      _listUbigeos.add(UbigeoModel(
-          idUbigeo: element["id"],
-          codigoDepartamento: element["codigoDepartamento"],
-          codigoProvincia: element["codigoProvincia"],
-          codigoDistrito: element["codigoDistrito"],
-          descripcion: element["descripcion"]));
-    });
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var ubigeoCargo = preferences.setString('ubigeoCargo','si');
 
-    print(_listUbigeos.length);
+    var response = await rootBundle.loadString("assets/ubi.json");
+    var data = json.decode(response);
+    print(data.runtimeType);
 
-    for (var x = 0; x < _listUbigeos.length; x++) {
-      await DBProvider.db.insertUbigeo(_listUbigeos[x]);
+    List<UbigeoModel> data1 =
+        (data as List).map((e) => UbigeoModel.fromJson(e)).toList();
+
+    for (var x = 0; x < data1.length; x++) {
+      await DBProvider.db.insertUbigeo(data1[x]);
     }
-    print('Todos los ubigeos fueron descargados');
+    List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
+    if(ubigeos.length > 0){
+      Get.back();
+      print('Todos los ubigeos fueron descargados');
+    }
+    
   }
 
   cargarProyectosEncuesta() async {

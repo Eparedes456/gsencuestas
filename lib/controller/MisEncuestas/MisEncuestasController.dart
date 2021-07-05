@@ -74,6 +74,11 @@ class MisEncuestasController extends GetxController{
         print(listMisEncuestas);
         _listDbEncuesta = await DBProvider.db.getOneEncuesta(idEncuesta);
         
+
+        var listEncuestados = await DBProvider.db.getAllEncuestado();
+        print(listMisEncuestas);
+
+
         _listEncuestado = await DBProvider.db.getOneEncuestado(idEncuestado);
         var data = await DBProvider.db.getAllEncuestado();
         print(data);

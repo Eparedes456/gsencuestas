@@ -99,7 +99,7 @@ class PrincipalController extends GetxController {
       print('hay conexion a internet');
       print('verifico en la tabla parametros para actualziar o no hacer nada');
       List<ParametroModel> dataParametro = await DBProvider.db.getParametros();
-      print(dataParametro);
+      //print(dataParametro);
       if (dataParametro.length > 0) {
         var fechaActuUsuario =
             dataParametro[0].ultiimaActualizacionUsuario.toString();
@@ -183,7 +183,7 @@ class PrincipalController extends GetxController {
           } else {
             print('eliminar datas maestras');
             await DBProvider.db.deleteAllUsuario(); //  usuario table
-            await DBProvider.db.deleteAllUbigeo(); // ubigeo table
+            //await DBProvider.db.deleteAllUbigeo(); // ubigeo table
             await DBProvider.db.deleteAllParcelas(); // parcelas table
             await DBProvider.db.deleteallEncuestas(); // encuestas table
             await DBProvider.db.deleteallProyectos(); //proyectos table
@@ -204,7 +204,12 @@ class PrincipalController extends GetxController {
             await cargarUsuarios();
             await cargarParcelas();
             await cargarProyectosEncuesta();
-            await cargarUbigeo();
+            var ubigeo = preferences.getString('ubigeoCargo');
+            if(ubigeo != "si"){
+              loadingUbigeo();
+              await cargarUbigeo();
+            }
+            //await cargarUbigeo();
           }
         }
       }
@@ -276,7 +281,7 @@ class PrincipalController extends GetxController {
     } else {
       /*E liminar las data */
       await DBProvider.db.deleteAllUsuario(); //  usuario table
-      await DBProvider.db.deleteAllUbigeo(); // ubigeo table
+      //await DBProvider.db.deleteAllUbigeo(); // ubigeo table
       await DBProvider.db.deleteAllParcelas(); // parcelas table
       await DBProvider.db.deleteallEncuestas(); // encuestas table
       await DBProvider.db.deleteallProyectos(); //proyectos table
@@ -321,8 +326,12 @@ class PrincipalController extends GetxController {
       print(dataParametro2);
       await cargarProyectosEncuesta();
       await cargarParcelas();
-      loadingUbigeo();
-      await cargarUbigeo();
+      var ubigeo = preferences.getString('ubigeoCargo');
+      if(ubigeo != "si"){
+        loadingUbigeo();
+        await cargarUbigeo();
+      }
+      
     }
   }
 
@@ -332,7 +341,7 @@ class PrincipalController extends GetxController {
       List<ProyectoModel> resultado =
           await DBProvider.db.searchProyecto(controllerSearch.text);
       if (resultado.length == 0) {
-        print('No se encontro el proyecto');
+        
       } else {
         _proyectos = resultado;
         _hayData = true;
@@ -342,7 +351,7 @@ class PrincipalController extends GetxController {
       List<ProyectoModel> resultado =
           await DBProvider.db.searchProyecto(controllerSearch.text);
       if (resultado.length == 0) {
-        print('No se encontro el proyecto');
+        
         _hayData = false;
         _proyectos = [];
         update();
@@ -417,6 +426,7 @@ class PrincipalController extends GetxController {
             email: element["email"],
             idUbigeo: element["idUbigeo"],
             estado: element["estado"].toString(),
+            idTecnico: element["idTecnico"].toString(),
             foto: element["foto"]));
       });
     }
@@ -424,7 +434,10 @@ class PrincipalController extends GetxController {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
     }
     var data = await DBProvider.db.getAllEncuestado();
-    print(data);
+    if(data.length > 0){
+      print("Se registro todos los encuestados");
+    }
+    
   }
 
   cargarParcelas() async {
@@ -467,6 +480,7 @@ class PrincipalController extends GetxController {
     for (var z = 0; z < _listParcelaCoordenada.length; z++) {
       await DBProvider.db.insertParcelaCoordenadas(_listParcelaCoordenada[z]);
     }
+    print('se inserto todas las parcelas');
   }
 
   cargarProyectosEncuesta() async {
@@ -626,7 +640,7 @@ class PrincipalController extends GetxController {
     var insertDataLocal = "Si";
     //_proyectos = [];
     preferences.setString('primeraCarga', insertDataLocal);
-
+    print('se inserto todos los  proyectos');
     update();
   }
 
@@ -651,16 +665,20 @@ class PrincipalController extends GetxController {
     for (var i = 0; i < _usuarios.length; i++) {
       await DBProvider.db.insertUsuarios(_usuarios[i]);
     }
+    print('se inserto todos los usuarios');
   }
 
   cargarUbigeo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var ubigeoCargo = preferences.setString('ubigeoCargo','si');
+
     var response = await rootBundle.loadString("assets/ubi.json");
     var data = json.decode(response);
     print(data.runtimeType);
 
     List<UbigeoModel> data1 =
         (data as List).map((e) => UbigeoModel.fromJson(e)).toList();
-    print(data1);
+    //print(data1);
     /*var ubi = UbigeoModel.fromMap(data);
     print(ubi);*/
 
@@ -680,8 +698,11 @@ class PrincipalController extends GetxController {
       await DBProvider.db.insertUbigeo(data1[x]);
     }
     List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
+    if(ubigeos.length > 0){
+      Get.back();
+    }
 
-    Get.back();
+    //Get.back();
   }
 
   loadingUbigeo() {

@@ -251,6 +251,8 @@ class DBProvider {
             email TEXT,
             foto TEXT,
             idUbigeo TEXT,
+            validadoReniec TEXT,
+            idTecnico TEXT,
             estado TEXT
 
           )
@@ -328,7 +330,7 @@ class DBProvider {
             updatedAt TEXT
           )
           ''');
-    }, version: 10);
+    }, version: 11);
   }
 
   //CREACION DE   LAS CONSULTAS SQL LOCAL
@@ -966,6 +968,19 @@ class DBProvider {
     return respuesta;
   }
 
+  getLastEncuestado() async {
+    final db = await database;
+    var response1 = await db.rawQuery('''
+      SELECT MAX(idEncuestado) as idEncuestado, idUbigeo from encuestado
+
+      ''');
+    List<EncuestadoModel> listEncuestado = response1.isNotEmpty
+        ? response1.map((e) => EncuestadoModel.fromMap(e)).toList()
+        : [];
+
+    return listEncuestado;
+  }
+
   /* Buscar al encuestado  */
 
   searchEncuestado(String valor) async {
@@ -1095,6 +1110,11 @@ class DBProvider {
     return respuesta;
   }
 
+  deleteParametros() async {
+    final db = await database;
+    var respuesta = await db.delete("parametro");
+  }
+
   updateParametros(String ultimaActualizacion, int idInstitucion,
       String ultimaActuaUsuario) async {
     final db = await database;
@@ -1214,7 +1234,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
-        AND codigoProvincia = '$codigoProvincia'
+        AND codigoProvincia = '$codigoProvincia' AND codigoCentroPoblado = '0000'
         ''');
     List<UbigeoModel> listDepartamento = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()

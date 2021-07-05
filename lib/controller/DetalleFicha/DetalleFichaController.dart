@@ -24,6 +24,8 @@ import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
 
 import '../../database/database.dart';
+import '../../database/database.dart';
+import '../../database/database.dart';
 import '../../model/Tracking/TrackingModal.dart';
 import '../../model/Tracking/TrackingModal.dart';
 
@@ -113,21 +115,22 @@ class DetalleFichaController extends GetxController{
   String hora_inicio;
   String hora_fin;
   String hora_retorno;
-
+  String encuestadoIngresoManual;
   int idEncuestaSend = 0;
 
 
   getDetailFicha(idFicha)async{
 
     _listFichasDb = await DBProvider.db.oneFicha(idFicha);
-    
+    var dataEncuesta = await DBProvider.db.getOneEncuesta(_listFichasDb[0].idEncuesta.toString());
+    print(dataEncuesta);
    
-    _idFicha          = _listFichasDb[0].idFicha.toString();
-    _estado           = _listFichasDb[0].estado;
-    idEncuestaSend    = _listFichasDb[0].idEncuesta;
-    ubigeoFicha       = _listFichasDb[0].ubigeo;
-    observacionFicha  = _listFichasDb[0].observacion; 
-    
+    _idFicha                = _listFichasDb[0].idFicha.toString();
+    _estado                 = _listFichasDb[0].estado;
+    idEncuestaSend          = _listFichasDb[0].idEncuesta;
+    ubigeoFicha             = _listFichasDb[0].ubigeo;
+    observacionFicha        = _listFichasDb[0].observacion; 
+    encuestadoIngresoManual = dataEncuesta[0].encuestadoIngresoManual;
    
     if(_listFichasDb[0].fecha_retorno == null){
       print('no se hacer nada ');
@@ -237,28 +240,20 @@ class DetalleFichaController extends GetxController{
 
             color: Colors.green,
             onPressed: (){
-
               Get.back(result: "SI");
               deleteFicha();
-              
-
             },
             icon: Icon(FontAwesomeIcons.check),
             label: Text('Si')
           ),
-
           FlatButton.icon(
             color: Colors.redAccent,
             onPressed: (){
-
               Get.back();
-
             }, 
             icon: Icon(FontAwesomeIcons.timesCircle),
             label: Text('No')
-
           )
-
         ],
       )
     );
@@ -266,49 +261,32 @@ class DetalleFichaController extends GetxController{
   }
 
   navigateToMaps()async{
-
     _listTracking = await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
-
     print(_listTracking);
-
     Get.to(
       GoogleMaps(),
       arguments: _listTracking 
     );
-
   }
 
   deleteFicha()async{
-
-    //dialogLoading("");
-   var response = await DBProvider.db.deleteOneFicha(_idFicha);
-
+    var response = await DBProvider.db.deleteOneFicha(_idFicha);
     List<FichasModel> respuesta = await DBProvider.db.oneFicha(idFicha);
-
     if(respuesta.length ==  0){
-
       print('se elimino el registro');
       Get.back(result: "SI");
-      
     }
-
-    
-
   }
 
   dialogLoading(String mensaje){
-
     Get.dialog(
-
       AlertDialog(
-
         title: Text(""),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-
             mensaje != "" || mensaje == null ? Container() : CircularProgressIndicator(),
             Padding(
               padding: EdgeInsets.only(top:12),
@@ -320,25 +298,18 @@ class DetalleFichaController extends GetxController{
           borderRadius: BorderRadius.circular(10)
         ),
       ),
-      
-
     );
-
   }
 
   navigateToRetomarEncuesta(){
-    
     var data = {
       'idFicha'         : idFicha,
       'nombreEncuesta'  : nombreEncuesta,
       'idEncuesta'      : idEncuestaSend.toString()
     };
-
     Get.to(RetomarEncuestaPage(),
       arguments: data
-    
     );
-
   }
 
   navigateToVer(){
@@ -367,7 +338,6 @@ class DetalleFichaController extends GetxController{
 
   }
 
-
   sendDataToServer()async{
     DateTime now = DateTime.now();
     var utc = now.toUtc();    
@@ -376,18 +346,12 @@ class DetalleFichaController extends GetxController{
     var hora =part[1].toString();
     String fecha_envio =fecha + "T" + hora;
     List<FichasModel> listFichas =  await DBProvider.db.updateFechaEnvio( idFicha, fecha_envio);
-    
-  
     List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(_idFicha);
     List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(_idFicha);
     List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
 
+    var sendFicha ={};
 
-
-    var sendFicha ={
-      
-
-    };
     print(fechaInicioSend);
     sendFicha['idficha']        =  int.parse(_idFicha);
     sendFicha['fechaFin']       = fechaFinSend;
@@ -403,11 +367,42 @@ class DetalleFichaController extends GetxController{
     sendFicha["fechaEnvio"]    = fecha_envio;
     var encuesta = {};
     encuesta["idEncuesta"]      = idEncuestaSend;
+    encuesta["encuestadoIngresoManual"] = encuestadoIngresoManual;
     sendFicha['encuesta']       = encuesta;
 
     var encuestado = {};
-    encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
-    sendFicha['encuestado']   = encuestado;
+    if(encuestadoIngresoManual == "true"){
+      List<EncuestadoModel> dataEncuestado = await DBProvider.db.getOneEncuestado(listEncuestadoModel[0].idEncuestado);
+      //print(dataEncuestado);
+      for (var i = 0; i < dataEncuestado.length; i++) {
+        encuestado["idEncuestado"]    = "0";
+        encuestado["apellidoMaterno"] = dataEncuestado[i].apellidoMaterno;
+        encuestado["apellidoPaterno"] = dataEncuestado[i].apellidoPaterno;
+        encuestado["direccion"]       = dataEncuestado[i].direccion;
+        encuestado["documento"] = dataEncuestado[i].documento;
+        encuestado["email"] = dataEncuestado[i].email;
+        encuestado["estado"] = dataEncuestado[i].estado;
+        encuestado["estadoCivil"] = dataEncuestado[i].estadoCivil;
+        encuestado["foto"] = dataEncuestado[i].foto;
+        encuestado["idTecnico"] = dataEncuestado[i].idTecnico;
+        encuestado["idUbigeo"] = dataEncuestado[i].idUbigeo;
+        encuestado["nombre"] = dataEncuestado[i].nombre;
+        encuestado["representanteLegal"] = dataEncuestado[i].representanteLegal;
+        encuestado["sexo"] = dataEncuestado[i].sexo;
+        encuestado["telefono"] = dataEncuestado[i].telefono;
+        encuestado["tipoDocumento"] = dataEncuestado[i].tipoDocumento;
+        encuestado["tipoPersona"] = dataEncuestado[i].tipoPersona;
+        encuestado["validadoReniec"] = dataEncuestado[i].validadoReniec;
+
+      }
+      sendFicha['encuestado'] = encuestado;
+
+    }else{
+      encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
+      sendFicha['encuestado']   = encuestado;
+    }
+
+    
 
     var respuesta ={};
     List<Map> listRespuestaMap = new List();
@@ -431,7 +426,7 @@ class DetalleFichaController extends GetxController{
       );
 
       sendFicha['respuesta']  = listRespuestaMap;
-      print(sendFicha);
+      //print(sendFicha);
       respuesta ={};
       pregunta = {};
       //print('hola');
@@ -455,7 +450,7 @@ class DetalleFichaController extends GetxController{
 
       sendFicha['tracking']  = listTrackingMap;
       tracking ={};
-      print('hola');
+      //print('hola');
     
     }
 
@@ -483,13 +478,11 @@ class DetalleFichaController extends GetxController{
 
         sendFicha['multimedia']  = listMultimediaMap;
         multimedia ={};
-        print('hola');
+        //print('hola');
     
       }
 
     }
-
-    
 
     print(sendFicha);
 
