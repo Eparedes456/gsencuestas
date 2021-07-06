@@ -1255,6 +1255,19 @@ class DBProvider {
     return listCentroPoblados;
   }
 
+  getCentroPoblado(String codigoProvincia, String codigoDepartamento,
+      String codigoDistrito, String codigoCentroPoblado) async {
+    final db = await database;
+    var response = await db.rawQuery('''
+        SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito' AND codigoCentroPoblado = '$codigoCentroPoblado'
+        ''');
+    List<UbigeoModel> listCentroPoblados = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listCentroPoblados;
+  }
+
   getDepartamentos(String codDepartamento) async {
     final db = await database;
     var response = await db.rawQuery('''

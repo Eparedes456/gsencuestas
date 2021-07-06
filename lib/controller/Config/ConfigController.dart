@@ -57,12 +57,13 @@ class ConfigController extends GetxController {
     ApiServices apiConexion = new ApiServices();
 
     for (var i = 0; i < listFichas.length; i++) {
-      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db
-          .getAllRespuestasxFicha(listFichas[i].idFicha.toString());
-      List<TrackingModel> listTracking = await DBProvider.db
-          .getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
-      List<MultimediaModel> listMultimedia = await DBProvider.db
-          .getAllMultimediaxFicha(listFichas[i].idFicha.toString());
+      
+      var dataEncuesta = await DBProvider.db.getOneEncuesta(listFichas[i].idEncuesta.toString());
+      print(dataEncuesta);
+
+      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha.toString());
+      List<TrackingModel> listTracking = await DBProvider.db.getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
+      List<MultimediaModel> listMultimedia = await DBProvider.db.getAllMultimediaxFicha(listFichas[i].idFicha.toString());
 
       DateTime now = DateTime.now();
       var utc = now.toUtc();
@@ -91,14 +92,46 @@ class ConfigController extends GetxController {
           ? ""
           : listFichas[i].longitud_retorno;
       sendFicha["fechaEnvio"] = fechaFin;
+
+
+
       var encuesta = {};
       encuesta["idEncuesta"] = listFichas[i].idEncuesta;
+      encuesta["encuestadoIngresoManual"] = dataEncuesta[0].encuestadoIngresoManual;
       sendFicha['encuesta'] = encuesta;
 
-      var encuestado = {};
-      encuestado["idEncuestado"] = listFichas[i].idEncuestado;
-      sendFicha['encuestado'] = encuestado;
 
+
+      var encuestado = {};
+      if(dataEncuesta[0].encuestadoIngresoManual == "true"){
+        List<EncuestadoModel> dataEncuestado = await DBProvider.db.getOneEncuestado(listFichas[i].idEncuestado.toString());
+        for (var i = 0; i < dataEncuestado.length; i++) {
+          encuestado["idEncuestado"]    = "0";
+          encuestado["apellidoMaterno"] = dataEncuestado[i].apellidoMaterno;
+          encuestado["apellidoPaterno"] = dataEncuestado[i].apellidoPaterno;
+          encuestado["direccion"]       = dataEncuestado[i].direccion;
+          encuestado["documento"] = dataEncuestado[i].documento;
+          encuestado["email"] = dataEncuestado[i].email;
+          encuestado["estado"] = dataEncuestado[i].estado;
+          encuestado["estadoCivil"] = dataEncuestado[i].estadoCivil;
+          encuestado["foto"] = dataEncuestado[i].foto;
+          encuestado["idTecnico"] = dataEncuestado[i].idTecnico;
+          encuestado["idUbigeo"] = dataEncuestado[i].idUbigeo;
+          encuestado["nombre"] = dataEncuestado[i].nombre;
+          encuestado["representanteLegal"] = dataEncuestado[i].representanteLegal;
+          encuestado["sexo"] = dataEncuestado[i].sexo;
+          encuestado["telefono"] = dataEncuestado[i].telefono;
+          encuestado["tipoDocumento"] = "DNI";
+          encuestado["tipoPersona"] = "NATURAL";
+          encuestado["validadoReniec"] = dataEncuestado[i].validadoReniec;
+        }
+        sendFicha['encuestado'] = encuestado;
+
+      }else{
+        encuestado["idEncuestado"] = listFichas[i].idEncuestado;
+        sendFicha['encuestado'] = encuestado;
+      }
+      
       var respuesta = {};
       List<Map> listRespuestaMap = new List();
 
@@ -157,71 +190,80 @@ class ConfigController extends GetxController {
       data.add(sendFicha);
     }
     ;
+    
 
-    ConnectivityResult conectivityResult =
-        await Connectivity().checkConnectivity();
+    ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
     if (data.length > 0) {
       int contador = 0;
 
-      if (conectivityResult == ConnectivityResult.wifi ||
-          conectivityResult == ConnectivityResult.mobile) {
+      if (conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile) {
         modal(true, false);
 
         for (var x = 0; x < data.length; x++) {
           var response = await apiConexion.sendFichaToServer(data[x]);
 
-          if (response != null ||
-              response != 1 ||
-              response != 2 ||
-              response != 3) {
-            var _estado = "S";
-
-            await DBProvider.db.updateFicha(data[x]['idficha'].toString(),
-                data[x]['observacion'], data[x]['fechaFin'], _estado, "");
-            contador++;
-            if (contador == data.length) {
+          if(response == 1){
+            print("token");
+            showModal("Estimado usuario su token expiro.",false,"Error inesperado");
+            Future.delayed(Duration(seconds: 2),(){
               Get.back();
-
+            });
+          }else if(response == 2){
+            showModal("Error de servidor comuniquese con el administrador del sistema.",false,"Error inesperado");
+            Future.delayed(Duration(seconds: 2),(){
+              Get.back();
+              
+            });
+            print("error server");
+          }else if(response == 3){
+            print("error 404 o bad request");
+            showModal("Error por parte del cliente, apunta a una ruta desconocia o envia mal los datos, comuniquese con el administrador del sistema.",false,"Error inesperado");
+            Future.delayed(Duration(seconds: 2),(){
+              Get.back();
+        
+            });
+          }else{
+            var _estado = "S";
+            await DBProvider.db.updateFicha(data[x]['idficha'].toString(),data[x]['observacion'], data[x]['fechaFin'], _estado, "");
+            contador++;
+            if(contador == data.length){
+              Get.back();
               Get.dialog(
-                  AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    //title: Text('Notificación'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: Colors.green,
-                          size: 60,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Los datos se subieron exitosamente.',
-                          textAlign: TextAlign.justify,
-                        ),
-                      ],
-                    ),
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)
                   ),
-                  barrierDismissible: false);
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'Los datos se subieron exitosamente.',
+                        textAlign: TextAlign.justify,
+                      ),
+                    ],
+                  ),
+                ),
+                barrierDismissible: false
+              );
               Future.delayed(Duration(seconds: 2), () {
                 _cantidadFinalizadas = "0";
-
                 Get.back();
                 update();
               });
+              
             }
-          } else {
-            Get.dialog(AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              title: Text('Notificación'),
-              content: Text('No se pudo subir los datos, error inesperado.'),
-            ));
+
           }
+          
         }
         //aca el else
       } else {
@@ -234,6 +276,26 @@ class ConfigController extends GetxController {
         ));
       }
     }
+  }
+
+  showModal(String mensaje, bool loading, String titulo){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
+        title: Text(titulo),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            loading == true ? 
+            CircularProgressIndicator() : Container(),
+            SizedBox(height: 8,),
+            mensaje == "" || mensaje == null ? Container(): Text(mensaje)
+          ],
+        ),
+      )
+    );
   }
 
   modal(bool isLoading, bool hayFinalizadas) {

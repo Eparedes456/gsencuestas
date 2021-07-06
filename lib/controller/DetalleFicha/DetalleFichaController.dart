@@ -365,6 +365,7 @@ class DetalleFichaController extends GetxController{
     sendFicha["latitudRetomo"]  = _listFichasDb[0].latitud_retorno;
     sendFicha["longitudRetomo"] = _listFichasDb[0].longitud_retorno;
     sendFicha["fechaEnvio"]    = fecha_envio;
+    
     var encuesta = {};
     encuesta["idEncuesta"]      = idEncuestaSend;
     encuesta["encuestadoIngresoManual"] = encuestadoIngresoManual;
@@ -390,8 +391,8 @@ class DetalleFichaController extends GetxController{
         encuestado["representanteLegal"] = dataEncuestado[i].representanteLegal;
         encuestado["sexo"] = dataEncuestado[i].sexo;
         encuestado["telefono"] = dataEncuestado[i].telefono;
-        encuestado["tipoDocumento"] = dataEncuestado[i].tipoDocumento;
-        encuestado["tipoPersona"] = dataEncuestado[i].tipoPersona;
+        encuestado["tipoDocumento"] = "DNI";
+        encuestado["tipoPersona"] = "NATURAL";
         encuestado["validadoReniec"] = dataEncuestado[i].validadoReniec;
 
       }
@@ -495,8 +496,56 @@ class DetalleFichaController extends GetxController{
       showModal("",true,'Sincronizando datos..');
 
       var response  = await apiConexion.sendFichaToServer(sendFicha);
-
-      if( response != null || response != 1 || response  != 2 || response  !=3 ){
+      //print(response);
+      if( response == 1){
+        print("token");
+        showModal("Estimado usuario su token expiro.",false,"Error inesperado");
+        Future.delayed(Duration(seconds: 2),(){
+          Get.back();
+  
+        });
+      }else if(response == 2){
+        showModal("Error de servidor comuniquese con el administrador del sistema.",false,"Error inesperado");
+        Future.delayed(Duration(seconds: 2),(){
+          Get.back();
+          
+        });
+        print("error server");
+      }else if( response == 3){
+        print("error 404 o bad request");
+        showModal("Error por parte del cliente, apunta a una ruta desconocia o envia mal los datos, comuniquese con el administrador del sistema.",false,"Error inesperado");
+        Future.delayed(Duration(seconds: 2),(){
+          Get.back();
+     
+        });
+      }else{
+        print('Se inserto correctamente');
+        _estado = "S";
+        await DBProvider.db.updateFicha(idFicha, observacion, fechaFinSend,_estado,fecha_retorno);
+        Get.back();
+        Get.dialog(
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)
+            ),
+            //title: Text('Notificación'),
+            content:  Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle_outline,color: Colors.green,size: 60,),
+                SizedBox(height: 8,),
+                Text('Los datos se subieron exitosamente.',textAlign: TextAlign.justify,),
+              ],
+            ),
+          ),
+          barrierDismissible: false
+        );
+        Future.delayed(Duration(seconds: 2),(){
+          Get.back();
+          update();
+        });
+      }
+      /*if( response != null || response != 1 || response  != 2 || response  !=3 ){
 
         print('se inserto correctamente'); 
         _estado = "S";
@@ -534,7 +583,7 @@ class DetalleFichaController extends GetxController{
 
         showModal("No se pudo sincronizar los datos.",false,"Error inesperado");
 
-      }
+      }*/
 
 
     }else{
