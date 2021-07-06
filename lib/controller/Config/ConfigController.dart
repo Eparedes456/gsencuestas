@@ -538,7 +538,7 @@ class ConfigController extends GetxController {
     await DBProvider.db.deleteallPreguntas(); // preguntas table
     await DBProvider.db.deleteallOpciones(); //opciones table
     await DBProvider.db.deletAllBloque(); // bloque table
-    //await DBProvider.db.deletAllFichas() // fichas table
+    await DBProvider.db.deletAllFichas(); // fichas table
     await DBProvider.db.deletAllRespuesta(); // respuestas table
     //await DBProvider.db.deletAllTracking(); // tracking table
     //await DBProvider.db.deletAllMultimedia(); // multimedia table

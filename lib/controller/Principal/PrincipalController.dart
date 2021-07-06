@@ -191,7 +191,7 @@ class PrincipalController extends GetxController {
             await DBProvider.db.deleteallPreguntas(); // preguntas table
             await DBProvider.db.deleteallOpciones(); //opciones table
             await DBProvider.db.deletAllBloque(); // bloque table
-            //await DBProvider.db.deletAllFichas(); // fichas table
+            await DBProvider.db.deletAllFichas(); // fichas table
             //await DBProvider.db.deletAllRespuesta(); // respuestas table
             //await DBProvider.db.deletAllTracking(); // tracking table
             //await DBProvider.db.deletAllMultimedia(); // multimedia table
@@ -200,15 +200,16 @@ class PrincipalController extends GetxController {
 
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"],
                 idInstitucion, response["ultimaActualizacionUsuario"]);
-            await cargarEncuestados();
-            await cargarUsuarios();
-            await cargarParcelas();
-            await cargarProyectosEncuesta();
             var ubigeo = preferences.getString('ubigeoCargo');
             if(ubigeo != "si"){
               loadingUbigeo();
               await cargarUbigeo();
             }
+            await cargarEncuestados();
+            await cargarUsuarios();
+            await cargarParcelas();
+            await cargarProyectosEncuesta();
+            
             //await cargarUbigeo();
           }
         }
@@ -289,7 +290,7 @@ class PrincipalController extends GetxController {
       await DBProvider.db.deleteallPreguntas(); // preguntas table
       await DBProvider.db.deleteallOpciones(); //opciones table
       await DBProvider.db.deletAllBloque(); // bloque table
-      //await DBProvider.db.deletAllFichas(); // fichas table
+      await DBProvider.db.deletAllFichas(); // fichas table
       await DBProvider.db.deletAllRespuesta(); // respuestas table
       //await DBProvider.db.deletAllTracking(); // tracking table
       //await DBProvider.db.deletAllMultimedia(); // multimedia table
@@ -324,13 +325,14 @@ class PrincipalController extends GetxController {
       }
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
-      await cargarProyectosEncuesta();
-      await cargarParcelas();
       var ubigeo = preferences.getString('ubigeoCargo');
       if(ubigeo != "si"){
         loadingUbigeo();
         await cargarUbigeo();
       }
+      await cargarProyectosEncuesta();
+      await cargarParcelas();
+      
       
     }
   }
@@ -626,9 +628,9 @@ class PrincipalController extends GetxController {
         await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
       }
       if (_proyectos.length > 0) {
-        _isLoading = false;
-        _hayData = true;
-        update();
+        /*_isLoading = false;
+        _hayData = true;*/
+        //update();
       }
     } else if (listProyecto == 1) {
       print('Error de servidor');
@@ -648,17 +650,19 @@ class PrincipalController extends GetxController {
     var listUserApi = await apiConexion.getAllUsers();
     listUserApi.forEach((item) {
       _usuarios.add(UsuarioModel(
-        idUsuario: item["idUsuario"],
-        nombre: item["nombre"],
-        apellidoPaterno: item["apellidoPaterno"],
-        apellidoMaterno: item["apellidoMaterno"],
-        dni: item["dni"],
-        email: item["email"],
-        username: item["login"],
-        password: item["password"],
-        foto: item["foto"],
-        estado: item["estado"].toString(),
-        createdAt: item["createdAt"],
+        idUsuario       : item["idUsuario"],
+        nombre          : item["nombre"],
+        apellidoPaterno : item["apellidoPaterno"],
+        apellidoMaterno : item["apellidoMaterno"],
+        dni             : item["dni"],
+        email           : item["email"],
+        username        : item["login"],
+        password        : item["password"],
+        foto            : item["foto"],
+        fechaAlta       : item["fechaAlta"],
+        perfil          : item['perfil']['nombre'],
+        estado          : item["estado"].toString(),
+        createdAt       : item["createdAt"],
       ));
     });
 
@@ -699,6 +703,9 @@ class PrincipalController extends GetxController {
     }
     List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
     if(ubigeos.length > 0){
+      _isLoading = false;
+      _hayData = true;
+      update();
       Get.back();
     }
 
@@ -710,17 +717,28 @@ class PrincipalController extends GetxController {
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
-          'Cargando datos de la tabla ubigeo',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+          'Notificación',
+          style: TextStyle( fontWeight: FontWeight.normal),
         ),
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text('Se esta cargando los datos de las siguientes tablas:'),
+            Text('- Usuarios'),
+            Text('- Encuestadores'),
+            Text('- Proyecto'),
+            Text('- Encuesta'),
+            Text('- Preguntas'),
+            Text('- Ubigeo'),
+            SizedBox(
+              height: 8,
+            ),
             CircularProgressIndicator(),
             SizedBox(
               height: 8,
             ),
-            Text('Tiempo estimado de carga 1 min')
+            Text('Está operación se realiza solo 1 vez ,tiempo estimado de carga 4 a 8 min')
           ],
         ),
       ),

@@ -80,11 +80,7 @@ class ProfileController extends GetxController{
       _encuestasFinalizadas = listMisEncuestas.length.toString();
     }
 
-    Parser p = Parser();
-    Expression exp = p.parse('5.5 +2');
-    print(exp); //( 5.0 +2.0)
-     String result = exp.evaluate(EvaluationType.REAL, null).toString();  // if context is not available replace it with null.
-    print(result); // 7 esto funcionan con dart v 2.12.3
+    
     update();
 
   }

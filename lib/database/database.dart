@@ -186,6 +186,8 @@ class DBProvider {
             username TEXT,
             password TEXT,
             foto TEXT,
+            fechaAlta TEXT,
+            perfil TEXT,
             estado TEXT,
             createdAt TEXT
            

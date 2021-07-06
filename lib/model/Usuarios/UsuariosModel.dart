@@ -36,7 +36,9 @@ class UsuarioModel{
   String email; 
   String username;
   String password;
-  String foto;  
+  String foto;
+  String fechaAlta;
+  String perfil;
   String estado;
   String createdAt;
   
@@ -45,7 +47,7 @@ class UsuarioModel{
   UsuarioModel(
       {
         this.idUsuario,this.nombre,this.apellidoPaterno,this.apellidoMaterno,this.dni,this.email,this.username,this.password,
-        this.foto,this.estado,this.createdAt
+        this.foto, this.fechaAlta,this.perfil,this.estado,this.createdAt
         
       }
   );
@@ -63,6 +65,8 @@ class UsuarioModel{
     password            : json['password'],
     foto                : json['foto'],
     estado              : json['estado'],
+    fechaAlta          : json['fechaAlta'],
+    //perfil              : json['perfil']['nombre'],
     createdAt           : json['createdAt'],
     
   );
@@ -82,6 +86,8 @@ class UsuarioModel{
       'password'            : password,
       'foto'                : foto,
       'estado'              : estado,
+      'fechaAlta'           : fechaAlta,
+      'perfil'              : perfil,
       'createdAt'           : createdAt,
          
 
