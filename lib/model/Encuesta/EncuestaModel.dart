@@ -33,9 +33,10 @@ class EncuestaModel {
   String requeridoMultimedia;
   String esRetomado;
   String encuestadoIngresoManual;
+  
 
-  EncuestaModel(
-      {this.idEncuesta,
+  EncuestaModel({
+    this.idEncuesta,
       this.idProyecto,
       this.titulo,
       this.descripcion,
@@ -55,7 +56,9 @@ class EncuestaModel {
       this.requeridoObservacion,
       this.requeridoMultimedia,
       this.esRetomado,
-      this.encuestadoIngresoManual});
+      this.encuestadoIngresoManual,
+     
+  });
 
   factory EncuestaModel.fromMap(Map<String, dynamic> json) => EncuestaModel(
       idEncuesta: json['idEncuesta'],
@@ -77,7 +80,9 @@ class EncuestaModel {
       esRetomado: json['esRetomado'].toString(),
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
-      encuestadoIngresoManual: json["encuestadoIngresoManual"]);
+      encuestadoIngresoManual: json["encuestadoIngresoManual"]
+  );
+      
 
   Map<String, dynamic> toMap() {
     return {
@@ -100,7 +105,8 @@ class EncuestaModel {
       'esRetomado': esRetomado,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
-      'encuestadoIngresoManual': encuestadoIngresoManual
+      'encuestadoIngresoManual': encuestadoIngresoManual,
+      
     };
   }
 }

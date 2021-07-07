@@ -554,8 +554,6 @@ class EncuestaController extends GetxController {
     _listprovincias = [];
     _listDistritos = [];
     _listCentrosPoblados = [];
-
-    print(data.idEncuestado);
     var idEncuestado2 = data.idEncuestado.toString();
     var nombreCompleto =
         data.nombre + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
@@ -585,11 +583,7 @@ class EncuestaController extends GetxController {
       temporalProvincia.add(flat);
     });
 
-    /*dataUbi.forEach((element) { 
-      var flat = element.substring(0,10);
-      print(flat);
-      temporalCentroPoblado.add(flat);
-    });*/
+    
 
     listCodDep = temporalDepartamento.toSet().toList();
     listcodProvincia = temporalProvincia.toSet().toList();
@@ -713,9 +707,7 @@ class EncuestaController extends GetxController {
           SizedBox(
             height: 8,
           ),
-          SizedBox(
-            height: 8,
-          ),
+          
           Text('CENTRO POBLADO'),
           CentroPoblado(
             showCentroPoblado: _listCentrosPoblados,
@@ -735,7 +727,7 @@ class EncuestaController extends GetxController {
                 onPressed: () {
                   String ubigeo = _selectCodDepartamento +
                       _selectCodProvincia +
-                      _selectCodDistrito;
+                      _selectCodDistrito + _selectCodCentroPoblado;
                   idEncuestado = idEncuestado2.toString();
                   print(idEncuestado);
                   print(ubigeo);
@@ -988,6 +980,7 @@ class EncuestaController extends GetxController {
       modalDeRegistro();
     }
   }
+  
   TextEditingController _nombreController     = new TextEditingController();
   TextEditingController _apellidoPaController = new TextEditingController();
   TextEditingController _apellidoMaController = new TextEditingController();
@@ -1086,9 +1079,9 @@ class EncuestaController extends GetxController {
                 ),
                 onPressed: () async {
                   SharedPreferences preferences = await SharedPreferences.getInstance();
-                  encuestadoData["apellidoMaterno"] = _apellidoMaController.text;
-                  encuestadoData["apellidoPaterno"] = _apellidoPaController.text;
-                  encuestadoData["nombre"] = _nombreController.text;
+                  encuestadoData["apellidoMaterno"] = _apellidoMaController.text == "" || _apellidoMaController.text == null ? "" :   _apellidoMaController.text;
+                  encuestadoData["apellidoPaterno"] = _apellidoPaController.text == "" || _apellidoPaController.text == null ? "" : _apellidoPaController.text;
+                  encuestadoData["nombre"] = _nombreController.text == "" || _nombreController.text == null ? "NO SE REGISTRO" : _nombreController.text;
                   encuestadoData["documento"] = _documentoController.text;
                   encuestadoData["email"] = "";
                   encuestadoData["direccion"] = "";
@@ -1100,8 +1093,27 @@ class EncuestaController extends GetxController {
                   encuestadoData["tipoDocumento"] = "";
                   encuestadoData["tipoPersona"] = "NATURAL";
                   encuestadoData["idTecnico"] = preferences.getString('idUsuario');
-                  Get.back();
-                  modalAmbitodeIntervencion(encuestadoData,false);
+                  if(_documentoController.text == "" || _documentoController.text == null){
+                    Get.dialog(
+                      AlertDialog(
+                        title: Text('Notificación'),
+                        content: Text('El campo del número de documento es obligatorio'),
+                        actions: [
+                          MaterialButton(
+                            color: Color.fromRGBO(0, 102, 84, 1),
+                            onPressed: (){
+                              Get.back();
+                            },
+                            child: Text('Entendido',style: TextStyle(color: Colors.white),),
+                          )
+                        ],
+                      )
+                    );
+                  }else{
+                    Get.back();
+                    modalAmbitodeIntervencion(encuestadoData,false);
+                  }
+                  
                 }
               )
             ],
@@ -1276,7 +1288,7 @@ class EncuestaController extends GetxController {
     List<UbigeoModel> showDepartamentos = [];
 
     List<UbigeoModel> dataDepartamento =
-        await DBProvider.db.getDepartamentos1("22");
+        await DBProvider.db.getDepartamentos2("22");
     print(dataDepartamento[0].descripcion);
     showDepartamentos.add(dataDepartamento[0]);
     _valueDepartamento = showDepartamentos[0].descripcion;
@@ -1391,32 +1403,46 @@ class EncuestaController extends GetxController {
   /* SI es manual el ingreso */
 
   selectProvinciaManual(UbigeoModel value) async {
-    _listDistritos = [];
+    
+    
+    //_listCentrosPoblados = [];
     List<UbigeoModel> dataDistritos =
         await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
-    print(dataDistritos.length);
+    //print(dataDistritos.length);
+    //
+    _listDistritos = [];
+    dataDistritos.forEach((element) { 
+      _listDistritos.add(element);
+    });
 
-    for (var i = 0; i < dataDistritos.length; i++) {
-      _listDistritos.add(dataDistritos[i]);
-    }
     if (_listDistritos.length > 0) {
       print(_listDistritos.length);
       _selectCodProvincia = value.codigoProvincia;
+      _selectCodDistrito = _listDistritos[0].codigoDistrito;
+      _valueDistrito = _listDistritos[0].descripcion;
       update(['distrito']);
+      await selectDistritoManual(value, _selectCodProvincia, _selectCodDistrito,true);
     }
+    //update(['distrito']);
+    
   }
 
-  selectDistritoManual(UbigeoModel value) async {
+  selectDistritoManual(UbigeoModel value,String codProvincia,String codDistrito ,bool estado) async {
     _listCentrosPoblados = [];
-    List<UbigeoModel> dataCentroPoblados = await DBProvider.db
-        .getAllCentrosPoblados(
-            value.codigoProvincia, "22", value.codigoDistrito);
-    print(dataCentroPoblados.length);
+    List<UbigeoModel> dataCentroPoblados =[];
+    if(estado == true){
+      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(codProvincia, "22", codDistrito);
+    }else{
+      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(value.codigoProvincia, "22", value.codigoDistrito);
+    }
+    
+    //print(dataCentroPoblados.length);
 
     for (var i = 0; i < dataCentroPoblados.length; i++) {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
     _selectCodDistrito = value.codigoDistrito;
+    _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
     update(['centroPoblado']);
 
   }
@@ -1737,7 +1763,7 @@ class DropDownDistrito extends StatelessWidget {
               ),
               onTap: () async {
                 if (isManual == true) {
-                  _.selectDistritoManual(value);
+                  _.selectDistritoManual(value,"","",false);
                 } else {
                   _.selectedDistrito(value);
                 }

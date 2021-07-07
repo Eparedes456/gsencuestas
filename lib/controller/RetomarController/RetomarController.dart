@@ -142,7 +142,7 @@ class RetommarController extends GetxController{
 
         }else{
 
-          if( int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion ){
+          if( int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion &&  respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta){
 
             print('pintar de verde');
 
@@ -184,7 +184,7 @@ class RetommarController extends GetxController{
       //await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
 
       
-      if(element.idOpcion == opcionEscogida.idOpcion){
+      if(element.idOpcion == opcionEscogida.idOpcion && element.idPregunta == opcionEscogida.idPregunta){
 
         element.selected = true;
         await DBProvider.db.insertRespuesta(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.idOpcion.toString(), opcionEscogida.valor);
@@ -205,7 +205,7 @@ class RetommarController extends GetxController{
     opcionesPreguntas.forEach((element) async{
       if(element.idPregunta == opcionEscogida.idPregunta){
 
-        if(element.idOpcion == opcionEscogida.idOpcion){
+        if(element.idOpcion == opcionEscogida.idOpcion && element.idPregunta == opcionEscogida.idPregunta){
           
           if(element.selected == true){
 

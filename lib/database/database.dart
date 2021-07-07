@@ -1194,6 +1194,17 @@ class DBProvider {
         : [];
     return listDepartamento;
   }
+  getDepartamentos2(String codDepartamento) async {
+    final db = await database;
+    var response = await db.rawQuery('''
+        SELECT codigoDepartamento,descripcion FROM ubigeo WHERE codigoDepartamento = '$codDepartamento' 
+        AND codigoProvincia != '00' AND codigoDistrito = '00'
+        ''');
+    List<UbigeoModel> listDepartamento = response.isNotEmpty
+        ? response.map((e) => UbigeoModel.fromJson(e)).toList()
+        : [];
+    return listDepartamento;
+  }
 
   getProvincia1(String codigoProvincia, String codigoDepartamento) async {
     final db = await database;
@@ -1211,7 +1222,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
-        AND codigoDistrito = '00'
+        AND codigoProvincia != '00' AND codigoDistrito = '00'
         ''');
     List<UbigeoModel> listProvincias = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()
@@ -1236,7 +1247,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
-        AND codigoProvincia = '$codigoProvincia' AND codigoCentroPoblado = '0000'
+        AND codigoProvincia = '$codigoProvincia' AND   codigoDistrito !='00' AND  codigoCentroPoblado = '0000'
         ''');
     List<UbigeoModel> listDepartamento = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()
@@ -1249,7 +1260,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
-        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito' AND codigoCentroPoblado != '0000' 
         ''');
     List<UbigeoModel> listCentroPoblados = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()

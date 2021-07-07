@@ -49,6 +49,11 @@ class Parcela1Controller extends GetxController{
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
   List<EncuestadoModel> encuestado = [];
+
+  String _valueCentroPoblado;
+  String get valueCentroPoblado => _valueCentroPoblado;
+  List<UbigeoModel> _listCentrosPoblados = [];
+  List<UbigeoModel> get listCentroPoblados => _listCentrosPoblados;
   
   /**  ubigeo */
     
@@ -222,10 +227,8 @@ class Parcela1Controller extends GetxController{
             showEncuesta1(encuestado);
 
           }else{
-          
             Get.back();
             messageInfo('El encuestado no se encuentra registrado');
-
           }
           
 
@@ -425,6 +428,8 @@ class Parcela1Controller extends GetxController{
     _selectCodDepartamento  = idDepartamento;
     _selectCodProvincia     = _listprovincias[0].codigoProvincia;
 
+
+
   
     Get.dialog(
 
@@ -464,6 +469,14 @@ class Parcela1Controller extends GetxController{
             SizedBox(height: 8,),
             Text('DISTRITO'),
             DropDownDistrito(),
+            SizedBox(height: 8,),
+            Text('CENTRO POBLADO'),
+            CentroPoblado(
+              showCentroPoblado: _listCentrosPoblados,
+              dataUbi: dataUbi,
+              isManual: false,
+            ),
+            
             
             
             SizedBox(height: 8,),
@@ -746,6 +759,65 @@ class DropDownDistrito extends StatelessWidget {
                 },
               ),
             ),
+    );
+  }
+}
+
+class CentroPoblado extends StatelessWidget {
+  final List<UbigeoModel> showCentroPoblado;
+  final List<String> dataUbi;
+  final bool isManual;
+  const CentroPoblado(
+      {Key key, this.showCentroPoblado, this.dataUbi, this.isManual})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<Parcela1Controller>(
+      init: Parcela1Controller(),
+      id: 'centroPoblado',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione un centro poblado'),
+          ),
+          isExpanded: true,
+          value: _.valueCentroPoblado,
+          items: _.listCentroPoblados.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                if (isManual == true) {
+                  //_.selectedCentroPoblado(value);
+                } else {
+                  //_.selectedDistrito(value);
+                }
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            //_.changeCentroPoblado(valor);
+          },
+        ),
+      ),
     );
   }
 }

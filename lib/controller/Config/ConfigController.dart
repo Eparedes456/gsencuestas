@@ -684,7 +684,8 @@ class ConfigController extends GetxController {
             .getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
         var idProyecto = _proyectos[j].idProyecto.toString();
         listEncuestaApi.forEach((item) {
-          _encuestas.add(EncuestaModel(
+          _encuestas.add(
+            EncuestaModel(
               idEncuesta: item["idEncuesta"],
               idProyecto: idProyecto.toString(),
               titulo: item["titulo"],
@@ -702,10 +703,12 @@ class ConfigController extends GetxController {
               requeridoObservacion: item['requeridoObservacion'].toString(),
               requeridoMultimedia: item['requeridoMultimedia'].toString(),
               esRetomado: item['esRetomado'].toString(),
-              encuestadoIngresoManual:
-                  item['encuestadoIngresoManual'].toString(),
+              encuestadoIngresoManual:item['encuestadoIngresoManual'].toString(),
+              //apariencia: item["apariencia"]["appearance"],
               createdAt: item["createdAt"],
-              updatedAt: item["updatedAt"]));
+              updatedAt: item["updatedAt"]
+            )
+          );
         });
       }
       for (var m = 0; m < _encuestas.length; m++) {
@@ -726,7 +729,7 @@ class ConfigController extends GetxController {
                 idEncuesta: int.parse(idEncuesta),
                 enunciado: item["enunciado"],
                 tipo_pregunta: item["tipoPregunta"]["questionType"],
-                apariencia: "", //item["apariencia"],
+                apariencia: item["apariencia"]["appearance"],
                 requerido: item["requerido"].toString(),
                 requerido_msj: item["requerido_msj"],
                 readonly: item["readonly"].toString(),

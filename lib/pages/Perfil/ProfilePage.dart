@@ -35,10 +35,6 @@ class ProfilePage extends StatelessWidget {
 
                       CircleAvatar(
                         radius: 30,
-                        /*child: Icon(
-                          Icons.account_circle,
-                          size: 80,
-                        ),*/
                         backgroundImage:  _.photoBase64 == null || _.photoBase64 == "" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_.photoBase64)  //NetworkImage('https://static01.nyt.com/images/2017/05/07/arts/07GAL-GADOTweb/07GAL-GADOTweb-articleLarge.jpg?quality=75&auto=webp&disable=upscale'),
                       ),
 
@@ -80,11 +76,7 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     
                     GestureDetector(
-                      onTap: (){
-
-                        //Get.to(MisEncuestas());
-
-                      },
+                      onTap: (){},
                       child: Container(
                         
                         width: 100,
@@ -183,7 +175,6 @@ class ProfilePage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-
                             Icon(
                               Icons.power_settings_new,
                               size: 35,
@@ -199,16 +190,20 @@ class ProfilePage extends StatelessWidget {
                                 fontWeight: FontWeight.w700
                               ),
                             )
-
-
                           ],
                         ),
                       ),
                     ),
-
                   ],
                 ),
                 SizedBox(height: 20,),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  child: Text('Datos adicionales',style: TextStyle(color: Colors.blueGrey),),
+                ),
+                SizedBox(height: 12,),
+                
 
                 Expanded(
                   child: Padding(
@@ -218,23 +213,65 @@ class ProfilePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white,
                       ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 12,),
-                          /*ListTile(
-                            leading: Icon(Icons.map,color: Color.fromRGBO(0, 102, 84, 1),),
-                            title: Text(
-                              'Ver parcelas de los beneficiarios',
-                              style: TextStyle(fontSize: 14),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 12,),
+                            ListTile(
+                              leading: Icon(Icons.person_outline,color: Color.fromRGBO(0, 102, 84, 1),),
+                              title: Text(
+                                'Perfil',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_.perfil}',style: TextStyle(fontSize: 12),),
+                              
                             ),
-                            subtitle: Text('Lista de beneficiarios con sus correspondientes parcelas geolocalizadas.',style: TextStyle(fontSize: 12),),
-                            trailing: Icon(Icons.arrow_forward_ios,color: Colors.grey,),
-                            onTap: (){
-                              _.navigateToParcela();
-                            },
-                          ),
-                          Divider()*/
-                        ],
+                            SizedBox(height: 12,),
+                            ListTile(
+                              leading: Icon(Icons.badge,color: Color.fromRGBO(0, 102, 84, 1),),
+                              title: Text(
+                                'Nro de documento',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_.nroDocumento}',style: TextStyle(fontSize: 12),),
+                              
+                            ),
+                            Divider(),
+                            SizedBox(height: 12,),
+                            ListTile(
+                              leading: Icon(Icons.email,color: Color.fromRGBO(0, 102, 84, 1),),
+                              title: Text(
+                                'Correo electronico',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_.correoElectronico}',style: TextStyle(fontSize: 12),),
+                              
+                            ),
+                            Divider(),
+                            SizedBox(height: 12,),
+                            ListTile(
+                              leading: Icon(Icons.email,color: Color.fromRGBO(0, 102, 84, 1),),
+                              title: Text(
+                                'Correo electronico',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_.correoElectronico}',style: TextStyle(fontSize: 12),),
+                              
+                            ),
+                            Divider(),
+                            SizedBox(height: 12,),
+                            ListTile(
+                              leading: Icon(Icons.calendar_today,color: Color.fromRGBO(0, 102, 84, 1),),
+                              title: Text(
+                                'Fecha alta',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_.fechaAlta}',style: TextStyle(fontSize: 12),),
+                              
+                            ),
+                            Divider(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

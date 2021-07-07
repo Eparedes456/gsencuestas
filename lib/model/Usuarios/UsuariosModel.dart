@@ -65,8 +65,8 @@ class UsuarioModel{
     password            : json['password'],
     foto                : json['foto'],
     estado              : json['estado'],
-    fechaAlta          : json['fechaAlta'],
-    //perfil              : json['perfil']['nombre'],
+    fechaAlta           : json['fechaAlta'],
+    perfil              : json['perfil'],
     createdAt           : json['createdAt'],
     
   );

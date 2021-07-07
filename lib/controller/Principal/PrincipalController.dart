@@ -539,7 +539,8 @@ class PrincipalController extends GetxController {
             .getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
         var idProyecto = _proyectos[j].idProyecto.toString();
         listEncuestaApi.forEach((item) {
-          _encuestas.add(EncuestaModel(
+          _encuestas.add(
+            EncuestaModel(
               idEncuesta: item["idEncuesta"],
               idProyecto: idProyecto.toString(),
               titulo: item["titulo"],
@@ -557,10 +558,11 @@ class PrincipalController extends GetxController {
               requeridoObservacion: item['requeridoObservacion'].toString(),
               requeridoMultimedia: item['requeridoMultimedia'].toString(),
               esRetomado: item['esRetomado'].toString(),
-              encuestadoIngresoManual:
-                  item['encuestadoIngresoManual'].toString(),
+              encuestadoIngresoManual:item['encuestadoIngresoManual'].toString(),
               createdAt: item["createdAt"],
-              updatedAt: item["updatedAt"]));
+              updatedAt: item["updatedAt"]
+            )
+          );
         });
       }
       for (var m = 0; m < _encuestas.length; m++) {
@@ -581,7 +583,7 @@ class PrincipalController extends GetxController {
                 idEncuesta: int.parse(idEncuesta),
                 enunciado: item["enunciado"],
                 tipo_pregunta: item["tipoPregunta"]["questionType"],
-                apariencia: "", //item["apariencia"],
+                apariencia: item["apariencia"]["appearance"],
                 requerido: item["requerido"].toString(),
                 requerido_msj: item["requerido_msj"],
                 readonly: item["readonly"].toString(),
@@ -732,11 +734,11 @@ class PrincipalController extends GetxController {
             Text('- Preguntas'),
             Text('- Ubigeo'),
             SizedBox(
-              height: 8,
+              height: 20,
             ),
-            CircularProgressIndicator(),
+            Center(child: CircularProgressIndicator()),
             SizedBox(
-              height: 8,
+              height: 20,
             ),
             Text('Está operación se realiza solo 1 vez ,tiempo estimado de carga 4 a 8 min')
           ],

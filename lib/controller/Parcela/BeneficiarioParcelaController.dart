@@ -36,6 +36,11 @@ class BeneficiarioParcelaController extends GetxController{
   String idEncuestado  = "";
   bool hayData = false;
   var idUbigeo1;
+  List<UbigeoModel> _listCentrosPoblados = [];
+  List<UbigeoModel> get listCentroPoblados => _listCentrosPoblados;
+   String _selectCodCentroPoblado = "";
+   String _valueCentroPoblado;
+  String get valueCentroPoblado => _valueCentroPoblado;
 
   /**  ubigeo */
     
@@ -98,13 +103,14 @@ class BeneficiarioParcelaController extends GetxController{
     liscodDistrito = [];
     _listprovincias = [];
     _listDistritos = [];
-
+    _listCentrosPoblados = [];
     
     var idUbigeo        =  idUbigeo1; // "220101,220203,210402,220103";  
     var dataUbi = idUbigeo.split(",");
     List temporalDepartamento = [];
     List temporalProvincia    = [];
     List temporalDistrito     = [];
+    List temporalCentroPoblado = [];
 
     List<UbigeoModel> showDepartamentos = [];
     List<UbigeoModel>    showProvincias    = [];
@@ -162,12 +168,30 @@ class BeneficiarioParcelaController extends GetxController{
       );
       _listDistritos.add(dataDistritos[0]);
     }
+
+    var result2 = dataUbi.where((item) =>  item.contains(_listDistritos[0].codigoDepartamento) && item.contains(_listDistritos[0].codigoProvincia) && item.contains(_listDistritos[0].codigoDistrito) );
+    result2.forEach((element) {
+      temporalCentroPoblado.add(element);
+    });
+
+    for (var i = 0; i < temporalCentroPoblado.length; i++) {
+
+      List<UbigeoModel> dataCentroPoblados = await DBProvider.db.getCentroPoblado(
+        temporalCentroPoblado[i].toString().substring(2,4), temporalCentroPoblado[i].toString().substring(0,2),
+        temporalCentroPoblado[i].toString().substring(4,6), temporalCentroPoblado[i].toString().substring(6,10)
+      );
+      _listCentrosPoblados.add(dataCentroPoblados[0]);
+    }
+
+
     print(_listDistritos);
 
     _valueDistrito = _listDistritos[0].descripcion;
     _selectCodDistrito = _listDistritos[0].codigoDistrito;
     _selectCodDepartamento  = idDepartamento;
     _selectCodProvincia     = _listprovincias[0].codigoProvincia;
+    _valueCentroPoblado     = _listCentrosPoblados[0].descripcion;
+    _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
 
   
     Get.dialog(
@@ -208,6 +232,16 @@ class BeneficiarioParcelaController extends GetxController{
             SizedBox(height: 8,),
             Text('DISTRITO'),
             DropDownDistrito(),
+            SizedBox(
+            height: 8,
+          ),
+          
+            Text('CENTRO POBLADO'),
+            CentroPoblado(
+              showCentroPoblado: _listCentrosPoblados,
+              dataUbi: dataUbi,
+              isManual: false,
+            ),
             
             
             SizedBox(height: 8,),
@@ -222,8 +256,6 @@ class BeneficiarioParcelaController extends GetxController{
                   onPressed: (){
 
                     String ubigeo = _selectCodDepartamento + _selectCodProvincia + _selectCodDistrito;
-                    
-                 
                     Get.back();
                     newParcela(ubigeo, idEncuestado);
 
@@ -245,12 +277,8 @@ class BeneficiarioParcelaController extends GetxController{
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         ),
-
       )
-
     );
-
-
   }
 
   newParcela(ubi,id){
@@ -344,8 +372,14 @@ class BeneficiarioParcelaController extends GetxController{
     update(['distrito']);
   }
 
+  selectedCentroPoblado(UbigeoModel value) {
+    _selectCodCentroPoblado = value.codigoCentroPoblado;
+  }
 
-
+  changeCentroPoblado(String valor){
+    _valueCentroPoblado = valor;
+    update(['centroPoblado']);
+  }
 
 }
 
@@ -499,6 +533,65 @@ class DropDownDistrito extends StatelessWidget {
                 },
               ),
             ),
+    );
+  }
+}
+
+class CentroPoblado extends StatelessWidget {
+  final List<UbigeoModel> showCentroPoblado;
+  final List<String> dataUbi;
+  final bool isManual;
+  const CentroPoblado(
+      {Key key, this.showCentroPoblado, this.dataUbi, this.isManual})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<BeneficiarioParcelaController>(
+      init: BeneficiarioParcelaController(),
+      id: 'centroPoblado',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione un centro poblado'),
+          ),
+          isExpanded: true,
+          value: _.valueCentroPoblado,
+          items: _.listCentroPoblados.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                if (isManual == true) {
+                  //_.selectedCentroPoblado(value);
+                } else {
+                  //_.selectedDistrito(value);
+                }
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            //_.changeCentroPoblado(valor);
+          },
+        ),
+      ),
     );
   }
 }

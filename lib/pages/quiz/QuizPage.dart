@@ -9,6 +9,8 @@ import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/TextFieldWidget.dart';
 import 'dart:io' show Platform;
 
+import 'package:gsencuesta/pages/quiz/WidgetQuiz/UbigeoWidget.dart';
+
 
 
 class QuizPage extends StatelessWidget {
@@ -57,10 +59,10 @@ class QuizPage extends StatelessWidget {
 
                   SizedBox(height: 10,),
                   Expanded(
-                    //height: MediaQuery.of(context).size.height,
+                    
                     child: ListView.builder(
                         shrinkWrap: true,
-                        //physics: ScrollPhysics(),
+                      
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         itemCount: _.preguntas.length,
                         itemBuilder: (BuildContext context, index){
@@ -256,6 +258,13 @@ class QuizPage extends StatelessWidget {
 
                           }else  if( _.preguntas[index].tipo_pregunta == "select_multiple list_name"){
                             return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
+                          }else if(_.preguntas[index].tipo_pregunta =="ubigeo"){
+                            return UbigeoWidget(
+                              id_pregunta : id_pregunta,
+                              enunciado   : enunciadoPregunta,
+                              numPregunta : numPregunta.toString(),
+                              apariencia  : _.preguntas[index].apariencia,
+                            );
                           }
 
 

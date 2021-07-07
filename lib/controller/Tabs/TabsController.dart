@@ -144,7 +144,7 @@ class TabsController extends GetxController{
         encuestado["tipoDocumento"] = "DNI";
         encuestado["tipoPersona"] = "NATURAL";
         encuestado["validadoReniec"] = dataEncuestado[i].validadoReniec;
-
+        sendFicha['encuestado']   = encuestado;
       }else{
         encuestado["idEncuestado"] = dataFichas[i].idEncuestado;
         sendFicha['encuestado']   = encuestado;

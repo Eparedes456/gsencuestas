@@ -50,6 +50,11 @@ class ProfileController extends GetxController{
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
 
+  String nroDocumento       = "";
+  String correoElectronico  = "";
+  String fechaAlta          = "";
+  String perfil             = "";
+
  
   loadData()async{
 
@@ -59,6 +64,10 @@ class ProfileController extends GetxController{
     var nombreUsuario =  preferences.getString('loginUser');
     
     List<UsuarioModel> usuarioData = await DBProvider.db.dataUser(nombreUsuario);
+    nroDocumento        = usuarioData[0].dni;
+    correoElectronico   = usuarioData[0].email;
+    fechaAlta           = usuarioData[0].fechaAlta;
+    perfil              = usuarioData[0].perfil;  
     print(usuarioData);
     var foto = usuarioData[0].foto;
     if(foto == "" || foto == null){
