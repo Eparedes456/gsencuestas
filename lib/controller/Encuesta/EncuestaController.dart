@@ -20,6 +20,7 @@ import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Practica/Practica.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
+import 'package:gsencuesta/pages/quiz/MultiPageQuiz/MultiPageQuiz.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,8 @@ class EncuestaController extends GetxController {
     var data = Get.arguments;
     _nombreProyecto = data[1];
     ingresoNuevo = data[0].encuestadoIngresoManual;
-    print(data[0]);
+    tipoVista = data[0].tipoVista;
+    print(tipoVista);
 
     loadData(data[0]);
   }
@@ -86,6 +88,8 @@ class EncuestaController extends GetxController {
 
   Uint8List _photoBase64;
   Uint8List get photoBase64 => _photoBase64;
+
+  String tipoVista = "";
 
   List<PreguntaModel> _listPregunta = [];
   List<PreguntaModel> get listPregunta => _listPregunta;
@@ -250,19 +254,25 @@ class EncuestaController extends GetxController {
   }
 
   loadingModal() {
-    Get.dialog(AlertDialog(
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(
-            height: 12,
-          ),
-          Text('Cargando....')
-        ],
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(
+              height: 12,
+            ),
+            Text('Buscando....')
+          ],
+        ),
       ),
-    ));
+      barrierDismissible: false
+    );
   }
 
   showModalSearch() {
@@ -765,7 +775,7 @@ class EncuestaController extends GetxController {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             color: Color.fromRGBO(0, 102, 84, 1),
             onPressed: () {
-              navigateToQuiz(id, ubigeo);
+                navigateToQuiz(id, ubigeo);
             },
             child: Text('Empezar'),
           ),
@@ -847,22 +857,34 @@ class EncuestaController extends GetxController {
 
     print("Ultima ficha insertada " + idFicha.toString());
 
-    var result = await Get.to(QuizPage(), arguments: {
-      'idEncuesta': idEncuesta,
-      'tituloEncuesta': titulo,
-      'idEncuestado': idEncuestado,
-      'idFicha': idFicha.toString()
-    });
+    if(tipoVista == "MULTIPAGE"){
+      Get.to(MultiPageQuiz(),arguments: {
+        'idEncuesta': idEncuesta,
+        'tituloEncuesta': titulo,
+        'idEncuestado': idEncuestado,
+        'idFicha': idFicha.toString()
+      });
+    }else {
+      var result = await Get.to(QuizPage(), arguments: {
+        'idEncuesta': idEncuesta,
+        'tituloEncuesta': titulo,
+        'idEncuestado': idEncuestado,
+        'idFicha': idFicha.toString()
+      });
 
-    if (result == "SI") {
-      print('Actualizar la vista mostrando las encuestas pendientes');
-      Get.back();
-      Get.back();
-      _listEncuesta = [];
-      _encuestasPendientes = false;
-      update();
-      await pendientesEncuestas();
+      if (result == "SI") {
+        print('Actualizar la vista mostrando las encuestas pendientes');
+        Get.back();
+        Get.back();
+        _listEncuesta = [];
+        _encuestasPendientes = false;
+        update();
+        await pendientesEncuestas();
+      }
+
     }
+
+    
   }
 
   pendientesEncuestas() async {
@@ -1147,11 +1169,26 @@ class EncuestaController extends GetxController {
             onPressed: () async {
               Get.back();
               loadingModal();
-              var result =
-                  await apiConexion.buscarReniec(searchReniecController.text);
-              print(result["datosPersona"]);
-              Get.back();
-              showInfoReniecModal(result["datosPersona"]);
+              var result = await apiConexion.buscarReniec(searchReniecController.text);
+              //print(result["datosPersona"]);
+              //print(result);
+              if(result == 3){
+                Get.back();
+                Get.dialog(
+                  AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    title: Text('Notificación'),
+                    content: Text('No se encontro ningún registro asociado al número de documento insertado.'),
+                  )
+                );
+              }else{
+
+                Get.back();
+                showInfoReniecModal(result["datosPersona"]);
+              }
+              
             })
       ]),
     ));
@@ -1171,7 +1208,11 @@ class EncuestaController extends GetxController {
 
     Uint8List _fotoBase64 = base64Decode(imagenReniec);
 
-    Get.dialog(AlertDialog(
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
         title: Center(child: Text('Ciudadano encontrado')),
         content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -1441,6 +1482,7 @@ class EncuestaController extends GetxController {
     for (var i = 0; i < dataCentroPoblados.length; i++) {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
+    _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
     _selectCodDistrito = value.codigoDistrito;
     _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
     update(['centroPoblado']);

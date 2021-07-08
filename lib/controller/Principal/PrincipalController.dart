@@ -559,6 +559,7 @@ class PrincipalController extends GetxController {
               requeridoMultimedia: item['requeridoMultimedia'].toString(),
               esRetomado: item['esRetomado'].toString(),
               encuestadoIngresoManual:item['encuestadoIngresoManual'].toString(),
+              tipoVista: item["tipoVista"],
               createdAt: item["createdAt"],
               updatedAt: item["updatedAt"]
             )
@@ -601,7 +602,9 @@ class PrincipalController extends GetxController {
                 estado: item["estado"].toString(),
                 updated_at: item["updatedAt"],
                 created_at: item["createdAt"],
-                index1: index),
+                index1: index,
+                bloqueDescripcion: item["bloque"]["nombre"]
+            ),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
           if (preguOpcion.length > 0) {

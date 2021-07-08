@@ -62,7 +62,6 @@ class QuizPage extends StatelessWidget {
                     
                     child: ListView.builder(
                         shrinkWrap: true,
-                      
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         itemCount: _.preguntas.length,
                         itemBuilder: (BuildContext context, index){
@@ -73,10 +72,19 @@ class QuizPage extends StatelessWidget {
                           var placeholder = _.preguntas[index].bind_field_placeholder;
                           var maxLength = _.preguntas[index].bind_field_length;
                           var typeData = _.preguntas[index].bind_type;
+                          var bloqueDefinitivo = _.preguntas[index].bloqueDescripcion;
+                          var bloque;
+                          if(_.bloque == null || _.bloque == ""){
+                            _.bloque = bloqueDefinitivo;
+                          }else if(_.bloque == bloqueDefinitivo){
+                            //_.bloque = "";
+                            bloque = bloqueDefinitivo; 
+                          }else if(_.bloque != bloqueDefinitivo){
+                            _.bloque = bloqueDefinitivo;
+                          }
 
                           if(_.preguntas[index].tipo_pregunta == "integer" || _.preguntas[index].tipo_pregunta == "decimal" ){
 
-                            
                               return Padding(
                               padding: EdgeInsets.only(left: 10,right: 10),
                               child: Container(
@@ -86,6 +94,12 @@ class QuizPage extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+
+                                      _.bloque == bloque? Container(): Padding(
+                                        padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                        child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
+                                      ),
+                                     
 
                                       Padding(
                                         padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
@@ -160,21 +174,97 @@ class QuizPage extends StatelessWidget {
         
                           }else if(_.preguntas[index].tipo_pregunta == "text"){
                             return Padding(
-                              padding: EdgeInsets.only(left: 10,right: 10),
-                              child: Container(
-                                width: double.infinity,
-                                child: Card(
-                                  elevation: 5,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-
-                                      Padding(
-                                        padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              padding:  EdgeInsets.only(left: 10,right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _.bloque == bloque? Container(): Padding(
+                                    padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                    child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
+                                  ), 
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 0,right: 0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: Card(
+                                        elevation: 5,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Expanded(
+
+                                            Padding(
+                                              padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      '$numPregunta.- $enunciadoPregunta',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w700,
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 16
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                     _.preguntas[index].requerido == "true"  ? " (*)": "",
+                                                     style: TextStyle(
+                                                       color: Colors.red
+                                                     ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+
+                                            SizedBox( height: 20,),
+
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 10,right: 10),
+                                              child: TextField(
+                                                maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                                                controller: _.controllerInput[index].controller,
+                                                decoration: InputDecoration(
+                                                  hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                                ),
+                                                keyboardType:  TextInputType.text,
+                                                
+                                              ),
+                                            
+                                            ),
+
+                                            SizedBox( height: 20,),
+
+
+
+                                          ],
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }else if(_.preguntas[index].tipo_pregunta == "note"){
+                            return Padding(
+                              padding:  EdgeInsets.only(left: 10,right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _.bloque == bloque? Container(): Padding(
+                                      padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                      child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
+                                    ), 
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 0,right: 0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: Card(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 20,left: 10,right: 10),
                                               child: Text(
                                                 '$numPregunta.- $enunciadoPregunta',
                                                 style: TextStyle(
@@ -184,98 +274,53 @@ class QuizPage extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            Text(
-                                               _.preguntas[index].requerido == "true"  ? " (*)": "",
-                                               style: TextStyle(
-                                                 color: Colors.red
-                                               ),
-                                            )
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 10,right: 10),
+                                              child: TextField(
+                                                controller: _.controllerInput[index].controller,
+                                                readOnly: true,
+                                              ),           
+                                            ),
+                                            //Text(_.total.toString())
                                           ],
                                         ),
                                       ),
-
-                                      SizedBox( height: 20,),
-
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 10,right: 10),
-                                        child: TextField(
-                                          maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
-                                          controller: _.controllerInput[index].controller,
-                                          decoration: InputDecoration(
-                                            hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
-                                          ),
-                                          keyboardType:  TextInputType.text,
-                                          
-                                        ),
-                                      
-                                      ),
-
-                                      SizedBox( height: 20,),
-
-
-
-                                    ],
+                                    ),
                                   ),
-                                )
-                              ),
-                            );
-                          }else if(_.preguntas[index].tipo_pregunta == "note"){
-                            return Padding(
-                              padding: EdgeInsets.only(left: 10,right: 10),
-                              child: Container(
-                                width: double.infinity,
-                                child: Card(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 20,left: 10,right: 10),
-                                        child: Text(
-                                          '$numPregunta.- $enunciadoPregunta',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 16
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 10,right: 10),
-                                        child: TextField(
-                                          controller: _.controllerInput[index].controller,
-                                          readOnly: true,
-                                        ),           
-                                      ),
-                                      //Text(_.total.toString())
-                                    ],
-                                  ),
-                                ),
+                                ],
                               ),
                             );
                           }else if(_.preguntas[index].tipo_pregunta == "select_one list_name"){
-
-                            return SelectSimpleWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
-
+                            return SelectSimpleWidget(
+                              enunciadoPregunta,
+                              id_pregunta,
+                              _,
+                              context,
+                              numPregunta.toString(),
+                              bloque
+                            );
                           }else  if( _.preguntas[index].tipo_pregunta == "select_multiple list_name"){
-                            return MultiSelectWidget(enunciadoPregunta,id_pregunta,_,context,numPregunta.toString());
+                            return MultiSelectWidget(
+                              enunciadoPregunta,
+                              id_pregunta,
+                              _,
+                              context,
+                              numPregunta.toString(),
+                              bloque
+                            );
                           }else if(_.preguntas[index].tipo_pregunta =="ubigeo"){
                             return UbigeoWidget(
                               id_pregunta : id_pregunta,
                               enunciado   : enunciadoPregunta,
                               numPregunta : numPregunta.toString(),
                               apariencia  : _.preguntas[index].apariencia,
+                              bloque: bloqueDefinitivo,
                             );
                           }
-
-
-
                         }
                       ),
-                    
                   ),
-
                   SizedBox(height: 20,),
-
                   Container(
                     width: 150,
                     decoration: BoxDecoration(
@@ -291,16 +336,11 @@ class QuizPage extends StatelessWidget {
                         ),
                       ),                 
                       onPressed: (){
-
                         _.guardarFicha();
-
                       }
                     ),
                   ),
-
                   SizedBox(height: 20,),
-
-
                 ],
               ),
             
@@ -309,10 +349,6 @@ class QuizPage extends StatelessWidget {
           Center(
             child: CircularProgressIndicator(),
           )
-          
-          
-          
-          
         ),
       ),
     );
@@ -322,19 +358,9 @@ class QuizPage extends StatelessWidget {
 
 TextFieldWidget1(String enunciado, String  numPregunta,QuizController _ ,int index, int id_pregunta){
 
-    //List<InputTextfield> _controllerInput = [];
-
-    
-    /*_controllerInput.add(
-      InputTextfield( id_pregunta.toString(), TextEditingController() )
-    );*/
-
     print(_.controllerInput.length);
 
     for (var i = 0; i < _.controllerInput.length; i++) {
-
-      //_.guardarIput(_controllerInput);
-
       return Padding(
       padding: EdgeInsets.only(left: 10,right: 10),
       child: Container(
@@ -387,145 +413,123 @@ TextFieldWidget1(String enunciado, String  numPregunta,QuizController _ ,int ind
       
     }
 
-  /*return Padding(
-      padding: EdgeInsets.only(left: 10,right: 10),
-      child: Container(
-        width: double.infinity,
-        child: Card(
-          elevation: 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Padding(
-                padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
-                child: Text(
-                  '$numPregunta.- $enunciado',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Poppins',
-                    fontSize: 16
-                  ),
-                ),
-              ),
-
-              SizedBox( height: 20,),
-
-              Padding(
-                padding: EdgeInsets.only(left: 10,right: 10),
-                child: TextField(
-                  
-                  controller: _controllerInput,
-                  decoration: InputDecoration(
-                    hintText: 'Ingrese su respuesta'
-                  ),
-                  onSubmitted: (valor){
-
-                  },
-                ),
-              
-              ),
-
-              SizedBox( height: 20,),
-
-
-
-            ],
-          ),
-        )
-      ),
-    );*/
 
 }
 
-SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildContext context, String numPregunta){
+SelectSimpleWidget(String enunciado , int id_pregunta, QuizController _ ,BuildContext context, String numPregunta,String bloque){
 
   return Padding(
-    padding: EdgeInsets.only(left: 10,right: 10),
-    child: Container(
-      width: double.infinity,
-      child: Card(
-        elevation: 5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            Padding(
-              padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
-              child: Text(
-                '$numPregunta.- $enunciado',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Poppins',
-                  fontSize: 16
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-            
-              child: SimpleSelectPage(
-
-                id_pregunta: id_pregunta,
-              )
-              
-              
-            ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
+    padding:  EdgeInsets.only(left: 10,right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _.bloque == bloque? Container(): Padding(
+          padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+          child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
         ),
-      )
+
+        Padding(
+          padding: EdgeInsets.only(left: 0,right: 0),
+          child: Container(
+            width: double.infinity,
+            child: Card(
+              elevation: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Padding(
+                    padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
+                    child: Text(
+                      '$numPregunta.- $enunciado',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Poppins',
+                        fontSize: 16
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                  
+                    child: SimpleSelectPage(
+
+                      id_pregunta: id_pregunta,
+                    )
+                    
+                    
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            )
+          ),
+        ),
+      ],
     ),
   );
 
 }
 
-MultiSelectWidget(String enunciado, int id_pregunta, QuizController _ ,BuildContext context, String numPregunta){
+MultiSelectWidget(String enunciado, int id_pregunta, QuizController _ ,BuildContext context, String numPregunta,String bloque){
 
   return Padding(
-    padding: EdgeInsets.only(left: 10,right: 10),
-    child: Container(
-      width: double.infinity,
-      child:Card(
-        elevation: 5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            Padding(
-              padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
-              child: Text(
-                '$numPregunta.- $enunciado',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Poppins',
-                  fontSize: 16
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-            
-              child: MultipleSelectPage(
-                id_pregunta: id_pregunta,
-              )
-              
-              
-            ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
+    padding:  EdgeInsets.only(left: 10,right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+         _.bloque == bloque? Container(): Padding(
+          padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+          child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
         ),
-      )
+
+        Padding(
+          padding: EdgeInsets.only(left: 0,right: 0),
+          child: Container(
+            width: double.infinity,
+            child:Card(
+              elevation: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Padding(
+                    padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
+                    child: Text(
+                      '$numPregunta.- $enunciado',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Poppins',
+                        fontSize: 16
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                  
+                    child: MultipleSelectPage(
+                      id_pregunta: id_pregunta,
+                    )
+                    
+                    
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            )
+          ),
+        ),
+      ],
     ),
   );
 

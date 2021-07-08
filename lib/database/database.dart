@@ -60,6 +60,7 @@ class DBProvider {
             requeridoMultimedia TEXT,
             esRetomado TEXT,
             encuestadoIngresoManual TEXT,
+            tipoVista TEXT,
             estado  TEXT,
             createdAt TEXT,
             updatedAt TEXT
@@ -110,10 +111,8 @@ class DBProvider {
             estado TEXT,
             created_at TEXT,
             updated_at TEXT,
-            index1      INTEGER
-            
-            
-
+            index1      INTEGER,
+            bloqueDescripcion TEXT
           )
 
           ''');

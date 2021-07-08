@@ -704,7 +704,7 @@ class ConfigController extends GetxController {
               requeridoMultimedia: item['requeridoMultimedia'].toString(),
               esRetomado: item['esRetomado'].toString(),
               encuestadoIngresoManual:item['encuestadoIngresoManual'].toString(),
-              //apariencia: item["apariencia"]["appearance"],
+              tipoVista: item["tipoVista"],
               createdAt: item["createdAt"],
               updatedAt: item["updatedAt"]
             )
@@ -722,6 +722,7 @@ class ConfigController extends GetxController {
         listPreguntas = listPreguntasxEncuesta["pregunta"];
         listPreguntas.asMap().forEach((index, item) async {
           int idPregunta = item["idPregunta"];
+          
           _preguntas.add(
             PreguntaModel(
                 id_pregunta: item["idPregunta"],
@@ -747,7 +748,9 @@ class ConfigController extends GetxController {
                 estado: item["estado"].toString(),
                 updated_at: item["updatedAt"],
                 created_at: item["createdAt"],
-                index1: index),
+                index1: index,
+                bloqueDescripcion: item["bloque"]["nombre"]
+            ),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
           if (preguOpcion.length > 0) {
