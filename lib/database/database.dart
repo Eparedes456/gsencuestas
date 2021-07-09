@@ -1234,7 +1234,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
-        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito'
+        AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito' AND codigoCentroPoblado = '0000'
         ''');
     List<UbigeoModel> listDepartamento = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()
