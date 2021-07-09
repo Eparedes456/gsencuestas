@@ -269,6 +269,35 @@ class ApiServices {
     }
   }
 
+  getAllEncuestado2() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var token = preferences.getString('token');
+
+    var response = await http.get(base_url_dev + "encuestado/lista_detalle_encuestado", headers: {
+      'Content-Type': 'application/json',
+      //'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+    if (response.statusCode == 200) {
+      print('Respuesta de servidor exitosa!');
+      //print(response.data);
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      //print(decodedData);
+      return decodedData["items"];
+    } else if (response.statusCode == 500) {
+      print('Error de servidor,consulte con el encargado del sistema');
+
+      return 1;
+    } else if (response.statusCode == 401) {
+      print('Estimado usuario su sesion a expirado.');
+      return 2;
+    } else {
+      print('la ruta que usted especifica no existe');
+      return 3;
+    }
+  }
+
   insertFicha(dynamic data) async {
     SharedPreferences preferencia = await SharedPreferences.getInstance();
 

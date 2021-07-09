@@ -496,7 +496,7 @@ class DetalleFichaController extends GetxController{
       showModal("",true,'Sincronizando datos..');
 
       var response  = await apiConexion.sendFichaToServer(sendFicha);
-      //print(response);
+      print(response);
       if( response == 1){
         print("token");
         showModal("Estimado usuario su token expiro.",false,"Error inesperado");

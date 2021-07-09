@@ -412,7 +412,7 @@ class PrincipalController extends GetxController {
   }
 
   cargarEncuestados() async {
-    var listEncuestados = await apiConexion.getAllEncuestado();
+    var listEncuestados = await apiConexion.getAllEncuestado2();
     if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
       listEncuestados.forEach((element) {
         _encuestadosLista.add(EncuestadoModel(

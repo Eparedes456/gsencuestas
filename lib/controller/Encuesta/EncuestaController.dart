@@ -568,6 +568,7 @@ class EncuestaController extends GetxController {
     var nombreCompleto =
         data.nombre + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
     var foto = data.foto;
+    
     if (foto != null) {
       _photoBase64 = base64Decode(foto);
     }
@@ -652,12 +653,15 @@ class EncuestaController extends GetxController {
       _listCentrosPoblados.add(dataCentroPoblados[0]);
     }
 
-    _valueCentroPoblado     = _listCentrosPoblados[0].descripcion;
-    _valueDistrito          = _listDistritos[0].descripcion;
     _selectCodDistrito      = _listDistritos[0].codigoDistrito;
     _selectCodDepartamento  = idDepartamento;
     _selectCodProvincia     = _listprovincias[0].codigoProvincia;
     _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
+
+    _valueCentroPoblado     = _listCentrosPoblados[0].descripcion;
+    _valueDistrito          = _listDistritos[0].descripcion;
+    _valueProvincia         = _listprovincias[0].descripcion;
+    
 
     Get.dialog(AlertDialog(
       title: Text('Encuestado encontrado'),
@@ -671,7 +675,7 @@ class EncuestaController extends GetxController {
             //leading: Icon(Icons.people,size: 16,),
             leading: CircleAvatar(
                 radius: 30,
-                backgroundImage: foto == null || foto == "null"
+                backgroundImage: foto == null || foto == "null" || foto == ""
                     ? AssetImage('assets/images/nouserimage.jpg')
                     : MemoryImage(_photoBase64)),
             //trailing: Icon(Icons.arrow_forward,size: 16,),
