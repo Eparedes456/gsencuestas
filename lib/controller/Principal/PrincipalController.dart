@@ -414,23 +414,28 @@ class PrincipalController extends GetxController {
   cargarEncuestados() async {
     var listEncuestados = await apiConexion.getAllEncuestado2();
     if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
-      listEncuestados.forEach((element) {
-        _encuestadosLista.add(EncuestadoModel(
-            idEncuestado: element["idEncuestado"].toString(),
-            documento: element["documento"],
-            nombre: element["nombre"],
-            apellidoPaterno: element["apellidoPaterno"],
-            apellidoMaterno: element["apellidoMaterno"],
-            sexo: element["sexo"],
-            estadoCivil: element["estadoCivil"],
-            direccion: element["direccion"],
-            telefono: element["telefono"],
-            email: element["email"],
-            idUbigeo: element["idUbigeo"],
-            estado: element["estado"].toString(),
-            idTecnico: element["idTecnico"].toString(),
-            foto: element["foto"]));
-      });
+      print(listEncuestados);
+      for (var i = 0; i < listEncuestados.length; i++) {
+        var listEncuestados2 = listEncuestados[i]["encuestado"];
+        print(listEncuestados2["documento"]);
+        _encuestadosLista.add(
+            EncuestadoModel(
+              idEncuestado: listEncuestados2["idEncuestado"].toString(),
+              documento: listEncuestados2["documento"],
+              nombre: listEncuestados2["nombre"],
+              apellidoPaterno: listEncuestados2["apellidoPaterno"],
+              apellidoMaterno: listEncuestados2["apellidoMaterno"],
+              sexo: listEncuestados2["sexo"],
+              estadoCivil: listEncuestados2["estadoCivil"],
+              direccion: listEncuestados2["direccion"],
+              telefono: listEncuestados2["telefono"],
+              email: listEncuestados2["email"],
+              idUbigeo: listEncuestados2["idUbigeo"],
+              estado: listEncuestados2["estado"].toString(),
+              foto: listEncuestados2["foto"]
+            )
+          );      
+      }
     }
     for (var e = 0; e < _encuestadosLista.length; e++) {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
