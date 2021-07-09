@@ -8,10 +8,15 @@ class UbigeoWidget extends StatelessWidget {
   final String numPregunta;
   final String apariencia;
   final String bloque;
-  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque }) : super(key: key);
+  final String bloque2;
+  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque, this.bloque2 }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
+
+
     return GetBuilder<QuizController>(
       init: QuizController(),
       id: 'ubigeo',

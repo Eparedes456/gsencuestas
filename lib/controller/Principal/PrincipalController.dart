@@ -617,15 +617,16 @@ class PrincipalController extends GetxController {
             var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
             listOpciones.forEach((item2) {
               _opcionesPreguntas.add(OpcionesModel(
-                idOpcion: item2["idOpcion"],
-                idPreguntaGrupoOpcion: idPreguOpcion.toString(),
-                idPregunta: idPregunta,
-                valor: item2["valor"],
-                label: item2["label"],
-                orden: item2["orden"],
-                estado: item2["estado"].toString(),
-                createdAt: item2["createdAt"],
-                updated_at: item2["updatedAt"],
+                idOpcion                : item2["idOpcion"],
+                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
+                idPregunta              : idPregunta,
+                valor                   : item2["valor"],
+                label                   : item2["label"],
+                orden                   : item2["orden"],
+                estado                  : item2["estado"].toString(),
+                createdAt               : item2["createdAt"],
+                updated_at              : item2["updatedAt"],
+                requiereDescripcion     : item2["requiereDescripcion"].toString()
               ));
             });
           }

@@ -387,3 +387,186 @@ MultiSelectWidget(String enunciado, int id_pregunta, RetommarController _ ,Build
   );
 
 }
+
+
+CustomTextField(String enunciado , int id_pregunta, RetommarController _ ,BuildContext context, String numPregunta,String bloque,String bloque2,String maxLength, int i,String placeholder,String requerido){
+  
+  if(_.bloque == null || _.bloque == ""){
+    _.bloque = bloque2;
+  }else if(_.bloque == bloque2){
+    bloque = bloque2; 
+  }else if(_.bloque != bloque2){
+    _.bloque = bloque2;
+  }
+
+  
+  return Padding(
+    padding:  EdgeInsets.only(left: 10,right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                          _.bloque == bloque? Container(): Padding(
+                                      padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                      child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
+                                    ), 
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0,right: 0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        child: Card(
+                                          elevation: 5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+
+                                              Padding(
+                                                padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '$numPregunta.- $enunciado',
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.w700,
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 16
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      requerido == "true"  ? " (*)": "",
+                                                      style: TextStyle(
+                                                        color: Colors.red
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+
+                                              SizedBox( height: 20,),
+
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 10,right: 10),
+                                                child: TextField(
+                                                  maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                                                  controller: _.controllerInput[i].controller,
+                                                  decoration: InputDecoration(
+                                                    hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                                                  ),
+                                                  keyboardType:  TextInputType.text,
+                                                ),
+                                              ),
+                                              SizedBox( height: 20,),
+                                            ],
+                                          ),
+                                        )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+}
+
+IntegerDecimalWidget(String enunciado , int id_pregunta, RetommarController _ ,BuildContext context, String numPregunta,String bloque,String bloque2,String maxLength, int i,String placeholder,String requerido,String tipoDato){
+
+  if(_.bloque == null || _.bloque == ""){
+    _.bloque = bloque2;
+  }else if(_.bloque == bloque2){
+    bloque = bloque2; 
+  }else if(_.bloque != bloque2){
+    _.bloque = bloque2;
+  }
+
+  return Padding(
+    padding: EdgeInsets.only(left: 10,right: 10),
+    child: Container(
+      width: double.infinity,
+      child: Card(
+        elevation: 5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _.bloque == bloque? Container(): Padding(
+              padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+              child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
+            ),
+            Padding(
+              padding:  EdgeInsets.only(top: 20,left: 10,right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '$numPregunta.- $enunciado',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Poppins',
+                        fontSize: 16
+                      ),
+                    ),
+                  ),
+                  Text(
+                    requerido == "true"  ? " (*)": "",
+                    style: TextStyle(
+                      color: Colors.red
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox( height: 20,),
+
+            Padding(
+              padding: EdgeInsets.only(left: 10,right: 10),
+              child: TextField(
+                maxLength:  maxLength == null || int.parse(maxLength) == 0 ? 100 : int.parse(maxLength),
+                controller: _.controllerInput[i].controller,
+                decoration: InputDecoration(
+                  hintText: placeholder == "-" || placeholder == null ? 'Ingrese su respuesta' : placeholder
+                ),
+                keyboardType: tipoDato == "number" || tipoDato == "decimal"? TextInputType.numberWithOptions(
+                  decimal: true,                            
+                )  : TextInputType.text,
+                inputFormatters: tipoDato == "number" ?  <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly, //.digitsOnly
+                ] : tipoDato == "decimal" ?  <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")), //.digitsOnly
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    try {
+                      final text = newValue.text;
+                      if (text.isNotEmpty) double.parse(text);
+                      return newValue;
+                    } catch (e) {}
+                    return oldValue;
+                  }),
+                                            
+                ] : null,
+                onChanged: (value){
+                  _.calcular();
+                },
+              ),
+
+            ),
+            SizedBox( height: 20,),
+          ],
+        ),
+      )
+    ),
+  );
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

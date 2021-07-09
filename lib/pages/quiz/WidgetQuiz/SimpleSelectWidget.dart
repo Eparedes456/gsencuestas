@@ -53,9 +53,6 @@ class Opciones extends StatelessWidget {
         padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
         child: GestureDetector(
                             onTap: (){
-
-                              
-
                               _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
 
                             },

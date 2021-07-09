@@ -128,6 +128,7 @@ class DBProvider {
             valor TEXT,
             label TEXT,
             orden INTEGER,
+            requiereDescripcion TEXT,
             estado TEXT,
             createdAt TEXT,
             updated_at TEXT

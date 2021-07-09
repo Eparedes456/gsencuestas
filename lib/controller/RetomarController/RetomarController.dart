@@ -69,6 +69,8 @@ class RetommarController extends GetxController{
   String idEncuesta = "";
   String idEncuestado = "";
 
+  String bloque;
+
   onloadData(Map datos)async{
 
     _opcionesPreguntas = [];

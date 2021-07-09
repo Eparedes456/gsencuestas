@@ -728,12 +728,12 @@ class EncuestaController extends GetxController {
             height: 8,
           ),
           
-          /*Text('CENTRO POBLADO'),
+          Text('CENTRO POBLADO'),
           CentroPoblado(
             showCentroPoblado: _listCentrosPoblados,
             dataUbi: dataUbi,
             isManual: false,
-          ),*/
+          ),
           SizedBox(
             height: 8,
           ),

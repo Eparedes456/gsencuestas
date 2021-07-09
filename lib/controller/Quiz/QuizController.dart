@@ -102,17 +102,21 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
       opciones.forEach((element) {
-        _opcionesPreguntas.add(OpcionesModel(
-            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
-            idOpcion: element["id_opcion"],
-            idPregunta: idPregunta,
-            valor: element["valor"],
-            label: element["label"],
-            orden: element["orden"],
-            estado: element["estado"].toString(),
-            createdAt: element["createdAt"],
-            updated_at: element["updatedAt"],
-            selected: false));
+        _opcionesPreguntas.add(
+          OpcionesModel(
+            idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
+            idOpcion              : element["id_opcion"],
+            idPregunta            : idPregunta,
+            valor                 : element["valor"],
+            label                 : element["label"],
+            orden                 : element["orden"],
+            estado                : element["estado"].toString(),
+            createdAt             : element["createdAt"],
+            updated_at            : element["updatedAt"],
+            selected              : false,
+            requiereDescripcion   : element["requiereDescripcion"] 
+          )
+        );
       });
     }
     print(_opcionesPreguntas);
@@ -200,6 +204,10 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
     print(listRespuestaDB);
+
+    if(opcionEscogida.requiereDescripcion == "true"){
+      print('dibujar una caja de texto');
+    }
 
     update(['simple']);
   }
@@ -374,6 +382,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                 onPressed: () async{
                   
                   if(apariencia == "distrito"){
+                    _ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito;
+                  }else{
                     _ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito;
                   }
                   //_ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito +"/" + _valueCentroPoblado;
