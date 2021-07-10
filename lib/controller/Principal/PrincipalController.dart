@@ -201,7 +201,7 @@ class PrincipalController extends GetxController {
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"],
                 idInstitucion, response["ultimaActualizacionUsuario"]);
             var ubigeo = preferences.getString('ubigeoCargo');
-            if(ubigeo != "si"){
+            if (ubigeo != "si") {
               loadingUbigeo();
               await cargarUbigeo();
             }
@@ -209,7 +209,7 @@ class PrincipalController extends GetxController {
             await cargarUsuarios();
             await cargarParcelas();
             await cargarProyectosEncuesta();
-            
+
             //await cargarUbigeo();
           }
         }
@@ -326,14 +326,16 @@ class PrincipalController extends GetxController {
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
       var ubigeo = preferences.getString('ubigeoCargo');
-      if(ubigeo != "si"){
+      if (ubigeo != "si") {
         loadingUbigeo();
         await cargarUbigeo();
       }
       await cargarProyectosEncuesta();
       await cargarParcelas();
-      
-      
+      _isLoading = false;
+      _hayData = true;
+      update();
+      //Get.back();
     }
   }
 
@@ -343,7 +345,6 @@ class PrincipalController extends GetxController {
       List<ProyectoModel> resultado =
           await DBProvider.db.searchProyecto(controllerSearch.text);
       if (resultado.length == 0) {
-        
       } else {
         _proyectos = resultado;
         _hayData = true;
@@ -353,7 +354,6 @@ class PrincipalController extends GetxController {
       List<ProyectoModel> resultado =
           await DBProvider.db.searchProyecto(controllerSearch.text);
       if (resultado.length == 0) {
-        
         _hayData = false;
         _proyectos = [];
         update();
@@ -418,33 +418,29 @@ class PrincipalController extends GetxController {
       for (var i = 0; i < listEncuestados.length; i++) {
         var listEncuestados2 = listEncuestados[i]["encuestado"];
         print(listEncuestados2["documento"]);
-        _encuestadosLista.add(
-            EncuestadoModel(
-              idEncuestado: listEncuestados2["idEncuestado"].toString(),
-              documento: listEncuestados2["documento"],
-              nombre: listEncuestados2["nombre"],
-              apellidoPaterno: listEncuestados2["apellidoPaterno"],
-              apellidoMaterno: listEncuestados2["apellidoMaterno"],
-              sexo: listEncuestados2["sexo"],
-              estadoCivil: listEncuestados2["estadoCivil"],
-              direccion: listEncuestados2["direccion"],
-              telefono: listEncuestados2["telefono"],
-              email: listEncuestados2["email"],
-              idUbigeo: listEncuestados2["idUbigeo"],
-              estado: listEncuestados2["estado"].toString(),
-              foto: listEncuestados2["foto"]
-            )
-          );      
+        _encuestadosLista.add(EncuestadoModel(
+            idEncuestado: listEncuestados2["idEncuestado"].toString(),
+            documento: listEncuestados2["documento"],
+            nombre: listEncuestados2["nombre"],
+            apellidoPaterno: listEncuestados2["apellidoPaterno"],
+            apellidoMaterno: listEncuestados2["apellidoMaterno"],
+            sexo: listEncuestados2["sexo"],
+            estadoCivil: listEncuestados2["estadoCivil"],
+            direccion: listEncuestados2["direccion"],
+            telefono: listEncuestados2["telefono"],
+            email: listEncuestados2["email"],
+            idUbigeo: listEncuestados2["idUbigeo"],
+            estado: listEncuestados2["estado"].toString(),
+            foto: listEncuestados2["foto"]));
       }
     }
     for (var e = 0; e < _encuestadosLista.length; e++) {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
     }
     var data = await DBProvider.db.getAllEncuestado();
-    if(data.length > 0){
+    if (data.length > 0) {
       print("Se registro todos los encuestados");
     }
-    
   }
 
   cargarParcelas() async {
@@ -544,8 +540,7 @@ class PrincipalController extends GetxController {
             .getEncuestasxProyecto(_proyectos[j].idProyecto.toString());
         var idProyecto = _proyectos[j].idProyecto.toString();
         listEncuestaApi.forEach((item) {
-          _encuestas.add(
-            EncuestaModel(
+          _encuestas.add(EncuestaModel(
               idEncuesta: item["idEncuesta"],
               idProyecto: idProyecto.toString(),
               titulo: item["titulo"],
@@ -563,12 +558,11 @@ class PrincipalController extends GetxController {
               requeridoObservacion: item['requeridoObservacion'].toString(),
               requeridoMultimedia: item['requeridoMultimedia'].toString(),
               esRetomado: item['esRetomado'].toString(),
-              encuestadoIngresoManual:item['encuestadoIngresoManual'].toString(),
+              encuestadoIngresoManual:
+                  item['encuestadoIngresoManual'].toString(),
               tipoVista: item["tipoVista"],
               createdAt: item["createdAt"],
-              updatedAt: item["updatedAt"]
-            )
-          );
+              updatedAt: item["updatedAt"]));
         });
       }
       for (var m = 0; m < _encuestas.length; m++) {
@@ -608,8 +602,7 @@ class PrincipalController extends GetxController {
                 updated_at: item["updatedAt"],
                 created_at: item["createdAt"],
                 index1: index,
-                bloqueDescripcion: item["bloque"]["nombre"]
-            ),
+                bloqueDescripcion: item["bloque"]["nombre"]),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
           if (preguOpcion.length > 0) {
@@ -617,17 +610,17 @@ class PrincipalController extends GetxController {
             var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
             listOpciones.forEach((item2) {
               _opcionesPreguntas.add(OpcionesModel(
-                idOpcion                : item2["idOpcion"],
-                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
-                idPregunta              : idPregunta,
-                valor                   : item2["valor"],
-                label                   : item2["label"],
-                orden                   : item2["orden"],
-                estado                  : item2["estado"].toString(),
-                createdAt               : item2["createdAt"],
-                updated_at              : item2["updatedAt"],
-                requiereDescripcion     : item2["requiereDescripcion"].toString()
-              ));
+                  idOpcion: item2["idOpcion"],
+                  idPreguntaGrupoOpcion: idPreguOpcion.toString(),
+                  idPregunta: idPregunta,
+                  valor: item2["valor"],
+                  label: item2["label"],
+                  orden: item2["orden"],
+                  estado: item2["estado"].toString(),
+                  createdAt: item2["createdAt"],
+                  updated_at: item2["updatedAt"],
+                  requiereDescripcion:
+                      item2["requiereDescripcion"].toString()));
             });
           }
         });
@@ -661,19 +654,19 @@ class PrincipalController extends GetxController {
     var listUserApi = await apiConexion.getAllUsers();
     listUserApi.forEach((item) {
       _usuarios.add(UsuarioModel(
-        idUsuario       : item["idUsuario"],
-        nombre          : item["nombre"],
-        apellidoPaterno : item["apellidoPaterno"],
-        apellidoMaterno : item["apellidoMaterno"],
-        dni             : item["dni"],
-        email           : item["email"],
-        username        : item["login"],
-        password        : item["password"],
-        foto            : item["foto"],
-        fechaAlta       : item["fechaAlta"],
-        perfil          : item['perfil']['nombre'],
-        estado          : item["estado"].toString(),
-        createdAt       : item["createdAt"],
+        idUsuario: item["idUsuario"],
+        nombre: item["nombre"],
+        apellidoPaterno: item["apellidoPaterno"],
+        apellidoMaterno: item["apellidoMaterno"],
+        dni: item["dni"],
+        email: item["email"],
+        username: item["login"],
+        password: item["password"],
+        foto: item["foto"],
+        fechaAlta: item["fechaAlta"],
+        perfil: item['perfil']['nombre'],
+        estado: item["estado"].toString(),
+        createdAt: item["createdAt"],
       ));
     });
 
@@ -685,7 +678,7 @@ class PrincipalController extends GetxController {
 
   cargarUbigeo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    var ubigeoCargo = preferences.setString('ubigeoCargo','si');
+    var ubigeoCargo = preferences.setString('ubigeoCargo', 'si');
 
     var response = await rootBundle.loadString("assets/ubi.json");
     var data = json.decode(response);
@@ -713,7 +706,7 @@ class PrincipalController extends GetxController {
       await DBProvider.db.insertUbigeo(data1[x]);
     }
     List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
-    if(ubigeos.length > 0){
+    if (ubigeos.length > 0) {
       _isLoading = false;
       _hayData = true;
       update();
@@ -729,7 +722,7 @@ class PrincipalController extends GetxController {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           'Notificación',
-          style: TextStyle( fontWeight: FontWeight.normal),
+          style: TextStyle(fontWeight: FontWeight.normal),
         ),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -749,7 +742,8 @@ class PrincipalController extends GetxController {
             SizedBox(
               height: 20,
             ),
-            Text('Está operación se realiza solo 1 vez ,tiempo estimado de carga 4 a 8 min')
+            Text(
+                'Está operación se realiza solo 1 vez ,tiempo estimado de carga 4 a 8 min')
           ],
         ),
       ),

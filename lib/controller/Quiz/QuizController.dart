@@ -102,21 +102,18 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
       opciones.forEach((element) {
-        _opcionesPreguntas.add(
-          OpcionesModel(
-            idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
-            idOpcion              : element["id_opcion"],
-            idPregunta            : idPregunta,
-            valor                 : element["valor"],
-            label                 : element["label"],
-            orden                 : element["orden"],
-            estado                : element["estado"].toString(),
-            createdAt             : element["createdAt"],
-            updated_at            : element["updatedAt"],
-            selected              : false,
-            requiereDescripcion   : element["requiereDescripcion"] 
-          )
-        );
+        _opcionesPreguntas.add(OpcionesModel(
+            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
+            idOpcion: element["id_opcion"],
+            idPregunta: idPregunta,
+            valor: element["valor"],
+            label: element["label"],
+            orden: element["orden"],
+            estado: element["estado"].toString(),
+            createdAt: element["createdAt"],
+            updated_at: element["updatedAt"],
+            selected: false,
+            requiereDescripcion: element["requiereDescripcion"]));
       });
     }
     print(_opcionesPreguntas);
@@ -205,7 +202,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
     print(listRespuestaDB);
 
-    if(opcionEscogida.requiereDescripcion == "true"){
+    if (opcionEscogida.requiereDescripcion == "true") {
       print('dibujar una caja de texto');
     }
 
@@ -306,7 +303,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   String _selectCodDistrito = "";
   String _selectCodCentroPoblado = "";
 
-  showModalUbigeo(String idPregunta,String apariencia) async {
+  showModalUbigeo(String idPregunta, String apariencia) async {
     listCodDep = [];
     listcodProvincia = [];
     liscodDistrito = [];
@@ -315,7 +312,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<UbigeoModel> showDepartamentos = [];
 
-    List<UbigeoModel> dataDepartamento = await DBProvider.db.getDepartamentos1("22");
+    List<UbigeoModel> dataDepartamento =
+        await DBProvider.db.getDepartamentos1("22");
     print(dataDepartamento[0].descripcion);
     showDepartamentos.add(dataDepartamento[0]);
     _valueDepartamento = showDepartamentos[0].descripcion;
@@ -329,8 +327,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       _listprovincias.add(dataProvincias[i]);
     }
 
-    Get.dialog(
-      AlertDialog(
+    Get.dialog(AlertDialog(
       title: Text('Seleccione el ubigeo'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -362,14 +359,17 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           SizedBox(
             height: 12,
           ),
-          apariencia == "distrito" ? Container(): Text('CENTRO POBLADO'),
-          apariencia == "distrito" ? Container(): CentroPoblado(
-            showCentroPoblado: _listCentrosPoblados,
-            isManual: true,
-          ),
+          apariencia == "distrito" ? Container() : Text('CENTRO POBLADO'),
+          apariencia == "distrito"
+              ? Container()
+              : CentroPoblado(
+                  showCentroPoblado: _listCentrosPoblados,
+                  isManual: true,
+                ),
           SizedBox(
             height: 8,
-          ),SizedBox(
+          ),
+          SizedBox(
             height: 8,
           ),
           Center(
@@ -379,22 +379,31 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                   borderRadius: BorderRadius.circular(10)),
               height: 45,
               child: MaterialButton(
-                onPressed: () async{
-                  
-                  if(apariencia == "distrito"){
-                    _ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito;
-                  }else{
-                    _ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito;
+                onPressed: () async {
+                  if (apariencia == "distrito") {
+                    _ubigeoCapturado = _valueDepartamento +
+                        "/" +
+                        _valueProvincia +
+                        "/" +
+                        _valueDistrito;
+                  } else {
+                    _ubigeoCapturado = _valueDepartamento +
+                        "/" +
+                        _valueProvincia +
+                        "/" +
+                        _valueDistrito;
                   }
                   //_ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito +"/" + _valueCentroPoblado;
-                  _ubigeoGuardar  = "22" + _selectCodProvincia + _selectCodDistrito + _selectCodCentroPoblado;
-              
+                  _ubigeoGuardar = "22" +
+                      _selectCodProvincia +
+                      _selectCodDistrito +
+                      _selectCodCentroPoblado;
+
                   print(_ubigeoCapturado);
                   print(_ubigeoGuardar);
                   update(['ubigeo']);
                   Get.back();
-                  await guardarUbigeo(idPregunta,_ubigeoGuardar);
-                  
+                  await guardarUbigeo(idPregunta, _ubigeoGuardar);
                 },
                 child: Text(
                   'Seleccionar',
@@ -402,8 +411,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                       color: Colors.white,
                       fontFamily: 'Poppins',
                       fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -413,16 +421,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     ));
   }
 
-  selectProvinciaManual(UbigeoModel value ,String aparienciaValor) async {
-    
-    
+  selectProvinciaManual(UbigeoModel value, String aparienciaValor) async {
     //_listCentrosPoblados = [];
     List<UbigeoModel> dataDistritos =
         await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
     //print(dataDistritos.length);
     //
     _listDistritos = [];
-    dataDistritos.forEach((element) { 
+    dataDistritos.forEach((element) {
       _listDistritos.add(element);
     });
 
@@ -432,26 +438,28 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       _selectCodDistrito = _listDistritos[0].codigoDistrito;
       _valueDistrito = _listDistritos[0].descripcion;
       update(['distrito']);
-      if(aparienciaValor == "distrito"){
+      if (aparienciaValor == "distrito") {
         //_selectCodCentroPoblado == "0000";
-      }else{
-        await selectDistritoManual(value, _selectCodProvincia, _selectCodDistrito,true);
+      } else {
+        await selectDistritoManual(
+            value, _selectCodProvincia, _selectCodDistrito, true);
       }
-      
     }
     //update(['distrito']);
-    
   }
 
-  selectDistritoManual(UbigeoModel value,String codProvincia,String codDistrito ,bool estado) async {
+  selectDistritoManual(UbigeoModel value, String codProvincia,
+      String codDistrito, bool estado) async {
     _listCentrosPoblados = [];
-    List<UbigeoModel> dataCentroPoblados =[];
-    if(estado == true){
-      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(codProvincia, "22", codDistrito);
-    }else{
-      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(value.codigoProvincia, "22", value.codigoDistrito);
+    List<UbigeoModel> dataCentroPoblados = [];
+    if (estado == true) {
+      dataCentroPoblados = await DBProvider.db
+          .getAllCentrosPoblados(codProvincia, "22", codDistrito);
+    } else {
+      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(
+          value.codigoProvincia, "22", value.codigoDistrito);
     }
-    
+
     //print(dataCentroPoblados.length);
 
     for (var i = 0; i < dataCentroPoblados.length; i++) {
@@ -461,7 +469,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
     _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
     update(['centroPoblado']);
-
   }
 
   changeDistrito(String valor) {
@@ -474,25 +481,19 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     update(['provincia']);
   }
 
-
   selectedCentroPoblado(UbigeoModel value) {
     _selectCodCentroPoblado = value.codigoCentroPoblado;
   }
 
-  changeCentroPoblado(String valor){
+  changeCentroPoblado(String valor) {
     _valueCentroPoblado = valor;
     update(['centroPoblado']);
   }
 
-  guardarUbigeo(String idPregunta,String valor)async{
-    await DBProvider.db.insertRespuesta(
-      idPregunta,
-      idFicha.toString(),
-      "",
-      valor
-    );
+  guardarUbigeo(String idPregunta, String valor) async {
+    await DBProvider.db
+        .insertRespuesta(idPregunta, idFicha.toString(), "", valor);
   }
-
 
 /* */
 
@@ -856,7 +857,11 @@ class DropDownProvincia extends StatelessWidget {
   final bool isManual;
   final String apariencia;
   const DropDownProvincia(
-      {Key key, this.showProvincia, this.dataUbi, this.isManual, this.apariencia})
+      {Key key,
+      this.showProvincia,
+      this.dataUbi,
+      this.isManual,
+      this.apariencia})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -894,7 +899,7 @@ class DropDownProvincia extends StatelessWidget {
               ),
               onTap: () async {
                 if (isManual == true) {
-                  _.selectProvinciaManual(value,apariencia);
+                  _.selectProvinciaManual(value, apariencia);
                 } else {
                   //_.selectedProvincia(dataUbi, value);
                 }
@@ -953,7 +958,7 @@ class DropDownDistrito extends StatelessWidget {
               ),
               onTap: () async {
                 if (isManual == true) {
-                  _.selectDistritoManual(value,"","",false);
+                  _.selectDistritoManual(value, "", "", false);
                 } else {
                   //_.selectedDistrito(value);
                 }

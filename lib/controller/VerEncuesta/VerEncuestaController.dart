@@ -7,17 +7,16 @@ import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 
-class VerEncuestacontroller extends GetxController{
-
+class VerEncuestacontroller extends GetxController {
   @override
-  void onInit()async{
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
     Map data = Get.arguments;
     print(data["nombreEncuesta"]);
     _titulo = data["nombreEncuesta"];
     await onloadData(data);
-  } 
+  }
 
   @override
   void onReady() {
@@ -27,7 +26,6 @@ class VerEncuestacontroller extends GetxController{
 
   String _titulo = "";
   String get titulo => _titulo;
-  
 
   List<OpcionesModel> _opcionesPreguntas = [];
   List<OpcionesModel> get opcionesPreguntas => _opcionesPreguntas;
@@ -45,16 +43,17 @@ class VerEncuestacontroller extends GetxController{
   String idEncuesta = "";
   String idEncuestado = "";
 
+  String bloque;
 
-  onloadData(Map datos)async{
-
+  onloadData(Map datos) async {
     _opcionesPreguntas = [];
     idEncuesta = datos["idEncuesta"];
     idFicha = datos["idFicha"];
-    List <FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
+    List<FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
     print(ficha);
     idEncuestado = ficha[0].idEncuestado.toString();
-    respuestas = await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
+    respuestas =
+        await DBProvider.db.getAllRespuestasxEncuesta(idFicha, idEncuesta);
 
     print(respuestas);
 
@@ -66,114 +65,76 @@ class VerEncuestacontroller extends GetxController{
     print(allOpciones);
 
     for (var i = 0; i < _preguntas.length; i++) {
+      print(_preguntas[i].id_pregunta);
+      var idPregunta = _preguntas[i].id_pregunta;
 
-        print(_preguntas[i].id_pregunta);
-        var idPregunta = _preguntas[i].id_pregunta;
+      //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
-        //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+      var opciones =
+          await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
-        var opciones = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
-
-        opciones.forEach((element){
-
-          _opcionesPreguntas.add(
-
-            OpcionesModel(
-
-                idPreguntaGrupoOpcion   : element["idPreguntaGrupoOpcion"],
-                idOpcion                : element["id_opcion"],
-                idPregunta              : idPregunta,
-                valor                   : element["valor"],
-                label                   : element["label"], 
-                orden                   : element["orden"],
-                estado                  : element["estado"].toString(),
-                createdAt               : element["createdAt"],
-                updated_at              : element["updatedAt"],
-                selected                : false   
-
-              )
-
-          );
-
-        });
+      opciones.forEach((element) {
+        _opcionesPreguntas.add(OpcionesModel(
+            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
+            idOpcion: element["id_opcion"],
+            idPregunta: idPregunta,
+            valor: element["valor"],
+            label: element["label"],
+            orden: element["orden"],
+            estado: element["estado"].toString(),
+            createdAt: element["createdAt"],
+            updated_at: element["updatedAt"],
+            selected: false));
+      });
     }
 
-
-    
-
     for (var x = 0; x < respuestas.length; x++) {
-
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
-
-        if( respuestas[x].idsOpcion == ""){
-
-        }else{
-
-          if( int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion ){
-
+        if (respuestas[x].idsOpcion == "") {
+        } else {
+          if (int.parse(respuestas[x].idsOpcion) ==
+              _opcionesPreguntas[z].idOpcion) {
             print('pintar de verde');
 
             _opcionesPreguntas[z].selected = true;
-
           }
-
         }
-        
       }
-      
     }
 
-    
     print(_opcionesPreguntas.length);
     //update('simple');
     _isLoadingData = true;
     update();
-    
-    Future.delayed(Duration(seconds: 1),()async{
+
+    Future.delayed(Duration(seconds: 1), () async {
       await inptuData();
     });
-
   }
 
-  inptuData()async{
-
+  inptuData() async {
     for (var i = 0; i < respuestas.length; i++) {
       print(respuestas.length);
 
       for (var j = 0; j < controllerInput.length; j++) {
-
-        if( respuestas[i].idsOpcion == "" ){
-
-          if(respuestas[i].idPregunta.toString() == controllerInput[j].idPregunta){
-
+        if (respuestas[i].idsOpcion == "") {
+          if (respuestas[i].idPregunta.toString() ==
+              controllerInput[j].idPregunta) {
             controllerInput[j].controller.text = respuestas[i].valor;
-
           }
-
         }
-        
       }
-
-      
-      
     }
 
     //print( "Cantidad de preguntas tipo input" + controllerInput.length.toString());
 
     update();
-
   }
-
-  
-
-
 }
 
-class InputTextfield{
+class InputTextfield {
+  String idPregunta;
+  TextEditingController controller;
 
-    String idPregunta;
-    TextEditingController controller;
-
-    InputTextfield(this.idPregunta,this.controller);
-
-  }
+  InputTextfield(this.idPregunta, this.controller);
+}
