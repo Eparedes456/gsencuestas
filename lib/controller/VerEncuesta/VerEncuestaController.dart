@@ -68,6 +68,14 @@ class VerEncuestacontroller extends GetxController {
       print(_preguntas[i].id_pregunta);
       var idPregunta = _preguntas[i].id_pregunta;
 
+      controllerInput.add(InputTextfield(
+          preguntas[i].id_pregunta.toString(),
+          TextEditingController(),
+          preguntas[i].bind_name,
+          i,
+          preguntas[i].tipo_pregunta,
+          preguntas[i].calculation));
+
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
       var opciones =
@@ -84,7 +92,8 @@ class VerEncuestacontroller extends GetxController {
             estado: element["estado"].toString(),
             createdAt: element["createdAt"],
             updated_at: element["updatedAt"],
-            selected: false));
+            selected: false,
+            requiereDescripcion: element["requiereDescripcion"]));
       });
     }
 
@@ -93,7 +102,8 @@ class VerEncuestacontroller extends GetxController {
         if (respuestas[x].idsOpcion == "") {
         } else {
           if (int.parse(respuestas[x].idsOpcion) ==
-              _opcionesPreguntas[z].idOpcion) {
+                  _opcionesPreguntas[z].idOpcion &&
+              respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta) {
             print('pintar de verde');
 
             _opcionesPreguntas[z].selected = true;
@@ -135,6 +145,11 @@ class VerEncuestacontroller extends GetxController {
 class InputTextfield {
   String idPregunta;
   TextEditingController controller;
+  String name;
+  int index;
+  String tipo_pregunta;
+  String calculation;
 
-  InputTextfield(this.idPregunta, this.controller);
+  InputTextfield(this.idPregunta, this.controller, this.name, this.index,
+      this.tipo_pregunta, this.calculation);
 }

@@ -22,7 +22,7 @@ class VerEncuestaPage extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: 1,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -264,36 +264,56 @@ SelectSimpleWidget(String enunciado, int id_pregunta, VerEncuestacontroller _,
 
   return Padding(
     padding: EdgeInsets.only(left: 10, right: 10),
-    child: Container(
-        width: double.infinity,
-        child: Card(
-          elevation: 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                 child: Text(
-                  '$numPregunta.- $enunciado',
+                  '${_.bloque}',
                   style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Poppins',
-                      fontSize: 16),
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                  child: SimpleSelectVer(
-                id_pregunta: id_pregunta,
+        Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Container(
+              width: double.infinity,
+              child: Card(
+                elevation: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: Text(
+                        '$numPregunta.- $enunciado',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                            fontSize: 16),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        child: SimpleSelectVer(
+                      id_pregunta: id_pregunta,
+                    )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               )),
-              SizedBox(
-                height: 20,
-              ),
-            ],
-          ),
-        )),
+        ),
+      ],
+    ),
   );
 }
 
@@ -435,6 +455,7 @@ CustomTextField(
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: TextField(
+                        readOnly: true,
                         maxLength:
                             maxLength == null || int.parse(maxLength) == 0
                                 ? 100
