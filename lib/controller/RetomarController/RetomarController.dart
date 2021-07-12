@@ -165,7 +165,9 @@ class RetommarController extends GetxController {
             opcionEscogida.idPregunta.toString(),
             idFicha.toString(),
             opcionEscogida.idOpcion.toString(),
-            opcionEscogida.valor);
+            opcionEscogida.valor,
+            'RespuestaSimple'
+        );
       }
     });
 
@@ -192,7 +194,9 @@ class RetommarController extends GetxController {
                 opcionEscogida.idPregunta.toString(),
                 idFicha.toString(),
                 opcionEscogida.idOpcion.toString(),
-                opcionEscogida.valor);
+                opcionEscogida.valor,
+                'RespuestaMultiple'
+            );
           }
         }
       }
@@ -458,7 +462,9 @@ class RetommarController extends GetxController {
         }
       } else {
         await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta,
-            idFicha.toString(), "", controllerInput[x].controller.text);
+            idFicha.toString(), "", controllerInput[x].controller.text,
+            'Text'
+        );
       }
     }
   }

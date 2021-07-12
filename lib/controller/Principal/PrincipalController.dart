@@ -115,6 +115,7 @@ class PrincipalController extends GetxController {
           print(
               'descargar los nuevos usuarios para guardar en la base de datos local');
           await DBProvider.db.deleteAllUsuario();
+          
           var listUserApi = await apiConexion.getAllUsers();
           listUserApi.forEach((item) {
             _usuarios.add(UsuarioModel(
@@ -704,6 +705,7 @@ class PrincipalController extends GetxController {
 
     for (var x = 0; x < data1.length; x++) {
       await DBProvider.db.insertUbigeo(data1[x]);
+      print(x);
     }
     List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
     if (ubigeos.length > 0) {

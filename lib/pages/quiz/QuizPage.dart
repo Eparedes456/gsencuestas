@@ -559,6 +559,10 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
                       id_pregunta: id_pregunta,
                     )),
                     SizedBox(
+                      height: 8,
+                    ),
+                    
+                    SizedBox(
                       height: 20,
                     ),
                   ],

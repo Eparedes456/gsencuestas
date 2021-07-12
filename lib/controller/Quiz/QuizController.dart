@@ -173,6 +173,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   List<OpcionesModel> _pickOpcionSimple = [];
   List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
+  var requiereObservacion =false;
+  var idRequierepreguntaObserva;
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
     print(opcionEscogida.idOpcion);
@@ -194,7 +196,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             opcionEscogida.idPregunta.toString(),
             idFicha.toString(),
             opcionEscogida.idOpcion.toString(),
-            opcionEscogida.valor);
+            opcionEscogida.valor,
+            'RespuestaSimple'
+        );
       }
     });
 
@@ -204,11 +208,25 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     if (opcionEscogida.requiereDescripcion == "true") {
       print('dibujar una caja de texto');
+      idRequierepreguntaObserva = opcionEscogida.idPregunta;
+      requiereObservacion = true;
+
     }
 
     update(['simple']);
   }
 
+  saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
+
+    print(id_pregunta);
+    print(idOpcion);
+    print(valueobservacion);
+
+    await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
+
+  }
+  
+  List<String> idsOpcion = [];
   /*  Obtener respuesta multiple widget  respuesta */
 
   capturarRespuestaMultiple(OpcionesModel opcionEscogida) async {
@@ -223,11 +241,16 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                 opcionEscogida.idPregunta.toString(), idFicha.toString());
           } else {
             element.selected = true;
+            idsOpcion.add(element.idOpcion.toString());
+            print(idsOpcion);
+
             await DBProvider.db.insertRespuesta(
                 opcionEscogida.idPregunta.toString(),
                 idFicha.toString(),
                 opcionEscogida.idOpcion.toString(),
-                opcionEscogida.valor);
+                opcionEscogida.valor,
+                'RespuestaMultiple'
+            );
           }
         }
       }
@@ -492,7 +515,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   guardarUbigeo(String idPregunta, String valor) async {
     await DBProvider.db
-        .insertRespuesta(idPregunta, idFicha.toString(), "", valor);
+        .insertRespuesta(idPregunta, idFicha.toString(), "", valor,'Ubigeo');
   }
 
 /* */
@@ -514,10 +537,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       }
     } else {
       await DBProvider.db.insertRespuesta(
-          idPregunta.toString(), idFicha.toString(), "", valor);
+          idPregunta.toString(), idFicha.toString(), "", valor,'Text');
     }
-
-    //await DBProvider.db.actualizarRespuestaxFicha();
   }
 
   /* guardar la ficha */
@@ -571,41 +592,10 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             formValidado = true;
           }
 
-          //}
+      
 
         }
-        /*else{
-
-          List<RespuestaModel> respuesta = await DBProvider.db.unaRespuestaFicha(idFicha,_preguntas[z].id_pregunta.toString());
-
-          if(respuesta.length == 0){
-           
-            print("La pregunta número $numPregunta es requerido");
-            formValidado = false;
-            Get.dialog(
-              AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)
-                ),
-                title: Text('Notificación'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.error_outline,color: Colors.yellowAccent[700],size: 70,),
-                    SizedBox(height: 12,),
-                    Text('Las preguntas con asteriscos son requeridas'),
-                  ],
-                ),
-              )
-            );
-
-            return;
-
-          }else{
-            formValidado  = true;
-          } 
-
-        }*/
+       
       }
     }
 
@@ -632,7 +622,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           }
         } else {
           await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta,
-              idFicha.toString(), "", controllerInput[x].controller.text);
+              idFicha.toString(), "", controllerInput[x].controller.text,'Text');
         }
       }
 
@@ -729,7 +719,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
         }
       } else {
         await DBProvider.db.insertRespuesta(controllerInput[i].idPregunta,
-            idFicha.toString(), "", controllerInput[i].controller.text);
+            idFicha.toString(), "", controllerInput[i].controller.text,'Text');
       }
     }
   }

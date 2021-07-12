@@ -169,6 +169,7 @@ class DBProvider {
             idFicha INTEGER,
             idsOpcion TEXT,
             valor TEXT,
+            tipoPregunta TEXT,
             estado TEXT         
           )
 
@@ -332,7 +333,7 @@ class DBProvider {
             updatedAt TEXT
           )
           ''');
-    }, version: 11);
+    }, version: 13);
   }
 
   //CREACION DE   LAS CONSULTAS SQL LOCAL
@@ -858,13 +859,26 @@ class DBProvider {
   /* Insertar Respuesta  */
 
   insertRespuesta(
-      String idPregunta, String idFicha, String idsOpcion, String valor) async {
+      String idPregunta, String idFicha, String idsOpcion, String valor,String tipoPregunta) async {
     final db = await database;
 
     var response = await db.rawQuery('''
-      INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$valor','TRUE')
+      INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,tipoPregunta,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$valor','$tipoPregunta','TRUE')
       
       ''');
+  }
+
+  /* */
+
+  updateRespuesta(String idPregunta, String valor)async{
+    
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      UPDATE respuesta SET valor = '$valor' WHERE idPregunta = '$idPregunta' 
+      '''
+    );
+
   }
 
   /* Traer todos las respuestas de una ficha */
@@ -1187,7 +1201,7 @@ class DBProvider {
     final db = await database;
     var response = await db.rawQuery('''
         SELECT codigoDepartamento,descripcion FROM ubigeo WHERE codigoDepartamento = '$codDepartamento' 
-        AND codigoProvincia = '00' AND codigoDistrito = '00'
+        AND codigoProvincia = '00' AND codigoDistrito = '00'  AND  codigoCentroPoblado = '0000'
         ''');
     List<UbigeoModel> listDepartamento = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()

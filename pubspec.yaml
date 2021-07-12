@@ -47,7 +47,7 @@ dependencies:
   flutter_polyline_points:
   simple_moment:
   url_launcher:
-  ffi: ^1.0.0
+  #ffi: ^1.0.0
 
 dev_dependencies:
   flutter_test:

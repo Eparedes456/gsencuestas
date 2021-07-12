@@ -24,12 +24,12 @@ class RespuestaModel {
   int     idFicha;
   String  idsOpcion;
   String  valor;
-  String   estado;
-  
+  String  estado;
+  String  tipoPregunta;
    
     RespuestaModel({
 
-      this.idRespuesta,this.idPregunta ,this.idFicha ,this.idsOpcion ,this.valor,this.estado
+      this.idRespuesta,this.idPregunta ,this.idFicha ,this.idsOpcion ,this.valor,this.estado,this.tipoPregunta
 
     });
 
@@ -45,6 +45,7 @@ class RespuestaModel {
     idsOpcion               : json['idsOpcion'].toString(),
     valor                   : json['valor'],
     estado                  : json['estado'].toString(),
+    tipoPregunta            : json['tipoPregunta'].toString() 
 
   );
 
@@ -61,6 +62,7 @@ class RespuestaModel {
       'idsOpcion'               : idsOpcion,
       'valor'                   : valor,
       'estado'                  : estado,
+      'tipoPregunta'            : tipoPregunta
 
     };
 

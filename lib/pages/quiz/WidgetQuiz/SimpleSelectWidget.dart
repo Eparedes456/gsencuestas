@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
+import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 
 class SimpleSelectPage extends StatelessWidget {
 
@@ -11,29 +12,84 @@ class SimpleSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuizController>(
+      id: 'simple',
       init: QuizController(),
-      builder:(_)=> ListView.builder(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemCount: _.opcionesPreguntas.length,
-                  itemBuilder: (context,index){
+      builder:(_)=> Column(
+        children: [
+          ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: _.opcionesPreguntas.length,
+                      itemBuilder: (context,index){
 
-                    if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
+                        if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
 
-                      return Opciones(
-                        id_pregunta: id_pregunta,
-                        index: index,
-                      );
+                          return Column(
+                            children: [
+                              Opciones(
+                                id_pregunta: id_pregunta,
+                                index: index,
+                              ),
+
+                              //Text('hola')
+                                
+                            ],
+                          );
+                          
+                        }else{
+
+                          return Container();
+
+                        }
+
+                        
+                      }
+                    ),
+
+             
+                for (var i = 0; i < _.opcionesPreguntas.length; i++)...{
+                  
+                  if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
+
+                    if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+
+                      Padding(
+                      padding:  EdgeInsets.only(left: 20,right: 20),
+                      child: TextFormField(
+                        //controller: ,
+                        onFieldSubmitted: (value){
+                          //print(value);
+                          _.saveRequireObservacion( _.opcionesPreguntas[i].idPregunta.toString(), _.opcionesPreguntas[i].idOpcion.toString() , value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Ingrese observación'
+                          
+                        ),
+                      ),
+                    )
+                    
                       
-                    }else{
-
-                      return Container();
 
                     }
 
-                    
                   }
-                ),
+
+                  
+                }
+
+            /*_.requiereObservacion == true? Padding(
+                      padding:  EdgeInsets.only(left: 20,right: 20),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Ingrese observación'
+                        ),
+                      ),
+                    ) : Container(),*/
+            
+          
+          
+        ],
+      ),
     );
   }
 }

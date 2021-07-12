@@ -704,6 +704,7 @@ class EncuestaController extends GetxController {
           DropDownDepartamento(
             showDepartamentos: showDepartamentos,
             dataUbi: dataUbi,
+            tieneUbigeo: true,
             
           ),
           SizedBox(
@@ -1339,7 +1340,7 @@ class EncuestaController extends GetxController {
     List<UbigeoModel> showDepartamentos = [];
 
     List<UbigeoModel> dataDepartamento =
-        await DBProvider.db.getDepartamentos2("22");
+        await DBProvider.db.getDepartamentos1("22");
     print(dataDepartamento[0].descripcion);
     showDepartamentos.add(dataDepartamento[0]);
     _valueDepartamento = showDepartamentos[0].descripcion;
@@ -1364,6 +1365,7 @@ class EncuestaController extends GetxController {
           Text('DEPARTAMENTO'),
           DropDownDepartamento(
             showDepartamentos: showDepartamentos,
+            tieneUbigeo: false,
             //dataUbi: dataUbi,
           ),
           SizedBox(
@@ -1542,13 +1544,15 @@ class EncuestaController extends GetxController {
     List temporalProvincia = [];
     List temporalDistrito = [];
     _valueDistrito = "";
-    var result =
-        dataUbi.where((element) => element.contains(value.codigoDepartamento));
+    print(dataUbi);
+    var result = dataUbi.where((element) => element.contains(value.codigoDepartamento));
+
 
     dataUbi.forEach((element) {
       var flat = element.substring(0, 4);
       temporalProvincia.add(flat);
     });
+
 
     listcodProvincia = temporalProvincia.toSet().toList();
     print(listcodProvincia);
@@ -1661,7 +1665,8 @@ class EncuestaController extends GetxController {
 class DropDownDepartamento extends StatelessWidget {
   final List<UbigeoModel> showDepartamentos;
   final List<String> dataUbi;
-  const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi})
+  final bool tieneUbigeo;
+  const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi, this.tieneUbigeo})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -1699,7 +1704,12 @@ class DropDownDepartamento extends StatelessWidget {
               ),
               onTap: () async {
                 //print(value.codigoDepartamento);
-                _.selectedDepartamento(dataUbi, value);
+                if(tieneUbigeo == true){
+                  _.selectedDepartamento(dataUbi, value);
+                }else{
+
+                }
+                
               },
             );
           }).toList(),

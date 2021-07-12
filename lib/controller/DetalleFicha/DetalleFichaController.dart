@@ -410,29 +410,64 @@ class DetalleFichaController extends GetxController{
 
     var pregunta = {};
     //pregunta["idPregunta"] = "14";
-
+    List<String> idsOpcionMultiple = [];
+    var idpregunta ;
+    var idRespuesta;
+    var b = true;
+    var preguntas = "";
+    var opciones = "";
     for (var i = 0; i < listRespuestaDBlocal.length; i++) {
 
-      bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
-      pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
+      if(listRespuestaDBlocal[i].tipoPregunta == "RespuestaMultiple"){
 
-      respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
-      respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
-      respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
-      respuesta["estado"]       =   b; //listRespuestaDBlocal[i].estado;
-      respuesta["pregunta"]     =   pregunta;
+        idsOpcionMultiple.add(listRespuestaDBlocal[i].idsOpcion);
         
-      listRespuestaMap.add(
-        respuesta
-      );
+        opciones = listRespuestaDBlocal[i].idsOpcion + ',' + opciones ;
+        idpregunta = listRespuestaDBlocal[i].idPregunta.toInt();
+        idRespuesta = listRespuestaDBlocal[i].idRespuesta.toInt();
 
-      sendFicha['respuesta']  = listRespuestaMap;
+      }else{
+        bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
+        pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
+        respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
+        respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
+        respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
+        respuesta["estado"]       =   b; //listRespuestaDBlocal[i].estado;
+        respuesta["pregunta"]     =   pregunta;
+        
+        listRespuestaMap.add(
+          respuesta
+        );
+      }
+
+      
+        
+      
+
+      
       //print(sendFicha);
       respuesta ={};
       pregunta = {};
       //print('hola');
-    
     }
+
+    print(opciones);
+    if(opciones.length > 0){
+
+      pregunta['idPregunta']    = idpregunta;
+      respuesta['idRespuesta']  = idRespuesta;
+      respuesta['idsOpcion']    = opciones;
+      respuesta["valor"]        =   "";
+      respuesta["estado"]       = b;
+      respuesta["pregunta"]     = pregunta;
+      listRespuestaMap.add(
+        respuesta
+      );
+
+    }
+
+    sendFicha['respuesta']  = listRespuestaMap;
+    
 
     var tracking = {};
     List<Map> listTrackingMap = new List();
@@ -558,12 +593,6 @@ class DetalleFichaController extends GetxController{
       );
 
     }
-      
-
-    
-
-
-
   }
 
   showModal(String mensaje, bool loading, String titulo){
