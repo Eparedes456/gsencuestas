@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/CoordenadasWidget.dart';
+import 'package:gsencuesta/pages/quiz/WidgetQuiz/DatepickerWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/ImageWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/MultipleSelectWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
@@ -161,6 +162,38 @@ class QuizPage extends StatelessWidget {
                                       _.preguntas[i].bloqueDescripcion,
                                       i,
                                       _.preguntas[i].apariencia)
+
+                                } else if(_.preguntas[i].tipo_pregunta =="image")...{
+                                  
+                                  ImageWidget(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                     _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      i.toString(),
+                                      1,
+                                      "",
+                                      ""
+                                  ),
+                                }else if(_.preguntas[i].tipo_pregunta =="date")...{
+
+                                  DatePickWidget(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                    _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      i.toString(),
+                                      1,
+                                      "",
+                                      ""
+                                  )
+
                                 }
                               }
                             ],
@@ -201,6 +234,151 @@ class QuizPage extends StatelessWidget {
     );
   }
 }
+
+
+DatePickWidget(String enunciado,
+    int id_pregunta,
+    QuizController _,
+    BuildContext context,
+    String numPregunta,
+    String bloque,
+    String bloque2,
+    String maxLength,
+    int i,
+    String placeholder,
+    String requerido){
+
+      if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+      } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+      } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+      }
+
+      return Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              DatePickerWidget(
+                idpregunta: _.preguntas[i].id_pregunta.toString(),
+                enunciado: _.preguntas[i].enunciado,
+                numPregunta: (i + 1).toString(),
+                //apariencia: apariencia,
+                bloque: _.preguntas[i].bloqueDescripcion,
+                i: i.toString(),
+                pagina: "quiz",
+              )            
+          ],
+        ),
+      );
+
+
+    }
+
+
+ImageWidget(String enunciado,
+    int id_pregunta,
+    QuizController _,
+    BuildContext context,
+    String numPregunta,
+    String bloque,
+    String bloque2,
+    String maxLength,
+    int i,
+    String placeholder,
+    String requerido){
+
+      if (_.bloque == null || _.bloque == "") {
+    _.bloque = bloque2;
+  } else if (_.bloque == bloque2) {
+    bloque = bloque2;
+  } else if (_.bloque != bloque2) {
+    _.bloque = bloque2;
+  }
+
+  return Padding(
+    padding: EdgeInsets.only(left: 10, right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+              width: double.infinity,
+              child: Card(
+                elevation: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta.- $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16),
+                            ),
+                          ),
+                          Text(
+                             "",//requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: ImagePage(
+                        idPregunta: id_pregunta.toString(),
+                      )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              )),
+        ),
+      ],
+    ),
+  );
+}
+
 
 CustomTextField(
     String enunciado,
@@ -718,6 +896,7 @@ Ubigeo(
         apariencia: apariencia,
         bloque: _.preguntas[i].bloqueDescripcion,
         i: i,
+        pagina: "quiz",
       ),
     ],
   );

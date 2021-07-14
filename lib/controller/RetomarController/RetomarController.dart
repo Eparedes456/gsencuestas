@@ -11,6 +11,7 @@ import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
+import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -68,6 +69,9 @@ class RetommarController extends GetxController {
   String idEncuestado = "";
 
   String bloque;
+
+  var requiereObservacion =false;
+  var idRequierepreguntaObserva;
 
   TextEditingController controller = new TextEditingController();
 
@@ -181,6 +185,15 @@ class RetommarController extends GetxController {
             'RespuestaSimple'
         );
       }
+
+      if (opcionEscogida.requiereDescripcion == "true") {
+      print('dibujar una caja de texto');
+      idRequierepreguntaObserva = opcionEscogida.idPregunta;
+      requiereObservacion = true;
+
+    }
+
+
     });
 
     List<RespuestaModel> listRespuestaDB =
@@ -326,6 +339,36 @@ class RetommarController extends GetxController {
     }
 
     if (formValidado == true) {
+      _positionStream.cancel();
+
+      /*for (var i = 0; i < controllerInput.length; i++) {
+        if (controllerInput[i].controller.text == "" ||
+            controllerInput[i].controller.text == null || controllerInput[i].tipo_pregunta == "ubigeo") {
+          controllerInput.removeWhere((item) => item.controller.text == "");
+          controllerInput.removeWhere((element) => element.tipo_pregunta =="ubigeo");
+        }
+      }
+
+      for (var x = 0; x < controllerInput.length; x++) {
+        List<RespuestaModel> respuesta = await DBProvider.db
+            .unaRespuestaFicha(idFicha, controllerInput[x].idPregunta);
+
+        if (respuesta.length > 0) {
+          if (respuesta[0].valor != "") {
+            print(
+                'Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+            await DBProvider.db.actualizarRespuestaxFicha(
+                controllerInput[x].idPregunta,
+                idFicha,
+                controllerInput[x].controller.text);
+          }
+        } else {
+          await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta,
+              idFicha.toString(), "", controllerInput[x].controller.text,'Text');
+        }
+      }*/
+
+
       DateTime now = DateTime.now();
       var utc = now.toUtc();
 
@@ -425,7 +468,7 @@ class RetommarController extends GetxController {
               guardarinputBack();
               Get.back(result: "SI");
             },
-            child: Text('Si'),
+            child: Text('Si',style: TextStyle(color: Colors.white),),
           ),
         ),
         Container(
@@ -453,9 +496,9 @@ class RetommarController extends GetxController {
 
   guardarinputBack() async {
     for (var i = 0; i < controllerInput.length; i++) {
-      if (controllerInput[i].controller.text == "" ||
-          controllerInput[i].controller.text == null) {
+      if (controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null || controllerInput[i].tipo_pregunta == "ubigeo") {
         controllerInput.removeWhere((item) => item.controller.text == "");
+        controllerInput.removeWhere((element) => element.tipo_pregunta =="ubigeo");
       }
     }
 
@@ -481,6 +524,242 @@ class RetommarController extends GetxController {
     }
   }
 
+
+  /* UBIGEO  WIDGET */
+
+  String _ubigeoCapturado = "";
+  String _ubigeoGuardar = "";
+  String get ubigeoCapturado => _ubigeoCapturado;
+
+  String _valueDistrito;
+  String get valueDistrito => _valueDistrito;
+
+  String _valueCentroPoblado;
+  String get valueCentroPoblado => _valueCentroPoblado;
+  String _valueDepartamento;
+  String get valueDepartamento => _valueDepartamento;
+
+  String _valueProvincia;
+  String get valueprovincia => _valueProvincia;
+
+  List<UbigeoModel> _listprovincias = [];
+  List<UbigeoModel> get listprovincias => _listprovincias;
+
+  List<UbigeoModel> _listDistritos = [];
+  List<UbigeoModel> get listDistrito => _listDistritos;
+
+  List<UbigeoModel> _listCentrosPoblados = [];
+  List<UbigeoModel> get listCentroPoblados => _listCentrosPoblados;
+  List listCodDep = [];
+  List listcodProvincia = [];
+  List liscodDistrito = [];
+  String _selectCodDepartamento = "";
+  String _selectCodProvincia = "";
+  String _selectCodDistritoUbigeo = "";
+  String _selectCodCentroPoblado = "";
+
+  showModalUbigeo(String idPregunta, String apariencia, int i) async {
+    listCodDep = [];
+    listcodProvincia = [];
+    liscodDistrito = [];
+    _listprovincias = [];
+    _listDistritos = [];
+
+    List<UbigeoModel> showDepartamentos = [];
+
+    List<UbigeoModel> dataDepartamento =
+        await DBProvider.db.getDepartamentos1("22");
+    print(dataDepartamento[0].descripcion);
+    showDepartamentos.add(dataDepartamento[0]);
+    _valueDepartamento = showDepartamentos[0].descripcion;
+    var idDepartamento = showDepartamentos[0].codigoDepartamento;
+
+    List<UbigeoModel> dataProvincias =
+        await DBProvider.db.getAllProvincias("22");
+    print(dataProvincias.length);
+
+    for (var i = 0; i < dataProvincias.length; i++) {
+      _listprovincias.add(dataProvincias[i]);
+    }
+
+    Get.dialog(AlertDialog(
+      title: Text('Seleccione el ubigeo'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('DEPARTAMENTO'),
+          DropDownDepartamento(
+            showDepartamentos: showDepartamentos,
+            //dataUbi: dataUbi,
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text('PROVINCIA'),
+          DropDownProvincia(
+            showProvincia: _listprovincias,
+            isManual: true,
+            apariencia: apariencia,
+            //dataUbi: dataUbi,
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text('DISTRITO'),
+          DropDownDistrito(
+            showDistrito: _listDistritos,
+            isManual: true,
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          apariencia == "distrito" ? Container() : Text('CENTRO POBLADO'),
+          apariencia == "distrito"
+              ? Container()
+              : CentroPoblado(
+                  showCentroPoblado: _listCentrosPoblados,
+                  isManual: true,
+                ),
+          SizedBox(
+            height: 8,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  borderRadius: BorderRadius.circular(10)),
+              height: 45,
+              child: MaterialButton(
+                onPressed: () async {
+                  if (apariencia == "distrito") {
+                    _ubigeoCapturado = _valueDepartamento +
+                        "/" +
+                        _valueProvincia +
+                        "/" +
+                        _valueDistrito;
+                  } else {
+                    _ubigeoCapturado = _valueDepartamento +
+                        "/" +
+                        _valueProvincia +
+                        "/" +
+                        _valueDistrito;
+                  }
+                  //_ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito +"/" + _valueCentroPoblado;
+                  _ubigeoGuardar = "22" +
+                      _selectCodProvincia +
+                      _selectCodDistritoUbigeo +
+                      _selectCodCentroPoblado;
+
+                  print(_ubigeoCapturado);
+                  print(_ubigeoGuardar);
+
+
+                  update(['ubigeo']);
+                  Get.back();
+                  await guardarUbigeo(idPregunta, _ubigeoGuardar,i,_ubigeoCapturado);
+                },
+                child: Text(
+                  'Seleccionar',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+
+  selectProvinciaManual(UbigeoModel value, String aparienciaValor) async {
+    //_listCentrosPoblados = [];
+    List<UbigeoModel> dataDistritos =
+        await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
+    //print(dataDistritos.length);
+    //
+    _listDistritos = [];
+    dataDistritos.forEach((element) {
+      _listDistritos.add(element);
+    });
+
+    if (_listDistritos.length > 0) {
+      print(_listDistritos.length);
+      _selectCodProvincia = value.codigoProvincia;
+      _selectCodDistritoUbigeo = _listDistritos[0].codigoDistrito;
+      _valueDistrito = _listDistritos[0].descripcion;
+      update(['distrito']);
+      if (aparienciaValor == "distrito") {
+        //_selectCodCentroPoblado == "0000";
+      } else {
+        await selectDistritoManual(
+            value, _selectCodProvincia, _selectCodDistritoUbigeo, true);
+      }
+    }
+    //update(['distrito']);
+  }
+
+  selectDistritoManual(UbigeoModel value, String codProvincia,
+      String codDistrito, bool estado) async {
+    _listCentrosPoblados = [];
+    List<UbigeoModel> dataCentroPoblados = [];
+    if (estado == true) {
+      dataCentroPoblados = await DBProvider.db
+          .getAllCentrosPoblados(codProvincia, "22", codDistrito);
+    } else {
+      dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(
+          value.codigoProvincia, "22", value.codigoDistrito);
+    }
+
+    //print(dataCentroPoblados.length);
+
+    for (var i = 0; i < dataCentroPoblados.length; i++) {
+      _listCentrosPoblados.add(dataCentroPoblados[i]);
+    }
+    //_selectCodDistritoUbigeo = value.codigoDistrito;
+    _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
+    _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
+    update(['centroPoblado']);
+  }
+
+  changeDistrito(String valor) {
+    _valueDistrito = valor;
+    update(['distrito']);
+  }
+
+  changeProvincia(String valor) {
+    _valueProvincia = valor;
+    update(['provincia']);
+  }
+
+  selectedCentroPoblado(UbigeoModel value) {
+    _selectCodCentroPoblado = value.codigoCentroPoblado;
+  }
+
+  changeCentroPoblado(String valor) {
+    _valueCentroPoblado = valor;
+    update(['centroPoblado']);
+  }
+
+  guardarUbigeo(String idPregunta, String valor, int index,String ubigeo) async {
+
+    _controllerInput[index].controller.text = ubigeo;
+    String ubigeoCodigo = valor;
+    print('Ubigeo' + ubigeoCodigo);
+    await DBProvider.db.insertRespuesta(idPregunta, idFicha.toString(), "", ubigeoCodigo,'Ubigeo');
+    var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
+    print(respuesta);
+  }
+
+/* */
+
+
   @override
   void onClose() {
     // TODO: implement onClose
@@ -498,4 +777,240 @@ class InputTextfield {
 
   InputTextfield(this.idPregunta, this.controller, this.name, this.index,
       this.tipo_pregunta, this.calculation);
+}
+
+class DropDownDepartamento extends StatelessWidget {
+  final List<UbigeoModel> showDepartamentos;
+  final List<String> dataUbi;
+  const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value = showDepartamentos[0].descripcion;
+
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
+      id: 'departamento',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione un departamento'),
+          ),
+          isExpanded: true,
+          value: _.valueDepartamento,
+          items: showDepartamentos.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                //print(value.codigoDepartamento);
+                //_.selectedDepartamento(dataUbi, value);
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            //_.selectdepartamento(valor);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class DropDownProvincia extends StatelessWidget {
+  final List<UbigeoModel> showProvincia;
+  final List<String> dataUbi;
+  final bool isManual;
+  final String apariencia;
+  const DropDownProvincia(
+      {Key key,
+      this.showProvincia,
+      this.dataUbi,
+      this.isManual,
+      this.apariencia})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
+      id: 'provincia',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione una provincia'),
+          ),
+          isExpanded: true,
+          value: _.valueprovincia,
+          items: _.listprovincias.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                if (isManual == true) {
+                  _.selectProvinciaManual(value, apariencia);
+                } else {
+                  //_.selectedProvincia(dataUbi, value);
+                }
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            _.changeProvincia(valor);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class DropDownDistrito extends StatelessWidget {
+  final List<UbigeoModel> showDistrito;
+  final List<String> dataUbi;
+  final bool isManual;
+  const DropDownDistrito(
+      {Key key, this.showDistrito, this.dataUbi, this.isManual})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
+      id: 'distrito',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione un distrito'),
+          ),
+          isExpanded: true,
+          value: _.valueDistrito,
+          items: _.listDistrito.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                if (isManual == true) {
+                  _.selectDistritoManual(value, "", "", false);
+                } else {
+                  //_.selectedDistrito(value);
+                }
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            _.changeDistrito(valor);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CentroPoblado extends StatelessWidget {
+  final List<UbigeoModel> showCentroPoblado;
+  final List<String> dataUbi;
+  final bool isManual;
+  const CentroPoblado(
+      {Key key, this.showCentroPoblado, this.dataUbi, this.isManual})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    String value; //showProvincia[0].descripcion;
+
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
+      id: 'centroPoblado',
+      builder: (_) => Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
+        child: DropdownButton(
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Seleccione un centro poblado'),
+          ),
+          isExpanded: true,
+          value: _.valueCentroPoblado,
+          items: _.listCentroPoblados.map((value) {
+            return DropdownMenuItem(
+              value: value.descripcion,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.descripcion,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              onTap: () async {
+                if (isManual == true) {
+                  _.selectedCentroPoblado(value);
+                } else {
+                  //_.selectedDistrito(value);
+                }
+              },
+            );
+          }).toList(),
+          onChanged: (valor) {
+            _.changeCentroPoblado(valor);
+          },
+        ),
+      ),
+    );
+  }
 }

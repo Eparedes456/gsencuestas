@@ -68,13 +68,19 @@ class VerEncuestacontroller extends GetxController {
       print(_preguntas[i].id_pregunta);
       var idPregunta = _preguntas[i].id_pregunta;
 
-      controllerInput.add(InputTextfield(
+      
+
+        controllerInput.add(InputTextfield(
           preguntas[i].id_pregunta.toString(),
           TextEditingController(),
           preguntas[i].bind_name,
           i,
           preguntas[i].tipo_pregunta,
           preguntas[i].calculation));
+
+      
+
+      
 
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 

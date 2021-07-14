@@ -852,6 +852,21 @@ class EncuestaController extends GetxController {
   //  creamos la ficha en la bse de datos y si logras insertar exitosamente entonces navegamos a la pagina de las preguntas y  opciones.
 
   navigateToQuiz(String idEncuestado, String ubigeo, var EncuestadoData) async {
+
+    Get.dialog(
+
+      AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 8,),
+            Text('Cargando preguntas....')
+          ],
+        ),
+      )
+    );
+
     DateTime now = DateTime.now();
     var utc = now.toUtc();
 
@@ -887,6 +902,7 @@ class EncuestaController extends GetxController {
         'idFicha': idFicha.toString()
       });
     }else {
+      Get.back();
       var result = await Get.to(QuizPage(), arguments: {
         'idEncuesta'      : idEncuesta,
         'tituloEncuesta'  : titulo,
@@ -1223,7 +1239,7 @@ class EncuestaController extends GetxController {
     var nombreCompletoReniec = dataReniec["prenombres"];
     var apellidoPaterno = dataReniec["apPrimer"];
     var apellidoMaterno = dataReniec["apSegundo"];
-
+    var ubigeoString = dataReniec["ubigeo"];
     var direccion = dataReniec["direccion"];
     var imagenReniec = dataReniec["foto"];
     var estado_civil = dataReniec["estadoCivil"];
@@ -1258,6 +1274,14 @@ class EncuestaController extends GetxController {
               ),
               SizedBox(
                 height: 20,
+              ),
+              Text(
+                'Ubigeo: $ubigeoString',
+                style: TextStyle(fontSize: 14),
+              ),
+
+              SizedBox(
+                height: 10,
               ),
               Row(
                 children: [
@@ -1718,7 +1742,7 @@ class DropDownDepartamento extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  value.descripcion,
+                  value.descripcion.toUpperCase(),
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -1779,7 +1803,7 @@ class DropDownProvincia extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  value.descripcion,
+                  value.descripcion.toUpperCase(),
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -1838,7 +1862,7 @@ class DropDownDistrito extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  value.descripcion,
+                  value.descripcion.toUpperCase(),
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -1897,7 +1921,7 @@ class CentroPoblado extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  value.descripcion,
+                  value.descripcion.toUpperCase(),
                   style: TextStyle(fontSize: 14),
                 ),
               ),

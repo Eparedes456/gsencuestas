@@ -93,6 +93,11 @@ class PrincipalController extends GetxController {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     ConnectivityResult conectivityResult =
         await Connectivity().checkConnectivity();
+    var ubigeo = preferences.getString('ubigeoCargo');
+    if (ubigeo != "si") {
+              loadingUbigeo();
+              await cargarUbigeo();
+    }
     var flag1 = preferences.getString('primeraCarga');
     if (conectivityResult == ConnectivityResult.wifi ||
         conectivityResult == ConnectivityResult.mobile) {
@@ -163,7 +168,7 @@ class PrincipalController extends GetxController {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              title: Text('Notificación'),
+              title: Text('Notificación',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
               content: Text(
                   'Se encontró una actualización, no se puede proceder ya que usted cuenta con  $pendientesLength $finalizadaslenght para subir al servidor'),
               actions: [
@@ -176,7 +181,7 @@ class PrincipalController extends GetxController {
                     onPressed: () async {
                       Get.back();
                     },
-                    child: Text('Ok'),
+                    child: Text('Ok',style: TextStyle(color: Colors.white),),
                   ),
                 ),
               ],
@@ -201,11 +206,8 @@ class PrincipalController extends GetxController {
 
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"],
                 idInstitucion, response["ultimaActualizacionUsuario"]);
-            var ubigeo = preferences.getString('ubigeoCargo');
-            if (ubigeo != "si") {
-              loadingUbigeo();
-              await cargarUbigeo();
-            }
+            
+            
             await cargarEncuestados();
             await cargarUsuarios();
             await cargarParcelas();
@@ -281,6 +283,13 @@ class PrincipalController extends GetxController {
     if (flag == "Si") {
       print("Consulto a la base de datos a la tabla proyecto");
     } else {
+
+      var ubigeo = preferences.getString('ubigeoCargo');
+      if (ubigeo != "si") {
+        loadingUbigeo();
+        await cargarUbigeo();
+      }
+
       /*E liminar las data */
       await DBProvider.db.deleteAllUsuario(); //  usuario table
       //await DBProvider.db.deleteAllUbigeo(); // ubigeo table
@@ -326,17 +335,14 @@ class PrincipalController extends GetxController {
       }
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
       print(dataParametro2);
-      var ubigeo = preferences.getString('ubigeoCargo');
-      if (ubigeo != "si") {
-        loadingUbigeo();
-        await cargarUbigeo();
-      }
-      await cargarProyectosEncuesta();
       await cargarParcelas();
+      await cargarProyectosEncuesta();
+      
       _isLoading = false;
       _hayData = true;
+      
       update();
-      //Get.back();
+      Get.back();
     }
   }
 
@@ -634,8 +640,8 @@ class PrincipalController extends GetxController {
       }
       if (_proyectos.length > 0) {
         /*_isLoading = false;
-        _hayData = true;*/
-        //update();
+        _hayData = true;
+        update();*/
       }
     } else if (listProyecto == 1) {
       print('Error de servidor');
@@ -708,12 +714,12 @@ class PrincipalController extends GetxController {
       print(x);
     }
     List<UbigeoModel> ubigeos = await DBProvider.db.getAllUbigeo();
-    if (ubigeos.length > 0) {
+    /*if (ubigeos.length > 0) {
       _isLoading = false;
       _hayData = true;
       update();
       Get.back();
-    }
+    }*/
 
     //Get.back();
   }
@@ -724,7 +730,7 @@ class PrincipalController extends GetxController {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           'Notificación',
-          style: TextStyle(fontWeight: FontWeight.normal),
+          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
         ),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -745,7 +751,7 @@ class PrincipalController extends GetxController {
               height: 20,
             ),
             Text(
-                'Está operación se realiza solo 1 vez ,tiempo estimado de carga 4 a 8 min')
+                'Está operación se realiza solo una vez, tiempo estimado de carga 28 a 40 segundos aproximadamente.')
           ],
         ),
       ),

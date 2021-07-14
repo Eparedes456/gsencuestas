@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'dart:io';
 
@@ -152,13 +153,61 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   File _imagePath;
   File get imagepath => _imagePath;
 
-  pickImage() async {
+  pickImage(String valor,String idPregunta) async {
+    String photoBase64 = "";
     final ImagePicker image = ImagePicker();
-    PickedFile imageCapturada =
-        await image.getImage(source: ImageSource.camera);
-    _imagePath = File(imageCapturada.path);
+    if(valor == "CAMARA"){
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+      _imagePath = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(_imagePath.readAsBytesSync());
+
+      print(photoBase64);
+
+      print(" $valor , $idPregunta");
+
+      
+
+      
+
+      
+
+      //var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
+      
+
+    }else{
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 500,maxWidth: 500);
+      _imagePath = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(_imagePath.readAsBytesSync());
+      print(photoBase64);
+
+      //var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
+      
+
+    }
+    List<RespuestaModel> existe = await DBProvider.db.unaRespuestaFicha(idFicha, idPregunta); 
+    print(existe);
+    if(existe.length > 0){
+      print("actualizar la respuesta");
+
+      var resp = await DBProvider.db.actualizarRespuestaxFicha(idPregunta, idFicha, photoBase64);
+      var data = await DBProvider.db.getAllRespuestas(idFicha);
+      print(data);
+    }else{
+      print("insertar nuevo valor");
+
+      var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
+      var data = await DBProvider.db.getAllRespuestas(idFicha);
+      print(data);
+
+    }
+    
+
     print(_imagePath);
-    update();
+
+
+    update(['image']);
   }
 
   /* Obtener la ubicación del dispositivo */
@@ -542,13 +591,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     _controllerInput[index].controller.text = ubigeo;
     String ubigeoCodigo = valor;
     print('Ubigeo' + ubigeoCodigo);
-
     await DBProvider.db.insertRespuesta(idPregunta, idFicha.toString(), "", ubigeoCodigo,'Ubigeo');
-
     var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
     print(respuesta);
-
-
   }
 
 /* */
@@ -732,9 +777,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   guardarinputBack() async {
     if (controllerInput.length > 0) {
       for (var i = 0; i < controllerInput.length; i++) {
-        if (controllerInput[i].controller.text == "" ||
-            controllerInput[i].controller.text == null) {
+        if (controllerInput[i].controller.text == "" || controllerInput[i].controller.text == null || controllerInput[i].tipo_pregunta == "ubigeo") {
           controllerInput.removeWhere((item) => item.controller.text == "");
+          controllerInput.removeWhere((element) => element.tipo_pregunta =="ubigeo");
         }
       }
     }

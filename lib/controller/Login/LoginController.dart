@@ -127,15 +127,15 @@ class LoginController extends GetxController{
           actions: [
 
             FlatButton.icon(
-
+              color: Color.fromRGBO(0, 102, 84, 1),
               onPressed: (){
                 
                 Get.back();
                 checkInternet();
 
               },
-              icon: Icon(Icons.pin_drop), 
-              label: Text('Activar GPS')
+              icon: Icon(Icons.pin_drop,color: Colors.white,), 
+              label: Text('Activar GPS',style: TextStyle(color: Colors.white),)
 
             )
 

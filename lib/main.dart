@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() { 
     super.initState();
-    final pushProvider = new PushNotificationProvider();
+    /*final pushProvider = new PushNotificationProvider();
     pushProvider.initNotifications();
 
     pushProvider.mensajesStream.listen((argumento) { 
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       
       //Get.to(ProfilePage,arguments: argumento);
 
-    });
+    });*/
 
   }
 

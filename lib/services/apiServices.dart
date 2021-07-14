@@ -15,9 +15,9 @@ class ApiServices {
   getParametroUsuario() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "parametro/actualizacion_usuario");
     var response = await http
-        .get(base_url_dev + "parametro/actualizacion_usuario", headers: {
+        .get( url /*base_url_dev + "parametro/actualizacion_usuario"*/, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     });
@@ -41,9 +41,10 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
     var idInstitucion = preferences.getString('idInstitucion');
+    var url =Uri.parse(base_url_dev + "parametro/byInstitucion/$idInstitucion");
 
     var response = await http
-        .get(base_url_dev + "parametro/byInstitucion/$idInstitucion", headers: {
+        .get(url /*base_url_dev + "parametro/byInstitucion/$idInstitucion"*/, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     });
@@ -66,9 +67,9 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "proyecto");
     //var response = await dio.get(base_url + "/proyecto");
-    var response = await http.get(base_url_dev + "proyecto", headers: {
+    var response = await http.get( url /*base_url_dev + "proyecto"*/, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -98,9 +99,9 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "encuesta/byProyecto/$idProyecto");
     var response = await http
-        .get(base_url_dev + "encuesta/byProyecto/$idProyecto", headers: {
+        .get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -129,9 +130,9 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "encuesta/$idEncuesta");
     var response =
-        await http.get(base_url_dev + "encuesta/$idEncuesta", headers: {
+        await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -181,7 +182,8 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-    var response = await http.get(base_url_dev + "usuario", headers: {
+    var url =Uri.parse(base_url_dev + "usuario");
+    var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -210,9 +212,9 @@ class ApiServices {
     //var uri = "https://test.regionsanmartin.gob.pe:6443/gsencuesta/api/auth";
     Map dataSend = {"password": password, "username": username};
     String body = json.encode(dataSend);
-
+    var url =Uri.parse(uri);
     var response = await http.post(
-      uri,
+      url,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -244,8 +246,8 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
-    var response = await http.get(base_url_dev + "encuestado", headers: {
+    var url =Uri.parse(base_url_dev + "encuestado");
+    var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -273,8 +275,8 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
-    var response = await http.get(base_url_dev + "encuestado/lista_detalle_encuestado", headers: {
+    var url =Uri.parse(base_url_dev + "encuestado/lista_detalle_encuestado");
+    var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -302,9 +304,9 @@ class ApiServices {
     SharedPreferences preferencia = await SharedPreferences.getInstance();
 
     var token = preferencia.getString('token');
-
+    var url =Uri.parse(base_url_dev + "ficha");
     var response = await http.post(
-      base_url_dev + 'ficha',
+      url,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -331,9 +333,9 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "encuestado?query=$data");
     var response =
-        await http.get(base_url_dev + "encuestado?query=$data", headers: {
+        await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -360,8 +362,8 @@ class ApiServices {
     var token = preferences.getString('token');
 
     var sendData = json.encode(data);
-
-    var response = await http.post(base_url_dev + "ficha/create_all",
+    var url =Uri.parse(base_url_dev + "ficha/create_all");
+    var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
           //'Accept': 'application/json',
@@ -387,8 +389,9 @@ class ApiServices {
   getDepartamentos() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "ubigeo/departamento");
     var response = await http.get(
-      base_url_dev + "ubigeo/departamento",
+      url,
       headers: {
         'Content-Type': 'application/json',
         //'Accept': 'application/json',
@@ -410,8 +413,9 @@ class ApiServices {
   getProvincias(String codigoDepartamento) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "ubigeo/provincia/$codigoDepartamento");
     var response = await http.get(
-      base_url_dev + "ubigeo/provincia/$codigoDepartamento",
+      url,
       headers: {
         'Content-Type': 'application/json',
         //'Accept': 'application/json',
@@ -434,9 +438,9 @@ class ApiServices {
   getDistritos(String codProvincia, String codigoDepartamento) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "ubigeo/distrito?codigoDepartamento=$codigoDepartamento&codigoProvincia=$codProvincia");
     var response = await http.get(
-      base_url_dev +
-          "ubigeo/distrito?codigoDepartamento=$codigoDepartamento&codigoProvincia=$codProvincia",
+      url,
       headers: {
         'Content-Type': 'application/json',
         //'Accept': 'application/json',
@@ -458,8 +462,8 @@ class ApiServices {
 
   saveUser(Map data) async {
     var sendData = json.encode(data);
-
-    var response = await http.post(base_url_dev + "usuario",
+    var url =Uri.parse(base_url_dev + "usuario");
+    var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
           //'Accept': 'application/json',
@@ -481,11 +485,11 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "parcela");
     var sendData = json.encode(data);
     print(sendData);
 
-    var response = await http.post(base_url_dev + "parcela",
+    var response = await http.post(url,
         headers: {
           'Content-Type': 'application/json',
           //'Accept': 'application/json',
@@ -509,8 +513,9 @@ class ApiServices {
   buscarReniec(String data) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "reniec/$data");
     var response = await http.get(
-      base_url_dev + "reniec/$data",
+      url,
       headers: {
         'Content-Type': 'application/json',
         //'Accept': 'application/json',
@@ -534,9 +539,9 @@ class ApiServices {
   getAllParcelas() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
-
+    var url =Uri.parse(base_url_dev + "parcela");
     var response = await http.get(
-      base_url_dev + "parcela",
+      url,
       headers: {
         'Content-Type': 'application/json',
         //'Accept': 'application/json',

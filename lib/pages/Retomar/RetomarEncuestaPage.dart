@@ -639,11 +639,33 @@ Ubigeo(
   } else if (_.bloque != bloque2) {
     _.bloque = bloque2;
   }
-  return UbigeoWidget(
-    id_pregunta: _.preguntas[i].id_pregunta,
-    enunciado: _.preguntas[i].enunciado,
-    numPregunta: (i + 1).toString(),
-    apariencia: apariencia,
-    bloque: _.preguntas[i].bloqueDescripcion,
+  return Column(
+    children: [
+
+      _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+      UbigeoWidget(
+        id_pregunta: _.preguntas[i].id_pregunta,
+        enunciado: _.preguntas[i].enunciado,
+        numPregunta: (i + 1).toString(),
+        apariencia: apariencia,
+        bloque: _.preguntas[i].bloqueDescripcion,
+        i: i,
+        pagina: "retomar",
+      ),
+    ],
   );
 }
+
+

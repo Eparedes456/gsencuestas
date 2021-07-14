@@ -46,7 +46,7 @@ class PrincipalPage extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(left: 10, top: 8, right: 10),
                         child: Text(
-                          'Busca los proyectos que tienes asignados',
+                          'Navega en los proyectos que tienes asignados',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -232,7 +232,7 @@ class PrincipalPage extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20),
                       child: Text(
                         'Lista de encuestas',
-                        style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1)),
+                        style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),
                       ),
                     ),
               _.isLoading == true
@@ -297,6 +297,7 @@ class PrincipalPage extends StatelessWidget {
                                               child: ListView(
                                                 children: [
                                                   Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Text(
                                                         _.listEncuesta[index]

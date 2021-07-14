@@ -6,11 +6,86 @@ import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:get/get.dart';
 
 class ImagePage extends StatelessWidget {
+  final String idPregunta;
+
+  const ImagePage({Key key, this.idPregunta}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuizController>(
       init: QuizController(),
-      builder: (_) => Padding(
+      id: 'image',
+      builder: (_) => Column(
+        children: [
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              GestureDetector(
+                onTap: (){
+                  _.pickImage("CAMARA",idPregunta);
+                },
+                child: Card(
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.camera,color: Colors.grey,),
+                        SizedBox(width: 8,),
+                        Text('Camara'),
+                      ],
+                    ),
+                  )
+                ),
+              ),
+
+              SizedBox(width: 20,),
+
+              GestureDetector(
+                onTap: (){
+                  _.pickImage("GALERIA",idPregunta);
+                },
+                child: Card(
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+              
+                        Icon(Icons.collections,color: Colors.grey,),
+                        SizedBox(width: 8,),
+                        Text('Galeria'),
+                      ],
+                    ),
+                  )
+                ),
+              )
+
+            ],
+          ),
+          SizedBox(height: 20,),
+
+          _.imagepath == null ? Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/noimage2.png'),
+                fit: BoxFit.cover
+              )
+            ),
+
+          ): Container(
+            height: 150,
+            width: double.infinity,
+            child: Image.file(_.imagepath,fit: BoxFit.contain,),
+          ),
+
+        ],
+      )
+      
+      /*Padding(
         padding: EdgeInsets.only(left: 10,right: 10),
         child: Container(
           width: double.infinity,
@@ -68,7 +143,7 @@ class ImagePage extends StatelessWidget {
             ),
           )
         ),
-      ),
+      ),*/
     );
   }
 }

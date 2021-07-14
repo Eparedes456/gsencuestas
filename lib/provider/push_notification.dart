@@ -1,10 +1,10 @@
 
 
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:async';
 import 'dart:io';
 
-class PushNotificationProvider{
+/*class PushNotificationProvider{
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -117,4 +117,4 @@ class PushNotificationProvider{
 
 
 
-}
+}*/

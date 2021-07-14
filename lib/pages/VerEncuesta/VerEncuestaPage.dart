@@ -38,90 +38,90 @@ class VerEncuestaPage extends StatelessWidget {
                     //SizedBox(height: 30,),
 
                     Expanded(
-                        child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          for (var i = 0; i < _.preguntas.length; i++) ...{
-                            if (_.preguntas[i].tipo_pregunta == "integer" ||
-                                _.preguntas[i].tipo_pregunta == "decimal") ...{
-                              IntegerDecimalWidget(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion,
-                                  _.preguntas[i].bind_field_length,
-                                  i,
-                                  _.preguntas[i].bind_field_placeholder,
-                                  _.preguntas[i].requerido,
-                                  _.preguntas[i].bind_type)
-                            } else if (_.preguntas[i].tipo_pregunta ==
-                                "text") ...{
-                              CustomTextField(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion,
-                                  _.preguntas[i].bind_field_length,
-                                  i,
-                                  _.preguntas[i].bind_field_placeholder,
-                                  _.preguntas[i].requerido),
-                            } else if (_.preguntas[i].tipo_pregunta ==
-                                "note") ...{
-                              Note(
-                                _.preguntas[i].enunciado,
-                                _.preguntas[i].id_pregunta,
-                                _,
-                                context,
-                                (i + 1).toString(),
-                                bloque,
-                                _.preguntas[i].bloqueDescripcion,
-                                i,
-                                _.preguntas[i].requerido,
-                              )
-                            } else if (_.preguntas[i].tipo_pregunta ==
-                                "select_one list_name") ...{
-                              SelectSimpleWidget(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion),
-                            } else if (_.preguntas[i].tipo_pregunta ==
-                                "select_multiple list_name") ...{
-                              MultiSelectWidget(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion),
-                            } else if (_.preguntas[i].tipo_pregunta ==
-                                "ubigeo") ...{
-                              Ubigeo(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion,
-                                  i,
-                                  _.preguntas[i].apariencia)
-                            }
-                          }
-                        ],
-                      ),
-                    )),
-
+                            child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              for (var i = 0; i < _.preguntas.length; i++) ...{
+                                if (_.preguntas[i].tipo_pregunta == "integer" ||
+                                    _.preguntas[i].tipo_pregunta ==
+                                        "decimal") ...{
+                                  IntegerDecimalWidget(
+                                      _.preguntas[i].enunciado,
+                                      _.preguntas[i].id_pregunta,
+                                      _,
+                                      context,
+                                      (i + 1).toString(),
+                                      bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      _.preguntas[i].bind_field_length,
+                                      i,
+                                      _.preguntas[i].bind_field_placeholder,
+                                      _.preguntas[i].requerido,
+                                      _.preguntas[i].bind_type)
+                                } else if (_.preguntas[i].tipo_pregunta ==
+                                    "text") ...{
+                                  CustomTextField(
+                                      _.preguntas[i].enunciado,
+                                      _.preguntas[i].id_pregunta,
+                                      _,
+                                      context,
+                                      (i + 1).toString(),
+                                      bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      _.preguntas[i].bind_field_length,
+                                      i,
+                                      _.preguntas[i].bind_field_placeholder,
+                                      _.preguntas[i].requerido),
+                                } else if (_.preguntas[i].tipo_pregunta ==
+                                    "note") ...{
+                                  Note(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                    _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                    _.preguntas[i].bloqueDescripcion,
+                                    i,
+                                    _.preguntas[i].requerido,
+                                  )
+                                } else if (_.preguntas[i].tipo_pregunta ==
+                                    "select_one list_name") ...{
+                                  SelectSimpleWidget(
+                                      _.preguntas[i].enunciado,
+                                      _.preguntas[i].id_pregunta,
+                                      _,
+                                      context,
+                                      (i + 1).toString(),
+                                      bloque,
+                                      _.preguntas[i].bloqueDescripcion),
+                                } else if (_.preguntas[i].tipo_pregunta ==
+                                    "select_multiple list_name") ...{
+                                  MultiSelectWidget(
+                                      _.preguntas[i].enunciado,
+                                      _.preguntas[i].id_pregunta,
+                                      _,
+                                      context,
+                                      (i + 1).toString(),
+                                      bloque,
+                                      _.preguntas[i].bloqueDescripcion),
+                                } else if (_.preguntas[i].tipo_pregunta ==
+                                    "ubigeo") ...{
+                                  Ubigeo(
+                                      _.preguntas[i].enunciado,
+                                      _.preguntas[i].id_pregunta,
+                                      _,
+                                      context,
+                                      (i + 1).toString(),
+                                      bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      i,
+                                      _.preguntas[i].apariencia)
+                                }
+                              }
+                            ],
+                          ),
+                        )),
                     SizedBox(
                       height: 20,
                     ),
@@ -573,5 +573,7 @@ Ubigeo(
     numPregunta: (i + 1).toString(),
     apariencia: apariencia,
     bloque: _.preguntas[i].bloqueDescripcion,
+    i: i,
+    pagina: "verEncuesta",
   );
 }
