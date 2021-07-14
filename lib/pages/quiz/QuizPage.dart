@@ -40,17 +40,41 @@ class QuizPage extends StatelessWidget {
             body: _.isLoadingData == true
                 ? Container(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 10,
                         ),
+
                         Padding(
                           padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Encuestado: ${_.encuestadoNombreCompleto}',style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700),),
+                              Text('Dni : ${_.numDOCUMENTO}',style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700),),
+                              Text('Direccion: ${_.direccionReniec}',style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700),),
+                            ],
+                          ),
+                        ),
+                        
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 20, right: 20,top: 10),
                           child: Text(
                             'Total de preguntas a responder ${_.preguntas.length}',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w700),
                           ),
                         ),
@@ -143,31 +167,33 @@ class QuizPage extends StatelessWidget {
                           ),
                         )),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        Container(
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(0, 102, 84, 1),
+                        Center(
+                          child: Container(
+                            width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color.fromRGBO(0, 102, 84, 1),
+                            ),
+                            child: MaterialButton(
+                                child: Text(
+                                  'Continuar',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                onPressed: () {
+                                  _.guardarFicha();
+                                }),
                           ),
-                          child: MaterialButton(
-                              child: Text(
-                                'Continuar',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              onPressed: () {
-                                _.guardarFicha();
-                              }),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                       ],
                     ),
-                  )
+                )
                 : Center(
                     child: CircularProgressIndicator(),
                   )),
@@ -295,96 +321,107 @@ IntegerDecimalWidget(
   }
 
   return Padding(
-    padding: EdgeInsets.only(left: 10, right: 10),
-    child: Container(
-        width: double.infinity,
-        child: Card(
-          elevation: 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _.bloque == bloque
-                  ? Container()
-                  : Padding(
-                      padding: EdgeInsets.only(
-                          left: 10, right: 10, top: 10, bottom: 10),
-                      child: Text(
-                        '${_.bloque}',
-                        style: TextStyle(
-                            color: Color.fromRGBO(0, 102, 84, 1),
-                            fontWeight: FontWeight.bold),
+    padding: const EdgeInsets.only(left: 10,right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        _.bloque == bloque
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsets.only(
+                            left: 10, right: 10, top: 10, bottom: 10),
+                        child: Text(
+                          '${_.bloque}',
+                          style: TextStyle(
+                              color: Color.fromRGBO(0, 102, 84, 1),
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-              Padding(
-                padding: EdgeInsets.only(top: 20, left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+              width: double.infinity,
+              child: Card(
+                elevation: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        '$numPregunta.- $enunciado',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                            fontSize: 16),
+                    
+                    Padding(
+                      padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta.- $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16),
+                            ),
+                          ),
+                          Text(
+                            requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
                       ),
                     ),
-                    Text(
-                      requerido == "true" ? " (*)" : "",
-                      style: TextStyle(color: Colors.red),
-                    )
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: TextField(
+                        maxLength: maxLength == null || int.parse(maxLength) == 0
+                            ? 100
+                            : int.parse(maxLength),
+                        controller: _.controllerInput[i].controller,
+                        decoration: InputDecoration(
+                            hintText: placeholder == "-" || placeholder == null
+                                ? 'Ingrese su respuesta'
+                                : placeholder),
+                        keyboardType: tipoDato == "int" || tipoDato == "decimal"
+                            ? TextInputType.numberWithOptions(
+                                decimal: true,
+                              )
+                            : TextInputType.text,
+                        inputFormatters: tipoDato == "int"
+                            ? <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly, //.digitsOnly
+                              ]
+                            : tipoDato == "decimal"
+                                ? <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r"[0-9.]")), //.digitsOnly
+                                    TextInputFormatter.withFunction(
+                                        (oldValue, newValue) {
+                                      try {
+                                        final text = newValue.text;
+                                        if (text.isNotEmpty) double.parse(text);
+                                        return newValue;
+                                      } catch (e) {}
+                                      return oldValue;
+                                    }),
+                                  ]
+                                : null,
+                        onChanged: (value) {
+                          _.calcular();
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: TextField(
-                  maxLength: maxLength == null || int.parse(maxLength) == 0
-                      ? 100
-                      : int.parse(maxLength),
-                  controller: _.controllerInput[i].controller,
-                  decoration: InputDecoration(
-                      hintText: placeholder == "-" || placeholder == null
-                          ? 'Ingrese su respuesta'
-                          : placeholder),
-                  keyboardType: tipoDato == "number" || tipoDato == "decimal"
-                      ? TextInputType.numberWithOptions(
-                          decimal: true,
-                        )
-                      : TextInputType.text,
-                  inputFormatters: tipoDato == "number"
-                      ? <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly, //.digitsOnly
-                        ]
-                      : tipoDato == "decimal"
-                          ? <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r"[0-9.]")), //.digitsOnly
-                              TextInputFormatter.withFunction(
-                                  (oldValue, newValue) {
-                                try {
-                                  final text = newValue.text;
-                                  if (text.isNotEmpty) double.parse(text);
-                                  return newValue;
-                                } catch (e) {}
-                                return oldValue;
-                              }),
-                            ]
-                          : null,
-                  onChanged: (value) {
-                    _.calcular();
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-            ],
-          ),
-        )),
+              )),
+        ),
+      ],
+    ),
   );
 }
 
@@ -657,11 +694,31 @@ Ubigeo(
     _.bloque = bloque2;
   }
 
-  return UbigeoWidget(
-    id_pregunta: _.preguntas[i].id_pregunta,
-    enunciado: _.preguntas[i].enunciado,
-    numPregunta: (i + 1).toString(),
-    apariencia: apariencia,
-    bloque: _.preguntas[i].bloqueDescripcion,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      
+      _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+      UbigeoWidget(
+        id_pregunta: _.preguntas[i].id_pregunta,
+        enunciado: _.preguntas[i].enunciado,
+        numPregunta: (i + 1).toString(),
+        apariencia: apariencia,
+        bloque: _.preguntas[i].bloqueDescripcion,
+        i: i,
+      ),
+    ],
   );
 }

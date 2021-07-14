@@ -346,7 +346,7 @@ class DetalleFichaController extends GetxController{
     var hora =part[1].toString();
     String fecha_envio =fecha + "T" + hora;
     List<FichasModel> listFichas =  await DBProvider.db.updateFechaEnvio( idFicha, fecha_envio);
-    List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(_idFicha);
+    List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestas(_idFicha);
     List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(_idFicha);
     List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(_idFicha);
 
@@ -439,20 +439,14 @@ class DetalleFichaController extends GetxController{
           respuesta
         );
       }
-
       
-        
-      
-
-      
-      //print(sendFicha);
       respuesta ={};
       pregunta = {};
-      //print('hola');
+      
     }
 
     print(opciones);
-    if(opciones.length > 0){
+    /*if(opciones.length > 0){
 
       pregunta['idPregunta']    = idpregunta;
       respuesta['idRespuesta']  = idRespuesta;
@@ -464,7 +458,7 @@ class DetalleFichaController extends GetxController{
         respuesta
       );
 
-    }
+    }*/
 
     sendFicha['respuesta']  = listRespuestaMap;
     

@@ -59,6 +59,14 @@ class EncuestaController extends GetxController {
   ApiServices apiConexion = new ApiServices();
   String ingresoNuevo = "";
 
+  /*Cabecera de la encuesta , nombre de la persona a encuestar */
+
+  
+  
+
+
+  /* */
+
   String _imagePortada = "";
   String get imagePortada => _imagePortada;
 
@@ -147,6 +155,9 @@ class EncuestaController extends GetxController {
   String _selectCodProvincia = "";
   String _selectCodDistrito = "";
   String _selectCodCentroPoblado = "";
+
+
+  String _selectCodDistritoManual = "";
 
   /** */
 
@@ -753,7 +764,7 @@ class EncuestaController extends GetxController {
                   print(idEncuestado);
                   print(ubigeo);
 
-                  confirmationModal(idEncuestado, ubigeo);
+                  confirmationModal(idEncuestado, ubigeo,data);
 
                   //Get.to(Practica());
                 },
@@ -774,7 +785,7 @@ class EncuestaController extends GetxController {
     ));
   }
 
-  confirmationModal(String id, String ubigeo) {
+  confirmationModal(String id, String ubigeo, var dataEncuestado) {
     Get.dialog(AlertDialog(
       title: Text('Notificación'),
       content: Text('¿Esta seguro que desea continuar?'),
@@ -786,9 +797,9 @@ class EncuestaController extends GetxController {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             color: Color.fromRGBO(0, 102, 84, 1),
             onPressed: () {
-                navigateToQuiz(id, ubigeo);
+                navigateToQuiz(id, ubigeo,dataEncuestado);
             },
-            child: Text('Empezar'),
+            child: Text('Empezar',style: TextStyle(color: Colors.white),),
           ),
         ),
         Container(
@@ -840,7 +851,7 @@ class EncuestaController extends GetxController {
 
   //  creamos la ficha en la bse de datos y si logras insertar exitosamente entonces navegamos a la pagina de las preguntas y  opciones.
 
-  navigateToQuiz(String idEncuestado, String ubigeo) async {
+  navigateToQuiz(String idEncuestado, String ubigeo, var EncuestadoData) async {
     DateTime now = DateTime.now();
     var utc = now.toUtc();
 
@@ -877,10 +888,11 @@ class EncuestaController extends GetxController {
       });
     }else {
       var result = await Get.to(QuizPage(), arguments: {
-        'idEncuesta': idEncuesta,
-        'tituloEncuesta': titulo,
-        'idEncuestado': idEncuestado,
-        'idFicha': idFicha.toString()
+        'idEncuesta'      : idEncuesta,
+        'tituloEncuesta'  : titulo,
+        'idEncuestado'    : idEncuestado,
+        'idFicha'         : idFicha.toString(),
+        'encuestado'      : EncuestadoData
       });
 
       if (result == "SI") {
@@ -974,7 +986,7 @@ class EncuestaController extends GetxController {
               onPressed: () {
                 deleteFicha(idFicha);
               },
-              child: Text('Si'),
+              child: Text('Si',style: TextStyle(color: Colors.white),),
             ),
           ),
           Container(
@@ -1181,8 +1193,7 @@ class EncuestaController extends GetxController {
               Get.back();
               loadingModal();
               var result = await apiConexion.buscarReniec(searchReniecController.text);
-              //print(result["datosPersona"]);
-              //print(result);
+              
               if(result == 3){
                 Get.back();
                 Get.dialog(
@@ -1354,6 +1365,10 @@ class EncuestaController extends GetxController {
       _listprovincias.add(dataProvincias[i]);
     }
 
+    
+
+
+
     Get.dialog(AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: Text('Ambito de intervención'),
@@ -1403,7 +1418,7 @@ class EncuestaController extends GetxController {
                 onPressed: () async{
                   dataEncuestado = [];
                   //await DBProvider.db.insertEncuestados(nuevoEncuestado);
-                  ubigeo = "22" + _selectCodProvincia + _selectCodDistrito + _selectCodCentroPoblado;
+                  ubigeo = "22" + _selectCodProvincia + _selectCodDistritoManual + _selectCodCentroPoblado;
                   
                   dataEncuestado.add(
                     EncuestadoModel(
@@ -1413,7 +1428,7 @@ class EncuestaController extends GetxController {
                       apellidoPaterno: dataEncuestados["apellidoPaterno"],
                       sexo: "",
                       email: "",
-                      direccion: "",
+                      direccion: dataEncuestados["direccion"] == "" || dataEncuestados["direccion"] == null ? ""  :  dataEncuestados["direccion"],
                       estadoCivil: dataEncuestados["estadoCivil"],
                       foto: dataEncuestados["foto"],
                       representanteLegal: "",
@@ -1433,7 +1448,7 @@ class EncuestaController extends GetxController {
                   print(idEncuestado);
                   print(ubigeo);
 
-                  confirmationModal(respuesta[0].idEncuestado, ubigeo);
+                  confirmationModal(respuesta[0].idEncuestado, ubigeo,dataEncuestado[0]);
 
                   //Get.to(Practica());
                 },
@@ -1461,7 +1476,7 @@ class EncuestaController extends GetxController {
     //_listCentrosPoblados = [];
     List<UbigeoModel> dataDistritos =
         await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
-    //print(dataDistritos.length);
+    print(dataDistritos.length);
     //
     _listDistritos = [];
     dataDistritos.forEach((element) { 
@@ -1471,10 +1486,13 @@ class EncuestaController extends GetxController {
     if (_listDistritos.length > 0) {
       print(_listDistritos.length);
       _selectCodProvincia = value.codigoProvincia;
-      _selectCodDistrito = _listDistritos[0].codigoDistrito;
+      _selectCodDistritoManual = _listDistritos[0].codigoDistrito;
       _valueDistrito = _listDistritos[0].descripcion;
+      print(_selectCodDistrito);
+
       update(['distrito']);
-      await selectDistritoManual(value, _selectCodProvincia, _selectCodDistrito,true);
+
+      await selectDistritoManual(value, _selectCodProvincia, _selectCodDistritoManual,true);
     }
     //update(['distrito']);
     
@@ -1495,7 +1513,7 @@ class EncuestaController extends GetxController {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
     _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
-    _selectCodDistrito = value.codigoDistrito;
+    //_selectCodDistrito = value.codigoDistrito;
     _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
     update(['centroPoblado']);
 
@@ -1590,6 +1608,7 @@ class EncuestaController extends GetxController {
     _listDistritos = [];
     _listCentrosPoblados = [];
     List temporalDistrito = [];
+    _selectCodDistrito = "";
 
     List result = dataUbi.where((element) => element.contains(value.codigoDepartamento + value.codigoProvincia)).toList();
     print(result.length);
@@ -1611,6 +1630,7 @@ class EncuestaController extends GetxController {
     _valueDistrito          = _listDistritos[0].descripcion;
     _selectCodProvincia     = value.codigoProvincia;
     _selectCodDistrito      = _listDistritos[0].codigoDistrito;
+    print(_selectCodDistrito);
     update(['distrito'],true);
     await centroPobladoSelected(dataUbi, _listDistritos[0]); 
   }

@@ -68,23 +68,11 @@ class SimpleSelectPage extends StatelessWidget {
                       ),
                     )
                     
-                      
-
                     }
-
                   }
-
-                  
                 }
 
-            /*_.requiereObservacion == true? Padding(
-                      padding:  EdgeInsets.only(left: 20,right: 20),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Ingrese observación'
-                        ),
-                      ),
-                    ) : Container(),*/
+            
             
           
           

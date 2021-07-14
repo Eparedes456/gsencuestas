@@ -69,6 +69,8 @@ class RetommarController extends GetxController {
 
   String bloque;
 
+  TextEditingController controller = new TextEditingController();
+
   onloadData(Map datos) async {
     _opcionesPreguntas = [];
     idEncuesta = datos["idEncuesta"];
@@ -143,6 +145,16 @@ class RetommarController extends GetxController {
     Future.delayed(Duration(seconds: 1), () async {
       await inptuData();
     });
+  }
+
+  saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
+
+    print(id_pregunta);
+    print(idOpcion);
+    print(valueobservacion);
+
+    await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
+
   }
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {

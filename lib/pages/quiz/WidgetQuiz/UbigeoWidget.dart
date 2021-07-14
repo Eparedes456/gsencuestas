@@ -9,7 +9,8 @@ class UbigeoWidget extends StatelessWidget {
   final String apariencia;
   final String bloque;
   final String bloque2;
-  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque, this.bloque2 }) : super(key: key);
+  final int    i;
+  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque, this.bloque2, this.i }) : super(key: key);
 
 
 
@@ -25,10 +26,7 @@ class UbigeoWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _.bloque == bloque? Container(): Padding(
-              padding:  EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-              child: Text('${_.bloque}',style: TextStyle(color: Color.fromRGBO(0, 102, 84, 1),fontWeight: FontWeight.bold),),
-            ),
+            
             Padding(
               padding: EdgeInsets.only(left: 0,right: 0),
               child: Container(
@@ -49,16 +47,25 @@ class UbigeoWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8,),
-                      GestureDetector(
-                        onTap: (){
-                          _.showModalUbigeo(id_pregunta.toString(),apariencia);
-                        },
-                        child: Padding(
-                          padding:  EdgeInsets.only(left: 20,right: 20),
-                          child:  _.ubigeoCapturado == "" ? Text('Presione aqui') : Text(_.ubigeoCapturado),
+                      SizedBox(height: 15,),
+
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          readOnly: true,
+                          onTap: (){
+                            _.showModalUbigeo(id_pregunta.toString(),apariencia,i);
+                          },
+                          controller: _.controllerInput[i].controller,
+                          decoration: InputDecoration(hintText: 'Presione aqui'),
                         ),
                       ),
+
+                        /*Padding(
+                          padding:  EdgeInsets.only(left: 20,right: 20),
+                          child:  _.ubigeoCapturado == "" ? Text('Presione aqui') : Text(_.ubigeoCapturado),
+                        ),*/
+                      
                       SizedBox(height: 12,)
                       
                     ],

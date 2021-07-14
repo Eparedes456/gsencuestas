@@ -7,6 +7,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
@@ -32,6 +33,15 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     _tituloEncuesta = listDataEncuesta["tituloEncuesta"];
     idFicha = listDataEncuesta["idFicha"];
     idEncuestado = listDataEncuesta["idEncuestado"];
+    EncuestadoModel datasa = listDataEncuesta["encuestado"];
+    print(listDataEncuesta["encuestado"]);
+    print(datasa.nombre);
+
+    encuestadoNombreCompleto = datasa.nombre + " " + datasa.apellidoPaterno  + " " + datasa.apellidoMaterno;
+    numDOCUMENTO = datasa.documento;
+    direccionReniec = datasa.direccion;
+
+
     this.getPreguntas(idEncuesta.toString());
 
     _positionStream = Geolocator.getPositionStream(
@@ -65,6 +75,18 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   var idEncuestado;
   var idFicha;
 
+
+  /* Datos del encuestado reiniec */
+
+  String encuestadoNombreCompleto = "";
+  String numDOCUMENTO = "";
+  String direccionReniec  = "";
+
+
+  /* */
+
+
+
   String bloque;
 
   bool _isLoadingData = false;
@@ -81,7 +103,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     preguntas.asMap().forEach((index, element) {
       controllerInput.add(InputTextfield(
           element.id_pregunta.toString(),
-          TextEditingController(),
+          element.defecto == "" || element.defecto == null || element.defecto == "-" ? TextEditingController() : TextEditingController(text: element.defecto),
           element.bind_name,
           index,
           element.tipo_pregunta,
@@ -323,10 +345,10 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   List liscodDistrito = [];
   String _selectCodDepartamento = "";
   String _selectCodProvincia = "";
-  String _selectCodDistrito = "";
+  String _selectCodDistritoUbigeo = "";
   String _selectCodCentroPoblado = "";
 
-  showModalUbigeo(String idPregunta, String apariencia) async {
+  showModalUbigeo(String idPregunta, String apariencia, int i) async {
     listCodDep = [];
     listcodProvincia = [];
     liscodDistrito = [];
@@ -419,14 +441,16 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                   //_ubigeoCapturado = _valueDepartamento + "/" + _valueProvincia +  "/" + _valueDistrito +"/" + _valueCentroPoblado;
                   _ubigeoGuardar = "22" +
                       _selectCodProvincia +
-                      _selectCodDistrito +
+                      _selectCodDistritoUbigeo +
                       _selectCodCentroPoblado;
 
                   print(_ubigeoCapturado);
                   print(_ubigeoGuardar);
+
+
                   update(['ubigeo']);
                   Get.back();
-                  await guardarUbigeo(idPregunta, _ubigeoGuardar);
+                  await guardarUbigeo(idPregunta, _ubigeoGuardar,i,_ubigeoCapturado);
                 },
                 child: Text(
                   'Seleccionar',
@@ -458,14 +482,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     if (_listDistritos.length > 0) {
       print(_listDistritos.length);
       _selectCodProvincia = value.codigoProvincia;
-      _selectCodDistrito = _listDistritos[0].codigoDistrito;
+      _selectCodDistritoUbigeo = _listDistritos[0].codigoDistrito;
       _valueDistrito = _listDistritos[0].descripcion;
       update(['distrito']);
       if (aparienciaValor == "distrito") {
         //_selectCodCentroPoblado == "0000";
       } else {
         await selectDistritoManual(
-            value, _selectCodProvincia, _selectCodDistrito, true);
+            value, _selectCodProvincia, _selectCodDistritoUbigeo, true);
       }
     }
     //update(['distrito']);
@@ -488,7 +512,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     for (var i = 0; i < dataCentroPoblados.length; i++) {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
-    _selectCodDistrito = value.codigoDistrito;
+    //_selectCodDistritoUbigeo = value.codigoDistrito;
     _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
     _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
     update(['centroPoblado']);
@@ -513,9 +537,18 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     update(['centroPoblado']);
   }
 
-  guardarUbigeo(String idPregunta, String valor) async {
-    await DBProvider.db
-        .insertRespuesta(idPregunta, idFicha.toString(), "", valor,'Ubigeo');
+  guardarUbigeo(String idPregunta, String valor, int index,String ubigeo) async {
+
+    _controllerInput[index].controller.text = ubigeo;
+    String ubigeoCodigo = valor;
+    print('Ubigeo' + ubigeoCodigo);
+
+    await DBProvider.db.insertRespuesta(idPregunta, idFicha.toString(), "", ubigeoCodigo,'Ubigeo');
+
+    var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
+    print(respuesta);
+
+
   }
 
 /* */
@@ -603,8 +636,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       _positionStream.cancel();
       for (var i = 0; i < controllerInput.length; i++) {
         if (controllerInput[i].controller.text == "" ||
-            controllerInput[i].controller.text == null) {
+            controllerInput[i].controller.text == null || controllerInput[i].tipo_pregunta == "ubigeo") {
           controllerInput.removeWhere((item) => item.controller.text == "");
+          controllerInput.removeWhere((element) => element.tipo_pregunta =="ubigeo");
         }
       }
       for (var x = 0; x < controllerInput.length; x++) {
@@ -669,7 +703,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
               await guardarinputBack();
               Get.back(result: "SI");
             },
-            child: Text('Si'),
+            child: Text('Si',style: TextStyle(color: Colors.white),),
           ),
         ),
         Container(

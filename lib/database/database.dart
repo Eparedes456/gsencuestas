@@ -859,11 +859,14 @@ class DBProvider {
   /* Insertar Respuesta  */
 
   insertRespuesta(
-      String idPregunta, String idFicha, String idsOpcion, String valor,String tipoPregunta) async {
+      String idPregunta, String idFicha, String idsOpcion, String ubigeo,String tipoPregunta) async {
     final db = await database;
 
+    print(ubigeo);
+
+
     var response = await db.rawQuery('''
-      INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,tipoPregunta,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$valor','$tipoPregunta','TRUE')
+      INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,tipoPregunta,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$ubigeo','$tipoPregunta','TRUE')
       
       ''');
   }
@@ -901,10 +904,14 @@ class DBProvider {
 
   /* Traer todos las respuestas */
 
-  getAllRespuestas() async {
+  getAllRespuestas(String idFicha) async {
     final db = await database;
 
-    var response = await db.query('respuesta');
+    var response = await db.query(
+      'respuesta',
+      where: 'idFicha = ?',
+      whereArgs: [idFicha]
+    );
 
     List<RespuestaModel> listRespuesta = response.isNotEmpty
         ? response.map((e) => RespuestaModel.fromMap(e)).toList()
@@ -912,6 +919,8 @@ class DBProvider {
 
     return listRespuesta;
   }
+
+  
 
   eliminarUnaRespuesta(
       String idPregunta, String idFicha, String idsOpcion) async {
@@ -1276,6 +1285,7 @@ class DBProvider {
         SELECT * FROM ubigeo WHERE codigoDepartamento = '$codigoDepartamento' 
         AND codigoProvincia = '$codigoProvincia' AND codigoDistrito = '$codigoDistrito' AND codigoCentroPoblado != '0000' 
         ''');
+        
     List<UbigeoModel> listCentroPoblados = response.isNotEmpty
         ? response.map((e) => UbigeoModel.fromJson(e)).toList()
         : [];

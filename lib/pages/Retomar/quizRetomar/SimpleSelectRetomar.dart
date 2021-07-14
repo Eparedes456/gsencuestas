@@ -12,30 +12,59 @@ class SimpleSelectRetomar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<RetommarController>(
       init: RetommarController(),
-      builder: (_) => ListView.builder(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemCount: _.opcionesPreguntas.length,
-                  itemBuilder: (context,index){
+      builder: (_) => Column(
+        children: [
+          ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: _.opcionesPreguntas.length,
+                      itemBuilder: (context,index){
 
-                    if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
+                        if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
 
-                      return Opciones(
-                        id_pregunta: id_pregunta,
-                        index: index,
-                      );
-                      
-                      
-                      
+                          return Opciones(
+                            id_pregunta: id_pregunta,
+                            index: index,
+                          );
+                          
+                          
+                          
 
-                    }else{
+                        }else{
 
-                      return Container();
+                          return Container();
 
-                    }
+                        }
 
+                        
+                      }
+          ),
+
+          for (var i = 0; i < _.opcionesPreguntas.length; i++)...{
+                  
+                  if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
+
+                    if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+
+                      Padding(
+                      padding:  EdgeInsets.only(left: 20,right: 20),
+                      child: TextFormField(
+                        controller: _.controller = TextEditingController(text: _.opcionesPreguntas[i].valor),
+                        onFieldSubmitted: (value){
+                          //print(value);
+                          _.saveRequireObservacion( _.opcionesPreguntas[i].idPregunta.toString(), _.opcionesPreguntas[i].idOpcion.toString() , value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Ingrese observación'
+                          
+                        ),
+                      ),
+                    )
                     
+                    }
                   }
+                }
+        ],
       ),
     );
   }
