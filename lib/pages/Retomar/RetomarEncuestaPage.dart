@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
+import 'package:gsencuesta/pages/Retomar/quizRetomar/DatePickerRetomar.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/MultiSelectWidgetRetomar.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/SimpleSelectRetomar.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/SimpleSelectWidget.dart';
@@ -128,7 +129,27 @@ class RetomarEncuestaPage extends StatelessWidget {
                                   _.preguntas[i].bloqueDescripcion,
                                   i,
                                   _.preguntas[i].apariencia)
-                            }
+                            }else if(_.preguntas[i].tipo_pregunta =="date")...{
+
+                                  //Text('holi')
+
+                                  DatePickWidget(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                    _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      "",
+                                      i,
+                                      "",
+                                      "",
+                                      "",
+                                      _.preguntas[i].bind_type
+                                  )
+
+                                }
                           }
                         ],
                       ),
@@ -165,6 +186,64 @@ class RetomarEncuestaPage extends StatelessWidget {
     );
   }
 }
+
+
+DatePickWidget(String enunciado,
+    int id_pregunta,
+    RetommarController _,
+    BuildContext context,
+    String numPregunta,
+    String bloque,
+    String bloque2,
+    String maxLength,
+    int i,
+    String placeholder,
+    String requerido,
+    String apariencia,
+    String tipoCampo
+    ){
+
+      if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+      } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+      } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+      }
+
+      return Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              DatePickerRetomar(
+                idpregunta: id_pregunta.toString(),
+                enunciado: enunciado,
+                numPregunta: numPregunta,
+                tipoCampo: tipoCampo,
+                //bloque: _.preguntas[i].bloqueDescripcion,
+                i: i,
+                pagina: "quiz",
+              )            
+          ],
+        ),
+      );
+
+
+    }
 
 SelectSimpleWidget(String enunciado, int id_pregunta, RetommarController _,
     BuildContext context, String numPregunta, String bloque, String bloque2) {

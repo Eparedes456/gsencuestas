@@ -232,27 +232,30 @@ class DetalleFichaController extends GetxController{
 
     Get.dialog(
       AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
         title: Text('Notificación'),
-        content: Text('¿Esta seguro de querer eliminar esta ficha?'),
+        content: Text('¿Esta seguro eliminar esta ficha?'),
         actions: [
 
           FlatButton.icon(
 
-            color: Colors.green,
+            color: Color.fromRGBO(0, 102, 84, 1),
             onPressed: (){
               Get.back(result: "SI");
               deleteFicha();
             },
-            icon: Icon(FontAwesomeIcons.check),
-            label: Text('Si')
+            icon: Icon(FontAwesomeIcons.check,color: Colors.white,),
+            label: Text('Si', style: TextStyle(color: Colors.white,))
           ),
           FlatButton.icon(
             color: Colors.redAccent,
             onPressed: (){
               Get.back();
             }, 
-            icon: Icon(FontAwesomeIcons.timesCircle),
-            label: Text('No')
+            icon: Icon(FontAwesomeIcons.timesCircle,color: Colors.white,),
+            label: Text('No', style: TextStyle(color: Colors.white),)
           )
         ],
       )
@@ -520,7 +523,7 @@ class DetalleFichaController extends GetxController{
 
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       showModal("",true,'Sincronizando datos..');
 
@@ -586,7 +589,7 @@ class DetalleFichaController extends GetxController{
         )
       );
 
-    }
+    }*/
   }
 
   showModal(String mensaje, bool loading, String titulo){

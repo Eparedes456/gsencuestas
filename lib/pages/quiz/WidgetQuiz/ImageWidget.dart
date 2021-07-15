@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 
 class ImagePage extends StatelessWidget {
   final String idPregunta;
-
-  const ImagePage({Key key, this.idPregunta}) : super(key: key);
+  final int i;
+  const ImagePage({Key key, this.idPregunta, this.i}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuizController>(
@@ -23,7 +23,7 @@ class ImagePage extends StatelessWidget {
 
               GestureDetector(
                 onTap: (){
-                  _.pickImage("CAMARA",idPregunta);
+                  _.pickImage("CAMARA",idPregunta,i);
                 },
                 child: Card(
                   elevation: 3,
@@ -44,7 +44,7 @@ class ImagePage extends StatelessWidget {
 
               GestureDetector(
                 onTap: (){
-                  _.pickImage("GALERIA",idPregunta);
+                  _.pickImage("GALERIA",idPregunta,i);
                 },
                 child: Card(
                   elevation: 3,
@@ -65,6 +65,7 @@ class ImagePage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20,),
+          //Text(_.controllerInput[i].controller.text),
 
           _.imagepath == null ? Container(
             height: 150,
@@ -79,6 +80,7 @@ class ImagePage extends StatelessWidget {
           ): Container(
             height: 150,
             width: double.infinity,
+            
             child: Image.file(_.imagepath,fit: BoxFit.contain,),
           ),
 
@@ -114,7 +116,8 @@ class ImagePage extends StatelessWidget {
                   child: Center(
                     child: GestureDetector(
                       onTap: (){
-                        _.pickImage();
+                        _.
+                        ();
                       },
                       child: _.imagepath == null ? Container(
                         height: 300,

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/VerEncuesta/VerEncuestaController.dart';
+import 'package:gsencuesta/database/database.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/MultiSelectWidgetRetomar.dart';
+import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/VerDatePicker.dart';
+import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/VerImage.dart';
 import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/simpleSelect.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/UbigeoWidget.dart';
 
@@ -117,6 +121,39 @@ class VerEncuestaPage extends StatelessWidget {
                                       _.preguntas[i].bloqueDescripcion,
                                       i,
                                       _.preguntas[i].apariencia)
+                                }else if(_.preguntas[i].tipo_pregunta =="date")...{
+
+                                  DatePickWidget(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                    _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      "",
+                                      i,
+                                      "",
+                                      "",
+                                      "",
+                                      _.preguntas[i].bind_type
+                                  )
+
+                                }else if(_.preguntas[i].tipo_pregunta =="image")...{
+                                  
+                                  ImageWidget(
+                                    _.preguntas[i].enunciado,
+                                    _.preguntas[i].id_pregunta,
+                                     _,
+                                    context,
+                                    (i + 1).toString(),
+                                    bloque,
+                                      _.preguntas[i].bloqueDescripcion,
+                                      i.toString(),
+                                      1,
+                                      "",
+                                      ""
+                                  ),
                                 }
                               }
                             ],
@@ -135,6 +172,157 @@ class VerEncuestaPage extends StatelessWidget {
     );
   }
 }
+
+
+ImageWidget(String enunciado,
+    int id_pregunta,
+    VerEncuestacontroller _,
+    BuildContext context,
+    String numPregunta,
+    String bloque,
+    String bloque2,
+    String maxLength,
+    int i,
+    String placeholder,
+    String requerido){
+
+      if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+      } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+      } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+      }
+
+  
+
+
+  return Padding(
+    padding: EdgeInsets.only(left: 10, right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+              width: double.infinity,
+              child: Card(
+                elevation: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta.- $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16),
+                            ),
+                          ),
+                          Text(
+                             "",//requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: VerImage(
+                        idPregunta: id_pregunta.toString(),
+                        i: i,
+                      )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              )),
+        ),
+      ],
+    ),
+  );
+}
+
+
+DatePickWidget(String enunciado,
+    int id_pregunta,
+    VerEncuestacontroller _,
+    BuildContext context,
+    String numPregunta,
+    String bloque,
+    String bloque2,
+    String maxLength,
+    int i,
+    String placeholder,
+    String requerido,
+    String apariencia,
+    String tipoCampo
+    ){
+
+      if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+      } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+      } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+      }
+
+      return Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _.bloque == bloque
+            ? Container()
+            : Padding(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                child: Text(
+                  '${_.bloque}',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 102, 84, 1),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              VerDatePicker(
+                idpregunta: id_pregunta.toString(),
+                enunciado: enunciado,
+                numPregunta: numPregunta,
+                tipoCampo: tipoCampo,
+                //bloque: _.preguntas[i].bloqueDescripcion,
+                i: i,
+                pagina: "quiz",
+              )            
+          ],
+        ),
+      );
+
+
+    }
 
 IntegerDecimalWidget(
     String enunciado,

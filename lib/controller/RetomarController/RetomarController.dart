@@ -759,6 +759,51 @@ class RetommarController extends GetxController {
 
 /* */
 
+  /* DatePicker respuesta */
+
+  selectDatePicker(String idpregunta, int i,BuildContext context,String tipo)async{
+
+    if(tipo == "time"){
+      final initialTime = TimeOfDay.now();
+      var time = await showTimePicker(
+        context: context,
+        initialTime: initialTime
+      );
+      if(time == null){
+        return null;
+      }else{
+        var timeMostrar = time.hour.toString()  + ":" + time.minute.toString();
+        print(timeMostrar);
+        _controllerInput[i].controller.text = timeMostrar;
+      }
+      
+
+    }else{
+
+      final initialDate = DateTime.now();
+      var data = await showDatePicker(
+        context: context, 
+        initialDate: initialDate, 
+        firstDate: DateTime(DateTime.now().year -5), 
+        lastDate: DateTime(DateTime.now().year + 5)
+      );
+     
+
+      if(data == null){
+        return null;
+      }else {
+
+          var dataMostrar = DateFormat('dd/MM/yyyy').format(data);
+          print(dataMostrar);
+          
+          _controllerInput[i].controller.text = dataMostrar;
+
+      }
+
+    }
+  }
+  /* */
+
 
   @override
   void onClose() {

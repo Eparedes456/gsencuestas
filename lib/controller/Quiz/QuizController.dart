@@ -20,9 +20,12 @@ import 'package:gsencuesta/services/apiServices.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
 import 'package:math_expressions/math_expressions.dart';
+
+
 
 class QuizController extends GetxController with SingleGetTickerProviderMixin {
   @override
@@ -153,27 +156,15 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   File _imagePath;
   File get imagepath => _imagePath;
 
-  pickImage(String valor,String idPregunta) async {
+  pickImage(String valor,String idPregunta,int i) async {
     String photoBase64 = "";
     final ImagePicker image = ImagePicker();
+
     if(valor == "CAMARA"){
       PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
-
-      print(photoBase64);
-
-      print(" $valor , $idPregunta");
-
-      
-
-      
-
-      
-
-      //var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
-      
 
     }else{
       PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 500,maxWidth: 500);
@@ -181,11 +172,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
       print(photoBase64);
-
-      //var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
-      
-
     }
+
     List<RespuestaModel> existe = await DBProvider.db.unaRespuestaFicha(idFicha, idPregunta); 
     print(existe);
     if(existe.length > 0){
@@ -200,13 +188,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
       var data = await DBProvider.db.getAllRespuestas(idFicha);
       print(data);
-
     }
-    
-
     print(_imagePath);
-
-
     update(['image']);
   }
 
@@ -239,6 +222,53 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       print('Activa tu gps');
     }
   }
+
+  /* DatePicker respuesta */
+
+  selectDatePicker(String idpregunta, int i,BuildContext context,String tipo)async{
+
+    if(tipo == "time"){
+      final initialTime = TimeOfDay.now();
+      var time = await showTimePicker(
+        context: context,
+        initialTime: initialTime
+      );
+      if(time == null){
+        return null;
+      }else{
+        var timeMostrar = time.hour.toString()  + ":" + time.minute.toString();
+        print(timeMostrar);
+        _controllerInput[i].controller.text = timeMostrar;
+      }
+      
+
+    }else{
+
+      final initialDate = DateTime.now();
+      var data = await showDatePicker(
+        context: context, 
+        initialDate: initialDate, 
+        firstDate: DateTime(DateTime.now().year -5), 
+        lastDate: DateTime(DateTime.now().year + 5)
+      );
+     
+
+      if(data == null){
+        return null;
+      }else {
+
+          var dataMostrar = DateFormat('dd/MM/yyyy').format(data);
+          print(dataMostrar);
+          
+          _controllerInput[i].controller.text = dataMostrar;
+
+      }
+
+    }
+  }
+  /* */
+
+
 
   /*  Obtener simple widget respuesta */
 

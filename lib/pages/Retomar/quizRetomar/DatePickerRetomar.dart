@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
+import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
 
 
-class DatePicker1Widget extends StatelessWidget {
+class DatePickerRetomar extends StatelessWidget {
   final String idpregunta;
   final String enunciado;
   final String numPregunta;
@@ -11,14 +12,14 @@ class DatePicker1Widget extends StatelessWidget {
   final int i;
   final String pagina;
   final String tipoCampo;
-  const DatePicker1Widget({ Key key, this.idpregunta, this.enunciado, this.numPregunta, this.bloque, this.i, this.pagina, this.tipoCampo }) : super(key: key);
+  const DatePickerRetomar({ Key key, this.idpregunta, this.enunciado, this.numPregunta, this.bloque, this.i, this.pagina, this.tipoCampo }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     
 
-    return GetBuilder<QuizController>(
-      init: QuizController(),
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
       id: 'datePicker',
       builder: (_)=> Padding(
           padding:  EdgeInsets.only(left: 0,right: 0),
@@ -47,8 +48,6 @@ class DatePicker1Widget extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 15,),
-                      
-                        
                         Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: TextField(

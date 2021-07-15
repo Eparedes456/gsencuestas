@@ -53,6 +53,7 @@ dependencies:
   simple_moment:
   url_launcher: ^6.0.9
   url_launcher_platform_interface: ^2.0.4
+  flutter_datetime_picker: ^1.5.1
   ffi: ^1.0.0
 
 dev_dependencies:

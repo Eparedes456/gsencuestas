@@ -45,6 +45,8 @@ class VerEncuestacontroller extends GetxController {
 
   String bloque;
 
+  List<String> imagenes =[];
+
   onloadData(Map datos) async {
     _opcionesPreguntas = [];
     idEncuesta = datos["idEncuesta"];
@@ -65,10 +67,8 @@ class VerEncuestacontroller extends GetxController {
     print(allOpciones);
 
     for (var i = 0; i < _preguntas.length; i++) {
-      print(_preguntas[i].id_pregunta);
-      var idPregunta = _preguntas[i].id_pregunta;
-
       
+      var idPregunta = _preguntas[i].id_pregunta;
 
         controllerInput.add(InputTextfield(
           preguntas[i].id_pregunta.toString(),
@@ -78,9 +78,6 @@ class VerEncuestacontroller extends GetxController {
           preguntas[i].tipo_pregunta,
           preguntas[i].calculation));
 
-      
-
-      
 
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
@@ -114,9 +111,16 @@ class VerEncuestacontroller extends GetxController {
 
             _opcionesPreguntas[z].selected = true;
           }
+          
         }
       }
+      if(respuestas[x].tipoPregunta == "Imagen"){
+
+            imagenes.add(respuestas[x].valor);
+
+          }
     }
+    
 
     print(_opcionesPreguntas.length);
     //update('simple');

@@ -180,6 +180,8 @@ class QuizPage extends StatelessWidget {
                                   ),
                                 }else if(_.preguntas[i].tipo_pregunta =="date")...{
 
+                                  //Text('holi')
+
                                   DatePickWidget(
                                     _.preguntas[i].enunciado,
                                     _.preguntas[i].id_pregunta,
@@ -188,10 +190,12 @@ class QuizPage extends StatelessWidget {
                                     (i + 1).toString(),
                                     bloque,
                                       _.preguntas[i].bloqueDescripcion,
-                                      i.toString(),
-                                      1,
                                       "",
-                                      ""
+                                      i,
+                                      "",
+                                      "",
+                                      "",
+                                      _.preguntas[i].bind_type
                                   )
 
                                 }
@@ -246,7 +250,10 @@ DatePickWidget(String enunciado,
     String maxLength,
     int i,
     String placeholder,
-    String requerido){
+    String requerido,
+    String apariencia,
+    String tipoCampo
+    ){
 
       if (_.bloque == null || _.bloque == "") {
         _.bloque = bloque2;
@@ -274,13 +281,13 @@ DatePickWidget(String enunciado,
                 ),
               ),
 
-              DatePickerWidget(
-                idpregunta: _.preguntas[i].id_pregunta.toString(),
-                enunciado: _.preguntas[i].enunciado,
-                numPregunta: (i + 1).toString(),
-                //apariencia: apariencia,
-                bloque: _.preguntas[i].bloqueDescripcion,
-                i: i.toString(),
+              DatePicker1Widget(
+                idpregunta: id_pregunta.toString(),
+                enunciado: enunciado,
+                numPregunta: numPregunta,
+                tipoCampo: tipoCampo,
+                //bloque: _.preguntas[i].bloqueDescripcion,
+                i: i,
                 pagina: "quiz",
               )            
           ],
@@ -365,6 +372,7 @@ ImageWidget(String enunciado,
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: ImagePage(
                         idPregunta: id_pregunta.toString(),
+                        i: i,
                       )
                     ),
                     SizedBox(

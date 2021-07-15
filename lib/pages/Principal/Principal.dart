@@ -46,7 +46,7 @@ class PrincipalPage extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(left: 10, top: 8, right: 10),
                         child: Text(
-                          'Navega en los proyectos que tienes asignados',
+                          'Navega en las encuestas que tienes asignados',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,

@@ -97,6 +97,8 @@ class PrincipalController extends GetxController {
     if (ubigeo != "si") {
               loadingUbigeo();
               await cargarUbigeo();
+    }else{
+      loading();
     }
     var flag1 = preferences.getString('primeraCarga');
     if (conectivityResult == ConnectivityResult.wifi ||
@@ -214,6 +216,7 @@ class PrincipalController extends GetxController {
             await cargarProyectosEncuesta();
 
             //await cargarUbigeo();
+            Get.back();
           }
         }
       }
@@ -257,6 +260,7 @@ class PrincipalController extends GetxController {
         } else {
           print('Error, no existe la pagina 404');
         }
+        Get.back();
       }
     } else {
       if (flag1 != null) {
@@ -285,10 +289,10 @@ class PrincipalController extends GetxController {
     } else {
 
       var ubigeo = preferences.getString('ubigeoCargo');
-      if (ubigeo != "si") {
+      /*if (ubigeo != "si") {
         loadingUbigeo();
         await cargarUbigeo();
-      }
+      }*/
 
       /*E liminar las data */
       await DBProvider.db.deleteAllUsuario(); //  usuario table
@@ -340,10 +344,30 @@ class PrincipalController extends GetxController {
       
       _isLoading = false;
       _hayData = true;
+
+      
       
       update();
       Get.back();
     }
+  }
+
+  loading(){
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 12,),
+            Text('Cargando los proyectos ...')
+          ],
+        ),
+      )
+    );
   }
 
   searchProyecto(String value) async {
