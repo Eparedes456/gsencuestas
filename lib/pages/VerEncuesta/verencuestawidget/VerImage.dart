@@ -21,28 +21,18 @@ class VerImage extends StatelessWidget {
       id: 'image',
       builder: (_) => Column(
         children: [
-
           SizedBox(height: 20,),
-
           for (var i = 0; i < _.respuestas.length; i++)...{
 
             if(_.respuestas[i].tipoPregunta == "Imagen" && _.respuestas[i].idPregunta == int.parse(idPregunta))...{
               Container(
                 height: 150,
                 width: double.infinity,
-                
-                child: Text(_.imagenes[i]),//Image.file(_.imagepath,fit: BoxFit.contain,),
+                child: Image.memory(_.imagenes[i],fit: BoxFit.contain,)   //MemoryImage(_.imagenes[i])   //Text(_.imagenes[i]),//Image.file(_.imagepath,fit: BoxFit.contain,),
               ),
 
             }
-
-           
-
-            
           }
-        
-          
-
         ],
       )
       

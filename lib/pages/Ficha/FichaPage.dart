@@ -13,9 +13,7 @@ class FichaPage extends StatelessWidget {
       init: FichaController(),
       builder: (_) => WillPopScope(
         onWillPop: (){
-
           _.cannotBack();
-
         },
         child: Scaffold(
 
@@ -76,83 +74,85 @@ class FichaPage extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 10,),
+                SizedBox(height:8,),
 
-                _.listMultimedia.length > 0 ?Container(
-                  height: 300,
-                  child: ListView.builder(
-                    itemCount: _.listMultimedia.length,
-                    itemBuilder: (context, index){
-
-                      Uint8List showImage64;
-                      showImage64 = base64Decode(_.listMultimedia[index].tipo );
-
-
-                      return Padding(
-                        padding:  EdgeInsets.only(left: 10,right: 10),
-                        child: Container(
-
-                          height: 110,
-                          child: Card(
-                            elevation: 2,
-                            child: Column(
-                              children: [
-
-                                
-                                
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        height: 86,
-                                        width: 120,
-                                        
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10),
-                                            
+                _.listMultimedia.length > 0 ?
+                  Container(
+                    height: MediaQuery.of(context).size.height/2.2,
+                    child: ListView.builder(
+                      itemCount: _.listMultimedia.length,
+                      itemBuilder: (context, index){
+                
+                        Uint8List showImage64;
+                        showImage64 = base64Decode(_.listMultimedia[index].tipo );
+                
+                
+                        return Padding(
+                          padding:  EdgeInsets.only(left: 10,right: 10),
+                          child: Container(
+                
+                            height: 110,
+                            child: Card(
+                              elevation: 2,
+                              child: Column(
+                                children: [
+                
+                                  
+                                  
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 86,
+                                          width: 120,
+                                          
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                              
+                                            ),
+                                            color: Colors.black
                                           ),
-                                          color: Colors.black
-                                        ),
-                                        child: ClipRRect(
-                                          /*borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10),
-                                            
-                                          ),*/
-                                          child: Image.memory(showImage64,fit: BoxFit.fill)
+                                          child: ClipRRect(
+                                            /*borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                              
+                                            ),*/
+                                            child: Image.memory(showImage64,fit: BoxFit.fill)
+                                          ),
                                         ),
                                       ),
-                                    ),
-
-                                    Text('Imagen ' + (index + 1).toString()),
-
-                                    IconButton(
-                                      icon: Icon(Icons.delete,color: Colors.redAccent,), 
-                                      onPressed: (){
-                                        _.deleteImage(_.listMultimedia[index].idMultimedia.toString());
-                                      }
-                                    )
-                                  ],
-                                ),
-
-                                
-
-                              ],
+                
+                                      Text('Imagen ' + (index + 1).toString()),
+                
+                                      IconButton(
+                                        icon: Icon(Icons.delete,color: Colors.redAccent,), 
+                                        onPressed: (){
+                                          _.deleteImage(_.listMultimedia[index].idMultimedia.toString());
+                                        }
+                                      )
+                                    ],
+                                  ),
+                
+                                  
+                
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                
+                      }
+                    ),
+                  )
+                :Container(),
 
-                    }
-                  ),
-                ):Container(),
 
-
-                SizedBox(height: 20,),
+                SizedBox(height: 1,) ,
 
                 Padding(
                   padding:  EdgeInsets.only(left: 40,right: 40),
@@ -180,8 +180,8 @@ class FichaPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20,),
+                
+                SizedBox(height: 5,),
 
                 
 

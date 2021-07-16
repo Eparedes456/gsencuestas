@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -45,7 +48,9 @@ class VerEncuestacontroller extends GetxController {
 
   String bloque;
 
-  List<String> imagenes =[];
+  List<Uint8List> imagenes =[];
+  
+  Uint8List _photoBase64;
 
   onloadData(Map datos) async {
     _opcionesPreguntas = [];
@@ -115,10 +120,12 @@ class VerEncuestacontroller extends GetxController {
         }
       }
       if(respuestas[x].tipoPregunta == "Imagen"){
+        
+        _photoBase64 = base64Decode(respuestas[x].valor);
 
-            imagenes.add(respuestas[x].valor);
+        imagenes.add(_photoBase64);
 
-          }
+      }
     }
     
 

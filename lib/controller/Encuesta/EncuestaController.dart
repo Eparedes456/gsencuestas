@@ -429,42 +429,29 @@ class EncuestaController extends GetxController {
   }
 
   showTodosEncuestados(List<EncuestadoModel> response) async {
-    Get.dialog(AlertDialog(
+
+    Get.dialog(
+      AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       title: Text('Encuestados encontrados'),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 500,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: response.length,
-                itemBuilder: (context, i) {
-                  var nombreCompleto = response[i].nombre +
-                      " " +
-                      response[i].apellidoPaterno +
-                      " " +
-                      response[i].apellidoMaterno;
-                  var foto = response[i].foto;
-                  if (foto != null) {
-                    _photoBase64 = base64Decode(foto);
-                  }
-                  return Padding(
+      content: SingleChildScrollView( //MUST TO ADDED
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < response.length; i++)...{
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
                           radius: 30,
-                          backgroundImage: foto == "" || foto == null
+                          backgroundImage: response[i].foto == "" || response[i].foto == null
                               ? AssetImage('assets/images/nouserimage.jpg')
                               : MemoryImage(_photoBase64)),
                       title: Text(
-                        nombreCompleto,
+                        '${response[i].nombre}  ${response[i].apellidoPaterno} ${response[i].apellidoMaterno}',
                         style: TextStyle(fontSize: 14),
                       ),
                       onTap: () {
@@ -472,11 +459,11 @@ class EncuestaController extends GetxController {
                         showEncuestadoModalFinal(response[i]);
                       },
                     ),
-                  );
-                }),
-          )
-        ],
-      ),
+                  ),
+                }
+              ],
+            ),
+          ),
     ));
   }
 
@@ -486,79 +473,33 @@ class EncuestaController extends GetxController {
         borderRadius: BorderRadius.circular(15),
       ),
       title: Text('Encuestados encontrados'),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          /*ListView.builder(
-                  //scrollDirection: Axis.vertical,
-                  itemCount: response.length,
-                  itemBuilder: (context,i){
-                    var nombreCompleto  = response[i].nombre + " " + response[i].apellidoPaterno + " " + response[i].apellidoMaterno;
-                    var foto            = response[i].foto;
-                    if(foto != null){
-                      _photoBase64        = base64Decode(foto);
-                    }
-                    
-
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage:  foto == "" || foto == null ?  AssetImage('assets/images/nouserimage.jpg') :  MemoryImage(_photoBase64)
-                        ),
-                        title: Text( nombreCompleto ,style: TextStyle(fontSize: 14),),
-                        onTap: (){
-                          Get.back();
-                          showEncuestadoModalFinal(response[i]);
-
-                        },
-                      ),
-                    );
-                  }
-                ),*/
-
-          Container(
-            height: 500,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: response.length,
-                itemBuilder: (context, i) {
-                  var nombreCompleto = response[i].nombre +
-                      " " +
-                      response[i].apellidoPaterno +
-                      " " +
-                      response[i].apellidoMaterno;
-                  var foto = response[i].foto;
-                  if (foto != null) {
-                    _photoBase64 = base64Decode(foto);
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: foto == "" || foto == null
-                              ? AssetImage('assets/images/nouserimage.jpg')
-                              : MemoryImage(_photoBase64)),
-                      title: Text(
-                        nombreCompleto,
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      onTap: () {
-                        Get.back();
-                        showEncuestadoModalFinal(response[i]);
-                      },
-                    ),
-                  );
-                }),
-          )
-        ],
+      content: SingleChildScrollView( //MUST TO ADDED
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < response.length; i++)...{
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: response[i].foto == "" || response[i].foto == null
+                    ? AssetImage('assets/images/nouserimage.jpg'): MemoryImage(_photoBase64)
+                  ),
+                  title: Text(
+                    '${response[i].nombre}  ${response[i].apellidoPaterno} ${response[i].apellidoMaterno}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onTap: () {
+                    Get.back();
+                    showEncuestadoModalFinal(response[i]);
+                  },
+                ),
+              ),
+            }
+          ],
+        ),
       ),
     ));
   }
