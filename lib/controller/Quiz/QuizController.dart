@@ -156,6 +156,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   File _imagePath;
   File get imagepath => _imagePath;
 
+  List<Imagelist> files = [];
+
   pickImage(String valor,String idPregunta,int i) async {
     String photoBase64 = "";
     final ImagePicker image = ImagePicker();
@@ -181,17 +183,38 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
       var resp = await DBProvider.db.actualizarRespuestaxFicha(idPregunta, idFicha, photoBase64);
       var data = await DBProvider.db.getAllRespuestas(idFicha);
-      print(data);
+      print(resp);
+      files.asMap().forEach((key, value) { 
+
+        if(value.idPregunta == idPregunta){
+          files[key].file =  _imagePath;
+          return false;
+        }
+
+      });
+
+      
+
+
     }else{
       print("insertar nuevo valor");
 
       var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
       var data = await DBProvider.db.getAllRespuestas(idFicha);
+      files.add(
+        Imagelist(
+          idPregunta,
+          _imagePath
+        ),
+      );
       print(data);
     }
     print(_imagePath);
+    print(files.length);
     update(['image']);
   }
+
+  /* */
 
   /* Obtener la ubicación del dispositivo */
 
@@ -894,6 +917,14 @@ class InputTextfield {
 
   InputTextfield(this.idPregunta, this.controller, this.name, this.index,
       this.tipo_pregunta, this.calculation);
+}
+
+class Imagelist{
+  String idPregunta;
+  File file;
+ 
+
+  Imagelist(this.idPregunta, this.file);
 }
 
 class DropDownDepartamento extends StatelessWidget {

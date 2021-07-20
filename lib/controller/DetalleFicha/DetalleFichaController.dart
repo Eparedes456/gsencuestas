@@ -523,7 +523,7 @@ class DetalleFichaController extends GetxController{
 
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       showModal("",true,'Sincronizando datos..');
 
@@ -589,7 +589,7 @@ class DetalleFichaController extends GetxController{
         )
       );
 
-    }*/
+    }
   }
 
   showModal(String mensaje, bool loading, String titulo){

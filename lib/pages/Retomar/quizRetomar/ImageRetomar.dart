@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:get/get.dart';
+import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
 
-class ImagePage extends StatelessWidget {
+class ImageRetonarPage extends StatelessWidget {
   final String idPregunta;
   final int i;
-  const ImagePage({Key key, this.idPregunta, this.i}) : super(key: key);
+  const ImageRetonarPage({Key key, this.idPregunta, this.i}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<QuizController>(
-      init: QuizController(),
+    return GetBuilder<RetommarController>(
+      init: RetommarController(),
       id: 'image',
       builder: (_) => Column(
         children: [
@@ -33,7 +34,7 @@ class ImagePage extends StatelessWidget {
                       children: [
                         Icon(Icons.camera,color: Colors.grey,),
                         SizedBox(width: 8,),
-                        Text('Camara'),
+                        Text('Cámara'),
                       ],
                     ),
                   )
@@ -55,7 +56,7 @@ class ImagePage extends StatelessWidget {
               
                         Icon(Icons.collections,color: Colors.grey,),
                         SizedBox(width: 8,),
-                        Text('Galeria'),
+                        Text('Galería'),
                       ],
                     ),
                   )
@@ -65,15 +66,15 @@ class ImagePage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20,),
-          //Text(_.controllerInput[i].controller.text),
+         
           
-          for (var i = 0; i < _.files.length; i++)...{
-            if(_.files[i].idPregunta == idPregunta)...{
+          for (var i = 0; i < _.imagenes.length; i++)...{
+            if(_.imagenes[i].idPregunta == idPregunta)...{
 
               Container(
                 height: 150,
                 width: double.infinity,
-                child: Image.file(_.files[i].file,fit: BoxFit.contain,),
+                child: Image.memory(_.imagenes[i].file,fit:BoxFit.contain) //Image.file(_.files[i].file,fit: BoxFit.contain,),
               )
 
             }

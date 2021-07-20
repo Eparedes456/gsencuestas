@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,6 +16,7 @@ import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -138,7 +142,20 @@ class RetommarController extends GetxController {
           }
         }
       }
+      
+      if(respuestas[x].tipoPregunta == "Imagen"){
+        
+        _photoBase64 = base64Decode(respuestas[x].valor);
+
+        imagenes.add(
+          Imagelist(respuestas[x].idPregunta.toString(), _photoBase64)
+        );
+
+      }
+
     }
+
+    
 
     print(_opcionesPreguntas.length);
     //update('simple');
@@ -150,6 +167,67 @@ class RetommarController extends GetxController {
       await inptuData();
     });
   }
+
+  /* Image pic to camera */  
+  File _imagePath;
+  List<Imagelist> imagenes = [];
+  Uint8List _photoBase64;
+
+  pickImage(String valor,String idPregunta,int i) async {
+    String photoBase64 = "";
+    final ImagePicker image = ImagePicker();
+
+    if(valor == "CAMARA"){
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+      _imagePath = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(_imagePath.readAsBytesSync());
+
+    }else{
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 500,maxWidth: 500);
+      _imagePath = File(imageCapturada.path);
+
+      photoBase64 = base64Encode(_imagePath.readAsBytesSync());
+      print(photoBase64);
+    }
+
+    List<RespuestaModel> existe = await DBProvider.db.unaRespuestaFicha(idFicha, idPregunta); 
+    print(existe);
+    if(existe.length > 0){
+      print("actualizar la respuesta");
+
+      var resp = await DBProvider.db.actualizarRespuestaxFicha(idPregunta, idFicha, photoBase64);
+      var data = await DBProvider.db.getAllRespuestas(idFicha);
+      print(resp);
+
+      imagenes.asMap().forEach((key, value) { 
+
+        if(value.idPregunta == idPregunta){
+          imagenes[key].file =  base64Decode(photoBase64);
+          return false;
+        }
+
+      });
+    }else{
+      print("insertar nuevo valor");
+
+      var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
+      var data = await DBProvider.db.getAllRespuestas(idFicha);
+      imagenes.add(
+        Imagelist(
+          idPregunta,
+          base64Decode(photoBase64)
+        ),
+      );
+      print(data);
+    }
+    print(_imagePath);
+    //print(files.length);
+    update(['image']);
+  }
+
+  /* */
+
 
   saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
 
@@ -1058,4 +1136,13 @@ class CentroPoblado extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class Imagelist{
+
+  String idPregunta;
+  Uint8List file;
+
+  Imagelist(this.idPregunta, this.file);
 }
