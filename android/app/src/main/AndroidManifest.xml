@@ -12,7 +12,9 @@
     <application
         android:name=".Application"
         android:label="GSEncuesta"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:allowBackup="false"
+        android:fullBackupOnly="false">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyB1VEU-5uWFBH1NkfbnoA3Ttq68JFl-HHI"/>
