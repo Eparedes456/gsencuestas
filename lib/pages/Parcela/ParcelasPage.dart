@@ -50,7 +50,7 @@ class ParcelaPage extends StatelessWidget {
                   padding:  EdgeInsets.only(top: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: _.listParcela[i].foto == null || _.listParcela[i].foto == "null" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_photoBase64),
+                      backgroundImage: _.listParcela[i].foto == null || _.listParcela[i].foto == "null" || _.listParcela[i].foto == "" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_photoBase64),
                     ),
                     title: Text(
                       _.listParcela[i].nombre +  " " + _.listParcela[i].apellidoPaterno + " " + _.listParcela[i].apellidoMaterno,

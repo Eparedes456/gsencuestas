@@ -133,7 +133,7 @@ class ConfigController extends GetxController {
       }
       
       var respuesta = {};
-      List<Map> listRespuestaMap = new List();
+      List<Map> listRespuestaMap =  [];//new List();
 
       var pregunta = {};
 
@@ -156,7 +156,7 @@ class ConfigController extends GetxController {
       }
 
       var tracking = {};
-      List<Map> listTrackingMap = new List();
+      List<Map> listTrackingMap =  []; //new List();
 
       for (var i = 0; i < listTracking.length; i++) {
         bool b = listTracking[i].estado.toLowerCase() == 'true';
@@ -173,7 +173,7 @@ class ConfigController extends GetxController {
       }
 
       var multimedia = {};
-      List<Map> listMultimediaMap = new List();
+      List<Map> listMultimediaMap =  []; //new List();
 
       for (var z = 0; z < listMultimedia.length; z++) {
         multimedia["idMultimedia"] = listMultimedia[z].idMultimedia;
@@ -651,7 +651,7 @@ class ConfigController extends GetxController {
             logo: item["logo"],
             latitud: item["latitud"],
             longitud: item["longitud"],
-            idUsuario: preferences.getString('idUsuario'),
+            idUsuario: preferences.getString('idUsuario')?? "",
             estado: item["estado"].toString(),
             createdAt: item["createdAt"],
             updatedAt: item["updatedAt"]));

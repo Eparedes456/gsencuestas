@@ -200,7 +200,7 @@ class ProfilePage extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.only(left: 20,right: 20),
-                  child: Text('Datos adicionales',style: TextStyle(color: Colors.blueGrey),),
+                  child: Text('Datos adicionales',style: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),),
                 ),
                 SizedBox(height: 12,),
                 
@@ -244,20 +244,13 @@ class ProfilePage extends StatelessWidget {
                                 'Correo electronico',
                                 style: TextStyle(fontSize: 14),
                               ),
-                              subtitle: Text('${_.correoElectronico}',style: TextStyle(fontSize: 12),),
-                              
-                            ),
-                            Divider(),
-                            SizedBox(height: 12,),
-                            ListTile(
-                              leading: Icon(Icons.email,color: Color.fromRGBO(0, 102, 84, 1),),
-                              title: Text(
-                                'Correo electronico',
-                                style: TextStyle(fontSize: 14),
+                              subtitle: Text(
+                                _.correoElectronico == "" || _.correoElectronico == null || _.correoElectronico =="null" ? 'No registrado' :'${_.correoElectronico}',
+                                style: TextStyle(fontSize: 12),
                               ),
-                              subtitle: Text('${_.correoElectronico}',style: TextStyle(fontSize: 12),),
                               
                             ),
+                            
                             Divider(),
                             SizedBox(height: 12,),
                             ListTile(

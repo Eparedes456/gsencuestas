@@ -450,18 +450,19 @@ class PrincipalController extends GetxController {
         var listEncuestados2 = listEncuestados[i]["encuestado"];
         print(listEncuestados2["documento"]);
         _encuestadosLista.add(EncuestadoModel(
-            idEncuestado: listEncuestados2["idEncuestado"].toString(),
-            documento: listEncuestados2["documento"],
-            nombre: listEncuestados2["nombre"],
-            apellidoPaterno: listEncuestados2["apellidoPaterno"],
-            apellidoMaterno: listEncuestados2["apellidoMaterno"],
-            sexo: listEncuestados2["sexo"],
-            estadoCivil: listEncuestados2["estadoCivil"],
-            direccion: listEncuestados2["direccion"],
-            telefono: listEncuestados2["telefono"],
-            email: listEncuestados2["email"],
-            idUbigeo: listEncuestados2["idUbigeo"],
-            estado: listEncuestados2["estado"].toString(),
+            idEncuestado    : listEncuestados2["idEncuestado"].toString(),
+            documento       : listEncuestados2["documento"],
+            nombre          : listEncuestados2["nombre"],
+            apellidoPaterno : listEncuestados2["apellidoPaterno"],
+            apellidoMaterno : listEncuestados2["apellidoMaterno"],
+            sexo            : listEncuestados2["sexo"],
+            estadoCivil     : listEncuestados2["estadoCivil"],
+            direccion       : listEncuestados2["direccion"],
+            telefono        : listEncuestados2["telefono"],
+            email           : listEncuestados2["email"],
+            idUbigeo        : listEncuestados2["idUbigeo"],
+            estado          : listEncuestados2["estado"].toString(),
+            idInstitucion   : listEncuestados[i]["idInstitucion"].toString(),
             foto: listEncuestados2["foto"]));
       }
     }
@@ -760,7 +761,7 @@ class PrincipalController extends GetxController {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Se esta cargando los datos de las siguientes tablas:'),
+            Text('Se está cargando los datos de las siguientes tablas:'),
             Text('- Usuarios'),
             Text('- Encuestadores'),
             Text('- Proyecto'),
@@ -775,7 +776,7 @@ class PrincipalController extends GetxController {
               height: 20,
             ),
             Text(
-                'Está operación se realiza solo una vez, tiempo estimado de carga 28 a 40 segundos aproximadamente.')
+                'Está operación se realiza sólo una vez, tiempo estimado de carga 28 a 40 segundos aproximadamente.')
           ],
         ),
       ),

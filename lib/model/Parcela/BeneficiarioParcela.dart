@@ -44,7 +44,7 @@ class BeneficiaroParcela extends StatelessWidget {
                             padding: EdgeInsets.only(top: 15),
                             child: CircleAvatar(
                               radius: 40,
-                              backgroundImage: _.photoBase64 == null || _.photoBase64 == "null" ? AssetImage('assets/images/nouserimage.jpg') : MemoryImage(_.photoBase64),
+                              backgroundImage: _.photoBase64 == null || _.photoBase64 == "null" || _.photoBase64 == "" ? AssetImage('assets/images/no-image.png') : MemoryImage(_.photoBase64),
                             ),
                           ),
                           SizedBox(height: 12,),

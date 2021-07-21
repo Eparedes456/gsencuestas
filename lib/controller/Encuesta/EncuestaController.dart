@@ -417,7 +417,12 @@ class EncuestaController extends GetxController {
   }
 
   getAllEncuestados() async {
-    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
+    SharedPreferences preferencias = await SharedPreferences.getInstance();
+    var idInstitucion = await preferencias.getString('idInstitucion');
+    print(idInstitucion);
+
+    //List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
+    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestadoxinstitucion(idInstitucion.toString());
     if (response.length > 0) {
       print(response);
       Get.back();
@@ -447,7 +452,7 @@ class EncuestaController extends GetxController {
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
                           radius: 30,
-                          backgroundImage: response[i].foto == "" || response[i].foto == null
+                          backgroundImage: response[i].foto == "" || response[i].foto == null || response[i].foto == "null"
                               ? AssetImage('assets/images/nouserimage.jpg')
                               : MemoryImage(_photoBase64)),
                       title: Text(
@@ -561,12 +566,13 @@ class EncuestaController extends GetxController {
     var idDepartamento = showDepartamentos[0].codigoDepartamento;
     listcodProvincia.removeWhere((element) => element.toString().substring(0, 2) != idDepartamento);
 
-    //print(listcodProvincia);
+    print(listcodProvincia);
     temporalProvincia = [];
     listcodProvincia.forEach((element) {
       var flat = element.substring(2, 4);
       temporalProvincia.add(flat);
     });
+    
     List codProvincia = temporalProvincia.toSet().toList();
 
     for (var x = 0; x < codProvincia.length; x++) {
@@ -581,32 +587,42 @@ class EncuestaController extends GetxController {
     var result = dataUbi.where((element) =>element.contains(_listprovincias[0].codigoDepartamento) && element.contains(_listprovincias[0].codigoProvincia));
     print(result);
     result.forEach((element) {
-      temporalDistrito.add(element);
+      var flat = element.substring(4, 6);
+      temporalDistrito.add(flat);
     });
 
-    for (var d = 0; d < temporalDistrito.length; d++) {
+    List codDistrito = temporalDistrito.toSet().toList();
+
+    for (var d = 0; d < codDistrito.length; d++) {
       List<UbigeoModel> dataDistritos = await DBProvider.db.getDistrito1(
-          temporalDistrito[d].toString().substring(2, 4),
-          temporalDistrito[d].toString().substring(0, 2),
-          temporalDistrito[d].toString().substring(4, 6)
+          _listprovincias[0].codigoProvincia, //temporalDistrito[d].toString().substring(2, 4),
+          idDepartamento, //temporalDistrito[d].toString().substring(0, 2),
+          codDistrito[d].toString() //temporalDistrito[d].toString().substring(4, 6)
       );
       _listDistritos.add(dataDistritos[0]);
     }
     print(_listDistritos);
 
     var result2 = dataUbi.where((item) =>  item.contains(_listDistritos[0].codigoDepartamento) && item.contains(_listDistritos[0].codigoProvincia) && item.contains(_listDistritos[0].codigoDistrito) );
+    print(result2);
+
     result2.forEach((element) {
-      temporalCentroPoblado.add(element);
+      var flat = element.substring(6, 10);
+      temporalCentroPoblado.add(flat);
     });
+    List codCentroPoblado = temporalCentroPoblado.toSet().toList();
    
-    for (var i = 0; i < temporalCentroPoblado.length; i++) {
+    for (var i = 0; i < codCentroPoblado.length; i++) {
 
       List<UbigeoModel> dataCentroPoblados = await DBProvider.db.getCentroPoblado(
-        temporalCentroPoblado[i].toString().substring(2,4), temporalCentroPoblado[i].toString().substring(0,2),
-        temporalCentroPoblado[i].toString().substring(4,6), temporalCentroPoblado[i].toString().substring(6,10)
+        _listprovincias[0].codigoProvincia, //temporalCentroPoblado[i].toString().substring(2,4), 
+        idDepartamento, //temporalCentroPoblado[i].toString().substring(0,2),
+        _listDistritos[0].codigoDistrito, //temporalCentroPoblado[i].toString().substring(4,6), 
+        codCentroPoblado[i].toString()  //temporalCentroPoblado[i].toString().substring(6,10)
       );
       _listCentrosPoblados.add(dataCentroPoblados[0]);
     }
+    print(_listCentrosPoblados);
 
     _selectCodDistrito      = _listDistritos[0].codigoDistrito;
     _selectCodDepartamento  = idDepartamento;
@@ -1464,8 +1480,10 @@ class EncuestaController extends GetxController {
   }
 
   selectDistritoManual(UbigeoModel value,String codProvincia,String codDistrito ,bool estado) async {
+    
     _listCentrosPoblados = [];
     List<UbigeoModel> dataCentroPoblados =[];
+    print(value.codigoDistrito);
     if(estado == true){
       dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(codProvincia, "22", codDistrito);
     }else{
@@ -1478,8 +1496,14 @@ class EncuestaController extends GetxController {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
     _selectCodCentroPoblado = _listCentrosPoblados[0].codigoCentroPoblado;
-    //_selectCodDistrito = value.codigoDistrito;
+    if(codDistrito == ""){
+      _selectCodDistritoManual = value.codigoDistrito;
+    }else{
+      _selectCodDistritoManual = codDistrito;
+    }
+    
     _valueCentroPoblado = _listCentrosPoblados[0].descripcion;
+
     update(['centroPoblado']);
 
   }
@@ -1870,6 +1894,7 @@ class CentroPoblado extends StatelessWidget {
                 if (isManual == true) {
                   _.selectedCentroPoblado(value);
                 } else {
+                  _.selectedCentroPoblado(value);
                   //_.selectedDistrito(value);
                 }
               },

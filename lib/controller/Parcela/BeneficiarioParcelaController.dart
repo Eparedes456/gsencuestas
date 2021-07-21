@@ -147,38 +147,49 @@ class BeneficiarioParcelaController extends GetxController{
       var flat = element.substring(2,4);
       temporalProvincia.add(flat);
     });
+
     List codProvincia = temporalProvincia.toSet().toList();
+
     for (var x = 0; x < codProvincia.length; x++) {
       List<UbigeoModel> dataProvincias = await DBProvider.db.getProvincia1(codProvincia[x].toString(),idDepartamento);
       _listprovincias.add(dataProvincias[0]);
     }
-    print(dataUbi[0].substring(2,4));
-    print(idDepartamento);
+    
 
     _valueProvincia = _listprovincias[0].descripcion;
 
     var result = dataUbi.where((element) =>  element.contains(_listprovincias[0].codigoDepartamento) && element.contains( _listprovincias[0].codigoProvincia));
     result.forEach((element) { 
-      temporalDistrito.add(element);
+      var flat = element.substring(4, 6);
+      temporalDistrito.add(flat);
     });
-    for (var d = 0; d < temporalDistrito.length; d++) {
+
+    List codDistrito = temporalDistrito.toSet().toList();
+
+    for (var d = 0; d < codDistrito.length; d++) {
 
       List<UbigeoModel> dataDistritos = await DBProvider.db.getDistrito1(
-        temporalDistrito[d].toString().substring(2,4), temporalDistrito[d].toString().substring(0,2), temporalDistrito[d].toString().substring(4,6)
+         _listprovincias[0].codigoProvincia, //temporalDistrito[d].toString().substring(2, 4),
+          idDepartamento, //temporalDistrito[d].toString().substring(0, 2),
+          codDistrito[d].toString() //temporalDistrito[d].toString().substring(4, 6)
       );
       _listDistritos.add(dataDistritos[0]);
     }
 
     var result2 = dataUbi.where((item) =>  item.contains(_listDistritos[0].codigoDepartamento) && item.contains(_listDistritos[0].codigoProvincia) && item.contains(_listDistritos[0].codigoDistrito) );
     result2.forEach((element) {
-      temporalCentroPoblado.add(element);
+       var flat = element.substring(6, 10);
+      temporalCentroPoblado.add(flat);
     });
+    List codCentroPoblado = temporalCentroPoblado.toSet().toList();
 
     for (var i = 0; i < temporalCentroPoblado.length; i++) {
 
       List<UbigeoModel> dataCentroPoblados = await DBProvider.db.getCentroPoblado(
-        temporalCentroPoblado[i].toString().substring(2,4), temporalCentroPoblado[i].toString().substring(0,2),
-        temporalCentroPoblado[i].toString().substring(4,6), temporalCentroPoblado[i].toString().substring(6,10)
+        _listprovincias[0].codigoProvincia, //temporalCentroPoblado[i].toString().substring(2,4), 
+        idDepartamento, //temporalCentroPoblado[i].toString().substring(0,2),
+        _listDistritos[0].codigoDistrito, //temporalCentroPoblado[i].toString().substring(4,6), 
+        codCentroPoblado[i].toString()  //temporalCentroPoblado[i].toString().substring(6,10)
       );
       _listCentrosPoblados.add(dataCentroPoblados[0]);
     }

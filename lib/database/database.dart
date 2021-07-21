@@ -256,6 +256,7 @@ class DBProvider {
             idUbigeo TEXT,
             validadoReniec TEXT,
             idTecnico TEXT,
+            idInstitucion TEXT,
             estado TEXT
 
           )
@@ -1043,6 +1044,19 @@ class DBProvider {
 
     var response = await db.rawQuery('''
       SELECT * FROM encuestado 
+      ''');
+    print(response);
+    List<EncuestadoModel> encuestados = response.isNotEmpty
+        ? response.map((e) => EncuestadoModel.fromMap(e)).toList()
+        : [];
+    return encuestados;
+  }
+
+  getAllEncuestadoxinstitucion(String idInstitucion) async {
+    final db = await database;
+
+    var response = await db.rawQuery('''
+      SELECT * FROM encuestado  WHERE idInstitucion = '$idInstitucion'
       ''');
     print(response);
     List<EncuestadoModel> encuestados = response.isNotEmpty

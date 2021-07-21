@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
 import 'package:gsencuesta/pages/Parcela/NewParcelapage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/Encuestado/EncuestadoModel.dart';
 
 class Parcela1Controller extends GetxController{
@@ -88,9 +89,12 @@ class Parcela1Controller extends GetxController{
   bool cargaCoordenadas = false;
 
   getAllParcela()async{
-
+    SharedPreferences preferencias = await SharedPreferences.getInstance();
+    var idInstitucion = await preferencias.getString('idInstitucion');
+    print(idInstitucion);
     //List response = await apiConexion.getAllParcelas();
-    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
+    //List<EncuestadoModel> response = await DBProvider.db.getAllEncuestado();
+    List<EncuestadoModel> response = await DBProvider.db.getAllEncuestadoxinstitucion(idInstitucion.toString());
     _listParcelas = response;
     if(_listParcelas.length > 0){
       hayParcela = true;
@@ -100,9 +104,6 @@ class Parcela1Controller extends GetxController{
       loading = false;
     }
     update();
-
-    
-
 
   }
 
