@@ -762,8 +762,8 @@ class PrincipalController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Se está cargando los datos de las siguientes tablas:'),
-            Text('- Usuarios'),
             Text('- Encuestadores'),
+            Text('- Encuestados'),
             Text('- Proyecto'),
             Text('- Encuesta'),
             Text('- Preguntas'),
