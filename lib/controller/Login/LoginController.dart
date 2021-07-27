@@ -1,13 +1,16 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Usuarios/UsuariosModel.dart';
+import 'package:gsencuesta/pages/Login/LoginPage.dart';
 import 'package:gsencuesta/pages/Login/RegisterUser.dart';
 import 'dart:io';
 import 'dart:async';
@@ -47,6 +50,7 @@ class LoginController extends GetxController{
 
   TextEditingController _username = new TextEditingController();
   TextEditingController _password = new TextEditingController();
+  LocationPermission permission;
 
   TextEditingController get username => _username;
   TextEditingController get password => _password;
@@ -95,25 +99,104 @@ class LoginController extends GetxController{
 
     if( servicioEnabled == true ){
 
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(position.latitude);
-      print(position.longitude);
+      permission = await Geolocator.checkPermission();
 
-      var usuario = preferences.getString('nombreUser');
-      var idUsuario = preferences.getString("idUsuario");
+      if(permission == LocationPermission.denied){
+        permission = await Geolocator.requestPermission();
+        if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
+          Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          print(permission);
+          print(position.latitude);
+          print(position.longitude);
+          var usuario = preferences.getString('nombreUser');
+          var idUsuario = preferences.getString("idUsuario");
+          if(usuario == null && idUsuario == null || usuario == "" && idUsuario == ""){
 
-      if(usuario == null && idUsuario == null || usuario == "" && idUsuario == ""){
+            Get.back();
 
-        Get.back();
+          }else{
 
-      }else{
+            Get.offAll(TabsPage());
 
-        Get.offAll(TabsPage());
+          }
+        }else if(permission == LocationPermission.denied){
+          Get.back();
+          await Geolocator.requestPermission();
+          checkInternet();
+        }else if(permission == LocationPermission.deniedForever){
+          Get.back();
+          Get.dialog(
+            AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
+              title: Text('Notificacion'),
+              content: SingleChildScrollView(child: Text('Estimado usuario usted denegó el acceso a sus servicios de localización, por favor actívelo en la configuración de aplicaciones y busque la aplicación GSEncuesta, o sólo desinstale la aplicación y vuelva a instalarlo otorgando los permisos de ubicación.')),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  child: MaterialButton(
+                    color: Color.fromRGBO(0, 102, 84, 1),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10,right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(FontAwesomeIcons.cogs,color: Colors.white,),
+                          Text('Config. Ubicación',style: TextStyle(color: Colors.white),)
 
-      }
+                        ],
+                      ),
+                    ),
+                    onPressed: ()async{
+                      var response =  await Geolocator.openLocationSettings();
+                      Get.back();
+                    }
+                  ),
+                ),
 
+                Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  child: MaterialButton(
+                    color: Colors.red,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10,right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.cancel,color: Colors.white,),
+                          Text('Cerrar',style: TextStyle(color: Colors.white),)
 
-      
+                        ],
+                      ),
+                    ),
+                    onPressed: ()async{
+                      Get.back();
+                    }
+                  ),
+                )
+              ],
+            )
+          );
+        }
+        
+      }else if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
+          Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+          print(permission);
+          print(position.latitude);
+          print(position.longitude);
+          var usuario = preferences.getString('nombreUser');
+          var idUsuario = preferences.getString("idUsuario");
+          if(usuario == null && idUsuario == null || usuario == "" && idUsuario == ""){
+
+            Get.back();
+
+          }else{
+
+            Get.offAll(TabsPage());
+
+          }
+        }
 
     }else{
 
@@ -150,77 +233,199 @@ class LoginController extends GetxController{
 
     }
 
+    update();
+
   }
 
   login()async{
 
-    loading('Verificando las credenciales',' Cargando');
+    
     SharedPreferences preferences = await SharedPreferences.getInstance();
     //var connectionInternet = await DataConnectionChecker().connectionStatus;
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
+    permission = await Geolocator.requestPermission();
+    print(permission);
+    if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
 
-    //comprint(connectionInternet);
-    
-    if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile    /*connectionInternet == DataConnectionStatus.connected*/ ){
-
-      print('Estoy conectado a internet, consulto a la api');
-      
-      loginApi();
-
-    }else{
-
-      List<UsuarioModel> resultado = await  DBProvider.db.getAllUsuarios();
-      print(resultado);
-      
-      if(resultado.length > 0){
-
-        print(' hay resultados');
-
-
-        print('Hacer el metodo en la base de datos para validar las credenciales');
-
+      if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile    /*connectionInternet == DataConnectionStatus.connected*/ ){
         loading('Verificando las credenciales',' Cargando');
+        print('Estoy conectado a internet, consulto a la api');
+        
+        loginApi();
 
-        List<UsuarioModel> response = await DBProvider.db.consultLogueo(_username.text, '');
+      }else{
+        loading('Verificando las credenciales',' Cargando');
+        List<UsuarioModel> resultado = await  DBProvider.db.getAllUsuarios();
+        print(resultado);
+        
+        if(resultado.length > 0){
 
-        print(response);
+          print(' hay resultados');
 
-        if(response.length > 0){
 
-          var idUsuario     = response[0].idUsuario;
-          var nombreUser    = response[0].nombre + ' ' + response[0].apellidoPaterno + ' ' + response[0].apellidoMaterno;
-          var usernamex     = response[0].username; 
+          print('Hacer el metodo en la base de datos para validar las credenciales');
 
-          _username.clear();
-          _password.clear();
-          preferences.setString('idUsuario', idUsuario.toString());
-          preferences.setString('nombreUser', nombreUser);
-          //var idInstitucion = resultado["user"]["idInstitucion"].toString();
-          preferences.setString('loginUser', usernamex);
-          //preferences.setString('idInstitucion', idInstitucion);
-          Get.offAll(TabsPage());
+          loading('Verificando las credenciales',' Cargando');
+
+          List<UsuarioModel> response = await DBProvider.db.consultLogueo(_username.text, '');
+
+          print(response);
+
+          if(response.length > 0){
+
+            var idUsuario     = response[0].idUsuario;
+            var nombreUser    = response[0].nombre + ' ' + response[0].apellidoPaterno + ' ' + response[0].apellidoMaterno;
+            var usernamex     = response[0].username; 
+
+            _username.clear();
+            _password.clear();
+            preferences.setString('idUsuario', idUsuario.toString());
+            preferences.setString('nombreUser', nombreUser);
+            //var idInstitucion = resultado["user"]["idInstitucion"].toString();
+            preferences.setString('loginUser', usernamex);
+            //preferences.setString('idInstitucion', idInstitucion);
+            Get.offAll(TabsPage());
+
+
+          }else{
+
+            Get.dialog(
+              AlertDialog(
+                content: Text('Credenciales erroneas',textAlign: TextAlign.justify,),
+              )
+            );
+
+          }
 
 
         }else{
 
-          Get.dialog(
-            AlertDialog(
-              content: Text('Credenciales erroneas',textAlign: TextAlign.justify,),
-            )
-          );
+          print('no hay datos');
+
+          loading('Por favor conéctese a internet , para poder descargar los datos necesarios para el uso de la app.', 'Error');
 
         }
 
-
-      }else{
-
-        print('no hay datos');
-
-        loading('Por favor conéctese a internet , para poder descargar los datos necesarios para el uso de la app.', 'Error');
-
       }
+    }else if(permission == LocationPermission.denied){
+      Get.back();
+      Get.dialog(
+        AlertDialog(
+        title: Text('Notificación'),
+        content: Text('Estimado usuario, otorgue acceso a su ubicación.'),
+        actions: [
+          Padding(
+                padding: const EdgeInsets.only(left: 20,right: 20),
+                child: MaterialButton(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10,right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                         Icon(FontAwesomeIcons.locationArrow,color: Colors.white,),
+                        Text('Otorgar permisos',style: TextStyle(color: Colors.white),)
 
+                      ],
+                    ),
+                  ),
+                  onPressed: ()async{
+                     permission =  await Geolocator.requestPermission(); //await Geolocator.openLocationSettings();
+                     update();
+                     Get.back();
+                     ubicacionpermiso();
+                    /*if(permission == LocationPermission.whileInUse){
+                      Get.off(LoginPage());
+                    }*/
+                    
+                    //Get.offAll(LoginPage());
+                  }
+                ),
+              ),
+        ],
+      )
+      );
+      
+      //await Geolocator.requestPermission();
+      
+
+    }else if(permission == LocationPermission.deniedForever){
+      Get.back();
+        Get.dialog(
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            ),
+            title: Text('Notificacion'),
+            content: SingleChildScrollView(child: Text('Estimado usuario usted denego el acceso a sus servicios de localización, por favor activelo en la configuracion de aplicaciones y busque la aplicación GSEncuesta, o solo desinstale la aplicación y vuelva a instalarlo otorgando los permisos de ubicación')),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20,right: 20),
+                child: MaterialButton(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10,right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                         Icon(FontAwesomeIcons.cogs,color: Colors.white,),
+                        Text('Config. Ubicación',style: TextStyle(color: Colors.white),)
+
+                      ],
+                    ),
+                  ),
+                  onPressed: ()async{
+                    
+                    bool response =  await Geolocator.openLocationSettings();
+                    print(response);
+                    if(response == true){
+                      Get.back();
+                    }
+                  }
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 20,right: 20),
+                child: MaterialButton(
+                  color: Colors.red,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10,right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                         Icon(Icons.cancel,color: Colors.white,),
+                         Text('Cerrar',style: TextStyle(color: Colors.white),)
+
+                      ],
+                    ),
+                  ),
+                  onPressed: ()async{
+                    Get.back();
+                  }
+                ),
+              )
+            ],
+          )
+        );
+        
     }
+
+  }
+
+  ubicacionpermiso(){
+
+    if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
+      login();
+      return 1;
+    }else if(permission == LocationPermission.denied){
+      login();
+      return 2;
+    }else if(permission == LocationPermission.deniedForever){
+      login();
+      return 3;
+    }
+    update();
 
   }
 

@@ -92,7 +92,7 @@ class Formulario extends StatelessWidget {
 
               GestureDetector(
                 onTap: (){
-                  print('holi');
+                  
                   //_.navigateToTabs();
                   _.login();
                   //_.loginApi();
