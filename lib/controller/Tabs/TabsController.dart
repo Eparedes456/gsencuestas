@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:gsencuesta/database/database.dart';
@@ -11,6 +13,7 @@ import 'package:gsencuesta/model/Multimedia/MultimediaModel.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Tracking/TrackingModal.dart';
 import 'package:gsencuesta/services/apiServices.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class TabsController extends GetxController{
@@ -23,6 +26,7 @@ class TabsController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    //this.checkVersion();
     this.checkConecction();
   }
 
@@ -33,6 +37,15 @@ class TabsController extends GetxController{
   }
 
   ApiServices apiConexion = new ApiServices();
+
+
+
+  
+
+  
+
+
+
 
   checkConecction()async{
 

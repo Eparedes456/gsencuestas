@@ -89,42 +89,86 @@ class PrincipalController extends GetxController {
   }
 
   ApiServices apiConexion = new ApiServices();
+  
 
   navigateToProfile() {
     Get.to(ProfilePage());
   }
 
+
   checkVersion()async{
+    
+    SharedPreferences pref = await SharedPreferences.getInstance();
 
     var versionAndroid = "2.0";
-    var versioniOS =  "1.0";
+    var versioniOS =  "2.2";
+    var isDrastico = false;
 
     var response = await apiConexion.getVersionsApp();
-    if (Platform.isAndroid) {
+
+    var prefresp = pref.getBool('drastico');
+
+    if(prefresp == null){
+
+       if (Platform.isAndroid) {
       
-      if(versionAndroid == response[0]['versionAndroid']){
-        validarCarga();
-      }else{
-        showModalUpdateApp('android');
-        print('hay nueva actualizacion de la aplicacion');
+        if(versionAndroid == response[0]['versionAndroid']){
+          validarCarga();
+        }else{
+          showModalUpdateApp('android',isDrastico);
+          print('hay nueva actualizacion de la aplicacion');
+        }
+
+      } else if (Platform.isIOS) {
+        if(versioniOS == response[0]['versionIos']){
+          validarCarga();
+        }else{
+          showModalUpdateApp('ios',isDrastico);
+          print('hay nueva actualizacion de la aplicacion');
+        }
+      }
+      
+
+    } else if( isDrastico == prefresp ){
+      validarCarga();
+    } else{
+
+        if (Platform.isAndroid) {
+      
+        if(versionAndroid == response[0]['versionAndroid']){
+          validarCarga();
+        }else{
+          showModalUpdateApp('android',isDrastico);
+          print('hay nueva actualizacion de la aplicacion');
+        }
+
+      } else if (Platform.isIOS) {
+        if(versioniOS == response[0]['versionIos']){
+          validarCarga();
+        }else{
+          showModalUpdateApp('ios',isDrastico);
+          print('hay nueva actualizacion de la aplicacion');
+        }
       }
 
-    } else if (Platform.isIOS) {
-      if(versioniOS == response[0]['versionIos']){
-        validarCarga();
-      }else{
-        showModalUpdateApp('ios');
-         print('hay nueva actualizacion de la aplicacion');
-      }
     }
+
+    
 
     //print(response[0]['versionAndroid']);
 
   }
 
-  showModalUpdateApp(String icon){
+
+
+  
+  showModalUpdateApp(String icon, bool isDrastico){
     Get.dialog(
+      
       AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+        ),
         title: Text('Actualización de GSEncuesta'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -174,14 +218,45 @@ class PrincipalController extends GetxController {
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 12,),
+            isDrastico == true ?  Container():
+            GestureDetector(
+              onTap: ()async{
+                SharedPreferences pref = await SharedPreferences.getInstance();
+                pref.setBool('drastico', false);
+                
+                Get.back();
+                validarCarga();
+              },
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Descargar, más tarde',style: TextStyle(color: Colors.white),),
+                    SizedBox(width: 20,),
+                    Icon( Icons.arrow_forward_ios,color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
 
           ],
         ),
       ),
-      barrierDismissible: false
+      
+      barrierDismissible: false,
+      
     );
   }
+
+  
 
   validarCarga() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
