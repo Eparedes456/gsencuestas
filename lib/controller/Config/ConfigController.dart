@@ -42,6 +42,7 @@ class ConfigController extends GetxController {
   String _cantidadFinalizadas = "";
   String get cantidadFinalizadas => _cantidadFinalizadas;
   ApiServices apiConexion = new ApiServices();
+  List<EncuestadoModel> _encuestadosLista = [];
 
   loadData() async {
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
@@ -180,6 +181,7 @@ class ConfigController extends GetxController {
         multimedia["latitud"] = listMultimedia[z].latitud;
         multimedia["longitud"] = listMultimedia[z].longitud;
         multimedia["url"] = listMultimedia[z].tipo;
+        multimedia["nombre"] = listMultimedia[z].nombre;
 
         listMultimediaMap.add(multimedia);
 
@@ -475,7 +477,7 @@ class ConfigController extends GetxController {
               Get.back();
               downloadAllDataToServer();
             },
-            child: Text('Si'),
+            child: Text('Si',style: TextStyle(color: Colors.white),),
           ),
         ),
         Container(
@@ -800,7 +802,7 @@ class ConfigController extends GetxController {
     print('Los proyectos, encuestas y preguntas se descargaron exitosamente');
   }
 
-  loadEncuestados() async {
+  /*loadEncuestados() async {
     List<EncuestadoModel> _encuestadosLista = [];
     var listEncuestados = await apiConexion.getAllEncuestado2();
     if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
@@ -833,7 +835,48 @@ class ConfigController extends GetxController {
     for (var e = 0; e < _encuestadosLista.length; e++) {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
     }
+
+    var data = await DBProvider.db.getAllEncuestado();
+    if (data.length > 0) {
+      print("Se registro todos los encuestados");
+    }
+
+    var result2 = await DBProvider.db.getLastEncuestado();
+    print(result2);
     print('Se descargaron los encuestados exitosamente');
+  }*/
+
+  loadEncuestados() async {
+    var listEncuestados = await apiConexion.getAllEncuestado2();
+    if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
+      print(listEncuestados);
+      for (var i = 0; i < listEncuestados.length; i++) {
+        var listEncuestados2 = listEncuestados[i]["encuestado"];
+        print(listEncuestados2["documento"]);
+        _encuestadosLista.add(EncuestadoModel(
+            idEncuestado    : listEncuestados2["idEncuestado"].toString(),
+            documento       : listEncuestados2["documento"],
+            nombre          : listEncuestados2["nombre"],
+            apellidoPaterno : listEncuestados2["apellidoPaterno"],
+            apellidoMaterno : listEncuestados2["apellidoMaterno"],
+            sexo            : listEncuestados2["sexo"],
+            estadoCivil     : listEncuestados2["estadoCivil"],
+            direccion       : listEncuestados2["direccion"],
+            telefono        : listEncuestados2["telefono"],
+            email           : listEncuestados2["email"],
+            idUbigeo        : listEncuestados2["idUbigeo"],
+            estado          : listEncuestados2["estado"].toString(),
+            idInstitucion   : listEncuestados[i]["idInstitucion"].toString(),
+            foto: listEncuestados2["foto"]));
+      }
+    }
+    for (var e = 0; e < _encuestadosLista.length; e++) {
+      await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
+    }
+    var data = await DBProvider.db.getAllEncuestado();
+    if (data.length > 0) {
+      print("Se registro todos los encuestados");
+    }
   }
 
   loadParcelas() async {

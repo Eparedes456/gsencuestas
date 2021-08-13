@@ -59,6 +59,10 @@ class FichaController extends GetxController{
 
   File _imagePath;
   File get imagepath => _imagePath;
+
+  List<InputTextfield> _controllerInput = [];
+
+  List<InputTextfield> get controllerInput => _controllerInput;
   
 
   loadData()async{
@@ -77,7 +81,7 @@ class FichaController extends GetxController{
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20)
         ),
-        title: Text('Esocge una de las opciones'),
+        title: Text('Escoge una de las opciones'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -133,7 +137,29 @@ class FichaController extends GetxController{
       var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64,fecha_captura);
       _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
 
+
       print(_listMultimedia);
+      var numero = (_listMultimedia.length).toString();
+      _controllerInput.add(
+        InputTextfield(
+          _listMultimedia[_listMultimedia.length - 1].idMultimedia,
+          TextEditingController(text: 'Imagen $numero')
+        )
+      );
+
+      /*for (var i = 0; i < _listMultimedia.length; i++) {
+
+        print(_controllerInput.length);
+
+        _controllerInput.add(
+          InputTextfield(
+            _listMultimedia[i].idMultimedia,
+            TextEditingController(text: 'Imagen $i')
+          )
+        );
+        
+      }*/
+
       update();
 
     }else{
@@ -145,13 +171,30 @@ class FichaController extends GetxController{
       image1 = File(imageCapturada.path);
 
       photoBase64 = base64Encode(image1.readAsBytesSync());
-
-      
-
       var resp = await DBProvider.db.insertMultimedia(idFicha, photoBase64,fecha_captura);
       _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
 
       print(_listMultimedia);
+
+      var numero = (_listMultimedia.length).toString();
+      _controllerInput.add(
+        InputTextfield(
+          _listMultimedia[_listMultimedia.length - 1].idMultimedia,
+          TextEditingController(text: 'Imagen $numero')
+        )
+      );
+
+      /*for (var i = 0; i < _listMultimedia.length; i++) {
+
+        _controllerInput.add(
+          InputTextfield(
+            _listMultimedia[i].idMultimedia,
+            TextEditingController(text: 'Imagen $i')
+          )
+        );
+        
+      }*/
+
       update();
 
     }
@@ -166,6 +209,10 @@ class FichaController extends GetxController{
     _listMultimedia  = await DBProvider.db.getAllMultimediaxFicha(idFicha);
     update();
 
+  }
+
+  cambiarnombreFoto(String idMultimedia,String name)async{
+    await DBProvider.db.updateMultimedia(idMultimedia,name);
   }
 
 
@@ -259,6 +306,8 @@ class FichaController extends GetxController{
 
   }
 
+ 
+
   saveFicha()async{
 
     DateTime now = DateTime.now();
@@ -275,6 +324,12 @@ class FichaController extends GetxController{
     print(part[1]);
     String formattedDate = fecha + "T" + hora;
     String fecha_retorno =fecha + "T" + hora;
+
+    if(_listMultimedia.length > 0){
+      for (var i = 0; i < _controllerInput.length; i++) {
+        await cambiarnombreFoto(_controllerInput[i].idMultimedia,_controllerInput[i].controller.text);
+      }
+    }
 
     List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F", fecha_retorno);
 
@@ -307,12 +362,6 @@ class FichaController extends GetxController{
       });
 
     }
-
-    
-    
-    
-
-
   }
 
   cannotBack(){
@@ -326,4 +375,11 @@ class FichaController extends GetxController{
 
   }
 
+}
+
+class InputTextfield {
+  String idMultimedia;
+  TextEditingController controller;
+  
+  InputTextfield(this.idMultimedia,this.controller);
 }

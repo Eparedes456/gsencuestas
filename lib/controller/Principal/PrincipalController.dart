@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:easyping/easyping.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
+import 'dart:io' show Platform;
+
+import 'package:url_launcher/url_launcher.dart';
 
 class PrincipalController extends GetxController {
   List<ProyectoModel> _proyectos = [];
@@ -80,13 +84,103 @@ class PrincipalController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     //this.getProyectos();
-    this.validarCarga();
+    this.checkVersion();
+    //this.validarCarga();
   }
 
   ApiServices apiConexion = new ApiServices();
 
   navigateToProfile() {
     Get.to(ProfilePage());
+  }
+
+  checkVersion()async{
+
+    var versionAndroid = "2.0";
+    var versioniOS =  "1.0";
+
+    var response = await apiConexion.getVersionsApp();
+    if (Platform.isAndroid) {
+      
+      if(versionAndroid == response[0]['versionAndroid']){
+        validarCarga();
+      }else{
+        showModalUpdateApp('android');
+        print('hay nueva actualizacion de la aplicacion');
+      }
+
+    } else if (Platform.isIOS) {
+      if(versioniOS == response[0]['versionIos']){
+        validarCarga();
+      }else{
+        showModalUpdateApp('ios');
+         print('hay nueva actualizacion de la aplicacion');
+      }
+    }
+
+    //print(response[0]['versionAndroid']);
+
+  }
+
+  showModalUpdateApp(String icon){
+    Get.dialog(
+      AlertDialog(
+        title: Text('Actualización de GSEncuesta'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Tenemos una nueva versión de GSEncuesta, presione "Descargar" a continuación para obtener la ultima versión más reciente de las tiendas digitales'),
+            SizedBox(height: 20,),
+            GestureDetector(
+              onTap: ()async{
+                var androidurl = "https://play.google.com/store/apps/details?id=pe.gob.regionsanmartin.gsencuesta";
+                var iOSurl = "https://apps.apple.com/pe/app/gsencuesta/id1566926144";
+
+                if (Platform.isAndroid) {
+      
+                    if (  await canLaunch(androidurl)) {
+                      await launch(androidurl);
+                    } 
+                      else {
+                          throw 'Could not launch $androidurl';
+                    }
+
+                } else if (Platform.isIOS) {
+                  
+                  if (  await canLaunch(iOSurl)) {
+                      await launch(iOSurl);
+                    } 
+                      else {
+                          throw 'Could not launch $iOSurl';
+                    }
+
+                }
+                  
+                
+              },
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(0, 102, 84, 1),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon( icon == "android"? FontAwesomeIcons.googlePlay : FontAwesomeIcons.appStore,color: Colors.white),
+                    SizedBox(width: 20,),
+                    Text('Descargar',style: TextStyle(color: Colors.white),)
+                  ],
+                ),
+              ),
+            )
+
+          ],
+        ),
+      ),
+      barrierDismissible: false
+    );
   }
 
   validarCarga() async {
@@ -363,7 +457,7 @@ class PrincipalController extends GetxController {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 12,),
-            Text('Cargando los proyectos ...')
+            Text('Cargando las encuestas...')
           ],
         ),
       )

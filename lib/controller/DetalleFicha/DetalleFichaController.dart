@@ -502,6 +502,7 @@ class DetalleFichaController extends GetxController{
         multimedia["longitud"]        =   listMultimedia[z].longitud;
         multimedia["url"]             =   listMultimedia[z].tipo;
         multimedia["fecha_capturada"] =   listMultimedia[z].fecha_capturada;
+        multimedia["nombre"]          =   listMultimedia[z].nombre;
       
       
         

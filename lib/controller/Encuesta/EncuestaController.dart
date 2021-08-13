@@ -1315,6 +1315,30 @@ class EncuestaController extends GetxController {
             ])));
   }
 
+  modalWarningAmbito(){
+    Get.dialog(
+      
+      AlertDialog(
+
+        title: Text('Notificación'),
+        content: Text('Seleccione el ambito de intervención'),
+        actions: [
+          ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(0, 102, 84, 1),),
+            ),
+            onPressed: (){
+              Get.back();
+            },
+            icon: Icon(Icons.cancel),
+            label: Text('Cerrar')
+          )
+        ],
+      ),
+      barrierDismissible: false
+    );
+  }
+
   modalAmbitodeIntervencion(var dataEncuestados, bool isValidadoReniec) async {
     listCodDep = [];
     listcodProvincia = [];
@@ -1345,9 +1369,6 @@ class EncuestaController extends GetxController {
     for (var i = 0; i < dataProvincias.length; i++) {
       _listprovincias.add(dataProvincias[i]);
     }
-
-    
-
 
 
     Get.dialog(AlertDialog(
@@ -1421,15 +1442,30 @@ class EncuestaController extends GetxController {
                       idUbigeo: ubigeo
                     )
                   );
-                  print(dataEncuestado);
-                  await DBProvider.db.insertEncuestados(dataEncuestado[0]);
-                  List<EncuestadoModel> respuesta = await DBProvider.db.getLastEncuestado();
-                  print(respuesta);
+                  if(_selectCodProvincia == "" &&  _selectCodDistritoManual == "" && _selectCodCentroPoblado == ""){
+                    modalWarningAmbito();
+                  } else if(_selectCodProvincia == ""){
+                    modalWarningAmbito();
+                  }else if(_selectCodDistritoManual == ""){
+                    modalWarningAmbito();
+                  }else if(_selectCodCentroPoblado == ""){
+                    modalWarningAmbito();
+                  }else{
 
-                  print(idEncuestado);
-                  print(ubigeo);
+                    print(dataEncuestado);
+                    await DBProvider.db.insertEncuestados(dataEncuestado[0]);
+                    List<EncuestadoModel> respuesta = await DBProvider.db.getLastEncuestado();
+                    print(respuesta);
 
-                  confirmationModal(respuesta[0].idEncuestado, ubigeo,dataEncuestado[0]);
+                    print(idEncuestado);
+                    print(ubigeo);
+
+                    confirmationModal(respuesta[0].idEncuestado, ubigeo,dataEncuestado[0]);
+
+
+                  }
+
+                  
 
                   //Get.to(Practica());
                 },

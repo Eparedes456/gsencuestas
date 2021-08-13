@@ -39,6 +39,7 @@ class FichaPage extends StatelessWidget {
                   child: TextField(
                     controller: _.controllerobservacion,
                     maxLines: 3,
+                    textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15)
@@ -106,7 +107,7 @@ class FichaPage extends StatelessWidget {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
                                           height: 86,
-                                          width: 120,
+                                          width: 100,
                                           
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
@@ -127,14 +128,31 @@ class FichaPage extends StatelessWidget {
                                         ),
                                       ),
                 
-                                      Text('Imagen ' + (index + 1).toString()),
-                
-                                      IconButton(
-                                        icon: Icon(Icons.delete,color: Colors.redAccent,), 
-                                        onPressed: (){
+                                      //Text('Imagen ' + (index + 1).toString()),
+
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _.controllerInput[index].controller,
+                                          decoration: InputDecoration(
+                                            hintText: 'nombre de la foto'
+                                          ),
+                                        )
+                                      ),
+                                      
+                                      /*GestureDetector(
+                                        onTap: (){
+                                          _.cambiarnombreFoto(_.listMultimedia[index].idMultimedia.toString(),"");
+                                        },
+                                        child: Icon(Icons.save,color: Color.fromRGBO(0, 102, 84, 1),), 
+                                      ),*/
+                                      GestureDetector(
+                                        onTap: (){
                                           _.deleteImage(_.listMultimedia[index].idMultimedia.toString());
-                                        }
+                                        },
+                                        child: Icon(Icons.delete,color: Colors.redAccent,),
                                       )
+
+                                      
                                     ],
                                   ),
                 

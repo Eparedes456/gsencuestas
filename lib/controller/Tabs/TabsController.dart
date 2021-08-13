@@ -202,7 +202,7 @@ class TabsController extends GetxController{
         multimedia["latitud"]         =   listMultimedia[z].latitud;
         multimedia["longitud"]        =   listMultimedia[z].longitud;
         multimedia["url"]             =   listMultimedia[z].tipo;
-      
+        multimedia["nombre"]          =   listMultimedia[z].nombre;
         listMultimediaMap.add(
           multimedia
         );

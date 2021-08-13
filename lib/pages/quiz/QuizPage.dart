@@ -562,6 +562,7 @@ IntegerDecimalWidget(
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: TextField(
+                        textInputAction: TextInputAction.done,
                         maxLength: maxLength == null || int.parse(maxLength) == 0
                             ? 100
                             : int.parse(maxLength),
@@ -712,6 +713,7 @@ TextFieldWidget1(String enunciado, String numPregunta, QuizController _,
                 Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: TextField(
+                    textInputAction: TextInputAction.done,
                     controller: _.controllerInput[i].controller,
                     decoration:
                         InputDecoration(hintText: 'Ingrese su respuesta'),

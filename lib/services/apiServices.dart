@@ -562,6 +562,37 @@ class ApiServices {
     }
   }
 
+  getVersionsApp()async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "versiones");
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+
+      return decodedData;
+    } else if (response.statusCode == 401) {
+      return 1;
+    } else if (response.statusCode == 500) {
+      return 2;
+    } else {
+      return 3;
+    }
+
+
+  }
+
+
+
   /* Funcion Post */
 
   testPost() async {

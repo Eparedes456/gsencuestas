@@ -27,11 +27,12 @@ class MultimediaModel{
   String latitud;
   String longitud;
   String fecha_capturada;
+  String nombre;
 
   MultimediaModel(
     {
 
-      this.idMultimedia, this.idFicha, this.tipo, this.latitud, this.longitud,this.fecha_capturada
+      this.idMultimedia, this.idFicha, this.tipo, this.latitud, this.longitud,this.fecha_capturada,this.nombre
 
     }
 
@@ -47,8 +48,8 @@ class MultimediaModel{
     tipo                    : json["tipo"],
     latitud                 : json['latitud'],
     longitud                : json['longitud'],
-    fecha_capturada         : json['fecha_capturada']   
-    
+    fecha_capturada         : json['fecha_capturada'],   
+    nombre                  : json['nombre'] 
                
 
   );
@@ -65,7 +66,8 @@ class MultimediaModel{
       'tipo'            :   tipo,
       'latitud'         :   latitud,
       'longitud'        :   longitud,
-      'fecha_capturada' :   fecha_capturada
+      'fecha_capturada' :   fecha_capturada,
+      'nombre'          :   nombre
 
     };
 

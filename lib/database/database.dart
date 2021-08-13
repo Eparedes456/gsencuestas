@@ -233,6 +233,7 @@ class DBProvider {
             tipo TEXT,
             latitud TEXT,
             longitud TEXT,
+            nombre TEXT,
             fecha_captura TEXT,
             estado TEXT
 
@@ -1091,6 +1092,24 @@ class DBProvider {
     return multimediaList;
   }
 
+  /*  ultimo multimedia*/
+
+  getLastMultimediaxFicha(String idFicha) async {
+    print(idFicha);
+    final db = await database;
+    var response = await db.rawQuery('''
+      SELECT MAX(idMultimedia) FROM multimedia WHERE idFicha = $idFicha
+      
+      ''');
+
+    List<MultimediaModel> multimediaList = response.isNotEmpty
+        ? response.map((e) => MultimediaModel.fromMap(e)).toList()
+        : [];
+
+    return multimediaList;
+  }
+
+
   /*Consulta insertar todas las multimedias */
 
   insertMultimedia(String idFicha, String tipo, String fecha_captura) async {
@@ -1115,6 +1134,15 @@ class DBProvider {
 
     print(response);
     return response;
+  }
+
+  updateMultimedia(String idMultimedia, String name)async{
+    final db = await database;
+    var response = await db.rawQuery(
+      '''
+      UPDATE multimedia SET  nombre = '$name' WHERE idMultimedia = '$idMultimedia'
+      '''
+    );
   }
 
   searchProyecto(String value) async {

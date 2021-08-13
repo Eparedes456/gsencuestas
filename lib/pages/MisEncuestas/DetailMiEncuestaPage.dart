@@ -269,7 +269,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             SizedBox(
                               height: 8,
                             ),
-                            Row(
+                            /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
@@ -286,7 +286,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
                             ),
                             SizedBox(
                               height: 8,
-                            ),
+                            ),*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

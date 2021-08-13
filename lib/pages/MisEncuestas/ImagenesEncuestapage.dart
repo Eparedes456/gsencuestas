@@ -30,17 +30,27 @@ class ImagenesEncuesta extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)
                   ),
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15),
-                      image: DecorationImage(
-                        image:  MemoryImage(photoBase64),  //NetworkImage('https://upload.wikimedia.org/wikipedia/commons/5/53/Vaporwave-4K-Wallpapers.jpg') //MemoryImage(_.photoBase64)  
-                        fit: BoxFit.cover
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image:  MemoryImage(photoBase64),  //NetworkImage('https://upload.wikimedia.org/wikipedia/commons/5/53/Vaporwave-4K-Wallpapers.jpg') //MemoryImage(_.photoBase64)  
+                            fit: BoxFit.cover
+                          )
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(_.lisMultimedia[i].nombre),
                       )
-                    ),
+                    ],
                   ),
                 ),
               );

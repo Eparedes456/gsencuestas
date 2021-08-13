@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Principal/PrincipalController.dart';
 import 'package:gsencuesta/model/Proyecto/ProyectoModel.dart';
+import 'package:gsencuesta/pages/Practica/Practica.dart';
 
 class PrincipalPage extends StatelessWidget {
   @override
@@ -259,7 +261,7 @@ class PrincipalPage extends StatelessWidget {
                                 padding: EdgeInsets.only(
                                     left: 20, right: 20, top: 8),
                                 child: Text(
-                                  'Presione en uno de los proyectos , para mostrar las encuestas correspondientes.',
+                                  'Presione en la parte superior para mostrar las encuestas correspondientes.',
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -277,8 +279,8 @@ class PrincipalPage extends StatelessWidget {
                                         'https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}');
                                     return GestureDetector(
                                       onTap: () {
-                                        _.navigateToEncuesta(
-                                            _.listEncuesta[index]);
+                                        _.navigateToEncuesta(_.listEncuesta[index]);
+                                        //Get.to(Practica());
                                       },
                                       child: Stack(
                                         children: [
