@@ -277,7 +277,9 @@ DatePickWidget(String enunciado,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
 
@@ -332,7 +334,9 @@ ImageWidget(String enunciado,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -422,7 +426,9 @@ CustomTextField(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -521,7 +527,9 @@ IntegerDecimalWidget(
                           '${_.bloque}',
                           style: TextStyle(
                               color: Color.fromRGBO(0, 102, 84, 1),
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18
+                          ),
                         ),
                       ),
 
@@ -644,7 +652,9 @@ Note(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -662,7 +672,8 @@ Note(
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Poppins',
-                          fontSize: 16),
+                          fontSize: 18
+                      ),
                     ),
                   ),
                   Padding(
@@ -704,7 +715,8 @@ TextFieldWidget1(String enunciado, String numPregunta, QuizController _,
                     style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Poppins',
-                        fontSize: 16),
+                        fontSize: 18
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -754,7 +766,9 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                  ),
                 ),
               ),
         Padding(
@@ -773,7 +787,7 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Poppins',
-                            fontSize: 16),
+                            fontSize: 18),
                       ),
                     ),
                     SizedBox(
@@ -823,7 +837,9 @@ MultiSelectWidget(String enunciado, int id_pregunta, QuizController _,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -895,7 +911,9 @@ Ubigeo(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
 

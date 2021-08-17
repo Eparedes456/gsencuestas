@@ -16,6 +16,7 @@ import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
 import 'package:gsencuesta/model/Provincia/ProvinciaModel.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/Practica/Practica.dart';
@@ -192,15 +193,24 @@ class EncuestaController extends GetxController {
         var nombreEncuestado = _listEncuestado[0].nombre.toString() +
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
+
+         List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
+        print(listRespuesta);
+
         listdata.forEach((item) {
-          _listEncuesta.add(MisEncuestasModel(
-              idEncuesta: item["idEncuesta"].toString(),
-              idProyecto: item["idProyecto"].toString(),
-              nombreEncuestado: nombreEncuestado,
-              nombreEncuesta: item["titulo"],
-              fechaInicio: item["fechaInicio"],
-              idFicha: element.idFicha.toString(),
-              esRetomado: item["esRetomado"].toString()));
+          _listEncuesta.add(
+            MisEncuestasModel(
+              idEncuesta              : item["idEncuesta"].toString(),
+              idProyecto              : item["idProyecto"].toString(),
+              nombreEncuestado        : nombreEncuestado,
+              nombreEncuesta          : item["titulo"],
+              fechaInicio             : item["fechaInicio"],
+              idFicha                 : element.idFicha.toString(),
+              esRetomado              : item["esRetomado"].toString(),
+              preguntasRespondidas    : listRespuesta.length.toString(),
+              totalPreguntas          : _listPregunta.length.toString(),
+            )
+          );
         });
       }
 
@@ -883,6 +893,7 @@ class EncuestaController extends GetxController {
     
   }
 
+
   pendientesEncuestas() async {
     _listFichas = [];
     _listFichas = await DBProvider.db.fichasPendientes("P");
@@ -898,15 +909,24 @@ class EncuestaController extends GetxController {
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
 
+        List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
+        print(listRespuesta);
+
         listdata.forEach((item) {
-          _listEncuesta.add(MisEncuestasModel(
-              idEncuesta: item["idEncuesta"].toString(),
-              idProyecto: item["idProyecto"].toString(),
-              nombreEncuestado: nombreEncuestado,
-              nombreEncuesta: item["titulo"],
-              fechaInicio: item["fechaInicio"],
-              idFicha: element.idFicha.toString(),
-              esRetomado: item["esRetomado"].toString()));
+          _listEncuesta.add(
+            MisEncuestasModel(
+              idEncuesta:             item["idEncuesta"].toString(),
+              idProyecto:             item["idProyecto"].toString(),
+              nombreEncuestado:       nombreEncuestado,
+              nombreEncuesta:         item["titulo"],
+              fechaInicio:            item["fechaInicio"],
+              idFicha:                element.idFicha.toString(),
+              esRetomado:             item["esRetomado"].toString(),
+              preguntasRespondidas:   listRespuesta.length.toString(),
+              totalPreguntas:         _listPregunta.length.toString(),
+            )
+          );
+              
         });
       }
 

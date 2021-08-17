@@ -9,6 +9,7 @@ import 'package:gsencuesta/model/Encuestado/EncuestadoModel.dart';
 import 'package:gsencuesta/model/Ficha/FichasModel.dart';
 import 'package:gsencuesta/model/MisEncuestas/MisEncuestasModel.dart';
 import 'package:gsencuesta/model/Pregunta/PreguntaModel.dart';
+import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:gsencuesta/pages/MisEncuestas/MisEncuestasPage.dart';
 import 'package:gsencuesta/pages/Retomar/RetomarEncuestaPage.dart';
@@ -94,20 +95,25 @@ class MisEncuestasController extends GetxController{
           var nombreEncuestado = _listEncuestado[0].nombre.toString() + " " + _listEncuestado[0].apellidoPaterno.toString();
           print(nombreProyecto);
 
+          List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
+          print(listRespuesta);
+
           for( var element2 in _listDbEncuesta){
 
             _listMisEncuestas.add(
 
               MisEncuestasModel(
                 
-                idFicha         : idFicha,
-                idProyecto      : element2.idProyecto.toString(),
-                idEncuesta      : element2.idEncuesta.toString(),
-                nombreEncuestado: nombreEncuestado,
-                nombreProyecto  : nombreProyecto,
-                nombreEncuesta  : element2.titulo,
-                fechaInicio     : element.fecha_inicio,
-                estadoFicha     : element.estado  
+                idFicha               : idFicha,
+                idProyecto            : element2.idProyecto.toString(),
+                idEncuesta            : element2.idEncuesta.toString(),
+                nombreEncuestado      : nombreEncuestado,
+                nombreProyecto        : nombreProyecto,
+                nombreEncuesta        : element2.titulo,
+                fechaInicio           : element.fecha_inicio,
+                estadoFicha           : element.estado,
+                preguntasRespondidas  : listRespuesta.length.toString(),
+                totalPreguntas        : _nroTotalPreguntas
 
               )
 

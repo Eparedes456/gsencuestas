@@ -333,7 +333,7 @@ class MisEncuestas extends StatelessWidget {
                                                       ),
 
                                                       Padding(
-                                                        padding:  EdgeInsets.only(left: 10,bottom: 10),
+                                                        padding:  EdgeInsets.only(left: 10,bottom: 0),
                                                         child: Row(
                                                         children: [
 
@@ -352,6 +352,17 @@ class MisEncuestas extends StatelessWidget {
                                                         ],
                                                     ),
                                                       ),
+
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(left: 10,bottom: 10),
+                                                        child: Text(
+                                                          'Se respondió ${_.listMisEncuestas[index].preguntasRespondidas} de ${_.listMisEncuestas[index].totalPreguntas} preguntas',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.grey[600]
+                                                          ),
+                                                        ),
+                                                      )
 
                                                     ],
                                                   ),

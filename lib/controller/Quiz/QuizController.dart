@@ -107,7 +107,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     preguntas.asMap().forEach((index, element) {
       controllerInput.add(InputTextfield(
           element.id_pregunta.toString(),
-          element.defecto == "" || element.defecto == null || element.defecto == "-" ? TextEditingController() : TextEditingController(text: element.defecto),
+          element.defecto == "" || element.defecto == null || element.defecto == "-" || element.defecto == "."? TextEditingController() : TextEditingController(text: element.defecto),
           element.bind_name,
           index,
           element.tipo_pregunta,

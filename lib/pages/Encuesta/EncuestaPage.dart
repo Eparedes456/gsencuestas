@@ -310,31 +310,13 @@ class EncuestaPage extends StatelessWidget {
                                                                   ],
                                                                 ),
 
-                                                                /*MaterialButton(
-                                                      height: 40,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(12)
-                                                      ),
-                                                      color: Colors.blue,
-                                                      onPressed: (){
-                                                        
-                                                        _.navigateToRetomarEncuesta(_.listEncuesta[index].idFicha,_.listEncuesta[index].titulo, _.listEncuesta[index].idEncuesta.toString());
+                                                                Text(
+                                                                  'Se respondió ${_.listEncuesta[index].preguntasRespondidas} de ${_.listPregunta.length} preguntas',
+                                                                  style: TextStyle(
+                                                                    fontSize: 11
+                                                                  ),
+                                                                )
 
-                                                      },
-                                                      child: Center(
-                                                        child: Padding(
-                                                          padding:  EdgeInsets.only(left: 10,right: 10),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                            children: [
-                                                              Icon(Icons.edit,color: Colors.white,),
-                                                              //SizedBox(width: 10,),
-                                                              Text('Retomar',style: TextStyle(color: Colors.white),),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )*/
                                                               ],
                                                             ),
                                                           ),

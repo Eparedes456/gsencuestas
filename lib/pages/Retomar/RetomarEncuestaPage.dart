@@ -237,7 +237,9 @@ ImageWidget(String enunciado,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -330,7 +332,9 @@ DatePickWidget(String enunciado,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
 
@@ -374,7 +378,9 @@ SelectSimpleWidget(String enunciado, int id_pregunta, RetommarController _,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -439,7 +445,9 @@ MultiSelectWidget(String enunciado, int id_pregunta, RetommarController _,
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -514,7 +522,9 @@ CustomTextField(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -616,7 +626,9 @@ IntegerDecimalWidget(
                         '${_.bloque}',
                         style: TextStyle(
                             color: Color.fromRGBO(0, 102, 84, 1),
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18
+                        ),
                       ),
                     ),
               Padding(
@@ -724,7 +736,9 @@ Note(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
         Padding(
@@ -835,7 +849,9 @@ Ubigeo(
                   '${_.bloque}',
                   style: TextStyle(
                       color: Color.fromRGBO(0, 102, 84, 1),
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                  ),
                 ),
               ),
 

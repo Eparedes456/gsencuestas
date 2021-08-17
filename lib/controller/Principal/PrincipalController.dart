@@ -30,6 +30,7 @@ import 'package:gsencuesta/pages/Proyecto/ProyectoPage.dart';
 import 'package:gsencuesta/services/apiServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io' show Platform;
 
 import 'package:url_launcher/url_launcher.dart';
@@ -99,12 +100,17 @@ class PrincipalController extends GetxController {
   checkVersion()async{
     
     SharedPreferences pref = await SharedPreferences.getInstance();
+    
+    final info = await PackageInfo.fromPlatform();
+    print(info);
 
-    var versionAndroid = "2.0";
-    var versioniOS =  "2.2";
-    var isDrastico = false;
+    var versionAndroid = info.version == null || info.version == "" ? "" :info.version ;
+    var versioniOS =  info.version == null || info.version == "" ? "" :info.version;
+    
 
     var response = await apiConexion.getVersionsApp();
+
+    var isDrastico = false;
 
     var prefresp = pref.getBool('drastico');
 
