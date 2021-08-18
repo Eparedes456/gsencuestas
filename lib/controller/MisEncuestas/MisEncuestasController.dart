@@ -97,6 +97,17 @@ class MisEncuestasController extends GetxController{
 
           List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
           print(listRespuesta);
+          List<int> respuestas = [];
+          listRespuesta.forEach((element) {
+            respuestas.add(element.idPregunta);
+          });
+          var respuestasLong = respuestas.toSet().toList();
+          print(respuestasLong);
+          //print(_nroTotalPreguntasa);
+          var calPercent =  ( respuestasLong.length *  100 ) / _listPreguntas.length;
+          print('Porcentaje '  + calPercent.toStringAsFixed(0));
+          var porcentaje =  ( double.parse(calPercent.toStringAsFixed(0)))  / 100;
+          print(porcentaje);
 
           for( var element2 in _listDbEncuesta){
 
@@ -112,8 +123,11 @@ class MisEncuestasController extends GetxController{
                 nombreEncuesta        : element2.titulo,
                 fechaInicio           : element.fecha_inicio,
                 estadoFicha           : element.estado,
-                preguntasRespondidas  : listRespuesta.length.toString(),
-                totalPreguntas        : _nroTotalPreguntas
+                preguntasRespondidas  : respuestasLong.length.toString(),
+                totalPreguntas        : _nroTotalPreguntas,
+                percent               : porcentaje,
+                porcentaje            : calPercent.toStringAsFixed(0)
+
 
               )
 

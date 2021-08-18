@@ -178,13 +178,15 @@ class EncuestaController extends GetxController {
     await preferences.setString(
         'requeridoObservacion', encuestaRequeObservacion);
     await preferences.setString('requeridoMultimedia', encuestaRequeMultimedia);
-
+    await getPreguntas(encuesta.idEncuesta.toString());
     _listFichas = await DBProvider.db.fichasPendientes("P");
+    
 
     print(_listFichas.length);
 
     if (_listFichas.length > 0) {
       for (var element in _listFichas) {
+
         var listdata =
             await DBProvider.db.getOnesEncuesta(element.idEncuesta.toString());
         var idEncuestado3 = element.idEncuestado.toString();
@@ -193,9 +195,27 @@ class EncuestaController extends GetxController {
         var nombreEncuestado = _listEncuestado[0].nombre.toString() +
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
+        
+        String idEncuesta = element.idEncuesta.toString();
+        List<PreguntaModel> _listPreguntas1 = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+        String _nroTotalPreguntasa = _listPreguntas1.length.toString();
 
-         List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
+        List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
         print(listRespuesta);
+
+        List<int> respuestas = [];
+        listRespuesta.forEach((element) {
+          respuestas.add(element.idPregunta);
+        });
+        var respuestasLong = respuestas.toSet().toList();
+        print(respuestasLong);
+        print(_nroTotalPreguntasa);
+
+
+        var calPercent =  ( respuestasLong.length *  100 ) / _listPreguntas1.length;
+        print('Porcentaje '  + calPercent.toStringAsFixed(0));
+        var porcentaje =  ( double.parse(calPercent.toStringAsFixed(0)))  / 100;
+        print(porcentaje);
 
         listdata.forEach((item) {
           _listEncuesta.add(
@@ -207,8 +227,10 @@ class EncuestaController extends GetxController {
               fechaInicio             : item["fechaInicio"],
               idFicha                 : element.idFicha.toString(),
               esRetomado              : item["esRetomado"].toString(),
-              preguntasRespondidas    : listRespuesta.length.toString(),
-              totalPreguntas          : _listPregunta.length.toString(),
+              preguntasRespondidas    : respuestasLong.length.toString(),
+              totalPreguntas          : _listPreguntas1.length.toString(),
+              percent                 : porcentaje,
+              porcentaje              : calPercent.toStringAsFixed(0) 
             )
           );
         });
@@ -220,7 +242,7 @@ class EncuestaController extends GetxController {
       _encuestasPendientes = false;
     }
 
-    await getPreguntas(encuesta.idEncuesta.toString());
+    
 
     update();
   }
@@ -909,8 +931,25 @@ class EncuestaController extends GetxController {
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
 
+        List<PreguntaModel> _listPreguntas1 = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
+        String _nroTotalPreguntasa = _listPreguntas1.length.toString();
+
+
         List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
         print(listRespuesta);
+
+        List<int> respuestas = [];
+        listRespuesta.forEach((element) {
+          respuestas.add(element.idPregunta);
+        });
+        var respuestasLong = respuestas.toSet().toList();
+        print(respuestasLong);
+        print(_nroTotalPreguntasa);
+
+        var calPercent =  ( respuestasLong.length *  100 ) / _listPreguntas1.length;
+        print('Porcentaje '  + calPercent.toStringAsFixed(0));
+        var porcentaje =  ( double.parse(calPercent.toStringAsFixed(0)))  / 100;
+        print(porcentaje);
 
         listdata.forEach((item) {
           _listEncuesta.add(
@@ -922,8 +961,10 @@ class EncuestaController extends GetxController {
               fechaInicio:            item["fechaInicio"],
               idFicha:                element.idFicha.toString(),
               esRetomado:             item["esRetomado"].toString(),
-              preguntasRespondidas:   listRespuesta.length.toString(),
-              totalPreguntas:         _listPregunta.length.toString(),
+              preguntasRespondidas:   respuestasLong.length.toString(),
+              totalPreguntas:         _listPreguntas1.length.toString(),
+              percent                 : porcentaje,
+              porcentaje              : calPercent.toStringAsFixed(0) 
             )
           );
               
@@ -961,7 +1002,18 @@ class EncuestaController extends GetxController {
     };
 
     print(data);
-    Get.to(RetomarEncuestaPage(), arguments: data);
+    var result = await Get.to(RetomarEncuestaPage(), arguments: data);
+
+    if (result == "SI") {
+        print('Actualizar la vista mostrando las encuestas pendientes');
+        
+        _listEncuesta = [];
+        _encuestasPendientes = false;
+        update();
+        await pendientesEncuestas();
+    }
+
+
   }
 
   modalDelete(String idFicha) {

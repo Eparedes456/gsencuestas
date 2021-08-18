@@ -32,11 +32,14 @@ class MisEncuestasModel{
   String esRetomado;
   String preguntasRespondidas;
   String totalPreguntas;
+  double percent;
+  String porcentaje;
 
   MisEncuestasModel({
 
     this.idFicha, this.idProyecto, this.idEncuesta, this.nombreEncuestado ,this.nombreProyecto, this.nombreEncuesta, this.nroPreguntas,
-    this.fechaInicio, this.imagen ,this.estadoFicha,this.esRetomado,this.preguntasRespondidas,this.totalPreguntas
+    this.fechaInicio, this.imagen ,this.estadoFicha,this.esRetomado,this.preguntasRespondidas,this.totalPreguntas,
+    this.percent,this.porcentaje
 
   });
 
@@ -53,8 +56,7 @@ class MisEncuestasModel{
     nroPreguntas        : json['nroPreguntas'],
     fechaInicio         : json['fechaInicio'],
     imagen              : json['imagen'],
-    estadoFicha         : json['createdAt'] ,
-                    
+    estadoFicha         : json['createdAt'] ,            
 
   );
 
@@ -77,7 +79,9 @@ class MisEncuestasModel{
       'updated_at'            : estadoFicha,
       'esRetomado'            : esRetomado,
       'preguntasRespondidas'  : preguntasRespondidas,
-      'totalPreguntas'        : totalPreguntas
+      'totalPreguntas'        : totalPreguntas,
+      'percent'               : percent,
+      'porcentaje'            : porcentaje
 
 
     };

@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/MisEncuestas/MisEncuestasController.dart';
 import 'package:gsencuesta/pages/MisEncuestas/DetailMiEncuestaPage.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class MisEncuestas extends StatelessWidget {
   @override
@@ -190,13 +191,29 @@ class MisEncuestas extends StatelessWidget {
                                                     height: 130,
                                                     width: 70,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.grey,
+                                                      color: Colors.white,
                                                       borderRadius: BorderRadius.circular(10)
                                                       //borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
                                                     ),
-                                                    child: Center(
+                                                    child: CircularPercentIndicator(
+                                                              radius: 60,
+                                                              lineWidth: 5,
+                                                              animation: true,
+                                                              animationDuration: 500,
+                                                              percent: _.listMisEncuestas[index].percent,
+                                                              center: Text(
+                                                                _.listMisEncuestas[index].porcentaje + '%',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 16
+                                                                ),
+                                                              ),
+                                                              progressColor:  Colors.green,
+                                                            )
+                                                    
+                                                    /*Center(
                                                       child: Icon(Icons.content_paste,size: 30,color: Colors.white),
-                                                    ),
+                                                    ),*/
                                                     
                                                     
                                                     

@@ -10,6 +10,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Encuesta/EncuestaController.dart';
 import 'package:gsencuesta/pages/quiz/QuizPage.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class EncuestaPage extends StatelessWidget {
   @override
@@ -238,19 +239,35 @@ class EncuestaPage extends StatelessWidget {
                                                             width: 60,
                                                             decoration: BoxDecoration(
                                                                 color:
-                                                                    Colors.grey,
+                                                                    Colors.white,
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
                                                                             10)),
-                                                            child: Center(
+                                                            child: CircularPercentIndicator(
+                                                              radius: 60,
+                                                              lineWidth: 5,
+                                                              animation: true,
+                                                              animationDuration: 500,
+                                                              percent: _.listEncuesta[index].percent,
+                                                              center: Text(
+                                                                _.listEncuesta[index].porcentaje + '%',
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 16
+                                                                ),
+                                                              ),
+                                                              progressColor:  Colors.green,
+                                                            )
+                                                            
+                                                            /*Center(
                                                               child: Icon(
                                                                   Icons
                                                                       .content_paste,
                                                                   size: 30,
                                                                   color: Colors
                                                                       .white),
-                                                            ),
+                                                            ),*/
                                                           ),
                                                         ),
                                                         Expanded(
@@ -311,7 +328,7 @@ class EncuestaPage extends StatelessWidget {
                                                                 ),
 
                                                                 Text(
-                                                                  'Se respondió ${_.listEncuesta[index].preguntasRespondidas} de ${_.listPregunta.length} preguntas',
+                                                                  'Se respondió ${_.listEncuesta[index].preguntasRespondidas} de ${_.listEncuesta[index].totalPreguntas} preguntas',
                                                                   style: TextStyle(
                                                                     fontSize: 11
                                                                   ),
