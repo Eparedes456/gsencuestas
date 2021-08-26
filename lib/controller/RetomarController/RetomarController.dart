@@ -44,12 +44,27 @@ class RetommarController extends GetxController {
 
       print(respuestaBd);
     });
+
+    Scrollcontroller.addListener(_scrollListener);
+
+    
   }
 
   @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
+  }
+
+  final Scrollcontroller = ScrollController(initialScrollOffset:0.0);
+  double _scrollPosition;
+
+   _scrollListener() {
+ 
+   _scrollPosition = Scrollcontroller.position.pixels;
+   print(_scrollPosition);
+   update();
+ 
   }
 
   String _titulo = "";

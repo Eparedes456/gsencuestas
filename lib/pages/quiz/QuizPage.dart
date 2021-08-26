@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/CoordenadasWidget.dart';
@@ -27,6 +28,7 @@ class QuizPage extends StatelessWidget {
         child: Scaffold(
             backgroundColor: Colors.grey[200],
             appBar: AppBar(
+              elevation: 0,
               title: Text(_.tituloEncuesta),
               centerTitle: true,
               leading: IconButton(
@@ -43,28 +45,79 @@ class QuizPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 10,
-                        ),
+                        
 
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Encuestado: ${_.encuestadoNombreCompleto}',style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700),),
-                              Text('Dni : ${_.numDOCUMENTO}',style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700),),
-                              Text('Direccion: ${_.direccionReniec}',style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700),),
-                            ],
+                        Container(
+                          color: Color.fromRGBO(0, 102, 84, 1),
+                          width: double.infinity,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    Row(
+                                      children: [
+                                        
+                                        Icon(
+                                          FontAwesomeIcons.solidUserCircle,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 8,),
+                                        Text('${_.encuestadoNombreCompleto}',style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700),),
+
+                                      ],
+                                    ),
+                                    
+
+
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          FontAwesomeIcons.idCard,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 8,),
+                                        Text('${_.numDOCUMENTO}',style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700),),
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
+                                SizedBox(height: 8,),
+                                
+                                Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.mapPin,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 8,),
+                                    Text('${_.direccionReniec}',style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700),),
+                                  ],
+                                ),
+                                  SizedBox(height: 8,),
+                              ],
+                            ),
                           ),
                         ),
                         
@@ -84,6 +137,7 @@ class QuizPage extends StatelessWidget {
                         ),
                         Expanded(
                             child: SingleChildScrollView(
+                          
                           child: Column(
                             children: [
                               for (var i = 0; i < _.preguntas.length; i++) ...{
@@ -513,6 +567,7 @@ IntegerDecimalWidget(
   }
 
   return Padding(
+    
     padding: const EdgeInsets.only(left: 10,right: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
