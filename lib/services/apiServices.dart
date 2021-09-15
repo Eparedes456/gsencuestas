@@ -562,6 +562,40 @@ class ApiServices {
     }
   }
 
+  getMetaData(String idUsuario)async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    var url =Uri.parse(base_url_dev + "usuario/metaData/$idUsuario");
+
+    var response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        //'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var decodedData = json.decode(utf8.decode(response.bodyBytes));
+      String data = decodedData['data'];
+      var varia2 = json.decode(data);
+
+      print(varia2);
+
+      return varia2;
+    } else if (response.statusCode == 401) {
+      return 1;
+    } else if (response.statusCode == 500) {
+      return 2;
+    } else {
+      return 3;
+    }
+
+
+  }
+
   getVersionsApp()async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();

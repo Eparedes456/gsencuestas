@@ -11,7 +11,9 @@ class SimpleSelectRetomar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RetommarController>(
+     
       init: RetommarController(),
+      //id: 'simpleSelect',
       builder: (_) => Column(
         children: [
           ListView.builder(
@@ -26,33 +28,35 @@ class SimpleSelectRetomar extends StatelessWidget {
                             id_pregunta: id_pregunta,
                             index: index,
                           );
-                          
-                          
-                          
-
                         }else{
-
                           return Container();
-
                         }
 
                         
                       }
           ),
 
+          //_.widgetSimpleWithOption(id_pregunta)
+
           for (var i = 0; i < _.opcionesPreguntas.length; i++)...{
                   
-                  if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
+            if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
 
-                    if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+              if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+
+                
 
                       Padding(
                       padding:  EdgeInsets.only(left: 20,right: 20),
                       child: TextFormField(
-                        controller: _.controller = TextEditingController(text: _.opcionesPreguntas[i].valor),
+                        controller: _.opcionesPreguntas[i].valor == "" || _.opcionesPreguntas[i].valor ==  null  ? _.controller : TextEditingController(text: _.opcionesPreguntas[i].valor),
                         onFieldSubmitted: (value){
                           //print(value);
-                          _.saveRequireObservacion( _.opcionesPreguntas[i].idPregunta.toString(), _.opcionesPreguntas[i].idOpcion.toString() , value);
+                          _.saveRequireObservacion( 
+                            _.opcionesPreguntas[i].idPregunta.toString(),
+                            _.opcionesPreguntas[i].idOpcion.toString() , 
+                            value
+                          );
                         },
                         decoration: InputDecoration(
                           hintText: 'Ingrese observación'
@@ -61,9 +65,10 @@ class SimpleSelectRetomar extends StatelessWidget {
                       ),
                     )
                     
-                    }
-                  }
-                }
+              }
+            }
+          }
+          
         ],
       ),
     );
@@ -79,7 +84,7 @@ class Opciones extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<RetommarController>(
       init: RetommarController(),
-      id: 'simple',
+      id: 'opciones',
       builder: (_)=> Padding(
         padding:  EdgeInsets.only(left: 20,right:20,bottom: 8),
         child: GestureDetector(

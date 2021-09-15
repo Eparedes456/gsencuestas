@@ -40,6 +40,7 @@ class UsuarioModel{
   String fechaAlta;
   String perfil;
   String estado;
+  String metaData;
   String createdAt;
   
   
@@ -47,7 +48,7 @@ class UsuarioModel{
   UsuarioModel(
       {
         this.idUsuario,this.nombre,this.apellidoPaterno,this.apellidoMaterno,this.dni,this.email,this.username,this.password,
-        this.foto, this.fechaAlta,this.perfil,this.estado,this.createdAt
+        this.foto, this.fechaAlta,this.perfil,this.estado,this.metaData,this.createdAt
         
       }
   );
@@ -67,6 +68,7 @@ class UsuarioModel{
     estado              : json['estado'],
     fechaAlta           : json['fechaAlta'],
     perfil              : json['perfil'],
+    metaData            : json['metaData'],
     createdAt           : json['createdAt'],
     
   );
@@ -74,8 +76,6 @@ class UsuarioModel{
   Map<String,dynamic> toMap(){
 
     return{
-
-      
       'idUsuario'           : idUsuario,
       'nombre'              : nombre,
       'apellidoPaterno'     : apellidoPaterno,
@@ -88,9 +88,8 @@ class UsuarioModel{
       'estado'              : estado,
       'fechaAlta'           : fechaAlta,
       'perfil'              : perfil,
+      'metaData'            : metaData,
       'createdAt'           : createdAt,
-         
-
     };
 
 

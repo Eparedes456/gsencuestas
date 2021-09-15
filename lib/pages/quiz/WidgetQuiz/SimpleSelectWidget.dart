@@ -44,14 +44,15 @@ class SimpleSelectPage extends StatelessWidget {
 
                         
                       }
-                    ),
+          ),
 
-             
-                for (var i = 0; i < _.opcionesPreguntas.length; i++)...{
+          
+
+          for (var i = 0; i < _.opcionesPreguntas.length; i++)...{
                   
-                  if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
+            if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
 
-                    if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+              if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
 
                       Padding(
                       padding:  EdgeInsets.only(left: 20,right: 20),
@@ -59,7 +60,11 @@ class SimpleSelectPage extends StatelessWidget {
                         //controller: ,
                         onFieldSubmitted: (value){
                           //print(value);
-                          _.saveRequireObservacion( _.opcionesPreguntas[i].idPregunta.toString(), _.opcionesPreguntas[i].idOpcion.toString() , value);
+                          _.saveRequireObservacion( 
+                            _.opcionesPreguntas[i].idPregunta.toString(),
+                            _.opcionesPreguntas[i].idOpcion.toString() , 
+                            value
+                          );
                         },
                         decoration: InputDecoration(
                           hintText: 'Ingrese observación'
@@ -68,9 +73,9 @@ class SimpleSelectPage extends StatelessWidget {
                       ),
                     )
                     
-                    }
-                  }
-                }
+              }
+            }
+          }
 
             
             

@@ -249,7 +249,7 @@ class LoginController extends GetxController{
 
       if( conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile    /*connectionInternet == DataConnectionStatus.connected*/ ){
         loading('Verificando las credenciales',' Cargando');
-        print('Estoy conectado a internet, consulto a la api');
+        //print('Estoy conectado a internet, consulto a la api');
         
         loginApi();
 
@@ -275,14 +275,15 @@ class LoginController extends GetxController{
 
             var idUsuario     = response[0].idUsuario;
             var nombreUser    = response[0].nombre + ' ' + response[0].apellidoPaterno + ' ' + response[0].apellidoMaterno;
-            var usernamex     = response[0].username; 
+            var usernamex     = response[0].username;
+            var metaDataUser  = response[0].metaData; 
 
             _username.clear();
             _password.clear();
             preferences.setString('idUsuario', idUsuario.toString());
             preferences.setString('nombreUser', nombreUser);
-            //var idInstitucion = resultado["user"]["idInstitucion"].toString();
             preferences.setString('loginUser', usernamex);
+            preferences.setString('metaDataUser', metaDataUser);
             //preferences.setString('idInstitucion', idInstitucion);
             Get.offAll(TabsPage());
 
@@ -455,17 +456,16 @@ class LoginController extends GetxController{
       var nombreUser    = resultado["user"]["nombreCompleto"];
       var usernamex     = resultado["user"]["username"]; 
       var idInstitucion = resultado["user"]["idInstitucion"].toString();
+      var metaDataUser = resultado["user"]["metaData"].toString();
       _username.clear();
       _password.clear();
-      print(token);
-      print(idUsuario);
-      print(nombreUser);
-
+      
       preferences.setString('token', token);
       preferences.setString('idUsuario', idUsuario.toString());
       preferences.setString('nombreUser', nombreUser);
       preferences.setString('loginUser', usernamex);
       preferences.setString('idInstitucion', idInstitucion);
+      preferences.setString('metaDataUser', metaDataUser);
       Get.to(TabsPage());
 
     }

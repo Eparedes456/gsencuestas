@@ -53,65 +53,9 @@ class RetomarEncuestaPage extends StatelessWidget {
                     ),
                     Expanded(
                         child: 
-                        /*ListView.builder(
-                          controller: _.Scrollcontroller,
-                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: _.preguntas.length,
-                          
-                          // ignore: missing_return
-                          itemBuilder: (context,i){
-                            print("$i - ${_.Scrollcontroller.offset}");
-                            if(_.preguntas[i].tipo_pregunta =="date"){
-
-                               return DatePickWidget(
-                                      _.preguntas[i].enunciado,
-                                      _.preguntas[i].id_pregunta,
-                                      _,
-                                      context,
-                                      (i + 1).toString(),
-                                      bloque,
-                                        _.preguntas[i].bloqueDescripcion,
-                                        "",
-                                        i,
-                                        "",
-                                        "",
-                                        "",
-                                        _.preguntas[i].bind_type
-                                    );
-
-                            }else if(_.preguntas[i].tipo_pregunta =="image"){
-                             return  ImageWidget(
-                                      _.preguntas[i].enunciado,
-                                      _.preguntas[i].id_pregunta,
-                                      _,
-                                      context,
-                                      (i + 1).toString(),
-                                      bloque,
-                                        _.preguntas[i].bloqueDescripcion,
-                                        i.toString(),
-                                        1,
-                                        "",
-                                        ""
-                                    );
-                            }else if(_.preguntas[i].tipo_pregunta == "select_one list_name"){
-
-                              return SelectSimpleWidget(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion);
-
-                            }
-
-                          }
-                        )*/
-                        
                         
                         SingleChildScrollView(
-                        controller: _.Scrollcontroller,
+                       
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         child: Column(
                           children: [
@@ -260,16 +204,20 @@ class RetomarEncuestaPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
 
-        floatingActionButton: FloatingActionButton(
+        /*floatingActionButton: FloatingActionButton(
           onPressed: (){
             _.Scrollcontroller.jumpTo(0);
           },
           child: Icon(Icons.arrow_upward),
-        ),
+        ),*/
       ),
     );
   }
 }
+
+
+
+
 
  ImageWidget(String enunciado,
     int id_pregunta,

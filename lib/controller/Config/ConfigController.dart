@@ -584,19 +584,22 @@ class ConfigController extends GetxController {
     List<UsuarioModel> _usuarios = [];
     var listUserApi = await apiConexion.getAllUsers();
     listUserApi.forEach((item) {
-      _usuarios.add(UsuarioModel(
-        idUsuario: item["idUsuario"],
-        nombre: item["nombre"],
-        apellidoPaterno: item["apellidoPaterno"],
-        apellidoMaterno: item["apellidoMaterno"],
-        dni: item["dni"],
-        email: item["email"],
-        username: item["login"],
-        password: item["password"],
-        foto: item["foto"],
-        estado: item["estado"].toString(),
-        createdAt: item["createdAt"],
-      ));
+      _usuarios.add(
+          UsuarioModel(
+          idUsuario: item["idUsuario"],
+          nombre: item["nombre"],
+          apellidoPaterno: item["apellidoPaterno"],
+          apellidoMaterno: item["apellidoMaterno"],
+          dni: item["dni"],
+          email: item["email"],
+          username: item["login"],
+          password: item["password"],
+          foto: item["foto"],
+          estado: item["estado"].toString(),
+          metaData: item["metaData"] == null ? "" : item["metaData"],
+          createdAt: item["createdAt"],
+        )
+      );
     });
     for (var i = 0; i < _usuarios.length; i++) {
       await DBProvider.db.insertUsuarios(_usuarios[i]);

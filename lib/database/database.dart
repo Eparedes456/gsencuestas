@@ -190,6 +190,7 @@ class DBProvider {
             fechaAlta TEXT,
             perfil TEXT,
             estado TEXT,
+            metaData TEXT,
             createdAt TEXT
            
 

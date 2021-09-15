@@ -38,9 +38,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     idFicha = listDataEncuesta["idFicha"];
     idEncuestado = listDataEncuesta["idEncuestado"];
     EncuestadoModel datasa = listDataEncuesta["encuestado"];
-    print(listDataEncuesta["encuestado"]);
-    print(datasa.nombre);
-
+    metaData = listDataEncuesta['metaData'];
     encuestadoNombreCompleto = datasa.nombre + " " + datasa.apellidoPaterno  + " " + datasa.apellidoMaterno;
     numDOCUMENTO = datasa.documento;
     direccionReniec = datasa.direccion;
@@ -56,7 +54,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           posicion.longitude.toString(), 'TRUE');
       List<TrackingModel> respuestaBd =
           await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
-      print(respuestaBd);
+  
     });
   }
 
@@ -78,6 +76,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   var idEncuesta;
   var idEncuestado;
   var idFicha;
+  var metaData;
 
 
   /* Datos del encuestado reiniec */
@@ -102,24 +101,43 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   getPreguntas(String idEncuesta) async {
     _opcionesPreguntas = [];
     _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
-    print(_preguntas);
 
-    preguntas.asMap().forEach((index, element) {
-      controllerInput.add(InputTextfield(
-          element.id_pregunta.toString(),
-          element.defecto == "" || element.defecto == null || element.defecto == "-" || element.defecto == "."? TextEditingController() : TextEditingController(text: element.defecto),
-          element.bind_name,
-          index,
-          element.tipo_pregunta,
-          element.calculation));
-    });
+    
+
+      preguntas.asMap().forEach((index, element) {
+
+        controllerInput.add(
+          InputTextfield(
+            element.id_pregunta.toString(),
+            element.defecto == "" || element.defecto == null || element.defecto == "-" || element.defecto == "."? TextEditingController() : TextEditingController(text: element.defecto),
+            element.bind_name,
+            index,
+            element.tipo_pregunta,
+            element.calculation));
+      });
+
+    
+      if(metaData != null && metaData != ""){
+      
+        print(metaData);
+        metaData.forEach((index,element2){
+
+          List<InputTextfield> index = controllerInput.where((element) => element.idPregunta == element2['idPregunta'].toString()).toList();
+
+          print(index[0].idPregunta);
+          index[0].controller = TextEditingController(text: element2['nombre']);
+
+        });
+
+      }
+
+     
+    
 
     var allOpciones = await DBProvider.db.getAllOpciones();
 
-    print(allOpciones);
-
     for (var i = 0; i < _preguntas.length; i++) {
-      print(_preguntas[i].id_pregunta);
+      
       var idPregunta = _preguntas[i].id_pregunta;
 
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
@@ -142,7 +160,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             requiereDescripcion: element["requiereDescripcion"]));
       });
     }
-    print(_opcionesPreguntas);
+
 
     _isLoadingData = true;
 
@@ -173,17 +191,17 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
-      print(photoBase64);
+ 
     }
 
     List<RespuestaModel> existe = await DBProvider.db.unaRespuestaFicha(idFicha, idPregunta); 
-    print(existe);
+
     if(existe.length > 0){
-      print("actualizar la respuesta");
+      
 
       var resp = await DBProvider.db.actualizarRespuestaxFicha(idPregunta, idFicha, photoBase64);
       var data = await DBProvider.db.getAllRespuestas(idFicha);
-      print(resp);
+
       files.asMap().forEach((key, value) { 
 
         if(value.idPregunta == idPregunta){
@@ -197,7 +215,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
 
     }else{
-      print("insertar nuevo valor");
+   
 
       var resp = await DBProvider.db.insertRespuesta(idPregunta, idFicha, "", photoBase64, "Imagen");
       var data = await DBProvider.db.getAllRespuestas(idFicha);
@@ -207,10 +225,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           _imagePath
         ),
       );
-      print(data);
+   
     }
-    print(_imagePath);
-    print(files.length);
+    
     update(['image']);
   }
 
@@ -233,8 +250,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     if (servicioEnabled == true) {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      print(position.latitude);
-      print(position.longitude);
+  
 
       _latitud = position.latitude.toString();
       _longitud = position.longitude.toString();
@@ -242,7 +258,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       update();
       Get.back();
     } else {
-      print('Activa tu gps');
     }
   }
 
@@ -260,7 +275,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
         return null;
       }else{
         var timeMostrar = time.hour.toString()  + ":" + time.minute.toString();
-        print(timeMostrar);
         _controllerInput[i].controller.text = timeMostrar;
       }
       
@@ -281,7 +295,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       }else {
 
           var dataMostrar = DateFormat('dd/MM/yyyy').format(data);
-          print(dataMostrar);
+      
           
           _controllerInput[i].controller.text = dataMostrar;
 
@@ -291,8 +305,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   }
   /* */
 
-
-
   /*  Obtener simple widget respuesta */
 
   List<OpcionesModel> _pickOpcionSimple = [];
@@ -301,7 +313,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   var idRequierepreguntaObserva;
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
-    print(opcionEscogida.idOpcion);
+
 
     opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
@@ -310,8 +322,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             opcionEscogida.idPregunta.toString(), idFicha.toString());
       }
 
-      //element.selected = false;
-      //await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
 
       if (element.idOpcion == opcionEscogida.idOpcion &&
           element.idPregunta == opcionEscogida.idPregunta) {
@@ -328,10 +338,10 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-    print(listRespuestaDB);
+
 
     if (opcionEscogida.requiereDescripcion == "true") {
-      print('dibujar una caja de texto');
+
       idRequierepreguntaObserva = opcionEscogida.idPregunta;
       requiereObservacion = true;
 
@@ -342,11 +352,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
 
-    print(id_pregunta);
-    print(idOpcion);
-    print(valueobservacion);
-
-    await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
+       await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
 
   }
   
@@ -354,7 +360,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   /*  Obtener respuesta multiple widget  respuesta */
 
   capturarRespuestaMultiple(OpcionesModel opcionEscogida) async {
-    print(opcionEscogida.idOpcion);
+
     opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
         if (element.idOpcion == opcionEscogida.idOpcion &&
@@ -366,7 +372,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           } else {
             element.selected = true;
             idsOpcion.add(element.idOpcion.toString());
-            print(idsOpcion);
+            
 
             await DBProvider.db.insertRespuesta(
                 opcionEscogida.idPregunta.toString(),
@@ -382,7 +388,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-    print(listRespuestaDB);
+ 
     update(['multiple']);
   }
 
@@ -461,14 +467,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<UbigeoModel> dataDepartamento =
         await DBProvider.db.getDepartamentos1("22");
-    print(dataDepartamento[0].descripcion);
+    
     showDepartamentos.add(dataDepartamento[0]);
     _valueDepartamento = showDepartamentos[0].descripcion;
     var idDepartamento = showDepartamentos[0].codigoDepartamento;
 
     List<UbigeoModel> dataProvincias =
         await DBProvider.db.getAllProvincias("22");
-    print(dataProvincias.length);
+
 
     for (var i = 0; i < dataProvincias.length; i++) {
       _listprovincias.add(dataProvincias[i]);
@@ -545,11 +551,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                       _selectCodProvincia +
                       _selectCodDistritoUbigeo +
                       _selectCodCentroPoblado;
-
-                  print(_ubigeoCapturado);
-                  print(_ubigeoGuardar);
-
-
                   update(['ubigeo']);
                   Get.back();
                   await guardarUbigeo(idPregunta, _ubigeoGuardar,i,_ubigeoCapturado);
@@ -574,7 +575,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     //_listCentrosPoblados = [];
     List<UbigeoModel> dataDistritos =
         await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
-    //print(dataDistritos.length);
+  
     //
     _listDistritos = [];
     dataDistritos.forEach((element) {
@@ -582,7 +583,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     });
 
     if (_listDistritos.length > 0) {
-      print(_listDistritos.length);
+      
       _selectCodProvincia = value.codigoProvincia;
       _selectCodDistritoUbigeo = _listDistritos[0].codigoDistrito;
       _valueDistrito = _listDistritos[0].descripcion;
@@ -608,9 +609,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       dataCentroPoblados = await DBProvider.db.getAllCentrosPoblados(
           value.codigoProvincia, "22", value.codigoDistrito);
     }
-
-    //print(dataCentroPoblados.length);
-
     for (var i = 0; i < dataCentroPoblados.length; i++) {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
     }
@@ -643,25 +641,19 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     _controllerInput[index].controller.text = ubigeo;
     String ubigeoCodigo = valor;
-    print('Ubigeo' + ubigeoCodigo);
     await DBProvider.db.insertRespuesta(idPregunta, idFicha.toString(), "", ubigeoCodigo,'Ubigeo');
     var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
-    print(respuesta);
   }
 
 /* */
 
   guardarInput(String idPregunta, String valor) async {
-    print(idPregunta);
-    print(idFicha);
-    print(valor);
 
     List<RespuestaModel> respuesta =
         await DBProvider.db.unaRespuestaFicha(idFicha, idPregunta);
 
     if (respuesta.length > 0) {
       if (respuesta[0].valor != "") {
-        print("si existe la respuesta, modificar en la bd");
 
         await DBProvider.db
             .actualizarRespuestaxFicha(idPregunta, idFicha, valor);
@@ -675,7 +667,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   /* guardar la ficha */
 
   guardarFicha() async {
-    print(controllerInput.length);
+  
 
     bool formValidado = true;
 
@@ -692,10 +684,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
                   _preguntas[z].id_pregunta.toString() &&
               controllerInput[z].controller.text == "") {
             formValidado = false;
-            print('La pregunta número $numPregunta es requerida');
-
-            print(controllerInput.length);
-
             update();
 
             Get.dialog(AlertDialog(
@@ -745,8 +733,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
         if (respuesta.length > 0) {
           if (respuesta[0].valor != "") {
-            print(
-                'Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+
             await DBProvider.db.actualizarRespuestaxFicha(
                 controllerInput[x].idPregunta,
                 idFicha,
@@ -758,8 +745,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
         }
       }
 
-      print("Formulario validado , inputables son :" +
-          controllerInput.length.toString());
+    
 
       List<RespuestaModel> listRespuestaDBlocal =
           await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
@@ -842,8 +828,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
       if (respuesta.length > 0) {
         if (respuesta[0].valor != "") {
-          print(
-              'Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+     
           await DBProvider.db.actualizarRespuestaxFicha(
               controllerInput[i].idPregunta,
               idFicha,
@@ -862,7 +847,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     tempList = _preguntas
         .where((element) => element.tipo_pregunta.contains("note"))
         .toList();
-    print(tempList);
+    
     List<PreguntaModel> filtered2 = _preguntas
         .where((element) =>
             element.tipo_pregunta.contains("integer") ||
@@ -871,14 +856,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     String formula = "";
     Parser p = Parser();
     Expression exp;
-    print(filtered2);
+
     if (tempList.length > 0) {
       tempList.asMap().forEach((index, element) {
         formula = element.calculation;
         _preguntas.asMap().forEach((index, value) {
           if (_preguntas[index].bind_name == controllerInput[index].name) {
             var value1 = controllerInput[index].controller.text;
-            print(value1);
+      
             if (value1 != null || value1 != "" || value1 != "null") {
               formula = formula.replaceAll(_preguntas[index].bind_name, value1);
               exp = p.parse(formula);
@@ -967,7 +952,7 @@ class DropDownDepartamento extends StatelessWidget {
                 ),
               ),
               onTap: () async {
-                //print(value.codigoDepartamento);
+               
                 //_.selectedDepartamento(dataUbi, value);
               },
             );

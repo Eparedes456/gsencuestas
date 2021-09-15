@@ -159,6 +159,7 @@ class EncuestaController extends GetxController {
 
 
   String _selectCodDistritoManual = "";
+  var metaData;
 
   /** */
 
@@ -179,6 +180,10 @@ class EncuestaController extends GetxController {
         'requeridoObservacion', encuestaRequeObservacion);
     await preferences.setString('requeridoMultimedia', encuestaRequeMultimedia);
     await getPreguntas(encuesta.idEncuesta.toString());
+
+    String metaDate = preferences.getString('metaDataUser');
+    metaData = json.decode(metaDate);
+
     _listFichas = await DBProvider.db.fichasPendientes("P");
     
 
@@ -201,21 +206,16 @@ class EncuestaController extends GetxController {
         String _nroTotalPreguntasa = _listPreguntas1.length.toString();
 
         List<RespuestaModel> listRespuesta  = await DBProvider.db.getAllRespuestasxFicha(element.idFicha.toString());
-        print(listRespuesta);
+        
 
         List<int> respuestas = [];
         listRespuesta.forEach((element) {
           respuestas.add(element.idPregunta);
         });
         var respuestasLong = respuestas.toSet().toList();
-        print(respuestasLong);
-        print(_nroTotalPreguntasa);
-
-
         var calPercent =  ( respuestasLong.length *  100 ) / _listPreguntas1.length;
-        print('Porcentaje '  + calPercent.toStringAsFixed(0));
         var porcentaje =  ( double.parse(calPercent.toStringAsFixed(0)))  / 100;
-        print(porcentaje);
+       
 
         listdata.forEach((item) {
           _listEncuesta.add(
@@ -374,6 +374,7 @@ class EncuestaController extends GetxController {
   }
 
   searchEncuestado() async {
+    
     Get.back();
 
     loadMessage('Buscando...', true);
@@ -383,56 +384,8 @@ class EncuestaController extends GetxController {
       Get.back();
       messageInfo('El campo es requerido para hacer la busqueda');
     } else {
-      //ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
-
-      /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
-
-        var response = await apiConexion.findEncuestado(insertEncuestadoController.text);
-        if(response == 2){
-
-          Get.back();
-
-          messageInfo('Error 500, error de servidor comuniquese con el encargado del sistema');
-
-        }else if( response != 2 && response != 1 && response != 3){
-
-          print(response);
-          
-          if( response.length > 0 ){
-
-            Get.back();
-            encuestado = [];
-            
-            response.forEach((element){
-              encuestado.add(
-                EncuestadoModel(
-                  idEncuestado    : element["idEncuestado"].toString(),
-                  nombre          : element["nombre"],
-                  apellidoPaterno : element["apellidoPaterno"], 
-                  apellidoMaterno : element["apellidoMaterno"],
-                  tipoDocumento   : element["tipoDocumento"],
-                  foto            : element["foto"],
-                  idUbigeo        : element["idUbigeo"]   
-                )
-              );
-            });
-
-            showEncuestadoModal(encuestado);
-
-          }else{
-          
-          Get.back();
-          messageInfo('El encuestado no se encuentra registrado');
-
-          }
-          
-
-        }*/
-
-      //}else{
-
       print("Busco al encuestado en la bd local");
-
+      
       List<EncuestadoModel> respuesta =
           await DBProvider.db.searchEncuestado(insertEncuestadoController.text);
       if (respuesta.length > 0) {
@@ -443,7 +396,7 @@ class EncuestaController extends GetxController {
         messageInfo('No se encontro ninguna coincidencia ');
       }
 
-      //}
+      insertEncuestadoController.clear();
 
     }
   }
@@ -486,7 +439,7 @@ class EncuestaController extends GetxController {
                           radius: 30,
                           backgroundImage: response[i].foto == "" || response[i].foto == null || response[i].foto == "null"
                               ? AssetImage('assets/images/nouserimage.jpg')
-                              : MemoryImage(_photoBase64)),
+                              : MemoryImage(base64.decode(response[i].foto))),
                       title: Text(
                         '${response[i].nombre}  ${response[i].apellidoPaterno} ${response[i].apellidoMaterno}',
                         style: TextStyle(fontSize: 14),
@@ -497,6 +450,7 @@ class EncuestaController extends GetxController {
                       },
                     ),
                   ),
+                  Divider(color: Colors.grey[400],)
                 }
               ],
             ),
@@ -505,6 +459,7 @@ class EncuestaController extends GetxController {
   }
 
   showEncuestadoModal(List<EncuestadoModel> response) async {
+
     Get.dialog(AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -522,7 +477,7 @@ class EncuestaController extends GetxController {
                   leading: CircleAvatar(
                     radius: 30,
                     backgroundImage: response[i].foto == "" || response[i].foto == null
-                    ? AssetImage('assets/images/nouserimage.jpg'): MemoryImage(_photoBase64)
+                    ? AssetImage('assets/images/nouserimage.jpg'): MemoryImage(base64.decode(response[i].foto))
                   ),
                   title: Text(
                     '${response[i].nombre}  ${response[i].apellidoPaterno} ${response[i].apellidoMaterno}',
@@ -534,6 +489,7 @@ class EncuestaController extends GetxController {
                   },
                 ),
               ),
+              Divider(color: Colors.grey[400],)
             }
           ],
         ),
@@ -891,16 +847,78 @@ class EncuestaController extends GetxController {
         'idFicha': idFicha.toString()
       });
     }else {
+
       Get.back();
-      var result = await Get.to(QuizPage(), arguments: {
+
+      if(metaData != null && metaData != ""){
+
+        var result = await Get.to(
+          QuizPage(),
+          arguments: {
+          'idEncuesta'      : idEncuesta,
+          'tituloEncuesta'  : titulo,
+          'idEncuestado'    : idEncuestado,
+          'idFicha'         : idFicha.toString(),
+          'encuestado'      : EncuestadoData,
+          'metaData'        : metaData
+        });
+
+        if (result == "SI") {
+          print('Actualizar la vista mostrando las encuestas pendientes');
+          Get.back();
+          Get.back();
+          _listEncuesta = [];
+          _encuestasPendientes = false;
+          update();
+          await pendientesEncuestas();
+        }
+
+
+      }else{
+        
+        var result = await Get.to(
+          QuizPage(),
+          arguments: {
+          'idEncuesta'      : idEncuesta,
+          'tituloEncuesta'  : titulo,
+          'idEncuestado'    : idEncuestado,
+          'idFicha'         : idFicha.toString(),
+          'encuestado'      : EncuestadoData,
+          'metaData'        : null
+        });
+
+        if (result == "SI") {
+          print('Actualizar la vista mostrando las encuestas pendientes');
+          Get.back();
+          Get.back();
+          _listEncuesta = [];
+          _encuestasPendientes = false;
+          update();
+          await pendientesEncuestas();
+        }
+
+
+      }
+
+
+
+
+
+
+      /*var result = await Get.to(QuizPage(), arguments: {
         'idEncuesta'      : idEncuesta,
         'tituloEncuesta'  : titulo,
         'idEncuestado'    : idEncuestado,
         'idFicha'         : idFicha.toString(),
         'encuestado'      : EncuestadoData
-      });
+      });*/
 
-      if (result == "SI") {
+
+
+
+
+
+      /*if (result == "SI") {
         print('Actualizar la vista mostrando las encuestas pendientes');
         Get.back();
         Get.back();
@@ -908,7 +926,7 @@ class EncuestaController extends GetxController {
         _encuestasPendientes = false;
         update();
         await pendientesEncuestas();
-      }
+      }*/
 
     }
 

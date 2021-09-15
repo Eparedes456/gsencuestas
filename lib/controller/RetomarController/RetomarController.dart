@@ -45,7 +45,7 @@ class RetommarController extends GetxController {
       print(respuestaBd);
     });
 
-    Scrollcontroller.addListener(_scrollListener);
+    
 
     
   }
@@ -56,16 +56,7 @@ class RetommarController extends GetxController {
     super.onReady();
   }
 
-  final Scrollcontroller = ScrollController(initialScrollOffset:0.0);
-  double _scrollPosition;
-
-   _scrollListener() {
- 
-   _scrollPosition = Scrollcontroller.position.pixels;
-   print(_scrollPosition);
-   update();
- 
-  }
+  
 
   String _titulo = "";
   String get titulo => _titulo;
@@ -99,18 +90,13 @@ class RetommarController extends GetxController {
     idEncuesta = datos["idEncuesta"];
     idFicha = datos["idFicha"];
     List<FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
-    print(ficha);
     idEncuestado = ficha[0].idEncuestado.toString();
     respuestas = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-    print(respuestas);
-
     _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
-    print(_preguntas);
-
+  
     var allOpciones = await DBProvider.db.getAllOpciones();
 
-    print(allOpciones);
+   
 
     for (var i = 0; i < _preguntas.length; i++) {
       print(_preguntas[i].id_pregunta);
@@ -154,7 +140,9 @@ class RetommarController extends GetxController {
             print('pintar de verde');
 
             _opcionesPreguntas[z].selected = true;
+            _opcionesPreguntas[z].valor = respuestas[x].valor;
           }
+          //widgetSimpleWithOption(respuestas[x].idPregunta);
         }
       }
       
@@ -169,13 +157,8 @@ class RetommarController extends GetxController {
       }
 
     }
-
-    
-
-    print(_opcionesPreguntas.length);
-    //update('simple');
     _isLoadingData = true;
-    update();
+    //update();
     update(['multiple']);
 
     Future.delayed(Duration(seconds: 1), () async {
@@ -255,7 +238,8 @@ class RetommarController extends GetxController {
   }
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
-    print(opcionEscogida.idOpcion);
+   
+
 
     opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
@@ -278,26 +262,17 @@ class RetommarController extends GetxController {
             'RespuestaSimple'
         );
       }
-
-      if (opcionEscogida.requiereDescripcion == "true") {
-      print('dibujar una caja de texto');
-      idRequierepreguntaObserva = opcionEscogida.idPregunta;
-      requiereObservacion = true;
-
-    }
-
-
     });
 
-    List<RespuestaModel> listRespuestaDB =
-        await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-    print(listRespuestaDB);
-
-    update(['simple']);
+    //widgetSimpleWithOption(opcionEscogida.idPregunta);
+    //update(['opciones']);
+    update();
+    /*List<RespuestaModel> listRespuestaDB =
+        await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());*/
   }
 
   capturarRespuestaMultipleRetomar(OpcionesModel opcionEscogida) async {
-    print(opcionEscogida.idOpcion);
+  
     opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
         if (element.idOpcion == opcionEscogida.idOpcion &&
@@ -340,13 +315,48 @@ class RetommarController extends GetxController {
       }
     }
 
-    //print( "Cantidad de preguntas tipo input" + controllerInput.length.toString());
+
 
     update();
   }
 
+
+  widgetSimpleWithOption(int idPregunta){
+
+      for (var i = 0; i < _opcionesPreguntas.length; i++){
+                  
+            if(idPregunta == _opcionesPreguntas[i].idPregunta){
+
+              if(_opcionesPreguntas[i].selected && _opcionesPreguntas[i].requiereDescripcion == "true"){
+
+                      Padding(
+                      padding:  EdgeInsets.only(left: 20,right: 20),
+                      child: TextFormField(
+                        //controller: ,
+                        onFieldSubmitted: (value){
+                          //print(value);
+                          
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Ingrese observación'
+                          
+                        ),
+                      ),
+                    );
+                    
+              }
+            }
+          }
+
+    
+    
+  }
+
+
+
+
   guardarFicha() async {
-    print(controllerInput.length);
+  
 
     bool formValidado = true;
 
@@ -363,9 +373,9 @@ class RetommarController extends GetxController {
                   _preguntas[z].id_pregunta.toString() &&
               controllerInput[z].controller.text == "") {
             formValidado = false;
-            print('La pregunta número $numPregunta es requerida');
+            
 
-            print(controllerInput.length);
+         
 
             update();
 
@@ -434,32 +444,7 @@ class RetommarController extends GetxController {
     if (formValidado == true) {
       _positionStream.cancel();
 
-      /*for (var i = 0; i < controllerInput.length; i++) {
-        if (controllerInput[i].controller.text == "" ||
-            controllerInput[i].controller.text == null || controllerInput[i].tipo_pregunta == "ubigeo") {
-          controllerInput.removeWhere((item) => item.controller.text == "");
-          controllerInput.removeWhere((element) => element.tipo_pregunta =="ubigeo");
-        }
-      }
-
-      for (var x = 0; x < controllerInput.length; x++) {
-        List<RespuestaModel> respuesta = await DBProvider.db
-            .unaRespuestaFicha(idFicha, controllerInput[x].idPregunta);
-
-        if (respuesta.length > 0) {
-          if (respuesta[0].valor != "") {
-            print(
-                'Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
-            await DBProvider.db.actualizarRespuestaxFicha(
-                controllerInput[x].idPregunta,
-                idFicha,
-                controllerInput[x].controller.text);
-          }
-        } else {
-          await DBProvider.db.insertRespuesta(controllerInput[x].idPregunta,
-              idFicha.toString(), "", controllerInput[x].controller.text,'Text');
-        }
-      }*/
+     
 
 
       DateTime now = DateTime.now();
@@ -471,7 +456,7 @@ class RetommarController extends GetxController {
       var part = utc.toString().split(" ");
       var fecha = part[0].toString();
       var hora = part[1].toString();
-      print(part[1]);
+
       String formattedDate = fecha + "T" + hora;
       await guardarinputBack();
 
@@ -481,8 +466,7 @@ class RetommarController extends GetxController {
       respuestas =
           await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
-      print(respuestas);
-      print(listtRACKING);
+  
 
       Map sendData = {
         'idEncuesta': idEncuesta,
@@ -492,7 +476,7 @@ class RetommarController extends GetxController {
         'idFicha': idFicha,
         'fecha_retorno': formattedDate
       };
-      print(sendData);
+
 
       _positionStream.cancel();
       Get.to(FichaPage(), arguments: sendData);
@@ -505,7 +489,7 @@ class RetommarController extends GetxController {
     tempList = _preguntas
         .where((element) => element.tipo_pregunta.contains("note"))
         .toList();
-    print(tempList);
+
     List<PreguntaModel> filtered2 = _preguntas
         .where((element) =>
             element.tipo_pregunta.contains("integer") ||
@@ -514,14 +498,14 @@ class RetommarController extends GetxController {
     String formula = "";
     Parser p = Parser();
     Expression exp;
-    print(filtered2);
+    
     if (tempList.length > 0) {
       tempList.asMap().forEach((index, element) {
         formula = element.calculation;
         _preguntas.asMap().forEach((index, value) {
           if (_preguntas[index].bind_name == controllerInput[index].name) {
             var value1 = controllerInput[index].controller.text;
-            print(value1);
+    
             if (value1 != null || value1 != "" || value1 != "null") {
               formula = formula.replaceAll(_preguntas[index].bind_name, value1);
               exp = p.parse(formula);
@@ -601,8 +585,7 @@ class RetommarController extends GetxController {
 
       if (respuesta.length > 0) {
         if (respuesta[0].valor != "") {
-          print(
-              'Ya existe la pregunta en la base de datos, ahora a actulizar con el nuevo valor');
+          
           await DBProvider.db.actualizarRespuestaxFicha(
               controllerInput[x].idPregunta,
               idFicha,
@@ -662,14 +645,14 @@ class RetommarController extends GetxController {
 
     List<UbigeoModel> dataDepartamento =
         await DBProvider.db.getDepartamentos1("22");
-    print(dataDepartamento[0].descripcion);
+    
     showDepartamentos.add(dataDepartamento[0]);
     _valueDepartamento = showDepartamentos[0].descripcion;
     var idDepartamento = showDepartamentos[0].codigoDepartamento;
 
     List<UbigeoModel> dataProvincias =
         await DBProvider.db.getAllProvincias("22");
-    print(dataProvincias.length);
+    
 
     for (var i = 0; i < dataProvincias.length; i++) {
       _listprovincias.add(dataProvincias[i]);
@@ -747,9 +730,7 @@ class RetommarController extends GetxController {
                       _selectCodDistritoUbigeo +
                       _selectCodCentroPoblado;
 
-                  print(_ubigeoCapturado);
-                  print(_ubigeoGuardar);
-
+                 
 
                   update(['ubigeo']);
                   Get.back();
@@ -775,7 +756,7 @@ class RetommarController extends GetxController {
     //_listCentrosPoblados = [];
     List<UbigeoModel> dataDistritos =
         await DBProvider.db.getAllDistritos(value.codigoProvincia, "22");
-    //print(dataDistritos.length);
+  
     //
     _listDistritos = [];
     dataDistritos.forEach((element) {
@@ -783,7 +764,7 @@ class RetommarController extends GetxController {
     });
 
     if (_listDistritos.length > 0) {
-      print(_listDistritos.length);
+      
       _selectCodProvincia = value.codigoProvincia;
       _selectCodDistritoUbigeo = _listDistritos[0].codigoDistrito;
       _valueDistrito = _listDistritos[0].descripcion;
@@ -810,7 +791,7 @@ class RetommarController extends GetxController {
           value.codigoProvincia, "22", value.codigoDistrito);
     }
 
-    //print(dataCentroPoblados.length);
+ 
 
     for (var i = 0; i < dataCentroPoblados.length; i++) {
       _listCentrosPoblados.add(dataCentroPoblados[i]);
@@ -844,10 +825,10 @@ class RetommarController extends GetxController {
 
     _controllerInput[index].controller.text = ubigeo;
     String ubigeoCodigo = valor;
-    print('Ubigeo' + ubigeoCodigo);
+    
     await DBProvider.db.insertRespuesta(idPregunta, idFicha.toString(), "", ubigeoCodigo,'Ubigeo');
     var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
-    print(respuesta);
+  
   }
 
 /* */
@@ -866,7 +847,7 @@ class RetommarController extends GetxController {
         return null;
       }else{
         var timeMostrar = time.hour.toString()  + ":" + time.minute.toString();
-        print(timeMostrar);
+        
         _controllerInput[i].controller.text = timeMostrar;
       }
       
@@ -887,7 +868,7 @@ class RetommarController extends GetxController {
       }else {
 
           var dataMostrar = DateFormat('dd/MM/yyyy').format(data);
-          print(dataMostrar);
+        
           
           _controllerInput[i].controller.text = dataMostrar;
 
@@ -957,8 +938,8 @@ class DropDownDepartamento extends StatelessWidget {
                 ),
               ),
               onTap: () async {
-                //print(value.codigoDepartamento);
-                //_.selectedDepartamento(dataUbi, value);
+                
+                
               },
             );
           }).toList(),
