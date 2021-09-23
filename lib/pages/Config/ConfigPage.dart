@@ -15,7 +15,7 @@ class ConfigPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text('Herramientas',style: TextStyle(fontFamily: 'Poppins'),),
+            title: Text('Herramientas',style: TextStyle(),),
             leading: Container(),
           ),
 

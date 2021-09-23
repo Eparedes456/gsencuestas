@@ -32,6 +32,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gsencuesta/model/Ubigeo/UbigeoModel.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io' show Platform;
+import 'package:basic_utils/basic_utils.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -789,7 +790,7 @@ class PrincipalController extends GetxController {
                 id_pregunta: item["idPregunta"],
                 id_bloque: item["id_bloque"],
                 idEncuesta: int.parse(idEncuesta),
-                enunciado: item["enunciado"],
+                enunciado: StringUtils.capitalize(item["enunciado"]),
                 tipo_pregunta: item["tipoPregunta"]["questionType"],
                 apariencia: item["apariencia"]["appearance"],
                 requerido: item["requerido"].toString(),

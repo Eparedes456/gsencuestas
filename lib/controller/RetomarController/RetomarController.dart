@@ -19,6 +19,7 @@ import 'package:gsencuesta/pages/Ficha/FichaPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RetommarController extends GetxController {
   @override
@@ -28,6 +29,8 @@ class RetommarController extends GetxController {
     Map data = Get.arguments;
     print(data["nombreEncuesta"]);
     _titulo = data["nombreEncuesta"];
+    nombreEncuestado = data["nombreEncuestado"];
+    dni = data["dni"];
     await onloadData(data);
 
     _positionStream = Geolocator.getPositionStream(
@@ -79,9 +82,12 @@ class RetommarController extends GetxController {
   String idEncuestado = "";
 
   String bloque;
+  String nombreEncuestado = "";
+  String dni = "";
 
   var requiereObservacion =false;
   var idRequierepreguntaObserva;
+  var metaData;
 
   TextEditingController controller = new TextEditingController();
 
@@ -96,20 +102,54 @@ class RetommarController extends GetxController {
   
     var allOpciones = await DBProvider.db.getAllOpciones();
 
-   
+   SharedPreferences preferences = await SharedPreferences.getInstance();
+    metaData =  json.decode( preferences.getString("metaDataUser"));
+
+
+
 
     for (var i = 0; i < _preguntas.length; i++) {
-      print(_preguntas[i].id_pregunta);
+      //print(_preguntas[i].id_pregunta);
       var idPregunta = _preguntas[i].id_pregunta;
 
+      var index = respuestas.indexWhere((element) => element.idPregunta == _preguntas[i].id_pregunta);
+      print(index);
+      
+      if( index == -1 ){
+
+        controllerInput.add(
+          InputTextfield(
+            preguntas[i].id_pregunta.toString(),
+            TextEditingController(),
+            preguntas[i].bind_name,
+            i,
+            preguntas[i].tipo_pregunta,
+            preguntas[i].calculation
+          )
+        );
+
+      }else{
+
+        print(respuestas[index].valor);
+
+        controllerInput.add(
+          InputTextfield(
+            preguntas[i].id_pregunta.toString(),
+            TextEditingController(text: respuestas[index].valor),
+            preguntas[i].bind_name,
+            i,
+            preguntas[i].tipo_pregunta,
+            preguntas[i].calculation
+          )
+        );
+        
+
+
+      }
+
+
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
-      controllerInput.add(InputTextfield(
-          preguntas[i].id_pregunta.toString(),
-          TextEditingController(),
-          preguntas[i].bind_name,
-          i,
-          preguntas[i].tipo_pregunta,
-          preguntas[i].calculation));
+      
 
       var opciones =
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
@@ -227,13 +267,42 @@ class RetommarController extends GetxController {
   /* */
 
 
-  saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
+  /*saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion)async{
 
     print(id_pregunta);
     print(idOpcion);
     print(valueobservacion);
 
+    var data =  _opcionesPreguntas.indexWhere((element) => element.idPregunta == id_pregunta);
+   
+
     await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
+
+  }*/
+
+  saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion,String tipoPregunta)async{
+
+    print(id_pregunta);
+    print(idOpcion);
+    print(valueobservacion);
+
+    List<RespuestaModel> existe = await DBProvider.db.unaRespuestaFicha(idFicha, id_pregunta); 
+
+    print(existe);
+    if(existe.length == 0){
+
+      print("insertar valor");
+      await DBProvider.db.insertRespuesta(id_pregunta, idFicha, "", valueobservacion, tipoPregunta);
+
+    }else{
+
+      print("actualizar valor");
+      await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
+
+    }
+
+
+    //await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
 
   }
 
@@ -266,7 +335,7 @@ class RetommarController extends GetxController {
 
     //widgetSimpleWithOption(opcionEscogida.idPregunta);
     //update(['opciones']);
-    update();
+    update(['opciones']);
     /*List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());*/
   }
@@ -352,6 +421,71 @@ class RetommarController extends GetxController {
     
   }
 
+
+  textFormFields(int id_pregunta){
+
+    for (var i = 0; i < opcionesPreguntas.length; i++) {
+      
+      if(id_pregunta == opcionesPreguntas[i].idPregunta ){
+
+        var index = controllerInput.indexWhere((element) => element.idPregunta == id_pregunta.toString());
+        print(index);
+
+        var index2 = respuestas.indexWhere((element2) => element2.idPregunta == id_pregunta);
+
+        if(index2 != -1){
+
+          return TextField(
+          controller:   TextEditingController(text: respuestas[index2].valor), //controllerInput[index].controller,
+          onChanged: (value){
+
+            saveRequireObservacion(id_pregunta.toString(),"",value,"");
+
+          },
+          style: TextStyle(
+          fontSize: 14
+          ),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            hintText: 'Ingrese observación',
+            hintStyle: TextStyle(
+              fontSize: 14
+            )
+                              
+          ),
+        );
+
+        }else{
+
+          return TextField(
+          controller: controllerInput[index].controller,
+          onChanged: (value){
+
+            saveRequireObservacion(id_pregunta.toString(),"",value,"");
+
+          },
+          style: TextStyle(
+          fontSize: 14
+          ),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            hintText: 'Ingrese observación',
+            hintStyle: TextStyle(
+              fontSize: 14
+            )
+                              
+          ),
+        );
+
+        }
+        
+        
+
+      }
+
+    }
+
+  }
 
 
 

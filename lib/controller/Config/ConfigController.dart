@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -733,7 +734,7 @@ class ConfigController extends GetxController {
                 id_pregunta: item["idPregunta"],
                 id_bloque: item["id_bloque"],
                 idEncuesta: int.parse(idEncuesta),
-                enunciado: item["enunciado"],
+                enunciado: StringUtils.capitalize(item["enunciado"]),
                 tipo_pregunta: item["tipoPregunta"]["questionType"],
                 apariencia: item["apariencia"]["appearance"],
                 requerido: item["requerido"].toString(),

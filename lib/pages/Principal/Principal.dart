@@ -51,8 +51,9 @@ class PrincipalPage extends StatelessWidget {
                           'Navega en las encuestas que tienes asignados',
                           style: TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              fontFamily: 'Poppins'),
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -307,9 +308,10 @@ class PrincipalPage extends StatelessWidget {
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          fontFamily: 'Poppins',
+                                                          
                                                         ),
                                                       ),
+                                                      
                                                       Text(
                                                         _.listEncuesta[index]
                                                             .descripcion,

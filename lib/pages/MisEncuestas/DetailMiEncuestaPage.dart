@@ -109,15 +109,19 @@ class DetailMiEncuestaPage extends StatelessWidget {
                                             ? Text(
                                                 'Finalizado',
                                                 style: TextStyle(
-                                                    color: Colors.white),
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold
+                                                    ),
                                               )
                                             : _.estado == "P"
                                                 ? Text('Pendiente',
                                                     style: TextStyle(
-                                                        color: Colors.white))
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold))
                                                 : Text('Sincronizado',
                                                     style: TextStyle(
-                                                        color: Colors.white)),
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold)),
                                       ),
                                     ),
                                   ),

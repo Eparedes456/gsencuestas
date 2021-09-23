@@ -42,7 +42,7 @@ class DatePicker1Widget extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontFamily: 'Poppins',
-                              fontSize: 16
+                              fontSize: 14
                             ),
                           ),
                         ),

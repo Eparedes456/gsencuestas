@@ -64,7 +64,7 @@ class EncuestaPage extends StatelessWidget {
                             child: Text(
                               '${_.descripcion}',
                               style: TextStyle(
-                                  fontFamily: 'Poppins',
+                                  
                                   fontWeight: FontWeight.w200),
                               textAlign: TextAlign.justify,
                             ),
@@ -101,7 +101,6 @@ class EncuestaPage extends StatelessWidget {
                                   'Iniciar Encuesta',
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontFamily: 'Poppins',
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -200,7 +199,11 @@ class EncuestaPage extends StatelessWidget {
                                                           .idEncuesta
                                                           .toString(),
                                                       _.listEncuesta[index]
-                                                          .nombreEncuesta);
+                                                          .nombreEncuesta,
+                                                      _.listEncuesta[index].nombreEncuestado,
+                                                      _.listEncuesta[index].dni
+
+                                                  );
                                                 } else {
                                                   Get.dialog(AlertDialog(
                                                     shape:
@@ -286,7 +289,9 @@ class EncuestaPage extends StatelessWidget {
                                                                   '${_.listEncuesta[index].nombreEncuesta}',
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          12),
+                                                                          12,
+                                                                          fontWeight: FontWeight.w700
+                                                                  ),
                                                                 ),
                                                                 Row(
                                                                   children: [
@@ -378,14 +383,16 @@ class EncuestaPage extends StatelessWidget {
                           child: BackdropFilter(
                             filter:
                                 ImageFilter.blur(sigmaY: 19.2, sigmaX: 19.2),
-                            child: Text(
-                              _.titulo + " - " + _.nombreProyecto,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                              textAlign: TextAlign.center,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                _.titulo + " - " + _.nombreProyecto,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
@@ -415,7 +422,7 @@ class EncuestaPage extends StatelessWidget {
                                 child: Text(
                                   "20 de Marzo",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontFamily: 'Poppins'),
+                                  style: TextStyle(),
                                 ),
                               ),
                               SizedBox(
@@ -442,7 +449,7 @@ class EncuestaPage extends StatelessWidget {
                                 child: Text(
                                   'No registra', //_.fechaFin == null ? 'No registra' : _.fechaFin,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontFamily: 'Poppins'),
+                                  style: TextStyle(),
                                 ),
                               ),
                               SizedBox(
@@ -471,14 +478,14 @@ class EncuestaPage extends StatelessWidget {
                                           _.listPregunta.length.toString(),
                                           textAlign: TextAlign.center,
                                           style:
-                                              TextStyle(fontFamily: 'Poppins'),
+                                              TextStyle(),
                                         )
                                       : _.listPregunta.length == 0
                                           ? Text(
                                               '0',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontFamily: 'Poppins'),
+                                                  ),
                                             )
                                           : Container() //CircularProgressIndicator() ,
                                   ),

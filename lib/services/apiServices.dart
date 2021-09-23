@@ -275,7 +275,7 @@ class ApiServices {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var token = preferences.getString('token');
-    var url =Uri.parse(base_url_dev + "encuestado/lista_detalle_encuestado");
+    var url =Uri.parse(base_url_dev + "encuestado/lista_detalle_encuestado?limit=2000&page=-1");
     var response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       //'Accept': 'application/json',

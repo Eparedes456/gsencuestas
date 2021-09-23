@@ -14,26 +14,37 @@ class SimpleSelectRetomar extends StatelessWidget {
      
       init: RetommarController(),
       //id: 'simpleSelect',
+      id: 'opciones',
       builder: (_) => Column(
         children: [
           ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: _.opcionesPreguntas.length,
-                      itemBuilder: (context,index){
+            padding: EdgeInsets.only(top: 12),
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: _.opcionesPreguntas.length,
+            itemBuilder: (context,index){
 
-                        if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
+              if(id_pregunta == _.opcionesPreguntas[index].idPregunta){
 
-                          return Opciones(
-                            id_pregunta: id_pregunta,
-                            index: index,
-                          );
-                        }else{
-                          return Container();
-                        }
+                              return Column(
+                              children: [
+                                Opciones(
+                                  id_pregunta: id_pregunta,
+                                  index: index,
+                                ),
 
-                        
-                      }
+                                //Text('hola')
+                                  
+                              ],
+                            );
+                            
+                          }else{
+
+                            return Container();
+
+                          }
+
+            }
           ),
 
           //_.widgetSimpleWithOption(id_pregunta)
@@ -42,14 +53,19 @@ class SimpleSelectRetomar extends StatelessWidget {
                   
             if(id_pregunta == _.opcionesPreguntas[i].idPregunta)...{
 
-              if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true")...{
+              if(_.opcionesPreguntas[i].selected && _.opcionesPreguntas[i].requiereDescripcion == "true" )...{
 
                 
 
                       Padding(
                       padding:  EdgeInsets.only(left: 20,right: 20),
-                      child: TextFormField(
-                        controller: _.opcionesPreguntas[i].valor == "" || _.opcionesPreguntas[i].valor ==  null  ? _.controller : TextEditingController(text: _.opcionesPreguntas[i].valor),
+                      child: _.textFormFields(id_pregunta)
+                      
+                      
+                      /*TextFormField(
+                        controller: TextEditingController(text: _.opcionesPreguntas[i].valor),
+                       //  _.controllerInput[i].controller  _.opcionesPreguntas[i].valor == "" || _.opcionesPreguntas[i].valor ==  null  ? _.controller : _.opcionesPreguntas[i].valor  == "No cumple" || _.opcionesPreguntas[i].valor  == "NO CUMPLE" || _.opcionesPreguntas[i].valor  == "Si cumple" || _.opcionesPreguntas[i].valor  == "SI CUMPLE" ?  _.controller : TextEditingController(text: _.opcionesPreguntas[i].valor),
+                        
                         onFieldSubmitted: (value){
                           //print(value);
                           _.saveRequireObservacion( 
@@ -62,7 +78,7 @@ class SimpleSelectRetomar extends StatelessWidget {
                           hintText: 'Ingrese observación'
                           
                         ),
-                      ),
+                      ),*/
                     )
                     
               }
@@ -96,11 +112,11 @@ class Opciones extends StatelessWidget {
 
                             },
                             child: Container(
-                              height:   45,
+                              height:   35,
                               
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color:   _.opcionesPreguntas[index].selected == true ? Colors.green : Colors.grey ,
+                                color:   _.opcionesPreguntas[index].selected == true ? Color.fromRGBO(246, 252, 124,1) : Colors.grey[200] ,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
@@ -113,12 +129,12 @@ class Opciones extends StatelessWidget {
                                       child: Text(
                                         _.opcionesPreguntas[index].label,
                                         style: TextStyle(
-                                          color:  _.opcionesPreguntas[index].selected == true ?  Colors.white :Colors.black
+                                          color:  _.opcionesPreguntas[index].selected == true ?  Colors.black : Colors.black
                                         ),
                                       )
                                     ),
 
-                                    Icon(Icons.check_circle_outline,color:  _.opcionesPreguntas[index].selected == true ? Colors.white : Colors.black,)
+                                    Icon(Icons.check_circle_outline,color:  _.opcionesPreguntas[index].selected == true ? Colors.black : Colors.black,)
                                     
 
 

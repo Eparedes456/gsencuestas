@@ -78,24 +78,6 @@ class ImagePage extends StatelessWidget {
 
             }
           }
-
-          /*_.imagepath == null ? Container(
-            height: 150,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/noimage2.png'),
-                fit: BoxFit.cover
-              )
-            ),
-
-          ): Container(
-            height: 150,
-            width: double.infinity,
-            
-            child: Image.file(_.imagepath,fit: BoxFit.contain,),
-          ),*/
-
         ],
       )
       

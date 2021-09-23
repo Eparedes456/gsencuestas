@@ -260,7 +260,7 @@ class MisEncuestas extends StatelessWidget {
                                                                 '${_.listMisEncuestas[index].nombreEncuesta}',
                                                                 style: TextStyle(
                                                                   fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'Poppins',
+                                                                  
                                                                   fontSize: 13
                                                                 ),
                                                               ),
@@ -281,6 +281,7 @@ class MisEncuestas extends StatelessWidget {
                                                                     _.listMisEncuestas[index].estadoFicha == "F" ? "Finalizado" : _.listMisEncuestas[index].estadoFicha == "P" ? "Pendiente" :'Sincronizado',
                                                                     style: TextStyle(
                                                                       color: Colors.white,
+                                                                      fontWeight: FontWeight.bold,
                                                                       fontSize: 12
                                                                     ),
                                                                   ),

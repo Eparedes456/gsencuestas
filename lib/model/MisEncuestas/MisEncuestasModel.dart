@@ -26,6 +26,7 @@ class MisEncuestasModel{
   String nombreProyecto;
   String nombreEncuesta;
   String nroPreguntas;
+  String dni;
   String fechaInicio;
   String imagen;
   String estadoFicha;
@@ -39,7 +40,7 @@ class MisEncuestasModel{
 
     this.idFicha, this.idProyecto, this.idEncuesta, this.nombreEncuestado ,this.nombreProyecto, this.nombreEncuesta, this.nroPreguntas,
     this.fechaInicio, this.imagen ,this.estadoFicha,this.esRetomado,this.preguntasRespondidas,this.totalPreguntas,
-    this.percent,this.porcentaje
+    this.percent,this.porcentaje,this.dni
 
   });
 
@@ -54,6 +55,7 @@ class MisEncuestasModel{
     nombreProyecto      : json['nombreProyecto'],
     nombreEncuesta      : json['nombreEncuesta'],
     nroPreguntas        : json['nroPreguntas'],
+    dni                 : json['dni'],
     fechaInicio         : json['fechaInicio'],
     imagen              : json['imagen'],
     estadoFicha         : json['createdAt'] ,            

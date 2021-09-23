@@ -200,6 +200,8 @@ class EncuestaController extends GetxController {
         var nombreEncuestado = _listEncuestado[0].nombre.toString() +
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
+
+        var dni = _listEncuestado[0].documento.toString();
         
         String idEncuesta = element.idEncuesta.toString();
         List<PreguntaModel> _listPreguntas1 = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
@@ -230,7 +232,8 @@ class EncuestaController extends GetxController {
               preguntasRespondidas    : respuestasLong.length.toString(),
               totalPreguntas          : _listPreguntas1.length.toString(),
               percent                 : porcentaje,
-              porcentaje              : calPercent.toStringAsFixed(0) 
+              porcentaje              : calPercent.toStringAsFixed(0) ,
+              dni                     : dni
             )
           );
         });
@@ -717,7 +720,7 @@ class EncuestaController extends GetxController {
                   'Empezar',
                   style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Poppins',
+                      
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
@@ -948,7 +951,7 @@ class EncuestaController extends GetxController {
         var nombreEncuestado = _listEncuestado[0].nombre.toString() +
             " " +
             _listEncuestado[0].apellidoPaterno.toString();
-
+        var dni = _listEncuestado[0].documento; 
         List<PreguntaModel> _listPreguntas1 = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
         String _nroTotalPreguntasa = _listPreguntas1.length.toString();
 
@@ -982,7 +985,8 @@ class EncuestaController extends GetxController {
               preguntasRespondidas:   respuestasLong.length.toString(),
               totalPreguntas:         _listPreguntas1.length.toString(),
               percent                 : porcentaje,
-              porcentaje              : calPercent.toStringAsFixed(0) 
+              porcentaje              : calPercent.toStringAsFixed(0),
+              dni                     : dni
             )
           );
               
@@ -997,7 +1001,7 @@ class EncuestaController extends GetxController {
     update();
   }
 
-  navigateToRetomarEncuesta( String idFicha, String idEncuesta, String encuestaName) async {
+  navigateToRetomarEncuesta( String idFicha, String idEncuesta, String encuestaName, String nombreEncuestado, String dni) async {
     DateTime now = DateTime.now();
     var utc = now.toUtc();
     var part = utc.toString().split(" ");
@@ -1014,9 +1018,11 @@ class EncuestaController extends GetxController {
     print(listFichas);
 
     var data = {
-      'idFicha': idFicha,
-      'nombreEncuesta': encuestaName,
-      'idEncuesta': idEncuesta
+      'idFicha'           : idFicha,
+      'nombreEncuesta'    : encuestaName,
+      'idEncuesta'        : idEncuesta,
+      'nombreEncuestado'  : nombreEncuestado,
+      'dni'               : dni
     };
 
     print(data);
@@ -1563,7 +1569,7 @@ class EncuestaController extends GetxController {
                   'Empezar',
                   style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'Poppins',
+                      
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),

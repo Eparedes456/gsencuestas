@@ -13,7 +13,8 @@ class UbigeoWidget extends StatelessWidget {
   final String bloque2;
   final int    i;
   final String pagina;
-  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque, this.bloque2, this.i, this.pagina }) : super(key: key);
+  final String requerido;
+  const UbigeoWidget({ Key  key, this.id_pregunta, this.enunciado, this.numPregunta, this.apariencia, this.bloque, this.bloque2, this.i, this.pagina,this.requerido }) : super(key: key);
 
 
 
@@ -42,13 +43,24 @@ class UbigeoWidget extends StatelessWidget {
                     children: [
                       Padding(
                         padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
-                        child: Text(
-                          '$numPregunta.- $enunciado',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                            fontSize: 16
-                          ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '$numPregunta. $enunciado',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  
+                                  fontSize: 14
+                                ),
+                              ),
+                            ),
+
+                             Text(
+                              requerido == "true" ? " (*)" : "",
+                              style: TextStyle(color: Colors.red),
+                            )
+                          ],
                         ),
                       ),
                       SizedBox(height: 15,),
@@ -56,12 +68,18 @@ class UbigeoWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
+                          style: TextStyle(
+                            fontSize: 14
+                          ),
                           readOnly: true,
                           onTap: (){
                             _.showModalUbigeo(id_pregunta.toString(),apariencia,i);
                           },
                           controller: _.controllerInput[i].controller,
-                          decoration: InputDecoration(hintText: 'Presione aqui'),
+                          decoration: InputDecoration(
+                            hintText: 'Presione aqui',
+                            hintStyle: TextStyle(fontSize: 10)
+                          ),
                         ),
                       ),
                       SizedBox(height: 12,)
@@ -98,13 +116,23 @@ class UbigeoWidget extends StatelessWidget {
                     children: [
                       Padding(
                         padding:  EdgeInsets.only(top: 20,left: 20,right: 20),
-                        child: Text(
-                          '$numPregunta.- $enunciado',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                            fontSize: 16
-                          ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '$numPregunta. $enunciado',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                
+                                  fontSize: 14
+                                ),
+                              ),
+                            ),
+                            Text(
+                              requerido == "true" ? " (*)" : "",
+                              style: TextStyle(color: Colors.red),
+                            )
+                          ],
                         ),
                       ),
                       SizedBox(height: 15,),
@@ -112,12 +140,17 @@ class UbigeoWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
+                          style: TextStyle(
+                            fontSize: 14
+                          ),
                           readOnly: true,
                           onTap: (){
                             _.showModalUbigeo(id_pregunta.toString(),apariencia,i);
                           },
                           controller: _.controllerInput[i].controller,
-                          decoration: InputDecoration(hintText: 'Presione aqui'),
+                          decoration: InputDecoration(
+                            hintText: 'Presione aqui'
+                          ),
                         ),
                       ),
                       SizedBox(height: 12,)

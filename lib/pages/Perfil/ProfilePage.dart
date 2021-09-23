@@ -48,7 +48,7 @@ class ProfilePage extends StatelessWidget {
                                 color: Color.fromRGBO(0, 102, 84, 1),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
-                                fontFamily: 'Poppins'
+                                
                               ),
                             ),
                             SizedBox(height: 8,),
@@ -56,7 +56,7 @@ class ProfilePage extends StatelessWidget {
                             Text(
                               'DRASAM',
                               style: TextStyle(
-                                fontFamily: 'Poppins',
+                                
                                 fontWeight: FontWeight.w700
                               ),
                             )
@@ -108,7 +108,7 @@ class ProfilePage extends StatelessWidget {
                                 style: TextStyle(
                                   color: Color.fromRGBO(67, 81, 99, 1),
                                   fontSize: 13,
-                                  fontFamily: 'Poppins',
+                                  
                                   fontWeight: FontWeight.w700
                                 ),
                               ),
@@ -186,7 +186,7 @@ class ProfilePage extends StatelessWidget {
                               style: TextStyle(
                                 color: Color.fromRGBO(67, 81, 99, 1),
                                 fontSize: 13,
-                                fontFamily: 'Poppins',
+                                
                                 fontWeight: FontWeight.w700
                               ),
                             )
@@ -210,7 +210,7 @@ class ProfilePage extends StatelessWidget {
                     padding:  EdgeInsets.only(left: 8,right: 8),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
                         color: Colors.white,
                       ),
                       child: SingleChildScrollView(
