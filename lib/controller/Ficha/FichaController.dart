@@ -123,7 +123,7 @@ class FichaController extends GetxController{
 
     final ImagePicker image = ImagePicker();
     if(valor == "CAMARA"){
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 65,maxHeight: 700,maxWidth: 700,);
 
       String photoBase64 = "";
       File image1;
@@ -164,7 +164,7 @@ class FichaController extends GetxController{
 
     }else{
 
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 65, maxHeight: 700,maxWidth: 700 );
       String photoBase64 = "";
       File image1;
 
@@ -333,7 +333,7 @@ class FichaController extends GetxController{
 
     List<FichasModel> hola =  await DBProvider.db.updateFicha( idFicha, observa, formattedDate,"F", fecha_retorno);
 
-    print(hola);
+
     //_positionStream.cancel();
     if(hola.length > 0){
 

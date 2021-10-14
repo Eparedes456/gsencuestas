@@ -342,6 +342,8 @@ class DetalleFichaController extends GetxController{
   }
 
   sendDataToServer()async{
+
+    showModal("",true,'Sincronizando datos..');
     DateTime now = DateTime.now();
     var utc = now.toUtc();    
     var part = utc.toString().split(" ");
@@ -402,7 +404,7 @@ class DetalleFichaController extends GetxController{
       sendFicha['encuestado'] = encuestado;
 
     }else{
-      encuestado["idEncuestado"] = listEncuestadoModel[0].idEncuestado;
+      encuestado["idEncuestado"] = int.parse(listEncuestadoModel[0].idEncuestado);
       sendFicha['encuestado']   = encuestado;
     }
 
@@ -483,7 +485,7 @@ class DetalleFichaController extends GetxController{
 
       sendFicha['tracking']  = listTrackingMap;
       tracking ={};
-      //print('hola');
+      
     
     }
 
@@ -512,7 +514,7 @@ class DetalleFichaController extends GetxController{
 
         sendFicha['multimedia']  = listMultimediaMap;
         multimedia ={};
-        //print('hola');
+    
     
       }
 
@@ -520,13 +522,16 @@ class DetalleFichaController extends GetxController{
 
     print(sendFicha);
 
+    var sendData = json.encode(sendFicha);
+    print(sendData);
+
     //String body = jsonEncode(sendFicha);
 
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
     if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
-      showModal("",true,'Sincronizando datos..');
+      
 
       var response  = await apiConexion.sendFichaToServer(sendFicha);
       print(response);

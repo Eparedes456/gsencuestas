@@ -27,7 +27,7 @@ class TabsController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     //this.checkVersion();
-    this.checkConecction();
+    //this.checkConecction();
   }
 
   @override
@@ -38,23 +38,14 @@ class TabsController extends GetxController{
 
   ApiServices apiConexion = new ApiServices();
 
-
-
-  
-
-  
-
-
-
-
   checkConecction()async{
 
     Timer.periodic(Duration(seconds: 180), (timer) async{ 
-      print('hola');
+     
       List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
       var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
       
-      print(result);
+
       if(result == ConnectivityResult.wifi || result  == ConnectivityResult.mobile){
         
         if(listFichas.length > 0){
@@ -75,25 +66,6 @@ class TabsController extends GetxController{
 
     });
 
-    //List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
-    /*var subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async{
-      
-      print(result);
-      if(result == ConnectivityResult.wifi || result  == ConnectivityResult.mobile){
-        
-        if(listFichas.length > 0){
-          print('hago la sincronización, envio las fichas al servidor');
-          print(listFichas.length);
-          await uploadData(listFichas);
-        }
-
-        print('estoy  conectado a internet');
-
-      }else{
-
-      }
-      
-    });*/
 
   }
 

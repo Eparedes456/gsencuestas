@@ -30,6 +30,55 @@ import 'package:basic_utils/basic_utils.dart';
 
 
 class QuizController extends GetxController with SingleGetTickerProviderMixin {
+  ApiServices apiConexion = new ApiServices();
+  String bloque;
+  String direccionReniec  = "";
+  String encuestadoNombreCompleto = "";
+  List<Imagelist> files = [];
+  var idEncuesta;
+  var idEncuestado;
+  var idFicha;
+  var idRequierepreguntaObserva;
+  List<String> idsOpcion = [];
+  List liscodDistrito = [];
+  List listCodDep = [];
+  List listcodProvincia = [];
+  var metaData;
+  String numDOCUMENTO = "";
+  var requiereObservacion =false;
+  List<PreguntaModel> tempList = [];
+
+  List<InputTextfield> _controllerInput = [];
+  File _imagePath;
+  bool _isLoadingData = false;
+  String _latitud = "";
+  List<UbigeoModel> _listCentrosPoblados = [];
+  List<UbigeoModel> _listDistritos = [];
+  List<UbigeoModel> _listprovincias = [];
+  String _longitud = "";
+  List<OpcionesModel> _opcionesPreguntas = [];
+  List<OpcionesModel> _pickOpcionSimple = [];
+  StreamSubscription<Position> _positionStream;
+  List<PreguntaModel> _preguntas = [];
+  String _selectCodCentroPoblado = "";
+  String _selectCodDepartamento = "";
+  String _selectCodDistritoUbigeo = "";
+  String _selectCodProvincia = "";
+  String _tipo_pregunta = 'Texto';
+  String _tituloEncuesta = "";
+  String _ubigeoCapturado = "";
+  String _ubigeoGuardar = "";
+  String _valueCentroPoblado;
+  String _valueDepartamento;
+  String _valueDistrito;
+  String _valueProvincia;
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+  }
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -69,39 +118,15 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     super.onReady();
   }
 
-  ApiServices apiConexion = new ApiServices();
-  String _tipo_pregunta = 'Texto';
   String get tipo_pregunta => _tipo_pregunta;
-  List<PreguntaModel> _preguntas = [];
+
   List<PreguntaModel> get preguntas => _preguntas;
-  List<OpcionesModel> _opcionesPreguntas = [];
+
   List<OpcionesModel> get opcionesPreguntas => _opcionesPreguntas;
-  String _tituloEncuesta = "";
+
   String get tituloEncuesta => _tituloEncuesta;
-  var idEncuesta;
-  var idEncuestado;
-  var idFicha;
-  var metaData;
-
-
-  /* Datos del encuestado reiniec */
-
-  String encuestadoNombreCompleto = "";
-  String numDOCUMENTO = "";
-  String direccionReniec  = "";
-
-
-  /* */
-
-
-
-  String bloque;
-
-  bool _isLoadingData = false;
 
   bool get isLoadingData => _isLoadingData;
-
-  StreamSubscription<Position> _positionStream;
 
   getPreguntas(String idEncuesta) async {
 
@@ -187,25 +212,20 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     update();
   }
 
-  /* Image pic to camera */
-
-  File _imagePath;
   File get imagepath => _imagePath;
-
-  List<Imagelist> files = [];
 
   pickImage(String valor,String idPregunta,int i) async {
     String photoBase64 = "";
     final ImagePicker image = ImagePicker();
 
     if(valor == "CAMARA"){
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 65,maxHeight: 700,maxWidth: 700,);
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
 
     }else{
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 500,maxWidth: 500);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 65,maxHeight: 700,maxWidth: 700);
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
@@ -249,14 +269,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     update(['image']);
   }
 
-  /* */
-
-  /* Obtener la ubicación del dispositivo */
-
-  String _latitud = "";
-  String _longitud = "";
-
   String get latitud => _latitud;
+
   String get longitud => _longitud;
 
   getCurrentLocation() async {
@@ -278,8 +292,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     } else {
     }
   }
-
-  /* DatePicker respuesta */
 
   selectDatePicker(String idpregunta, int i,BuildContext context,String tipo)async{
 
@@ -321,14 +333,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     }
   }
-  /* */
 
-  /*  Obtener simple widget respuesta */
-
-  List<OpcionesModel> _pickOpcionSimple = [];
   List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
-  var requiereObservacion =false;
-  var idRequierepreguntaObserva;
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
 
@@ -443,9 +449,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     //await DBProvider.db.updateRespuesta(id_pregunta,valueobservacion);
 
   }
-  
-  List<String> idsOpcion = [];
-  /*  Obtener respuesta multiple widget  respuesta */
 
   capturarRespuestaMultiple(OpcionesModel opcionEscogida) async {
 
@@ -505,44 +508,23 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     );
   }
 
-  /* Obtener el dato de los texteditting controller */
-
-  List<InputTextfield> _controllerInput = [];
-
   List<InputTextfield> get controllerInput => _controllerInput;
 
-  /* UBIGEO  WIDGET */
-
-  String _ubigeoCapturado = "";
-  String _ubigeoGuardar = "";
   String get ubigeoCapturado => _ubigeoCapturado;
 
-  String _valueDistrito;
   String get valueDistrito => _valueDistrito;
 
-  String _valueCentroPoblado;
   String get valueCentroPoblado => _valueCentroPoblado;
-  String _valueDepartamento;
+
   String get valueDepartamento => _valueDepartamento;
 
-  String _valueProvincia;
   String get valueprovincia => _valueProvincia;
 
-  List<UbigeoModel> _listprovincias = [];
   List<UbigeoModel> get listprovincias => _listprovincias;
 
-  List<UbigeoModel> _listDistritos = [];
   List<UbigeoModel> get listDistrito => _listDistritos;
 
-  List<UbigeoModel> _listCentrosPoblados = [];
   List<UbigeoModel> get listCentroPoblados => _listCentrosPoblados;
-  List listCodDep = [];
-  List listcodProvincia = [];
-  List liscodDistrito = [];
-  String _selectCodDepartamento = "";
-  String _selectCodProvincia = "";
-  String _selectCodDistritoUbigeo = "";
-  String _selectCodCentroPoblado = "";
 
   showModalUbigeo(String idPregunta, String apariencia, int i) async {
     listCodDep = [];
@@ -721,13 +703,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   }
 
-
-
-
-
-
-
-
   selectDistritoManual(UbigeoModel value, String codProvincia,
       String codDistrito, bool estado) async {
     _listCentrosPoblados = [];
@@ -775,8 +750,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     var respuesta = await DBProvider.db.getAllRespuestas(idFicha.toString());
   }
 
-/* */
-
   guardarInput(String idPregunta, String valor) async {
 
     List<RespuestaModel> respuesta =
@@ -793,8 +766,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           idPregunta.toString(), idFicha.toString(), "", valor,'Text');
     }
   }
-
-  /* guardar la ficha */
 
   guardarFicha() async {
   
@@ -970,8 +941,6 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  List<PreguntaModel> tempList = [];
-
   calcular() {
     tempList = _preguntas
         .where((element) => element.tipo_pregunta.contains("note"))
@@ -1014,40 +983,60 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
-  }
+  /* Datos del encuestado reiniec */
+
+  /* */
+
+  /* Image pic to camera */
+
+  /* */
+
+  /* Obtener la ubicación del dispositivo */
+
+  /* DatePicker respuesta */
+
+  /* */
+
+  /*  Obtener simple widget respuesta */
+
+  /*  Obtener respuesta multiple widget  respuesta */
+
+  /* Obtener el dato de los texteditting controller */
+
+  /* UBIGEO  WIDGET */
+
+/* */
+
+  /* guardar la ficha */
 }
 
 class InputTextfield {
-  String idPregunta;
-  TextEditingController controller;
-  String name;
-  int index;
-  String tipo_pregunta;
-  String calculation;
-  String require;
- 
-
   InputTextfield(this.idPregunta, this.controller, this.name, this.index,
       this.tipo_pregunta, this.calculation,this.require,);
+
+  String calculation;
+  TextEditingController controller;
+  String idPregunta;
+  int index;
+  String name;
+  String require;
+  String tipo_pregunta;
 }
 
 class Imagelist{
-  String idPregunta;
   File file;
- 
+  String idPregunta;
 
   Imagelist(this.idPregunta, this.file);
 }
 
 class DropDownDepartamento extends StatelessWidget {
-  final List<UbigeoModel> showDepartamentos;
-  final List<String> dataUbi;
   const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi})
       : super(key: key);
+
+  final List<String> dataUbi;
+  final List<UbigeoModel> showDepartamentos;
+
   @override
   Widget build(BuildContext context) {
     String value = showDepartamentos[0].descripcion;
@@ -1098,10 +1087,6 @@ class DropDownDepartamento extends StatelessWidget {
 }
 
 class DropDownProvincia extends StatelessWidget {
-  final List<UbigeoModel> showProvincia;
-  final List<String> dataUbi;
-  final bool isManual;
-  final String apariencia;
   const DropDownProvincia(
       {Key key,
       this.showProvincia,
@@ -1109,6 +1094,12 @@ class DropDownProvincia extends StatelessWidget {
       this.isManual,
       this.apariencia})
       : super(key: key);
+
+  final String apariencia;
+  final List<String> dataUbi;
+  final bool isManual;
+  final List<UbigeoModel> showProvincia;
+
   @override
   Widget build(BuildContext context) {
     String value; //showProvincia[0].descripcion;
@@ -1162,12 +1153,14 @@ class DropDownProvincia extends StatelessWidget {
 }
 
 class DropDownDistrito extends StatelessWidget {
-  final List<UbigeoModel> showDistrito;
-  final List<String> dataUbi;
-  final bool isManual;
   const DropDownDistrito(
       {Key key, this.showDistrito, this.dataUbi, this.isManual})
       : super(key: key);
+
+  final List<String> dataUbi;
+  final bool isManual;
+  final List<UbigeoModel> showDistrito;
+
   @override
   Widget build(BuildContext context) {
     String value; //showProvincia[0].descripcion;
@@ -1221,12 +1214,14 @@ class DropDownDistrito extends StatelessWidget {
 }
 
 class CentroPoblado extends StatelessWidget {
-  final List<UbigeoModel> showCentroPoblado;
-  final List<String> dataUbi;
-  final bool isManual;
   const CentroPoblado(
       {Key key, this.showCentroPoblado, this.dataUbi, this.isManual})
       : super(key: key);
+
+  final List<String> dataUbi;
+  final bool isManual;
+  final List<UbigeoModel> showCentroPoblado;
+
   @override
   Widget build(BuildContext context) {
     String value; //showProvincia[0].descripcion;

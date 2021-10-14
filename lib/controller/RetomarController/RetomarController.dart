@@ -216,13 +216,13 @@ class RetommarController extends GetxController {
     final ImagePicker image = ImagePicker();
 
     if(valor == "CAMARA"){
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 50,maxHeight: 500,maxWidth: 500,);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 65,maxHeight: 700,maxWidth: 700,);
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());
 
     }else{
-      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 50,maxHeight: 500,maxWidth: 500);
+      PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 65,maxHeight: 700,maxWidth: 700);
       _imagePath = File(imageCapturada.path);
 
       photoBase64 = base64Encode(_imagePath.readAsBytesSync());

@@ -19,9 +19,29 @@ class VerImage extends StatelessWidget {
       builder: (_) => Column(
         children: [
           SizedBox(height: 20,),
-          for (var i = 0; i < _.respuestas.length; i++)...{
+          
+          for (var i = 0; i < _.imagenes.length; i++)...{
+            
+            if(_.imagenes[i].idPregunta == idPregunta)...{
 
-            if(_.respuestas[i].tipoPregunta == "Imagen" && _.respuestas[i].idPregunta == int.parse(idPregunta))...{
+              Container(
+                height: 150,
+                width: double.infinity,
+                child:  Image(
+                  image: MemoryImage(_.imagenes[i].file),
+                ) //Text(_.imagenes[i].file.toString())   //Image.memory(_.imagenes[i].file,fit: BoxFit.contain,)   //MemoryImage(_.imagenes[i])   //Text(_.imagenes[i]),//Image.file(_.imagepath,fit: BoxFit.contain,),
+              ),
+
+            }
+
+          }
+          
+          /*for (var i = 0; i < _.respuestas.length; i++)...{
+
+            if(_.respuestas[i].tipoPregunta == "Imagen")...{
+              
+              if(_.respuestas[i].tipoPregunta)...{}
+              
               Container(
                 height: 150,
                 width: double.infinity,
@@ -29,7 +49,7 @@ class VerImage extends StatelessWidget {
               ),
 
             }
-          }
+          }*/
         ],
       )
       

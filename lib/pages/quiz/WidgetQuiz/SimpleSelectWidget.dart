@@ -33,7 +33,7 @@ class SimpleSelectPage extends StatelessWidget {
                                   index: index,
                                 ),
 
-                                //Text('hola')
+                         
                                   
                               ],
                             );
@@ -115,7 +115,7 @@ class SimpleSelectPage extends StatelessWidget {
                                   index: index,
                                 ),
 
-                                //Text('hola')
+               
                                   
                               ],
                             );

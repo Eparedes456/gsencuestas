@@ -60,7 +60,7 @@ class Opciones extends StatelessWidget {
                               
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color:   _.opcionesPreguntas[index].selected == true ? Colors.green : Colors.grey ,
+                                color:   _.opcionesPreguntas[index].selected == true ? Color.fromRGBO(246, 252, 124,1) : Colors.grey[200] ,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
@@ -73,12 +73,12 @@ class Opciones extends StatelessWidget {
                                       child: Text(
                                         _.opcionesPreguntas[index].label,
                                         style: TextStyle(
-                                          color:  _.opcionesPreguntas[index].selected == true ?  Colors.white :Colors.black
+                                          color:  _.opcionesPreguntas[index].selected == true ?  Colors.black : Colors.black,
                                         ),
                                       )
                                     ),
 
-                                    Icon(Icons.check_circle_outline,color:  _.opcionesPreguntas[index].selected == true ? Colors.white : Colors.black,)
+                                    Icon(Icons.check_circle_outline,color:  _.opcionesPreguntas[index].selected == true ? Colors.black : Colors.black,)
                                     
 
 

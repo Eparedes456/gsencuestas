@@ -48,7 +48,7 @@ class VerEncuestacontroller extends GetxController {
 
   String bloque;
 
-  List<Uint8List> imagenes =[];
+  List<Imagelist> imagenes =[];
   
   Uint8List _photoBase64;
 
@@ -75,13 +75,15 @@ class VerEncuestacontroller extends GetxController {
       
       var idPregunta = _preguntas[i].id_pregunta;
 
-        controllerInput.add(InputTextfield(
+        controllerInput.add(
+          InputTextfield(
           preguntas[i].id_pregunta.toString(),
           TextEditingController(),
           preguntas[i].bind_name,
           i,
           preguntas[i].tipo_pregunta,
-          preguntas[i].calculation));
+          preguntas[i].calculation)
+        );
 
 
       //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
@@ -123,12 +125,17 @@ class VerEncuestacontroller extends GetxController {
         
         _photoBase64 = base64Decode(respuestas[x].valor);
 
-        imagenes.add(_photoBase64);
+        imagenes.add(
+          Imagelist(
+            respuestas[x].idPregunta.toString(),
+            _photoBase64
+          )
+        );
 
       }
     }
     
-
+    print(imagenes);
     print(_opcionesPreguntas.length);
     //update('simple');
     _isLoadingData = true;
@@ -169,4 +176,13 @@ class InputTextfield {
 
   InputTextfield(this.idPregunta, this.controller, this.name, this.index,
       this.tipo_pregunta, this.calculation);
+}
+
+
+class Imagelist{
+  String idPregunta;
+  Uint8List file;
+ 
+
+  Imagelist(this.idPregunta, this.file);
 }

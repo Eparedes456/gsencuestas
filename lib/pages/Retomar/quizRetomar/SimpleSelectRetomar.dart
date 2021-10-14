@@ -33,7 +33,7 @@ class SimpleSelectRetomar extends StatelessWidget {
                                   index: index,
                                 ),
 
-                                //Text('hola')
+                             
                                   
                               ],
                             );

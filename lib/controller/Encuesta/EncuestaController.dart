@@ -1444,7 +1444,7 @@ class EncuestaController extends GetxController {
     String ubigeo;
 
     /* Datos del encuestado de reniec */
-    print('hola');
+    
     print(dataEncuestados["nombre"]);
 
 
