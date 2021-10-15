@@ -338,58 +338,10 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
 
+    var response = await DBProvider.db.getHijosOpcion(opcionEscogida.padre);
+    print(response);
 
-
-    /*List<OpcionesModel> opcionesFlag = opcionesPreguntas.where((element) => element.idPregunta == opcionEscogida.idPregunta).toList();
-
-      //print(opcionesFlag);
-
-      if(opcionesFlag.length != 0){
-
-      for (var i = 0; i < opcionesFlag.length; i++) {
-
-        if(opcionEscogida.idOpcion == opcionesFlag[i].idOpcion){
-
-          var index = opcionesPreguntas.indexWhere((element) => element.idOpcion == opcionEscogida.idOpcion);
-          opcionesPreguntas[index].selected =  true;
-          await DBProvider.db.insertRespuesta(
-            opcionEscogida.idPregunta.toString(),
-            idFicha.toString(),
-            opcionEscogida.idOpcion.toString(),
-            opcionEscogida.valor,
-            'RespuestaSimple'
-        );
-
-
-        }else{
-
-          var index = opcionesPreguntas.indexWhere((element) => element.idOpcion == opcionesFlag[i].idOpcion);
-          opcionesPreguntas[index].selected =  false;
-
-          await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogida.idPregunta.toString(),
-            idFicha.toString()
-          );
-          
-        }
-        
-      }
-
-
-    }else{
-
-
-    }*/
-
-    /*var index2 = opcionesPreguntas.indexWhere((element) => element.idOpcion == opcionEscogida.idOpcion);
-      print(index2);
-      opcionesPreguntas[index2].selected  = true;
-      print(opcionesPreguntas[index2].selected);*/
-
-
-
-
-    opcionesPreguntas.forEach((element) async {
+    /*opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
         element.selected = false;
         await DBProvider.db.eliminarRespuestasxFicha(
@@ -419,7 +371,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       idRequierepreguntaObserva = opcionEscogida.idPregunta;
       requiereObservacion = true;
 
-    }
+    }*/
 
     update(['simple']);
   }

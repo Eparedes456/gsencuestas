@@ -130,6 +130,7 @@ class DBProvider {
             orden INTEGER,
             requiereDescripcion TEXT,
             estado TEXT,
+            padre INTEGER,
             createdAt TEXT,
             updated_at TEXT
             
@@ -1446,6 +1447,17 @@ class DBProvider {
   deleteAllParcelas() async {
     final db = await database;
     var respuesta = await db.delete("parcelas");
+  }
+
+  getHijosOpcion(int idPadre)async{
+
+    final db = await database;
+    var respuesta = await db.rawQuery(
+      '''SELECT * FROM opcion WHERE padre = $idPadre'''
+    );
+    List<OpcionesModel> listOpciones = respuesta.isNotEmpty ? respuesta.map((e) => OpcionesModel.fromMap(e)).toList() : [];
+    return listOpciones;
+
   }
 
   /* */

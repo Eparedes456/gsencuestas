@@ -29,14 +29,15 @@ class OpcionesModel {
   String  createdAt;  
   String  updated_at;
   bool    selected;
-  String requiereDescripcion;
+  String  requiereDescripcion;
+  int     padre;
   
   
    
     OpcionesModel({
 
       this.idOpcion,this.idPreguntaGrupoOpcion,this.idPregunta,this.valor,this.label,this.orden,this.estado,this.createdAt,
-      this.updated_at,this.selected,this.requiereDescripcion,
+      this.updated_at,this.selected,this.requiereDescripcion,this.padre
 
     });
 
@@ -56,6 +57,7 @@ class OpcionesModel {
     updated_at              : json['updatedAt'],
     selected                : false,
     requiereDescripcion     : json['requiereDescripcion'],
+    padre                   : json['padre']
                    
 
   );
@@ -77,7 +79,7 @@ class OpcionesModel {
       'createdAt'             : createdAt,
       'updated_at'            : updated_at,
       'requiereDescripcion'   : requiereDescripcion,
-      
+      'padre'                 : padre
 
     };
 

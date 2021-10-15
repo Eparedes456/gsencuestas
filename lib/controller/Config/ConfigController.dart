@@ -773,7 +773,8 @@ class ConfigController extends GetxController {
                 estado                  : item2["estado"].toString(),
                 createdAt               : item2["createdAt"],
                 updated_at              : item2["updatedAt"],
-                requiereDescripcion     : item2["requiereDescripcion"].toString()
+                requiereDescripcion     : item2["requiereDescripcion"].toString(),
+                padre                   : item2["padre"] 
               ));
             });
           }

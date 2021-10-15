@@ -818,7 +818,8 @@ class PrincipalController extends GetxController {
             int idPreguOpcion = preguOpcion[0]["idPreguntaGrupoOpcion"];
             var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
             listOpciones.forEach((item2) {
-              _opcionesPreguntas.add(OpcionesModel(
+              _opcionesPreguntas.add(
+                OpcionesModel(
                   idOpcion: item2["idOpcion"],
                   idPreguntaGrupoOpcion: idPreguOpcion.toString(),
                   idPregunta: idPregunta,
@@ -828,8 +829,10 @@ class PrincipalController extends GetxController {
                   estado: item2["estado"].toString(),
                   createdAt: item2["createdAt"],
                   updated_at: item2["updatedAt"],
-                  requiereDescripcion:
-                      item2["requiereDescripcion"].toString()));
+                  requiereDescripcion: item2["requiereDescripcion"].toString(),
+                  padre   :   item2["padre"] 
+                )
+              );
             });
           }
         });
@@ -840,6 +843,8 @@ class PrincipalController extends GetxController {
       for (var r = 0; r < _opcionesPreguntas.length; r++) {
         await DBProvider.db.insertOpcionesxPregunta(_opcionesPreguntas[r]);
       }
+      var opcion = await DBProvider.db.getAllOpciones();
+      print(opcion);
       if (_proyectos.length > 0) {
         /*_isLoading = false;
         _hayData = true;
