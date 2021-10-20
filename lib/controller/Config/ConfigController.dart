@@ -52,7 +52,7 @@ class ConfigController extends GetxController {
     update();
   }
 
-  sendDataToServer() async {
+  /*sendDataToServer() async {
     Get.back();
     List data = [];
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
@@ -63,7 +63,7 @@ class ConfigController extends GetxController {
       var dataEncuesta = await DBProvider.db.getOneEncuesta(listFichas[i].idEncuesta.toString());
       print(dataEncuesta);
 
-      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha.toString());
+      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha);
       List<TrackingModel> listTracking = await DBProvider.db.getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
       List<MultimediaModel> listMultimedia = await DBProvider.db.getAllMultimediaxFicha(listFichas[i].idFicha.toString());
 
@@ -279,7 +279,7 @@ class ConfigController extends GetxController {
         ));
       }
     }
-  }
+  }*/
 
   showModal(String mensaje, bool loading, String titulo){
     Get.dialog(
@@ -328,7 +328,7 @@ class ConfigController extends GetxController {
                             borderRadius: BorderRadius.circular(10)),
                         color: Color.fromRGBO(0, 102, 84, 1),
                         onPressed: () {
-                          sendDataToServer();
+                          //sendDataToServer();
                         },
                         child: Text('Subir'),
                       ),
@@ -763,23 +763,28 @@ class ConfigController extends GetxController {
             int idPreguOpcion = preguOpcion[0]["idPreguntaGrupoOpcion"];
             var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
             listOpciones.forEach((item2) {
-              _opcionesPreguntas.add(OpcionesModel(
-                idOpcion                : item2["idOpcion"],
-                idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
-                idPregunta              : idPregunta,
-                valor                   : item2["valor"],
-                label                   : item2["label"],
-                orden                   : item2["orden"],
-                estado                  : item2["estado"].toString(),
-                createdAt               : item2["createdAt"],
-                updated_at              : item2["updatedAt"],
-                requiereDescripcion     : item2["requiereDescripcion"].toString(),
-                padre                   : item2["padre"] 
-              ));
+              _opcionesPreguntas.add(
+                OpcionesModel(
+                  idOpcion                : item2["idOpcion"],
+                  idPreguntaGrupoOpcion   : idPreguOpcion.toString(),
+                  idPregunta              : idPregunta,
+                  valor                   : item2["valor"],
+                  label                   : item2["label"],
+                  orden                   : item2["orden"],
+                  estado                  : item2["estado"].toString(),
+                  createdAt               : item2["createdAt"],
+                  updated_at              : item2["updatedAt"],
+                  requiereDescripcion     : item2["requiereDescripcion"].toString(),
+                  padre                   : item2["padre"] 
+                )
+              );
             });
           }
         });
       }
+
+      
+      
       for (var e = 0; e < _preguntas.length; e++) {
         await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
       }
@@ -788,6 +793,7 @@ class ConfigController extends GetxController {
       }
       var result = await DBProvider.db.getAllOpciones();
       print(result);
+      
       if (_proyectos.length > 0) {
         /*_isLoading = false;
         _hayData = true;

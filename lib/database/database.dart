@@ -590,7 +590,12 @@ class DBProvider {
 
   getAllOpciones() async {
     final db = await database;
-    var respuesta = await db.query("opcion");
+    //var respuesta = await db.query("opcion");
+
+    var respuesta = await db.rawQuery('''
+      SELECT * FROM opcion
+      
+      ''');
 
     List<OpcionesModel> listOpciones = respuesta.isNotEmpty
         ? respuesta.map((e) => OpcionesModel.fromMap(e)).toList()
@@ -937,12 +942,12 @@ class DBProvider {
       ''');
   }
 
-  eliminarRespuestasxFicha(String idPregunta, String idFicha) async {
+  eliminarRespuestasxFicha(String idPregunta, String idFicha,String valor) async {
     final db = await database;
 
     var response = await db.rawQuery('''
       
-      DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha 
+      DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha AND valor = '$valor'
 
       ''');
   }

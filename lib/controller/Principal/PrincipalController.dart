@@ -103,7 +103,7 @@ class PrincipalController extends GetxController {
     SharedPreferences pref = await SharedPreferences.getInstance();
     
     final info = await PackageInfo.fromPlatform();
-    print(info);
+    //print(info);
 
     var versionAndroid = info.version == null || info.version == "" ? "" :info.version ;
     var versioniOS =  info.version == null || info.version == "" ? "" :info.version;
@@ -316,7 +316,7 @@ class PrincipalController extends GetxController {
               createdAt: item["createdAt"],
             ));
           });
-          print(_usuarios);
+          //print(_usuarios);
           for (var i = 0; i < _usuarios.length; i++) {
             await DBProvider.db.insertUsuarios(_usuarios[i]);
           }
@@ -495,7 +495,7 @@ class PrincipalController extends GetxController {
 
       var parametro = await apiConexion.getParametroUsuario();
       if (parametro != 1 && parametro != 2 && parametro != 3) {
-        print(parametro["idParametro"]);
+        //(parametro["idParametro"]);
         _parametros.add(ParametroModel(
           idParametro: parametro["idParametro"],
           ultiimaActualizacionUsuario: parametro["ultimaActualizacionUsuario"],
@@ -515,7 +515,7 @@ class PrincipalController extends GetxController {
             parametro["ultimaActualizacionUsuario"]);
       }
       List<ParametroModel> dataParametro2 = await DBProvider.db.getParametros();
-      print(dataParametro2);
+      //print(dataParametro2);
       await cargarParcelas();
       await cargarProyectosEncuesta();
       
@@ -622,10 +622,10 @@ class PrincipalController extends GetxController {
   cargarEncuestados() async {
     var listEncuestados = await apiConexion.getAllEncuestado2();
     if (listEncuestados != 1 && listEncuestados != 2 && listEncuestados != 3) {
-      print(listEncuestados);
+      //print(listEncuestados);
       for (var i = 0; i < listEncuestados.length; i++) {
         var listEncuestados2 = listEncuestados[i]["encuestado"];
-        print(listEncuestados2["documento"]);
+        //print(listEncuestados2["documento"]);
         _encuestadosLista.add(EncuestadoModel(
             idEncuestado    : listEncuestados2["idEncuestado"].toString(),
             documento       : listEncuestados2["documento"],
@@ -738,10 +738,10 @@ class PrincipalController extends GetxController {
 
       for (var x = 0; x < _proyectos.length; x++) {
         var data = await DBProvider.db.getAllProyectos();
-        print(data);
+        //print(data);
         await DBProvider.db.insertProyectos(_proyectos[x]);
         var data1 = await DBProvider.db.getAllProyectos();
-        print(data1);
+        //print(data1);
       }
 
       for (var j = 0; j < _proyectos.length; j++) {
@@ -817,8 +817,12 @@ class PrincipalController extends GetxController {
           if (preguOpcion.length > 0) {
             int idPreguOpcion = preguOpcion[0]["idPreguntaGrupoOpcion"];
             var listOpciones = preguOpcion[0]["grupoOpcion"]["opcion"];
+            print(listOpciones);
+
             listOpciones.forEach((item2) {
+
               _opcionesPreguntas.add(
+
                 OpcionesModel(
                   idOpcion: item2["idOpcion"],
                   idPreguntaGrupoOpcion: idPreguOpcion.toString(),
@@ -832,11 +836,16 @@ class PrincipalController extends GetxController {
                   requiereDescripcion: item2["requiereDescripcion"].toString(),
                   padre   :   item2["padre"] 
                 )
+
               );
+
             });
           }
         });
       }
+
+      print(_opcionesPreguntas);
+      
       for (var e = 0; e < _preguntas.length; e++) {
         await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
       }
@@ -845,6 +854,8 @@ class PrincipalController extends GetxController {
       }
       var opcion = await DBProvider.db.getAllOpciones();
       print(opcion);
+
+
       if (_proyectos.length > 0) {
         /*_isLoading = false;
         _hayData = true;
@@ -899,7 +910,7 @@ class PrincipalController extends GetxController {
 
     var response = await rootBundle.loadString("assets/ubi.json");
     var data = json.decode(response);
-    print(data.runtimeType);
+    //print(data.runtimeType);
 
     List<UbigeoModel> data1 =
         (data as List).map((e) => UbigeoModel.fromJson(e)).toList();
@@ -972,7 +983,7 @@ class PrincipalController extends GetxController {
   loadEncuestas(int id_proyecto, String proyectonombre) async {
     _nombreProyecto = proyectonombre;
     _encuestas = [];
-    print(id_proyecto);
+    //print(id_proyecto);
     ConnectivityResult conectivityResult =
         await Connectivity().checkConnectivity();
 
@@ -1040,9 +1051,9 @@ class PrincipalController extends GetxController {
     _encuestas =
         await DBProvider.db.consultEncuestaxProyecto(id_proyecto.toString());
 
-    print(_encuestas);
+    //print(_encuestas);
 
-    print(_encuestas.length);
+    //print(_encuestas.length);
 
     if (_encuestas.length > 0) {
       isLoadingEncuestas = false;

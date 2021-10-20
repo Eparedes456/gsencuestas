@@ -97,7 +97,7 @@ class RetommarController extends GetxController {
     idFicha = datos["idFicha"];
     List<FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
     idEncuestado = ficha[0].idEncuestado.toString();
-    respuestas = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+    respuestas = await DBProvider.db.getAllRespuestasxFicha( idFicha);
     _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
   
     var allOpciones = await DBProvider.db.getAllOpciones();
@@ -314,7 +314,7 @@ class RetommarController extends GetxController {
       if (element.idPregunta == opcionEscogida.idPregunta) {
         element.selected = false;
         await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogida.idPregunta.toString(), idFicha.toString());
+            opcionEscogida.idPregunta.toString(), idFicha.toString(),opcionEscogida.valor);
       }
 
       //element.selected = false;
@@ -349,7 +349,7 @@ class RetommarController extends GetxController {
           if (element.selected == true) {
             element.selected = false;
             await DBProvider.db.eliminarRespuestasxFicha(
-                opcionEscogida.idPregunta.toString(), idFicha.toString());
+                opcionEscogida.idPregunta.toString(), idFicha.toString(),opcionEscogida.valor);
           } else {
             element.selected = true;
             await DBProvider.db.insertRespuesta(
@@ -365,7 +365,7 @@ class RetommarController extends GetxController {
     });
 
     List<RespuestaModel> listRespuestaDB =
-        await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+        await DBProvider.db.getAllRespuestasxFicha(idFicha);
     print(listRespuestaDB);
     update(['multiple']);
   }
@@ -598,7 +598,7 @@ class RetommarController extends GetxController {
           await DBProvider.db.getAllTrackingOfOneSurvery(idFicha);
 
       respuestas =
-          await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+          await DBProvider.db.getAllRespuestasxFicha(idFicha);
 
   
 

@@ -51,7 +51,7 @@ class TabsController extends GetxController{
         if(listFichas.length > 0){
           print('hago la sincronización, envio las fichas al servidor');
           print(listFichas.length);
-          await uploadData(listFichas);
+          //await uploadData(listFichas);
         }else{
           print('No hay fichas para sincronizar');
         }
@@ -69,10 +69,10 @@ class TabsController extends GetxController{
 
   }
 
-  uploadData(List<FichasModel> dataFichas)async{
+  /*uploadData(List<FichasModel> dataFichas)async{
     List data = [];
     for (var i = 0; i < dataFichas.length; i++) {
-      List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(dataFichas[i].idFicha.toString());
+      List<RespuestaModel> listRespuestaDBlocal   =  await DBProvider.db.getAllRespuestasxFicha(dataFichas[i].idFicha);
       List<TrackingModel>   listTracking          =  await DBProvider.db.getAllTrackingOfOneSurvery(dataFichas[i].idFicha.toString());
       List<MultimediaModel> listMultimedia        =  await DBProvider.db.getAllMultimediaxFicha(dataFichas[i].idFicha.toString());
 
@@ -258,7 +258,7 @@ class TabsController extends GetxController{
       }
     }
 
-  }
+  }*/
 
   showModal(String mensaje, bool loading, String titulo){
     Get.dialog(

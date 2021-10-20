@@ -56,7 +56,9 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   List<UbigeoModel> _listDistritos = [];
   List<UbigeoModel> _listprovincias = [];
   String _longitud = "";
-  List<OpcionesModel> _opcionesPreguntas = [];
+  List<OpcionesModel> _opcionesPreguntas  = [];
+  List<OpcionesModel> opcionesHijos      = [];
+
   List<OpcionesModel> _pickOpcionSimple = [];
   StreamSubscription<Position> _positionStream;
   List<PreguntaModel> _preguntas = [];
@@ -135,9 +137,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
 
     _opcionesPreguntas = [];
+    opcionesHijos     = [];
     _preguntas = await DBProvider.db.consultPreguntaxEncuesta(idEncuesta);
-
-    
 
       preguntas.asMap().forEach((index, element) {
 
@@ -187,22 +188,62 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
       var opciones =
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+          print(opciones);
 
       opciones.forEach((element) {
-        _opcionesPreguntas.add(OpcionesModel(
-            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
-            idOpcion: element["id_opcion"],
-            idPregunta: idPregunta,
-            valor: element["valor"],
-            label: StringUtils.capitalize(element["label"],),  
-            orden: element["orden"],
-            estado: element["estado"].toString(),
-            createdAt: element["createdAt"],
-            updated_at: element["updatedAt"],
-            selected: false,
-            requiereDescripcion: element["requiereDescripcion"]));
+
+        if(element["padre"] == 0){
+
+          _opcionesPreguntas.add(
+            OpcionesModel(
+              idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
+              idOpcion              : element["id_opcion"],
+              idPregunta            : idPregunta,
+              valor                 : element["valor"],
+              label                 : StringUtils.capitalize(element["label"],),  
+              orden                 : element["orden"],
+              estado                : element["estado"].toString(),
+              createdAt             : element["createdAt"],
+              updated_at            : element["updatedAt"],
+              selected              : false,
+              requiereDescripcion   : element["requiereDescripcion"],
+              padre                 : element["padre"],
+              hijos                 : false  
+            )
+          );
+
+
+        }else{
+
+          opcionesHijos.add(
+            OpcionesModel(
+
+              idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
+              idOpcion              : element["id_opcion"],
+              idPregunta            : idPregunta,
+              valor                 : element["valor"],
+              label                 : StringUtils.capitalize(element["label"],),  
+              orden                 : element["orden"],
+              estado                : element["estado"].toString(),
+              createdAt             : element["createdAt"],
+              updated_at            : element["updatedAt"],
+              selected              : false,
+              requiereDescripcion   : element["requiereDescripcion"],
+              padre                 : element["padre"],
+              hijos                 : false  
+
+            )
+          );
+
+        }
+
+        
+
+
       });
     }
+
+    //print(_opcionesPreguntas);
 
 
     _isLoadingData = true;
@@ -338,14 +379,28 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
 
-    var response = await DBProvider.db.getHijosOpcion(opcionEscogida.padre);
-    print(response);
+    List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
 
-    /*opcionesPreguntas.forEach((element) async {
+    if(response.length > 0){
+
+      var index = opcionesPreguntas.indexWhere((element) => element.idOpcion == opcionEscogida.idOpcion);
+      print(index);
+      
+      opcionesPreguntas[index].hijos = true;
+
+      print("dibujar las otras opciones");
+
+      
+    }else{
+
+      print("nodibujar nada");
+    }
+
+    opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
         element.selected = false;
         await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogida.idPregunta.toString(), idFicha.toString());
+            opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.valor);
       }
 
 
@@ -364,6 +419,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+
+    
     
 
     if (opcionEscogida.requiereDescripcion == "true") {
@@ -371,10 +428,48 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       idRequierepreguntaObserva = opcionEscogida.idPregunta;
       requiereObservacion = true;
 
-    }*/
+    }
+
+    print(listRespuestaDB);
 
     update(['simple']);
   }
+
+  capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
+    opcionesHijos.forEach((element2)async{
+
+      if(element2.idPregunta == opcionEscogidaHijos.idPregunta){
+        element2.selected = false;
+        await DBProvider.db.eliminarRespuestasxFicha(
+            opcionEscogidaHijos.idPregunta.toString(), idFicha.toString(),opcionEscogidaHijos.valor);
+
+      }
+
+      if(element2.idOpcion == opcionEscogidaHijos.idOpcion){
+        element2.selected  = true;
+
+        await DBProvider.db.insertRespuesta(
+            opcionEscogidaHijos.idPregunta.toString(),
+            idFicha.toString(),
+            opcionEscogidaHijos.idOpcion.toString(),
+            opcionEscogidaHijos.valor,
+            'RespuestaSimple'
+        );
+
+
+      }
+
+    });
+
+    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+
+    print(listRespuestaDB);
+
+    update(['simpleHijos']);
+
+  }
+
+
 
   saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion,String tipoPregunta)async{
 
@@ -411,7 +506,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
           if (element.selected == true) {
             element.selected = false;
             await DBProvider.db.eliminarRespuestasxFicha(
-                opcionEscogida.idPregunta.toString(), idFicha.toString());
+                opcionEscogida.idPregunta.toString(), idFicha.toString(),opcionEscogida.valor);
           } else {
             element.selected = true;
             idsOpcion.add(element.idOpcion.toString());
