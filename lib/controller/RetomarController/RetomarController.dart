@@ -75,6 +75,8 @@ class RetommarController extends GetxController {
 
   List<InputTextfield> get controllerInput => _controllerInput;
 
+  List<OpcionesModel> opcionesHijos      = [];
+
   bool get isLoadingData => _isLoadingData;
   List<RespuestaModel> respuestas = [];
   String idFicha = "";
@@ -93,6 +95,7 @@ class RetommarController extends GetxController {
 
   onloadData(Map datos) async {
     _opcionesPreguntas = [];
+     opcionesHijos     = [];
     idEncuesta = datos["idEncuesta"];
     idFicha = datos["idFicha"];
     List<FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
@@ -103,7 +106,7 @@ class RetommarController extends GetxController {
     var allOpciones = await DBProvider.db.getAllOpciones();
 
    SharedPreferences preferences = await SharedPreferences.getInstance();
-    metaData =  json.decode( preferences.getString("metaDataUser"));
+    //metaData =  json.decode( preferences.getString("metaDataUser"));
 
 
 
@@ -155,18 +158,56 @@ class RetommarController extends GetxController {
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
       opciones.forEach((element) {
-        _opcionesPreguntas.add(OpcionesModel(
-            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
-            idOpcion: element["id_opcion"],
-            idPregunta: idPregunta,
-            valor: element["valor"],
-            label: element["label"],
-            orden: element["orden"],
-            estado: element["estado"].toString(),
-            createdAt: element["createdAt"],
-            updated_at: element["updatedAt"],
-            selected: false,
-            requiereDescripcion: element["requiereDescripcion"]));
+
+        if(element["padre"] == 0){
+
+          _opcionesPreguntas.add(
+          
+            OpcionesModel(
+              idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
+              idOpcion: element["id_opcion"],
+              idPregunta: idPregunta,
+              valor: element["valor"],
+              label: element["label"],
+              orden: element["orden"],
+              estado: element["estado"].toString(),
+              createdAt: element["createdAt"],
+              updated_at: element["updatedAt"],
+              selected: false,
+              requiereDescripcion: element["requiereDescripcion"],
+              padre                 : element["padre"],
+              hijos                 : false  
+            )
+          );
+
+
+        }else{
+
+          opcionesHijos.add(
+            OpcionesModel(
+
+              idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
+              idOpcion              : element["id_opcion"],
+              idPregunta            : idPregunta,
+              valor                 : element["valor"],
+              label                 : element["label"], 
+              orden                 : element["orden"],
+              estado                : element["estado"].toString(),
+              createdAt             : element["createdAt"],
+              updated_at            : element["updatedAt"],
+              selected              : false,
+              requiereDescripcion   : element["requiereDescripcion"],
+              padre                 : element["padre"],
+              hijos                 : false  
+
+            )
+          );
+
+
+        }
+
+        
+        
       });
     }
 
