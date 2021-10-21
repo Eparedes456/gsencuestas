@@ -133,7 +133,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   getPreguntas(String idEncuesta) async {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    metaData = json.decode( preferences.getString("metaDataUser"));
+    //metaData = json.decode( preferences.getString("metaDataUser"));
 
 
     _opcionesPreguntas = [];
@@ -436,34 +436,45 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
+
+    var response =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
+    print(response);
+    var flag = response[0].valor.split("-");
+    print(flag);
+    var editResponse = await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, flag[0]);
+
     opcionesHijos.forEach((element2)async{
 
       if(element2.idPregunta == opcionEscogidaHijos.idPregunta){
+        
         element2.selected = false;
-        await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogidaHijos.idPregunta.toString(), idFicha.toString(),opcionEscogidaHijos.valor);
+        
+        /*await DBProvider.db.eliminarRespuestasxFicha(
+          opcionEscogidaHijos.idPregunta.toString(), idFicha.toString(),opcionEscogidaHijos.valor
+        );*/
+
+        await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, flag[0]);
+        
 
       }
 
       if(element2.idOpcion == opcionEscogidaHijos.idOpcion){
         element2.selected  = true;
 
-        await DBProvider.db.insertRespuesta(
-            opcionEscogidaHijos.idPregunta.toString(),
-            idFicha.toString(),
-            opcionEscogidaHijos.idOpcion.toString(),
-            opcionEscogidaHijos.valor,
-            'RespuestaSimple'
-        );
+        /*var response =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
+        print(response);*/
 
+       
 
+          var nuevoValor = flag[0] + "-" + opcionEscogidaHijos.valor;
+
+          await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, nuevoValor);
+
+          var response2 =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
+          print(response2[0].valor);
       }
 
     });
-
-    List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-    print(listRespuestaDB);
 
     update(['simpleHijos']);
 

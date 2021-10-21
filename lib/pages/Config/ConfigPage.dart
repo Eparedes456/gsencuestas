@@ -14,6 +14,7 @@ class ConfigPage extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             centerTitle: true,
             title: Text('Herramientas',style: TextStyle(),),
             leading: Container(),

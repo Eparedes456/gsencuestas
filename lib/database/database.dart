@@ -955,11 +955,20 @@ class DBProvider {
   actualizarRespuestaxFicha(
       String idPregunta, String idFicha, String valor) async {
     final db = await database;
+
     var response = await db.rawQuery('''
       UPDATE respuesta SET valor = '$valor' WHERE idPregunta = $idPregunta AND idFicha = $idFicha
       ''');
 
     return 1;
+  }
+
+  updateResponseByFicha(int idRespuesta,String valor)async{
+    final db = await database;
+    var response = await db.rawQuery('''UPDATE respuesta SET valor = '$valor' WHERE idRespuesta = $idRespuesta''');
+
+    return 1;
+
   }
 
   unaRespuestaFicha(String idFicha, String idPregunta) async {

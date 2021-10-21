@@ -12,6 +12,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: Text('Acerca de la Aplicación'),
         leading: Container(),

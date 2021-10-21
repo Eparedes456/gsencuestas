@@ -22,6 +22,7 @@ class MisEncuestas extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('Mis Encuestas'),
             centerTitle: true,
             leading: IconButton(

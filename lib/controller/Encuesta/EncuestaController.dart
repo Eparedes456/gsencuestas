@@ -182,7 +182,7 @@ class EncuestaController extends GetxController {
     await getPreguntas(encuesta.idEncuesta.toString());
 
     String metaDate = preferences.getString('metaDataUser');
-    metaData = json.decode(metaDate);
+    //metaData = json.decode(metaDate);
 
     _listFichas = await DBProvider.db.fichasPendientes("P");
     

@@ -19,6 +19,7 @@ class FichaPage extends StatelessWidget {
 
           backgroundColor: Colors.grey[100],
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text('Ficha'),
             centerTitle: true,
             leading: Container(),

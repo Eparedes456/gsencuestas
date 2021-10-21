@@ -626,7 +626,8 @@ class PrincipalController extends GetxController {
       for (var i = 0; i < listEncuestados.length; i++) {
         var listEncuestados2 = listEncuestados[i]["encuestado"];
         //print(listEncuestados2["documento"]);
-        _encuestadosLista.add(EncuestadoModel(
+        _encuestadosLista.add(
+          EncuestadoModel(
             idEncuestado    : listEncuestados2["idEncuestado"].toString(),
             documento       : listEncuestados2["documento"],
             nombre          : listEncuestados2["nombre"],
@@ -643,6 +644,7 @@ class PrincipalController extends GetxController {
             foto: listEncuestados2["foto"]));
       }
     }
+    print(_encuestadosLista);
     for (var e = 0; e < _encuestadosLista.length; e++) {
       await DBProvider.db.insertEncuestados(_encuestadosLista[e]);
     }
