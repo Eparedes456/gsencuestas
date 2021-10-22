@@ -971,6 +971,15 @@ class DBProvider {
 
   }
 
+  updateResponseHijosByFicha(int idRespuesta,String valor,String idsOpcion)async{
+    final db = await database;
+    var response = await db.rawQuery('''UPDATE respuesta SET valor = '$valor', idsOpcion = '$idsOpcion'  WHERE idRespuesta = $idRespuesta''');
+
+    return 1;
+
+  }
+
+
   unaRespuestaFicha(String idFicha, String idPregunta) async {
     final db = await database;
 

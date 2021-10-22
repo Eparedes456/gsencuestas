@@ -14,6 +14,7 @@ class DetailMiEncuestaPage extends StatelessWidget {
       init: DetalleFichaController(),
       builder: (_) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,
           title: Text('Detalle Ficha'),
           leading: IconButton(

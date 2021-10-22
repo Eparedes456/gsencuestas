@@ -27,7 +27,7 @@ class RetommarController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     Map data = Get.arguments;
-    print(data["nombreEncuesta"]);
+    
     _titulo = data["nombreEncuesta"];
     nombreEncuestado = data["nombreEncuestado"];
     dni = data["dni"];
@@ -37,20 +37,14 @@ class RetommarController extends GetxController {
             desiredAccuracy: LocationAccuracy.high,
             intervalDuration: Duration(minutes: 2))
         .listen((Position posicion) async {
-      print(posicion.latitude);
-      print(posicion.longitude);
+      
 
       await DBProvider.db.insertTracking(idFicha, posicion.latitude.toString(),
           posicion.longitude.toString(), 'TRUE');
 
       List<TrackingModel> respuestaBd = await DBProvider.db.getAllTrackings();
-
-      print(respuestaBd);
     });
 
-    
-
-    
   }
 
   @override
@@ -109,14 +103,11 @@ class RetommarController extends GetxController {
     //metaData =  json.decode( preferences.getString("metaDataUser"));
 
 
-
-
-    for (var i = 0; i < _preguntas.length; i++) {
+    for (var i = 0; i < _preguntas.length; i++){
       //print(_preguntas[i].id_pregunta);
       var idPregunta = _preguntas[i].id_pregunta;
 
       var index = respuestas.indexWhere((element) => element.idPregunta == _preguntas[i].id_pregunta);
-      print(index);
       
       if( index == -1 ){
 
@@ -146,58 +137,84 @@ class RetommarController extends GetxController {
           )
         );
         
-
-
       }
 
+      var opciones = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
-      //_opcionesPreguntas = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
-      
+      for (var i = 0; i < opciones.length; i++) {
 
-      var opciones =
-          await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
+        //id_opcion
+       
+        //print( "ID PADRE "  + element["padre"].toString() + "ID OPCION"  + element["id_opcion"].toString());
+        if(opciones[i]["padre"] == 0){
 
-      opciones.forEach((element) {
+          List response = await DBProvider.db.getHijosOpcion(opciones[i]["id_opcion"]);
+        
+          if(response.length > 0){
 
-        if(element["padre"] == 0){
-
-          _opcionesPreguntas.add(
+            _opcionesPreguntas.add(
           
-            OpcionesModel(
-              idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
-              idOpcion: element["id_opcion"],
-              idPregunta: idPregunta,
-              valor: element["valor"],
-              label: element["label"],
-              orden: element["orden"],
-              estado: element["estado"].toString(),
-              createdAt: element["createdAt"],
-              updated_at: element["updatedAt"],
-              selected: false,
-              requiereDescripcion: element["requiereDescripcion"],
-              padre                 : element["padre"],
-              hijos                 : false  
-            )
-          );
+              OpcionesModel(
+                idPreguntaGrupoOpcion: opciones[i]["idPreguntaGrupoOpcion"],
+                idOpcion: opciones[i]["id_opcion"],
+                idPregunta: idPregunta,
+                valor: opciones[i]["valor"],
+                label: opciones[i]["label"],
+                orden: opciones[i]["orden"],
+                estado: opciones[i]["estado"].toString(),
+                createdAt: opciones[i]["createdAt"],
+                updated_at: opciones[i]["updatedAt"],
+                selected: false,
+                requiereDescripcion: opciones[i]["requiereDescripcion"],
+                padre                 : opciones[i]["padre"],
+                hijos                 : true  
+              )
+            );
 
+
+          }else{
+
+            _opcionesPreguntas.add(
+          
+              OpcionesModel(
+                idPreguntaGrupoOpcion: opciones[i]["idPreguntaGrupoOpcion"],
+                idOpcion: opciones[i]["id_opcion"],
+                idPregunta: idPregunta,
+                valor: opciones[i]["valor"],
+                label: opciones[i]["label"],
+                orden: opciones[i]["orden"],
+                estado: opciones[i]["estado"].toString(),
+                createdAt: opciones[i]["createdAt"],
+                updated_at: opciones[i]["updatedAt"],
+                selected: false,
+                requiereDescripcion: opciones[i]["requiereDescripcion"],
+                padre                 : opciones[i]["padre"],
+                hijos                 : false  
+              )
+            );
+
+
+          }
+
+          print(_opcionesPreguntas);
 
         }else{
 
           opcionesHijos.add(
             OpcionesModel(
 
-              idPreguntaGrupoOpcion : element["idPreguntaGrupoOpcion"],
-              idOpcion              : element["id_opcion"],
+              idPreguntaGrupoOpcion : opciones[i]["idPreguntaGrupoOpcion"],
+              idOpcion              : opciones[i]["id_opcion"],
               idPregunta            : idPregunta,
-              valor                 : element["valor"],
-              label                 : element["label"], 
-              orden                 : element["orden"],
-              estado                : element["estado"].toString(),
-              createdAt             : element["createdAt"],
-              updated_at            : element["updatedAt"],
+              valor                 : opciones[i]["valor"],
+              label                 : opciones[i]["label"], 
+              orden                 : opciones[i]["orden"],
+              estado                : opciones[i]["estado"].toString(),
+              createdAt             : opciones[i]["createdAt"],
+              updated_at            : opciones[i]["updatedAt"],
               selected              : false,
-              requiereDescripcion   : element["requiereDescripcion"],
-              padre                 : element["padre"],
+              requiereDescripcion   : opciones[i]["requiereDescripcion"],
+              padre                 : opciones[i]["padre"],
               hijos                 : false  
 
             )
@@ -207,24 +224,57 @@ class RetommarController extends GetxController {
         }
 
         
-        
-      });
+      }
     }
 
     for (var x = 0; x < respuestas.length; x++) {
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
-        if (respuestas[x].idsOpcion == "") {
-        } else {
-          if (int.parse(respuestas[x].idsOpcion) ==
-                  _opcionesPreguntas[z].idOpcion &&
-              respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta) {
-            print('pintar de verde');
+
+        var data = respuestas[x].idsOpcion.split('(');
+        print(data);
+        print(data[0].replaceAll(")", ""));
+        for (var i = 0; i < data.length; i++) {
+
+          if(data[i] == ""){
+
+          }else if( int.parse(data[i].replaceAll(")", ""))  == _opcionesPreguntas[z].idOpcion && respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta){
 
             _opcionesPreguntas[z].selected = true;
             _opcionesPreguntas[z].valor = respuestas[x].valor;
+
           }
-          //widgetSimpleWithOption(respuestas[x].idPregunta);
+
+          if(data[i] == ""){
+
+          }else{
+
+            var index4 = opcionesHijos.indexWhere((element) => element.idOpcion == int.parse(data[i].replaceAll(")", "")));
+            if(index4 == -1){
+
+            }else{
+
+              opcionesHijos[index4].selected = true;
+              
+            }
+
+          }
+          
+          
+          
+          /*if (respuestas[x].idsOpcion == "") {
+        
+          }else {
+
+            if (int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion && respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta) {
+              _opcionesPreguntas[z].selected = true;
+              _opcionesPreguntas[z].valor = respuestas[x].valor;
+            }
+          }*/
+
+          
         }
+
+        
       }
       
       if(respuestas[x].tipoPregunta == "Imagen"){
@@ -348,8 +398,23 @@ class RetommarController extends GetxController {
   }
 
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
-   
+    
+    List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
 
+    if(response.length > 0){
+
+      var index = opcionesPreguntas.indexWhere((element) => element.idOpcion == opcionEscogida.idOpcion);
+      print(index);
+      
+      opcionesPreguntas[index].hijos = true;
+ 
+      print("dibujar las otras opciones");
+
+      
+    }else{
+
+      print("nodibujar nada");
+    }
 
     opcionesPreguntas.forEach((element) async {
       if (element.idPregunta == opcionEscogida.idPregunta) {
@@ -380,6 +445,52 @@ class RetommarController extends GetxController {
     /*List<RespuestaModel> listRespuestaDB =
         await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());*/
   }
+
+  capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
+    var nuevoValor = "";
+    var idPadre = opcionEscogidaHijos.padre;
+    print(idPadre);
+
+    List<String> idsOpcionHijos = [];
+
+    var response =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
+    var flag = response[0].valor.split("-");
+    
+    idsOpcionHijos.add(response[0].idsOpcion);
+    var editResponse = await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, flag[0]);
+
+    opcionesHijos.forEach((element2)async{
+
+      if(element2.idPregunta == opcionEscogidaHijos.idPregunta){
+        element2.selected = false;
+        await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, flag[0]);
+      }
+
+      if(element2.idOpcion == opcionEscogidaHijos.idOpcion){
+        String  ids = "";
+        element2.selected  = true;
+        
+        nuevoValor = flag[0] + "-" + opcionEscogidaHijos.valor;
+
+        print(nuevoValor);
+        idsOpcionHijos.add(element2.idOpcion.toString());
+        print(idsOpcionHijos);
+        idsOpcionHijos.forEach((element3) { 
+          ids = idPadre.toString() + "("+ element3 + ")";
+        });
+        print(ids);
+        await DBProvider.db.updateResponseHijosByFicha(response[0].idRespuesta, flag[0]+"-"+opcionEscogidaHijos.valor,ids);
+        var response2 =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
+        print(response2[0].valor);
+      }
+
+    });
+
+    update(['simpleHijosRetomar']);
+
+  }
+
+
 
   capturarRespuestaMultipleRetomar(OpcionesModel opcionEscogida) async {
   
@@ -640,7 +751,8 @@ class RetommarController extends GetxController {
 
       respuestas =
           await DBProvider.db.getAllRespuestasxFicha(idFicha);
-
+      
+      print(respuestas);
   
 
       Map sendData = {

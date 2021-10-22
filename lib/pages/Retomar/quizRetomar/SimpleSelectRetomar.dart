@@ -165,7 +165,7 @@ class OpcionesHijos extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<RetommarController>(
       init: RetommarController(),
-      id: 'simpleHijos',
+      id: 'simpleHijosRetomar',
       builder: (_)=> Padding(
               padding:  EdgeInsets.only(left: 12,right: 12,top: 0,bottom: 0),
               child: Container(
@@ -202,7 +202,7 @@ class OpcionesHijos extends StatelessWidget {
                               return GestureDetector(
                                 onTap: (){
 
-                                  //_.capturarRespuestaSimpleHijos(_.opcionesHijos[index2]);
+                                  _.capturarRespuestaSimpleHijos(_.opcionesHijos[index2]);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 12,right: 12,bottom: 8),

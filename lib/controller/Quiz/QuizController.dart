@@ -40,6 +40,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   var idFicha;
   var idRequierepreguntaObserva;
   List<String> idsOpcion = [];
+  
   List liscodDistrito = [];
   List listCodDep = [];
   List listcodProvincia = [];
@@ -387,7 +388,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       print(index);
       
       opcionesPreguntas[index].hijos = true;
-
+ 
       print("dibujar las otras opciones");
 
       
@@ -437,8 +438,15 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
 
+    var idPadre = opcionEscogidaHijos.padre;
+    print(idPadre);
+
+    List<String> idsOpcionHijos = [];
+
     var response =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
     var flag = response[0].valor.split("-");
+    print(flag);
+    idsOpcionHijos.add(response[0].idsOpcion );
     var editResponse = await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, flag[0]);
 
     opcionesHijos.forEach((element2)async{
@@ -449,9 +457,17 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       }
 
       if(element2.idOpcion == opcionEscogidaHijos.idOpcion){
+        String  ids = "";
         element2.selected  = true;
         var nuevoValor = flag[0] + "-" + opcionEscogidaHijos.valor;
-        await DBProvider.db.updateResponseByFicha(response[0].idRespuesta, nuevoValor);
+        print(nuevoValor);
+        idsOpcionHijos.add(element2.idOpcion.toString());
+        print(idsOpcionHijos);
+        idsOpcionHijos.forEach((element3) { 
+          ids = idPadre.toString() + "("+ element3 + ")";
+        });
+        print(ids);
+        await DBProvider.db.updateResponseHijosByFicha(response[0].idRespuesta, nuevoValor,ids);
         var response2 =  await DBProvider.db.unaRespuestaFicha(idFicha,opcionEscogidaHijos.idPregunta.toString());
         print(response2[0].valor);
       }

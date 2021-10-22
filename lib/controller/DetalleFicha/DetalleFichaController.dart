@@ -433,7 +433,7 @@ class DetalleFichaController extends GetxController{
 
       }else{
         bool b = listRespuestaDBlocal[i].estado.toLowerCase() == 'true';
-        pregunta["idPregunta"] = listRespuestaDBlocal[i].idPregunta.toInt();
+        pregunta["idPregunta"]    = listRespuestaDBlocal[i].idPregunta.toInt();
         respuesta["idRespuesta"]  =   listRespuestaDBlocal[i].idRespuesta.toInt();
         respuesta["idsOpcion"]    =   listRespuestaDBlocal[i].idsOpcion;
         respuesta["valor"]        =   listRespuestaDBlocal[i].valor;
@@ -524,12 +524,9 @@ class DetalleFichaController extends GetxController{
 
     var sendData = json.encode(sendFicha);
     print(sendData);
-
-    //String body = jsonEncode(sendFicha);
-
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       
 
@@ -595,7 +592,7 @@ class DetalleFichaController extends GetxController{
         )
       );
 
-    }
+    }*/
   }
 
   showModal(String mensaje, bool loading, String titulo){
