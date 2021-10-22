@@ -337,7 +337,7 @@ class DBProvider {
             updatedAt TEXT
           )
           ''');
-    }, version: 13);
+    }, version: 14);
   }
 
   //CREACION DE   LAS CONSULTAS SQL LOCAL
