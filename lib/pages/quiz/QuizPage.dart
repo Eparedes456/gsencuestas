@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
+import 'package:gsencuesta/pages/quiz/WidgetQuiz/ConditionalWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/CoordenadasWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/DatepickerWidget.dart';
 import 'package:gsencuesta/pages/quiz/WidgetQuiz/ImageWidget.dart';
@@ -328,6 +329,24 @@ class QuizPage extends StatelessWidget {
                                               _.preguntas[i].bind_type
                                           )
 
+                                        }else if(_.preguntas[i].tipo_pregunta == "condicional")...{
+
+                                          CondicionalWidget(
+                                            _.preguntas[i].enunciado,
+                                            _.preguntas[i].id_pregunta,
+                                            _,
+                                            context,
+                                            (i + 1).toString(),
+                                            bloque,
+                                            _.preguntas[i].bloqueDescripcion,
+                                            "",
+                                            i,
+                                            "",
+                                            "",
+                                            "",
+                                            _.preguntas[i].bind_type
+                                          )
+
                                         }
                                       },
 
@@ -378,6 +397,122 @@ class QuizPage extends StatelessWidget {
     );
   }
 }
+
+
+CondicionalWidget(
+
+  String enunciado,
+  int id_pregunta,
+  QuizController _,
+  BuildContext context,
+  String numPregunta,
+  String bloque,
+  String bloque2,
+  String maxLength,
+  int i,
+  String placeholder,
+  String requerido,
+  String apariencia,
+  String tipoCampo  
+
+
+){
+  
+  if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+  } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+  } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+  }
+  
+  return Padding(
+    
+    padding: EdgeInsets.only(left: 10, right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        _.bloque == bloque
+        ? Container()
+        :Padding(
+          padding:EdgeInsets.only( top: 10, bottom: 10),
+          child: Container(
+                  width: double.infinity,
+                  color: Color.fromRGBO(3, 161, 133, 1),
+                  child: Padding(
+                    padding:  EdgeInsets.only(top: 10,bottom: 10,left: 10),
+                    child: Row(
+                          children: [
+                            Icon(
+                              Icons.grid_view,
+                              color: Colors.white,
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${_.bloque}',
+                                style: TextStyle(
+                                    color: Colors.white, //Color.fromRGBO(0, 102, 84, 1),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                    ),
+                  ),
+                ),
+
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+            width: double.infinity,
+            child: Card(
+              child: Column(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta. $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  
+                                  fontSize: 14),
+                            ),
+                          ),
+                          Text(
+                            requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      ),
+                  ),
+                  SizedBox(height: 20,),
+
+                  Conditional(),
+                  SizedBox(height: 20,)
+                ],
+              ),
+            ),
+          ),
+        )
+
+
+      ],
+    ),
+
+  );
+
+
+}
+
 
 
 DatePickWidget(String enunciado,
@@ -1253,3 +1388,5 @@ Ubigeo(
     ],
   );
 }
+
+

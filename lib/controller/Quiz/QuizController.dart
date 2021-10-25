@@ -389,23 +389,75 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       
       opcionesPreguntas[index].hijos = true;
  
-      print("dibujar las otras opciones");
+      //print("dibujar las otras opciones");
 
       
     }else{
 
-      print("nodibujar nada");
+      //print("nodibujar nada");
     }
 
+    
+
     opcionesPreguntas.forEach((element) async {
+
       if (element.idPregunta == opcionEscogida.idPregunta) {
-        element.selected = false;
-        await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.valor);
+
+        //element.selected = false;
+        
+        List<RespuestaModel> hayRespuesta = await DBProvider.db.unaRespuestaFicha(idFicha.toString(),opcionEscogida.idPregunta.toString());
+        
+        print(hayRespuesta);
+        
+        if(hayRespuesta.length > 0){
+          
+          if(element.idOpcion.toString() == hayRespuesta[0].idsOpcion){
+
+            element.selected =  false;
+
+          }else{
+            element.selected = true;
+            await DBProvider.db.updateResponseByFichaid(hayRespuesta[0].idRespuesta,opcionEscogida.valor,opcionEscogida.idOpcion.toString());
+          }
+          /*var valor = hayRespuesta[0].idsOpcion;
+
+          var index7 = opcionesPreguntas.indexWhere((item)=> item.idOpcion == int.parse(valor));
+          print(index7);
+          
+
+          opcionesPreguntas[index7].selected  = false;
+          print("se tiene que editar el valor");*/
+
+          //await DBProvider.db.updateResponseByFicha(hayRespuesta[0].idRespuesta,opcionEscogida.valor);
+          //element.selected = true;
+
+        }else{
+
+          if (element.idOpcion == opcionEscogida.idOpcion && element.idPregunta == opcionEscogida.idPregunta) {
+
+            element.selected = true;
+            await DBProvider.db.insertRespuesta(
+              opcionEscogida.idPregunta.toString(),
+              idFicha.toString(),
+              opcionEscogida.idOpcion.toString(),
+              opcionEscogida.valor,
+              'RespuestaSimple'
+            );
+          }
+
+
+
+        }
+
+        //await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString(), opcionEscogida.valor);
+        //List<RespuestaModel> listRespuestaDB = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+
+        //print(listRespuestaDB);
+      
       }
 
 
-      if (element.idOpcion == opcionEscogida.idOpcion &&
+      /*if (element.idOpcion == opcionEscogida.idOpcion &&
           element.idPregunta == opcionEscogida.idPregunta) {
         element.selected = true;
         await DBProvider.db.insertRespuesta(
@@ -415,25 +467,27 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             opcionEscogida.valor,
             'RespuestaSimple'
         );
-      }
+      }*/
+
+
     });
-
-    List<RespuestaModel> listRespuestaDB =
-        await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-    
-    
-
     if (opcionEscogida.requiereDescripcion == "true") {
 
       idRequierepreguntaObserva = opcionEscogida.idPregunta;
       requiereObservacion = true;
-
     }
 
-    print(listRespuestaDB);
-
     update(['simple']);
+
+    var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
+    if(index3 != -1){
+
+      await Future.delayed(Duration(milliseconds: 500),(){
+        //print("hola");
+        conditional(_preguntas[index3].id_pregunta);
+      });
+    }
+
   }
 
   capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
@@ -478,6 +532,105 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
   }
 
+  bool conditionalsi = false;
+  bool conditionalno = false;
+
+  conditional(int id_pregunta)async{
+
+    List<int> listNo = [];
+    //print("holi condicional  , id_pregunta $id_pregunta");
+
+    List<RespuestaModel> listRespuesta = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+
+    print(listRespuesta);
+
+    var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
+    print(index2);
+
+    
+
+
+    var index  = listRespuesta.indexWhere((element) => element.valor == "NO" || element.valor == "No");
+    if(index != -1){
+
+      listNo.add(index);
+      print(listNo.length);
+      print("pintar la opcion no");
+
+    }else{
+
+      listNo = [];
+
+    }
+
+    if(listNo.length > 0){
+
+      conditionalno  = true;
+      conditionalsi = false;
+
+      var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
+      if(index2 != -1){
+
+        print("actualizar");
+       
+
+        await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"NO","");
+
+      }else{
+
+        print("insertar");
+
+        await DBProvider.db.insertRespuesta(
+            id_pregunta.toString(),
+            idFicha.toString(),
+            "",
+            "NO",
+            'RespuestaSimple'
+        );
+
+      }
+
+
+      /*await DBProvider.db.insertRespuesta(
+            id_pregunta.toString(),
+            idFicha.toString(),
+            "",
+            "NO",
+            'RespuestaSimple'
+      );*/
+
+    }else{
+
+      conditionalno  = false;
+      conditionalsi = true;
+      var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
+      if(index2 != -1){
+
+        print("actualizar");
+
+        await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"SI","");
+
+
+      }else{
+
+        print("insertar");
+
+        await DBProvider.db.insertRespuesta(
+            id_pregunta.toString(),
+            idFicha.toString(),
+            "",
+            "SI",
+            'RespuestaSimple'
+        );
+
+      }
+
+
+    }
+
+    update(['condicional']);
+
+  }
 
 
   saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion,String tipoPregunta)async{

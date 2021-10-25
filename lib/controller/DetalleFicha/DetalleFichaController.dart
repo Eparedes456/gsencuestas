@@ -526,7 +526,7 @@ class DetalleFichaController extends GetxController{
     print(sendData);
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
-    /*if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
+    if(conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile){
 
       
 
@@ -592,7 +592,7 @@ class DetalleFichaController extends GetxController{
         )
       );
 
-    }*/
+    }
   }
 
   showModal(String mensaje, bool loading, String titulo){
