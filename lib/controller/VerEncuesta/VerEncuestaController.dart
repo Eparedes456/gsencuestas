@@ -35,6 +35,8 @@ class VerEncuestacontroller extends GetxController {
   List<PreguntaModel> _preguntas = [];
   List<PreguntaModel> get preguntas => _preguntas;
   bool _isLoadingData = false;
+  List<OpcionesModel> opcionesHijos      = [];
+
 
   List<InputTextfield> _controllerInput = [];
 
@@ -48,12 +50,16 @@ class VerEncuestacontroller extends GetxController {
 
   String bloque;
 
+  bool conditionalRetomarsi = false;
+  bool conditionalRetomarno = false;
+
   List<Imagelist> imagenes =[];
   
   Uint8List _photoBase64;
 
   onloadData(Map datos) async {
     _opcionesPreguntas = [];
+    opcionesHijos = [];
     idEncuesta = datos["idEncuesta"];
     idFicha = datos["idFicha"];
     List<FichasModel> ficha = await DBProvider.db.oneFicha(idFicha);
@@ -91,48 +97,142 @@ class VerEncuestacontroller extends GetxController {
       var opciones =
           await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
-      opciones.forEach((element) {
-        _opcionesPreguntas.add(OpcionesModel(
-            idPreguntaGrupoOpcion: element["idPreguntaGrupoOpcion"],
-            idOpcion: element["id_opcion"],
-            idPregunta: idPregunta,
-            valor: element["valor"],
-            label: element["label"],
-            orden: element["orden"],
-            estado: element["estado"].toString(),
-            createdAt: element["createdAt"],
-            updated_at: element["updatedAt"],
-            selected: false,
-            requiereDescripcion: element["requiereDescripcion"]));
-      });
+      for (var i = 0; i < opciones.length; i++) {
+
+        //id_opcion
+       
+        //print( "ID PADRE "  + element["padre"].toString() + "ID OPCION"  + element["id_opcion"].toString());
+        if(opciones[i]["padre"] == 0){
+
+          List response = await DBProvider.db.getHijosOpcion(opciones[i]["id_opcion"]);
+        
+          if(response.length > 0){
+
+            _opcionesPreguntas.add(
+          
+              OpcionesModel(
+                idPreguntaGrupoOpcion: opciones[i]["idPreguntaGrupoOpcion"],
+                idOpcion: opciones[i]["id_opcion"],
+                idPregunta: idPregunta,
+                valor: opciones[i]["valor"],
+                label: opciones[i]["label"],
+                orden: opciones[i]["orden"],
+                estado: opciones[i]["estado"].toString(),
+                createdAt: opciones[i]["createdAt"],
+                updated_at: opciones[i]["updatedAt"],
+                selected: false,
+                requiereDescripcion: opciones[i]["requiereDescripcion"],
+                padre                 : opciones[i]["padre"],
+                hijos                 : true  
+              )
+            );
+
+
+          }else{
+
+            _opcionesPreguntas.add(
+          
+              OpcionesModel(
+                idPreguntaGrupoOpcion: opciones[i]["idPreguntaGrupoOpcion"],
+                idOpcion: opciones[i]["id_opcion"],
+                idPregunta: idPregunta,
+                valor: opciones[i]["valor"],
+                label: opciones[i]["label"],
+                orden: opciones[i]["orden"],
+                estado: opciones[i]["estado"].toString(),
+                createdAt: opciones[i]["createdAt"],
+                updated_at: opciones[i]["updatedAt"],
+                selected: false,
+                requiereDescripcion: opciones[i]["requiereDescripcion"],
+                padre                 : opciones[i]["padre"],
+                hijos                 : false  
+              )
+            );
+
+
+          }
+
+
+        }else{
+
+          opcionesHijos.add(
+            OpcionesModel(
+
+              idPreguntaGrupoOpcion : opciones[i]["idPreguntaGrupoOpcion"],
+              idOpcion              : opciones[i]["id_opcion"],
+              idPregunta            : idPregunta,
+              valor                 : opciones[i]["valor"],
+              label                 : opciones[i]["label"], 
+              orden                 : opciones[i]["orden"],
+              estado                : opciones[i]["estado"].toString(),
+              createdAt             : opciones[i]["createdAt"],
+              updated_at            : opciones[i]["updatedAt"],
+              selected              : false,
+              requiereDescripcion   : opciones[i]["requiereDescripcion"],
+              padre                 : opciones[i]["padre"],
+              hijos                 : false  
+
+            )
+          );
+
+
+        }
+
+        
+      }
     }
 
     for (var x = 0; x < respuestas.length; x++) {
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
-        if (respuestas[x].idsOpcion == "") {
-        } else {
-          if (int.parse(respuestas[x].idsOpcion) ==
-                  _opcionesPreguntas[z].idOpcion &&
-              respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta) {
-            print('pintar de verde');
+
+        var data = respuestas[x].idsOpcion.split('(');
+        for (var i = 0; i < data.length; i++) {
+
+          if(data[i] == ""){
+
+          }else if( int.parse(data[i].replaceAll(")", ""))  == _opcionesPreguntas[z].idOpcion && respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta){
 
             _opcionesPreguntas[z].selected = true;
+            _opcionesPreguntas[z].valor = respuestas[x].valor;
+
+          }
+
+          if(data[i] == ""){
+
+          }else{
+
+            var index4 = opcionesHijos.indexWhere((element) => element.idOpcion == int.parse(data[i].replaceAll(")", "")));
+            if(index4 == -1){
+
+            }else{
+
+              opcionesHijos[index4].selected = true;
+              
+            }
+
           }
           
         }
+
+        
       }
+      
       if(respuestas[x].tipoPregunta == "Imagen"){
         
         _photoBase64 = base64Decode(respuestas[x].valor);
 
         imagenes.add(
-          Imagelist(
-            respuestas[x].idPregunta.toString(),
-            _photoBase64
-          )
+          Imagelist(respuestas[x].idPregunta.toString(), _photoBase64)
         );
 
       }
+
+      if(respuestas[x].tipoPregunta ==  "condicional"){
+
+        await condicionalFirstLoad(respuestas[x].valor);
+
+      }
+
     }
     
     print(imagenes);
@@ -145,6 +245,19 @@ class VerEncuestacontroller extends GetxController {
       await inptuData();
     });
   }
+
+  condicionalFirstLoad(String valor)async {
+
+    if(valor == "SI" || valor == "Si"){
+          conditionalRetomarsi = true;
+          print("pintar el si");
+    }else{
+      print("pintar el si");
+      conditionalRetomarno = true; 
+    }
+    update(["Vercondicional"]);
+  }
+
 
   inptuData() async {
     for (var i = 0; i < respuestas.length; i++) {

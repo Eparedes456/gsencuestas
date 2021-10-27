@@ -85,6 +85,10 @@ class RetommarController extends GetxController {
   var idRequierepreguntaObserva;
   var metaData;
 
+
+  bool conditionalRetomarsi = false;
+  bool conditionalRetomarno = false;
+
   TextEditingController controller = new TextEditingController();
 
   onloadData(Map datos) async {
@@ -100,7 +104,12 @@ class RetommarController extends GetxController {
     var allOpciones = await DBProvider.db.getAllOpciones();
 
    SharedPreferences preferences = await SharedPreferences.getInstance();
-    //metaData =  json.decode( preferences.getString("metaDataUser"));
+    var datee = preferences.getString("metaDataUser");
+    if(datee == "" || datee == null){
+
+    }else{
+      metaData = json.decode( preferences.getString("metaDataUser"));
+    }
 
 
     for (var i = 0; i < _preguntas.length; i++){
@@ -124,7 +133,6 @@ class RetommarController extends GetxController {
 
       }else{
 
-        print(respuestas[index].valor);
 
         controllerInput.add(
           InputTextfield(
@@ -196,7 +204,6 @@ class RetommarController extends GetxController {
 
           }
 
-          print(_opcionesPreguntas);
 
         }else{
 
@@ -231,8 +238,6 @@ class RetommarController extends GetxController {
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
 
         var data = respuestas[x].idsOpcion.split('(');
-        print(data);
-        print(data[0].replaceAll(")", ""));
         for (var i = 0; i < data.length; i++) {
 
           if(data[i] == ""){
@@ -259,19 +264,6 @@ class RetommarController extends GetxController {
 
           }
           
-          
-          
-          /*if (respuestas[x].idsOpcion == "") {
-        
-          }else {
-
-            if (int.parse(respuestas[x].idsOpcion) == _opcionesPreguntas[z].idOpcion && respuestas[x].idPregunta == _opcionesPreguntas[z].idPregunta) {
-              _opcionesPreguntas[z].selected = true;
-              _opcionesPreguntas[z].valor = respuestas[x].valor;
-            }
-          }*/
-
-          
         }
 
         
@@ -287,15 +279,35 @@ class RetommarController extends GetxController {
 
       }
 
+      if(respuestas[x].tipoPregunta ==  "condicional"){
+
+        await condicionalFirstLoad(respuestas[x].valor);
+
+      }
+
     }
     _isLoadingData = true;
     //update();
     update(['multiple']);
 
     Future.delayed(Duration(seconds: 1), () async {
+      //update(["condicionalRetomar"]);
       await inptuData();
     });
   }
+
+  condicionalFirstLoad(String valor)async {
+
+    if(valor == "SI" || valor == "Si"){
+          conditionalRetomarsi = true;
+          print("pintar el si");
+    }else{
+      print("pintar el si");
+      conditionalRetomarno = true; 
+    }
+    update(["condicionalRetomar"]);
+  }
+
 
   /* Image pic to camera */  
   File _imagePath;
@@ -397,9 +409,106 @@ class RetommarController extends GetxController {
 
   }
 
+
+
+  
+
+  conditional(int id_pregunta)async{
+
+    List<int> listNo = [];
+
+    List<RespuestaModel> listRespuesta = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
+
+    print(listRespuesta);
+
+    List<RespuestaModel> temporalRespuesta  = listRespuesta.where((element) => element.tipoPregunta == "RespuestaSimple" ).toList();
+    print(temporalRespuesta);
+
+    var index = temporalRespuesta.indexWhere((element) => element.valor == "NO" || element.valor == "No");
+    
+    if( index != -1){
+
+      listNo.add(index);
+      print(listNo.length);
+      print("pintar la opcion no");
+
+    }else{
+
+      listNo = [];
+
+    }
+
+    print(listNo);
+
+    if(listNo.length > 0){
+
+      conditionalRetomarno  = true;
+      conditionalRetomarsi = false;
+
+      var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
+      if(index2 != -1){
+
+        print("actualizar");
+       
+
+        await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"NO","");
+
+      }else{
+
+        print("insertar");
+
+        await DBProvider.db.insertRespuesta(
+            id_pregunta.toString(),
+            idFicha.toString(),
+            "",
+            "NO",
+            'condicional'
+        );
+
+      }
+
+    }else{
+
+      conditionalRetomarno  = false;
+      conditionalRetomarsi = true;
+      var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
+      if(index2 != -1){
+
+        print("actualizar");
+
+        await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"SI","");
+
+
+      }else{
+
+        print("insertar");
+
+        await DBProvider.db.insertRespuesta(
+            id_pregunta.toString(),
+            idFicha.toString(),
+            "",
+            "SI",
+            'condicional'
+        );
+
+      }
+
+
+    }
+
+    update(['condicionalRetomar']);
+
+  }
+
+
+
+
+
+
+
   capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
     
-    List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
+   List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
 
     if(response.length > 0){
 
@@ -408,42 +517,87 @@ class RetommarController extends GetxController {
       
       opcionesPreguntas[index].hijos = true;
  
-      print("dibujar las otras opciones");
+      //print("dibujar las otras opciones");
 
       
     }else{
 
-      print("nodibujar nada");
+      //print("nodibujar nada");
     }
 
     opcionesPreguntas.forEach((element) async {
+
       if (element.idPregunta == opcionEscogida.idPregunta) {
-        element.selected = false;
-        await DBProvider.db.eliminarRespuestasxFicha(
-            opcionEscogida.idPregunta.toString(), idFicha.toString(),opcionEscogida.valor);
+
+        //element.selected = false;
+        
+        List<RespuestaModel> hayRespuesta = await DBProvider.db.unaRespuestaFicha(idFicha.toString(),opcionEscogida.idPregunta.toString());
+        
+        print(hayRespuesta);
+        
+        if(hayRespuesta.length > 0){
+
+          if(opcionEscogida.idOpcion.toString() == hayRespuesta[0].idsOpcion){
+
+              
+          }else{
+            if(element.idOpcion.toString() == opcionEscogida.idOpcion.toString()){
+
+              element.selected = true;
+              await DBProvider.db.updateResponseByFichaid(hayRespuesta[0].idRespuesta,opcionEscogida.valor,opcionEscogida.idOpcion.toString());
+
+            }else{
+              element.selected = false;
+            }
+            
+
+          }
+
+        }else{
+
+          
+
+          if (element.idOpcion == opcionEscogida.idOpcion && element.idPregunta == opcionEscogida.idPregunta) {
+
+            element.selected = true;
+            await DBProvider.db.insertRespuesta(
+              opcionEscogida.idPregunta.toString(),
+              idFicha.toString(),
+              opcionEscogida.idOpcion.toString(),
+              opcionEscogida.valor,
+              'RespuestaSimple'
+            );
+          }
+
+
+
+        }
+
+    
+      
       }
 
-      //element.selected = false;
-      //await DBProvider.db.eliminarRespuestasxFicha(opcionEscogida.idPregunta.toString(), idFicha.toString() );
-
-      if (element.idOpcion == opcionEscogida.idOpcion &&
-          element.idPregunta == opcionEscogida.idPregunta) {
-        element.selected = true;
-        await DBProvider.db.insertRespuesta(
-            opcionEscogida.idPregunta.toString(),
-            idFicha.toString(),
-            opcionEscogida.idOpcion.toString(),
-            opcionEscogida.valor,
-            'RespuestaSimple'
-        );
-      }
     });
 
-    //widgetSimpleWithOption(opcionEscogida.idPregunta);
-    //update(['opciones']);
+
+    if (opcionEscogida.requiereDescripcion == "true") {
+
+      idRequierepreguntaObserva = opcionEscogida.idPregunta;
+      requiereObservacion = true;
+    }
+
     update(['opciones']);
-    /*List<RespuestaModel> listRespuestaDB =
-        await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());*/
+
+    var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
+    if(index3 != -1){
+
+      await Future.delayed(Duration(milliseconds: 500),(){
+        //print("hola");
+        conditional(_preguntas[index3].id_pregunta);
+      });
+    }
+
+   
   }
 
   capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{

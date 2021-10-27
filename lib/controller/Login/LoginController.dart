@@ -277,6 +277,7 @@ class LoginController extends GetxController{
             var nombreUser    = response[0].nombre + ' ' + response[0].apellidoPaterno + ' ' + response[0].apellidoMaterno;
             var usernamex     = response[0].username;
             var metaDataUser  = response[0].metaData; 
+            print(metaDataUser);
 
             _username.clear();
             _password.clear();
@@ -457,6 +458,7 @@ class LoginController extends GetxController{
       var usernamex     = resultado["user"]["username"]; 
       var idInstitucion = resultado["user"]["idInstitucion"].toString();
       var metaDataUser = resultado["user"]["metaData"].toString();
+      
       _username.clear();
       _password.clear();
       

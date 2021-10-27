@@ -5,6 +5,7 @@ import 'package:gsencuesta/controller/VerEncuesta/VerEncuestaController.dart';
 import 'package:gsencuesta/database/database.dart';
 import 'package:gsencuesta/model/Respuesta/RespuestaModel.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/MultiSelectWidgetRetomar.dart';
+import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/VerConditional.dart';
 import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/VerDatePicker.dart';
 import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/VerImage.dart';
 import 'package:gsencuesta/pages/VerEncuesta/verencuestawidget/simpleSelect.dart';
@@ -18,6 +19,7 @@ class VerEncuestaPage extends StatelessWidget {
       init: VerEncuestacontroller(),
       builder: (_) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(_.titulo),
           centerTitle: true,
         ),
@@ -163,6 +165,24 @@ class VerEncuestaPage extends StatelessWidget {
                                               _.preguntas[i].bind_type
                                           )
 
+                                        }else if(_.preguntas[i].tipo_pregunta == "condicional")...{
+
+                                          CondicionalWidget(
+                                            _.preguntas[i].enunciado,
+                                            _.preguntas[i].id_pregunta,
+                                            _,
+                                            context,
+                                            (i + 1).toString(),
+                                            bloque,
+                                            _.preguntas[i].bloqueDescripcion,
+                                            "",
+                                            i,
+                                            "",
+                                            "",
+                                            "",
+                                            _.preguntas[i].bind_type
+                                          )
+
                                         }
                                       },
                             ],
@@ -181,6 +201,127 @@ class VerEncuestaPage extends StatelessWidget {
     );
   }
 }
+
+
+
+
+  CondicionalWidget(
+
+  String enunciado,
+  int id_pregunta,
+  VerEncuestacontroller _,
+  BuildContext context,
+  String numPregunta,
+  String bloque,
+  String bloque2,
+  String maxLength,
+  int i,
+  String placeholder,
+  String requerido,
+  String apariencia,
+  String tipoCampo  
+
+
+){
+  
+  if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+  } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+  } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+  }
+  
+  return Padding(
+    
+    padding: EdgeInsets.only(left: 10, right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        _.bloque == bloque
+        ? Container()
+        :Padding(
+          padding:EdgeInsets.only( top: 10, bottom: 10),
+          child: Container(
+                  width: double.infinity,
+                  color: Color.fromRGBO(3, 161, 133, 1),
+                  child: Padding(
+                    padding:  EdgeInsets.only(top: 10,bottom: 10,left: 10),
+                    child: Row(
+                          children: [
+                            Icon(
+                              Icons.grid_view,
+                              color: Colors.white,
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${_.bloque}',
+                                style: TextStyle(
+                                    color: Colors.white, //Color.fromRGBO(0, 102, 84, 1),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                    ),
+                  ),
+                ),
+
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+            width: double.infinity,
+            child: Card(
+              child: Column(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta. $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  
+                                  fontSize: 14),
+                            ),
+                          ),
+                          Text(
+                            requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      ),
+                  ),
+                  SizedBox(height: 20,),
+
+                  VerConditional(),
+                  SizedBox(height: 20,)
+                ],
+              ),
+            ),
+          ),
+        )
+
+
+      ],
+    ),
+
+  );
+
+
+}
+
+
+
+
 
 
 ImageWidget(String enunciado,
@@ -508,9 +649,9 @@ SelectSimpleWidget(String enunciado, int id_pregunta, VerEncuestacontroller _,
                       child: Text(
                         '$numPregunta.- $enunciado',
                         style: TextStyle(
-                            fontWeight: FontWeight.w700,
+                            //fontWeight: FontWeight.w700,
                             fontFamily: 'Poppins',
-                            fontSize: 16),
+                            fontSize: 14),
                       ),
                     ),
                     SizedBox(

@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
+import 'package:gsencuesta/pages/Retomar/quizRetomar/ConditionalRetomarWidget.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/DatePickerRetomar.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/ImageRetomar.dart';
 import 'package:gsencuesta/pages/Retomar/quizRetomar/MultiSelectWidgetRetomar.dart';
@@ -307,7 +308,25 @@ class RetomarEncuestaPage extends StatelessWidget {
                                         "",
                                         _.preguntas[i].requerido
                                     ),
-                                  }
+                                  }else if(_.preguntas[i].tipo_pregunta == "condicional")...{
+
+                                          CondicionalWidget(
+                                            _.preguntas[i].enunciado,
+                                            _.preguntas[i].id_pregunta,
+                                            _,
+                                            context,
+                                            (i + 1).toString(),
+                                            bloque,
+                                            _.preguntas[i].bloqueDescripcion,
+                                            "",
+                                            i,
+                                            "",
+                                            "",
+                                            "",
+                                            _.preguntas[i].bind_type
+                                          )
+
+                                        }
                             },
 
                       SizedBox(
@@ -350,190 +369,124 @@ class RetomarEncuestaPage extends StatelessWidget {
 
           ],
         )
-        
-        
-        /*_.isLoadingData == true
-            ? Container(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Text(
-                        'Total de preguntas a responder ${_.preguntas.length}',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Expanded(
-                        child: 
-                        
-                        SingleChildScrollView(
-                       
-                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                        child: Column(
-                          children: [
-                            for (var i = 0; i < _.preguntas.length; i++) ...{
-                              if (_.preguntas[i].tipo_pregunta == "integer" ||
-                                  _.preguntas[i].tipo_pregunta == "decimal") ...{
-                                IntegerDecimalWidget(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion,
-                                    _.preguntas[i].bind_field_length,
-                                    i,
-                                    _.preguntas[i].bind_field_placeholder,
-                                    _.preguntas[i].requerido,
-                                    _.preguntas[i].bind_type)
-                              } else if (_.preguntas[i].tipo_pregunta ==
-                                  "text") ...{
-                                CustomTextField(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion,
-                                    _.preguntas[i].bind_field_length,
-                                    i,
-                                    _.preguntas[i].bind_field_placeholder,
-                                    _.preguntas[i].requerido),
-                              } else if (_.preguntas[i].tipo_pregunta ==
-                                  "note") ...{
-                                Note(
-                                  _.preguntas[i].enunciado,
-                                  _.preguntas[i].id_pregunta,
-                                  _,
-                                  context,
-                                  (i + 1).toString(),
-                                  bloque,
-                                  _.preguntas[i].bloqueDescripcion,
-                                  i,
-                                  _.preguntas[i].requerido,
-                                )
-                              } else if (_.preguntas[i].tipo_pregunta ==
-                                  "select_one list_name") ...{
-                                SelectSimpleWidget(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion),
-                              } else if (_.preguntas[i].tipo_pregunta ==
-                                  "select_multiple list_name") ...{
-                                MultiSelectWidget(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion),
-                              } else if (_.preguntas[i].tipo_pregunta ==
-                                  "ubigeo") ...{
-                                Ubigeo(
-                                    _.preguntas[i].enunciado,
-                                    _.preguntas[i].id_pregunta,
-                                    _,
-                                    context,
-                                    (i + 1).toString(),
-                                    bloque,
-                                    _.preguntas[i].bloqueDescripcion,
-                                    i,
-                                    _.preguntas[i].apariencia)
-                              }else if(_.preguntas[i].tipo_pregunta =="date")...{
-
-                                    //Text('holi')
-
-                                    DatePickWidget(
-                                      _.preguntas[i].enunciado,
-                                      _.preguntas[i].id_pregunta,
-                                      _,
-                                      context,
-                                      (i + 1).toString(),
-                                      bloque,
-                                        _.preguntas[i].bloqueDescripcion,
-                                        "",
-                                        i,
-                                        "",
-                                        "",
-                                        "",
-                                        _.preguntas[i].bind_type
-                                    )
-
-                              }else if(_.preguntas[i].tipo_pregunta =="image")...{
-                                    
-                                    ImageWidget(
-                                      _.preguntas[i].enunciado,
-                                      _.preguntas[i].id_pregunta,
-                                      _,
-                                      context,
-                                      (i + 1).toString(),
-                                      bloque,
-                                        _.preguntas[i].bloqueDescripcion,
-                                        i.toString(),
-                                        1,
-                                        "",
-                                        ""
-                                    ),
-                                  }
-                            }
-                          ],
-                        ),
-                      )
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color.fromRGBO(0, 102, 84, 1)),
-                      child: MaterialButton(
-                          child: Text(
-                            'Continuar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          onPressed: () {
-                            _.guardarFicha();
-                          }),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
-              )
-            : Center(
-                child: CircularProgressIndicator(),
-              ),*/
-
-        /*floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            _.Scrollcontroller.jumpTo(0);
-          },
-          child: Icon(Icons.arrow_upward),
-        ),*/
       ),
     );
   }
+}
+
+
+  CondicionalWidget(
+
+  String enunciado,
+  int id_pregunta,
+  RetommarController _,
+  BuildContext context,
+  String numPregunta,
+  String bloque,
+  String bloque2,
+  String maxLength,
+  int i,
+  String placeholder,
+  String requerido,
+  String apariencia,
+  String tipoCampo  
+
+
+){
+  
+  if (_.bloque == null || _.bloque == "") {
+        _.bloque = bloque2;
+  } else if (_.bloque == bloque2) {
+        bloque = bloque2;
+  } else if (_.bloque != bloque2) {
+        _.bloque = bloque2;
+  }
+  
+  return Padding(
+    
+    padding: EdgeInsets.only(left: 10, right: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        _.bloque == bloque
+        ? Container()
+        :Padding(
+          padding:EdgeInsets.only( top: 10, bottom: 10),
+          child: Container(
+                  width: double.infinity,
+                  color: Color.fromRGBO(3, 161, 133, 1),
+                  child: Padding(
+                    padding:  EdgeInsets.only(top: 10,bottom: 10,left: 10),
+                    child: Row(
+                          children: [
+                            Icon(
+                              Icons.grid_view,
+                              color: Colors.white,
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${_.bloque}',
+                                style: TextStyle(
+                                    color: Colors.white, //Color.fromRGBO(0, 102, 84, 1),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                    ),
+                  ),
+                ),
+
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+            width: double.infinity,
+            child: Card(
+              child: Column(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '$numPregunta. $enunciado',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  
+                                  fontSize: 14),
+                            ),
+                          ),
+                          Text(
+                            requerido == "true" ? " (*)" : "",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        ],
+                      ),
+                  ),
+                  SizedBox(height: 20,),
+
+                  ConditionalRetomar(),
+                  SizedBox(height: 20,)
+                ],
+              ),
+            ),
+          ),
+        )
+
+
+      ],
+    ),
+
+  );
+
+
 }
 
 

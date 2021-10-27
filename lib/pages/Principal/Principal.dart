@@ -275,9 +275,6 @@ class PrincipalPage extends StatelessWidget {
                               child: ListView.builder(
                                   itemCount: _.listEncuesta.length,
                                   itemBuilder: (context, index) {
-                                    print(_.listEncuesta[index].idEncuesta);
-                                    print(
-                                        'https://dev.regionsanmartin.gob.pe/gsencuesta/api/v1/recurso/encuesta/${_.listEncuesta[index].idEncuesta}');
                                     return GestureDetector(
                                       onTap: () {
                                         _.navigateToEncuesta(_.listEncuesta[index]);

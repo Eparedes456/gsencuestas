@@ -181,7 +181,8 @@ class EncuestaController extends GetxController {
     await preferences.setString('requeridoMultimedia', encuestaRequeMultimedia);
     await getPreguntas(encuesta.idEncuesta.toString());
 
-    String metaDate = preferences.getString('metaDataUser');
+    metaData = preferences.getString('metaDataUser');
+    print(metaData);
     //metaData = json.decode(metaDate);
 
     _listFichas = await DBProvider.db.fichasPendientes("P");
@@ -1002,6 +1003,21 @@ class EncuestaController extends GetxController {
   }
 
   navigateToRetomarEncuesta( String idFicha, String idEncuesta, String encuestaName, String nombreEncuestado, String dni) async {
+
+    Get.dialog(
+
+      AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 8,),
+            Text('Cargando preguntas....')
+          ],
+        ),
+      )
+    );
+
     DateTime now = DateTime.now();
     var utc = now.toUtc();
     var part = utc.toString().split(" ");
@@ -1026,9 +1042,13 @@ class EncuestaController extends GetxController {
     };
 
     print(data);
-    var result = await Get.to(RetomarEncuestaPage(), arguments: data);
+    var result = await Get.to(
+      RetomarEncuestaPage(),
+      arguments: data
+    );
 
     if (result == "SI") {
+      Get.back();
         print('Actualizar la vista mostrando las encuestas pendientes');
         
         _listEncuesta = [];

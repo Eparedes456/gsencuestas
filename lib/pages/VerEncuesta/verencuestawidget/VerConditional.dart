@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gsencuesta/controller/Quiz/QuizController.dart';
 import 'package:gsencuesta/controller/RetomarController/RetomarController.dart';
+import 'package:gsencuesta/controller/VerEncuesta/VerEncuestaController.dart';
 
-class ConditionalRetomar extends StatelessWidget {
-  const ConditionalRetomar({ Key key }) : super(key: key);
+class VerConditional extends StatelessWidget {
+  const VerConditional({ Key key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RetommarController>(
-      init: RetommarController(),
-      id: 'condicionalRetomar',
+    return GetBuilder<VerEncuestacontroller>(
+      init: VerEncuestacontroller(),
+      id: 'Vercondicional',
       builder: (_)=> Padding(
         padding:  EdgeInsets.only(left: 20,right: 20),
         child: Row(
