@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>GSEncuesta</string>
+	<string>gsencuestas</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,20 +25,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>GSEncuesta need to access your camera to capture a photo add and update profile picture.</string>
+	<string>La aplicación necesita acceso a su camara de fotos para tomar fotos en las fichas ejecutadas.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>La aplicación necesita acceder a su localización</string>
+	<string>La aplicación GSEncuesta necesita acceder su ubicación hacer el trackign del recorrido de las ejecucuiones de las fichas</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>La aplicación necesita acceder a su localización para guardar los puntos de georreferenciación de las encuestas realizadas.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>GSEncuesta need to access your photo library to select a photo add an update profile picture.</string>
+	<string>La aplicación GSEncuesta necesita acceder a su ubicación ya que la aplicación usa para georreferenciar las fichas ejecutadas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>GSEncuesta need to acces to library to take a photo</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
+	<string>La aplicación necesita acceso a su galería de fotos para adjuntar imagenes en las fichas ejecutadas.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
