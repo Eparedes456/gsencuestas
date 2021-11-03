@@ -32,6 +32,8 @@
 	<string>La aplicación GSEncuesta necesita acceder a su ubicación ya que la aplicación usa para georreferenciar las fichas ejecutadas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>La aplicación necesita acceso a su galería de fotos para adjuntar imagenes en las fichas ejecutadas.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>GSEncuesta necesita acceso a su microfono para grabar audio de las fichas</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
