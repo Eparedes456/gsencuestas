@@ -44,13 +44,16 @@ class PreguntaModel {
   String created_at;
   int    index1;
   String bloqueDescripcion;
+  String formula_condicion;
+  String   condicion;
+  String show;
    
     PreguntaModel({
 
       this.id_pregunta,this.id_bloque,this.idEncuesta,this.enunciado,this.tipo_pregunta,this.apariencia,this.requerido,this.requerido_msj,this.readonly,this.defecto,
       this.calculation,this.restriccion,this.restriccion_msj,this.relevant,this.choice_filter,this.bind_name,this.bind_type,this.bind_field_length,this.bind_field_placeholder,
-      this.orden,this.estado,this.updated_at,this.created_at,this.index1, this.bloqueDescripcion
-
+      this.orden,this.estado,this.updated_at,this.created_at,this.index1, this.bloqueDescripcion,this.formula_condicion,
+      this.condicion,this.show
     });
 
 
@@ -82,7 +85,10 @@ class PreguntaModel {
     updated_at              : json['updatedAt'],
     created_at              : json['createdAt'],         
     index1                  : json['index1'],
-    bloqueDescripcion       : json['bloqueDescripcion']  
+    bloqueDescripcion       : json['bloqueDescripcion'],
+    formula_condicion       : json['formula_condicion'],
+    condicion               : json['condicion'],
+    show                    : json['show']     
   );
 
 
@@ -115,7 +121,10 @@ class PreguntaModel {
       'updated_at'              : updated_at,
       'created_at'              : created_at,
       'index1'                  : index1,
-      'bloqueDescripcion'       : bloqueDescripcion
+      'bloqueDescripcion'       : bloqueDescripcion,
+      'formula_condicion'       : formula_condicion,
+      'condicion'               : condicion,
+      'show'                    : show
     };
 
 

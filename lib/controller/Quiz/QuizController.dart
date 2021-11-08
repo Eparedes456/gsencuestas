@@ -49,6 +49,8 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   var requiereObservacion =false;
   List<PreguntaModel> tempList = [];
 
+  List<CondicionalPregunta> preguntaCondicional = [];
+
   List<InputTextfield> _controllerInput = [];
   File _imagePath;
   bool _isLoadingData = false;
@@ -155,6 +157,18 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
       preguntas.asMap().forEach((index, element) {
 
+        if(element.condicion == "true"){
+          preguntaCondicional.add(
+            CondicionalPregunta(
+              index,
+              element.id_pregunta.toString(),
+              "false",
+              "true",
+              element.formula_condicion
+            )
+          );
+        }
+
         controllerInput.add(
           InputTextfield(
             element.id_pregunta.toString(),
@@ -165,7 +179,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
             element.calculation,
             element.requerido,
           ));
+        
+
+
       }); 
+      
+      
+
+      print(preguntaCondicional);
 
       print(controllerInput);
 
@@ -391,7 +412,7 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   List<OpcionesModel> get pickOpcion => _pickOpcionSimple;
 
 
-  capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
+  capturarRespuestaSimple(OpcionesModel opcionEscogida,String condicional,String show, String formula_condicion) async {
 
     List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
 
@@ -474,14 +495,26 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     update(['simple']);
 
-    var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
-    if(index3 != -1){
+    if(condicional  == "false"){
 
-      await Future.delayed(Duration(milliseconds: 500),(){
-        //print("hola");
-        conditional(_preguntas[index3].id_pregunta);
-      });
+      var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
+      if(index3 != -1){
+
+        await Future.delayed(Duration(milliseconds: 500),(){
+          //print("hola");
+          conditional(_preguntas[index3].id_pregunta);
+        });
+      }
+
+    }else if(formula_condicion != ""){
+
+      List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+      condicionalDependiente(opcionEscogida.idPregunta.toString(),opcionEscogida.valor);
+
+
     }
+
+    
 
   }
 
@@ -537,18 +570,18 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     List<RespuestaModel> listRespuesta = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
 
-    print(listRespuesta);
+    //print(listRespuesta);
 
     List<RespuestaModel> temporalRespuesta  = listRespuesta.where((element) => element.tipoPregunta == "RespuestaSimple" ).toList();
-    print(temporalRespuesta);
+    //print(temporalRespuesta);
 
     var index = temporalRespuesta.indexWhere((element) => element.valor == "NO" || element.valor == "No");
     
     if( index != -1){
 
       listNo.add(index);
-      print(listNo.length);
-      print("pintar la opcion no");
+      //print(listNo.length);
+      //print("pintar la opcion no");
 
     }else{
 
@@ -566,14 +599,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
       if(index2 != -1){
 
-        print("actualizar");
+        //print("actualizar");
        
 
         await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"NO","");
 
       }else{
 
-        print("insertar");
+        //print("insertar");
 
         await DBProvider.db.insertRespuesta(
             id_pregunta.toString(),
@@ -592,14 +625,14 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
       if(index2 != -1){
 
-        print("actualizar");
+        //print("actualizar");
 
         await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"SI","");
 
 
       }else{
 
-        print("insertar");
+        //print("insertar");
 
         await DBProvider.db.insertRespuesta(
             id_pregunta.toString(),
@@ -616,7 +649,42 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     update(['condicional']);
 
+    if(preguntaCondicional.length > 0){
+
+      List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+      condicionalDependiente(lastvalor[0].idPregunta.toString(),lastvalor[0].valor);
+
+    }
+
+
   }
+
+  condicionalDependiente(String idPregunta,String valors)async{
+
+    print('Condicional dependiente' + "  $idPregunta"  +"  $valors " );
+
+    for (var i = 0; i < preguntaCondicional.length; i++) {
+
+      if(idPregunta == preguntaCondicional[i].formula.split("-")[0]  &&  preguntaCondicional[i].formula.split("-")[1] == valors){
+
+        preguntas[preguntaCondicional[i].index].show  = "true";
+
+      }else{
+        
+        //preguntas[preguntaCondicional[i].index].show  = "false";
+
+      
+      }
+
+
+    }    
+
+
+    update();
+
+  }
+
+
 
 
   saveRequireObservacion(String id_pregunta, String  idOpcion, String valueobservacion,String tipoPregunta)async{
@@ -1218,12 +1286,26 @@ class InputTextfield {
   String tipo_pregunta;
 }
 
+
 class Imagelist{
   File file;
   String idPregunta;
 
   Imagelist(this.idPregunta, this.file);
 }
+
+class CondicionalPregunta {
+
+  int index;
+  String idPregunta;
+  String show;
+  String estado;
+  String formula;
+
+  CondicionalPregunta(this.index,this.idPregunta,this.show,this.estado,this.formula);
+
+}
+
 
 class DropDownDepartamento extends StatelessWidget {
   const DropDownDepartamento({Key key, this.showDepartamentos, this.dataUbi})

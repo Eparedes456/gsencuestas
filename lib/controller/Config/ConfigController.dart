@@ -755,7 +755,9 @@ class ConfigController extends GetxController {
                 updated_at: item["updatedAt"],
                 created_at: item["createdAt"],
                 index1: index,
-                bloqueDescripcion: item["bloque"]["nombre"]
+                bloqueDescripcion: item["bloque"]["nombre"],
+                formula_condicion : item["formulaCondicion"]  == null ? "" : item["formulaCondicion"],
+                condicion         : item["condicionalDependiente"].toString() 
             ),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];

@@ -112,7 +112,10 @@ class DBProvider {
             created_at TEXT,
             updated_at TEXT,
             index1      INTEGER,
-            bloqueDescripcion TEXT
+            bloqueDescripcion TEXT,
+            formula_condicion TEXT,
+            condicion TEXT,
+            show TEXT
           )
 
           ''');
@@ -337,7 +340,7 @@ class DBProvider {
             updatedAt TEXT
           )
           ''');
-    }, version: 14);
+    }, version: 15);
   }
 
   //CREACION DE   LAS CONSULTAS SQL LOCAL
@@ -878,6 +881,26 @@ class DBProvider {
       INSERT INTO respuesta(idPregunta,idFicha,idsOpcion,valor,tipoPregunta,estado) VALUES('$idPregunta','$idFicha','$idsOpcion','$ubigeo','$tipoPregunta','TRUE')
       
       ''');
+  }
+      /* */
+
+
+  ultimoRegistro(String idFicha)async{
+
+    final db = await database;
+
+    var response = await db.rawQuery('''
+      
+      SELECT * FROM respuesta WHERE idFicha = '$idFicha' ORDER BY idRespuesta DESC LIMIT 1
+      
+      ''');
+    
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
+
+    return listRespuesta;
+
   }
 
   /* */

@@ -6,8 +6,10 @@ import 'package:gsencuesta/model/Opciones/OpcionesModel.dart';
 class SimpleSelectPage extends StatelessWidget {
 
   final int id_pregunta;
-
-  SimpleSelectPage({Key key, @required this.id_pregunta}) : super(key: key);
+  final String condicional;
+  final String show;
+  final String formula_condicion;
+  SimpleSelectPage({Key key, @required this.id_pregunta, this.condicional, this.show, this.formula_condicion}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,11 @@ class SimpleSelectPage extends StatelessWidget {
                               return Column(
                               children: [
                                 Opciones(
-                                  id_pregunta: id_pregunta,
-                                  index: index,
+                                  id_pregunta : id_pregunta,
+                                  index       : index,
+                                  condicional : condicional,
+                                  show        : show,
+                                  formula_condicion: formula_condicion
                                 ),
                               ],
                             );
@@ -80,8 +85,10 @@ class SimpleSelectPage extends StatelessWidget {
 class Opciones extends StatelessWidget {
   final int id_pregunta;
   final int index;
-
-  Opciones({Key key, @required this.id_pregunta, this.index}) : super(key: key);
+  final String condicional;
+  final String show;
+  final String formula_condicion;
+  Opciones({Key key, @required this.id_pregunta, this.index, this.condicional, this.show, this.formula_condicion}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuizController>(
@@ -93,7 +100,7 @@ class Opciones extends StatelessWidget {
           children: [
             GestureDetector(
                                 onTap: (){
-                                  _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
+                                  _.capturarRespuestaSimple(_.opcionesPreguntas[index],condicional,show,formula_condicion);
 
                                 },
                                 child: Container(

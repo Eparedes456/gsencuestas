@@ -188,11 +188,13 @@ class QuizPage extends StatelessWidget {
                                             size: 18,
                                           ),
                                           SizedBox(width: 8,),
-                                          Text('${_.direccionReniec}',style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),),
+                                          Expanded(
+                                            child: Text('${_.direccionReniec}',style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700),),
+                                          ),
                                         ],
                                       ),
                                         SizedBox(height: 12,),
@@ -212,6 +214,8 @@ class QuizPage extends StatelessWidget {
                           children: [
 
                             for (var i = 0; i < _.preguntas.length; i++) ...{
+
+                              
                                         if (_.preguntas[i].tipo_pregunta == "integer" ||
                                             _.preguntas[i].tipo_pregunta ==
                                                 "decimal") ...{
@@ -258,7 +262,7 @@ class QuizPage extends StatelessWidget {
                                             _.preguntas[i].requerido,
                                           )
                                         } else if (_.preguntas[i].tipo_pregunta ==
-                                            "select_one list_name") ...{
+                                            "select_one list_name" ) ...{
                                           SelectSimpleWidget(
                                               _.preguntas[i].enunciado,
                                               _.preguntas[i].id_pregunta,
@@ -267,7 +271,10 @@ class QuizPage extends StatelessWidget {
                                               (i + 1).toString(),
                                               bloque,
                                               _.preguntas[i].bloqueDescripcion,
-                                              _.preguntas[i].requerido
+                                              _.preguntas[i].requerido,
+                                              _.preguntas[i].condicion,
+                                              _.preguntas[i].show,
+                                              _.preguntas[i].formula_condicion,
                                           ),
                                         } else if (_.preguntas[i].tipo_pregunta ==
                                             "select_multiple list_name") ...{
@@ -1135,7 +1142,8 @@ TextFieldWidget1(String enunciado, String numPregunta, QuizController _,
 }
 
 SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
-    BuildContext context, String numPregunta, String bloque, String bloque2, String requerido) {
+    BuildContext context, String numPregunta, String bloque, String bloque2, String requerido,String condicional, String show,
+    String formula_condicion) {
   if (_.bloque == null || _.bloque == "") {
     _.bloque = bloque2;
   } else if (_.bloque == bloque2) {
@@ -1144,8 +1152,9 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
     _.bloque = bloque2;
   }
 
+  if(show == "true"){
 
-  return Padding(
+    return Padding(
     padding: EdgeInsets.only(left: 0, right: 0,bottom: 8),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1215,7 +1224,10 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
 
                      Container(
                         child: SimpleSelectPage(
-                        id_pregunta: id_pregunta,
+                        id_pregunta : id_pregunta,
+                        condicional : condicional,
+                        show        : show,
+                        formula_condicion: formula_condicion
                         )
                     ),
                     
@@ -1231,6 +1243,14 @@ SelectSimpleWidget(String enunciado, int id_pregunta, QuizController _,
       ],
     ),
   );
+
+  }else{
+
+    return Container();
+
+  }
+
+  
 }
 
 MultiSelectWidget(String enunciado, int id_pregunta, QuizController _,
