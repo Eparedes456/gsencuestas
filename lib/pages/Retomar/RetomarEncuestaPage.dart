@@ -247,7 +247,10 @@ class RetomarEncuestaPage extends StatelessWidget {
                                     (i + 1).toString(),
                                     bloque,
                                     _.preguntas[i].bloqueDescripcion,
-                                    _.preguntas[i].requerido
+                                    _.preguntas[i].requerido,
+                                    _.preguntas[i].condicion,
+                                    _.preguntas[i].show,
+                                    _.preguntas[i].formula_condicion,
                                 ),
                               } else if (_.preguntas[i].tipo_pregunta ==
                                   "select_multiple list_name") ...{
@@ -680,7 +683,8 @@ class RetomarEncuestaPage extends StatelessWidget {
     }
 
  SelectSimpleWidget(String enunciado, int id_pregunta, RetommarController _,
-    BuildContext context, String numPregunta, String bloque, String bloque2,String requerido) {
+    BuildContext context, String numPregunta, String bloque, String bloque2,String requerido
+    ,String condicional, String show,String formula_condicion) {
   if (_.bloque == null || _.bloque == "") {
     _.bloque = bloque2;
   } else if (_.bloque == bloque2) {
@@ -689,88 +693,101 @@ class RetomarEncuestaPage extends StatelessWidget {
     _.bloque = bloque2;
   }
 
-  return Padding(
-    padding: EdgeInsets.only(left: 0, right: 0,bottom: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _.bloque == bloque
-            ? Container()
-            : Padding(
-                padding:
-                    EdgeInsets.only(  top: 10, bottom: 10),
-                child: Container(
-                  width: double.infinity,
-                  color: Color.fromRGBO(3, 161, 133, 1),
-                  child: Padding(
-                    padding:  EdgeInsets.only(left: 15,top: 8,bottom: 8,right: 15),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.grid_view,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                          child: Text(
-                            '${_.bloque}',
-                            style: TextStyle(
-                                color: Colors.white, //Color.fromRGBO(0, 102, 84, 1),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-        Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Container(
-              width: double.infinity,
-              child: Card(
-                elevation: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+  if(show == "true"){
+
+    return Padding(
+      padding: EdgeInsets.only(left: 0, right: 0,bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _.bloque == bloque
+              ? Container()
+              : Padding(
+                  padding:
+                      EdgeInsets.only(  top: 10, bottom: 10),
+                  child: Container(
+                    width: double.infinity,
+                    color: Color.fromRGBO(3, 161, 133, 1),
+                    child: Padding(
+                      padding:  EdgeInsets.only(left: 15,top: 8,bottom: 8,right: 15),
                       child: Row(
                         children: [
+                          Icon(
+                            Icons.grid_view,
+                            color: Colors.white,
+                          ),
                           Expanded(
                             child: Text(
-                              '$numPregunta. $enunciado',
+                              '${_.bloque}',
                               style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                 
-                                  fontSize: 14),
-                                  textAlign: TextAlign.justify,
+                                  color: Colors.white, //Color.fromRGBO(0, 102, 84, 1),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          Text(
-                            requerido == "true" ? " (*)" : "",
-                            style: TextStyle(color: Colors.red),
-                          )
                         ],
                       ),
                     ),
-                    
-                    Container(
-                        child: SimpleSelectRetomar(
-                      id_pregunta: id_pregunta,
-                    )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                  ),
                 ),
-              )),
-        ),
-      ],
-    ),
-  );
+          Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: Container(
+                width: double.infinity,
+                child: Card(
+                  elevation: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '$numPregunta. $enunciado',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  
+                                    fontSize: 14),
+                                    textAlign: TextAlign.justify,
+                              ),
+                            ),
+                            Text(
+                              requerido == "true" ? " (*)" : "",
+                              style: TextStyle(color: Colors.red),
+                            )
+                          ],
+                        ),
+                      ),
+                      
+                      Container(
+                          child: SimpleSelectRetomar(
+                        id_pregunta: id_pregunta,
+                        condicional : condicional,
+                        show        : show,
+                        formula_condicion: formula_condicion
+                      )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+        ],
+      ),
+    );
+
+  }else{
+
+    return Container();
+
+  }
+
+  
 }
 
  MultiSelectWidget(String enunciado, int id_pregunta, RetommarController _,
