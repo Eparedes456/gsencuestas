@@ -965,6 +965,39 @@ class DBProvider {
       ''');
   }
 
+  eliminarUnaRespuestaSimple(String idPregunta, String idFicha) async {
+    final db = await database;
+
+    var response = await db.rawQuery('''
+      
+      DELETE FROM respuesta WHERE idPregunta = $idPregunta AND idFicha = $idFicha 
+
+      ''');
+  }
+
+  eliminarRespuestasById(String idRespuesta, ) async {
+    final db = await database;
+
+    var response = await db.rawQuery('''
+      
+      DELETE FROM respuesta WHERE idRespuesta = $idRespuesta 
+
+      '''
+    );
+
+    var response2 = await db.rawQuery('''
+      SELECT * FROM respuesta WHERE idRespuesta = $idRespuesta
+      
+      ''');
+
+    List<RespuestaModel> listRespuesta = response.isNotEmpty
+        ? response.map((e) => RespuestaModel.fromMap(e)).toList()
+        : [];
+
+    return listRespuesta;
+
+  }
+
   eliminarRespuestasxFicha(String idPregunta, String idFicha,String valor) async {
     final db = await database;
 

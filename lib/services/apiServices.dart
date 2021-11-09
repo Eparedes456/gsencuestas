@@ -223,7 +223,7 @@ class ApiServices {
 
     if (response.statusCode == 200) {
       print(response.body);
-      final decodedData = json.decode(response.body);
+      final decodedData =  json.decode(utf8.decode(response.bodyBytes));
 
       return decodedData;
     } else if (response.statusCode == 500) {

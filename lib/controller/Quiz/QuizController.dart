@@ -500,12 +500,19 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
       var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
       if(index3 != -1){
 
-        await Future.delayed(Duration(milliseconds: 500),(){
+        await Future.delayed(Duration(milliseconds: 250),(){
           //print("hola");
           conditional(_preguntas[index3].id_pregunta);
         });
+      }else{
+        await Future.delayed(Duration(milliseconds: 200),(){
+          //print("hola");
+          //dontShowDependiente();
+          condicionalDependiente(opcionEscogida.idPregunta.toString(),opcionEscogida.valor);
+        });
+        
       }
-
+      
     }else if(formula_condicion != ""){
 
       List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
@@ -566,30 +573,21 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
   conditional(int id_pregunta)async{
 
     List<int> listNo = [];
-    //print("holi condicional  , id_pregunta $id_pregunta");
-
     List<RespuestaModel> listRespuesta = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
-
-    //print(listRespuesta);
-
     List<RespuestaModel> temporalRespuesta  = listRespuesta.where((element) => element.tipoPregunta == "RespuestaSimple" ).toList();
-    //print(temporalRespuesta);
+    
 
     var index = temporalRespuesta.indexWhere((element) => element.valor == "NO" || element.valor == "No");
     
     if( index != -1){
 
       listNo.add(index);
-      //print(listNo.length);
-      //print("pintar la opcion no");
-
+      
     }else{
 
       listNo = [];
 
     }
-
-    print(listNo);
 
     if(listNo.length > 0){
 
@@ -649,37 +647,99 @@ class QuizController extends GetxController with SingleGetTickerProviderMixin {
 
     update(['condicional']);
 
-    if(preguntaCondicional.length > 0){
+    print("Valor condicional No : " + conditionalno.toString());
 
+    if(conditionalno == true){
+      
       List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
-      condicionalDependiente(lastvalor[0].idPregunta.toString(),lastvalor[0].valor);
+        
+      print("Ultimo Valor : " + id_pregunta.toString() + " " + "NO");
+
+      await Future.delayed(Duration(milliseconds: 200),(){
+          //print("hola");
+          dontShowDependiente(null,false);
+      });
+
+    }else{
+
+      if(preguntaCondicional.length > 0){
+
+        List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+        
+         print("Ultimo Valor : " + id_pregunta.toString() + " " + "SI");
+
+        condicionalDependiente(id_pregunta.toString(),"SI");
+        
+
+      }
+
 
     }
 
+    
+
+
+  }
+
+  dontShowDependiente(int index, bool borrarUno)async{
+    
+
+    for (var i = 0; i < preguntaCondicional.length; i++) {
+
+      //preguntas[preguntaCondicional[i].index].show  = "false";
+      if(borrarUno == true){
+        preguntas[index].show = "false";
+      }else{
+        preguntas[preguntaCondicional[i].index].show  = "false";
+      }
+      
+      List<RespuestaModel> unaRespuesta =   await DBProvider.db.unaRespuestaFicha(idFicha,preguntaCondicional[i].idPregunta);
+      print(unaRespuesta);
+      if(unaRespuesta.length > 0){
+        for (var j = 0; j < unaRespuesta.length; j++) {
+          
+          //print(unaRespuesta[j].idRespuesta);
+          //code to delete record
+          List<RespuestaModel> temp =   await DBProvider.db.eliminarRespuestasById(unaRespuesta[j].idRespuesta.toString());
+          if(temp.isEmpty){
+            print('Se elimino el registro');
+            var indexOpcion =  opcionesPreguntas.indexWhere((element) => element.idOpcion.toString() == unaRespuesta[j].idsOpcion);
+            print('Index : ' + indexOpcion.toString());
+
+            opcionesPreguntas[indexOpcion].selected = false;
+          }
+
+          
+
+        }
+        
+      }
+
+      
+    }
+
+    update();
 
   }
 
   condicionalDependiente(String idPregunta,String valors)async{
 
     print('Condicional dependiente' + "  $idPregunta"  +"  $valors " );
-
     for (var i = 0; i < preguntaCondicional.length; i++) {
 
-      if(idPregunta == preguntaCondicional[i].formula.split("-")[0]  &&  preguntaCondicional[i].formula.split("-")[1] == valors){
+      if(idPregunta == preguntaCondicional[i].formula.split("-")[0]  /*&&  preguntaCondicional[i].formula.split("-")[1] == valors*/){
 
-        preguntas[preguntaCondicional[i].index].show  = "true";
-
-      }else{
+        if(preguntaCondicional[i].formula.split("-")[1] == valors){
+          preguntas[preguntaCondicional[i].index].show  = "true";
+        }else{
+          preguntas[preguntaCondicional[i].index].show  = "false";
+        }
         
-        //preguntas[preguntaCondicional[i].index].show  = "false";
 
-      
       }
 
 
-    }    
-
-
+    }
     update();
 
   }

@@ -123,6 +123,7 @@ class FichaController extends GetxController{
 
     final ImagePicker image = ImagePicker();
     if(valor == "CAMARA"){
+      showLoadingmodal();
       PickedFile imageCapturada = await image.getImage(source: ImageSource.camera,imageQuality: 65,maxHeight: 700,maxWidth: 700,);
 
       String photoBase64 = "";
@@ -159,10 +160,13 @@ class FichaController extends GetxController{
         );
         
       }*/
+      Get.back();
 
       update();
 
     }else{
+
+      showLoadingmodal();
 
       PickedFile imageCapturada = await image.getImage(source: ImageSource.gallery,imageQuality: 65, maxHeight: 700,maxWidth: 700 );
       String photoBase64 = "";
@@ -183,7 +187,7 @@ class FichaController extends GetxController{
           TextEditingController(text: 'Imagen $numero')
         )
       );
-
+      Get.back();
       /*for (var i = 0; i < _listMultimedia.length; i++) {
 
         _controllerInput.add(
@@ -199,6 +203,22 @@ class FichaController extends GetxController{
 
     }
 
+  }
+
+  showLoadingmodal(){
+    Get.dialog(
+      AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 12,),
+            Text('Cargando la imagen..')
+          ],
+        ),
+      )
+    );
   }
   
   deleteImage(String idMultimedia)async{
