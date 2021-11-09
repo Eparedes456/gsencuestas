@@ -67,6 +67,9 @@ class RetommarController extends GetxController {
 
   List<InputTextfield> _controllerInput = [];
 
+  List<CondicionalPregunta> preguntaCondicional = [];
+
+
   List<InputTextfield> get controllerInput => _controllerInput;
 
   List<OpcionesModel> opcionesHijos      = [];
@@ -1582,4 +1585,16 @@ class Imagelist{
   Uint8List file;
 
   Imagelist(this.idPregunta, this.file);
+}
+
+class CondicionalPregunta {
+
+  int index;
+  String idPregunta;
+  String show;
+  String estado;
+  String formula;
+
+  CondicionalPregunta(this.index,this.idPregunta,this.show,this.estado,this.formula);
+
 }
