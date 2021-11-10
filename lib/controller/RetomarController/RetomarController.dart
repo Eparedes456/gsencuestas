@@ -114,6 +114,22 @@ class RetommarController extends GetxController {
       metaData = json.decode( preferences.getString("metaDataUser"));
     }
 
+    preguntas.asMap().forEach((index, element) {
+
+      if(element.condicion == "true"){
+          preguntaCondicional.add(
+            CondicionalPregunta(
+              index,
+              element.id_pregunta.toString(),
+              "false",
+              "true",
+              element.formula_condicion
+            )
+          );
+      }
+
+    });
+
 
     for (var i = 0; i < _preguntas.length; i++){
       //print(_preguntas[i].id_pregunta);
@@ -136,7 +152,6 @@ class RetommarController extends GetxController {
 
       }else{
 
-
         controllerInput.add(
           InputTextfield(
             preguntas[i].id_pregunta.toString(),
@@ -147,8 +162,28 @@ class RetommarController extends GetxController {
             preguntas[i].calculation
           )
         );
+
+        if(_preguntas[i].condicion == "false" || _preguntas[i].condicion == "true"){
+
+          var indexPregunCondi  =  preguntaCondicional.indexWhere((element) => _preguntas[i].id_pregunta.toString() == element.formula.split("-")[0]);
+
+          if(indexPregunCondi  != -1){
+            if(preguntaCondicional[indexPregunCondi].formula.split("-")[1]  == respuestas[index].valor){
+              print(preguntaCondicional[indexPregunCondi].index);
+              _preguntas[preguntaCondicional[indexPregunCondi].index].show = "true";
+            }
+          }
+
+          
+
+
+        }
+
+        
         
       }
+
+        
 
       var opciones = await DBProvider.db.getOpcionesxPregunta(idPregunta.toString());
 
@@ -236,6 +271,11 @@ class RetommarController extends GetxController {
         
       }
     }
+
+
+    
+    
+
 
     for (var x = 0; x < respuestas.length; x++) {
       for (var z = 0; z < _opcionesPreguntas.length; z++) {
@@ -417,7 +457,8 @@ class RetommarController extends GetxController {
   
 
   conditional(int id_pregunta)async{
-
+    bool conditionalsi = false;
+    bool conditionalno = false;
     List<int> listNo = [];
 
     List<RespuestaModel> listRespuesta = await DBProvider.db.getAllRespuestasxFicha(idFicha.toString());
@@ -432,8 +473,7 @@ class RetommarController extends GetxController {
     if( index != -1){
 
       listNo.add(index);
-      print(listNo.length);
-      print("pintar la opcion no");
+    
 
     }else{
 
@@ -451,15 +491,14 @@ class RetommarController extends GetxController {
       var index2 = listRespuesta.indexWhere((element) => element.idPregunta == id_pregunta);
       if(index2 != -1){
 
-        print("actualizar");
+       
        
 
         await DBProvider.db.updateResponseByFichaid(listRespuesta[index2].idRespuesta,"NO","");
 
       }else{
 
-        print("insertar");
-
+        
         await DBProvider.db.insertRespuesta(
             id_pregunta.toString(),
             idFicha.toString(),
@@ -501,15 +540,82 @@ class RetommarController extends GetxController {
 
     update(['condicionalRetomar']);
 
+     if(conditionalRetomarno == true){
+      
+      List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+        
+      print("Ultimo Valor : " + id_pregunta.toString() + " " + "NO");
+
+      await Future.delayed(Duration(milliseconds: 200),(){
+          //print("hola");
+          dontShowDependiente(null,false);
+      });
+
+    }else{
+
+      if(preguntaCondicional.length > 0){
+
+        List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+        
+         print("Ultimo Valor : " + id_pregunta.toString() + " " + "SI");
+
+        condicionalDependiente(id_pregunta.toString(),"SI");
+        
+
+      }
+
+
+    }
+
+
+  }
+
+  dontShowDependiente(int index, bool borrarUno)async{
+    
+
+    for (var i = 0; i < preguntaCondicional.length; i++) {
+
+      //preguntas[preguntaCondicional[i].index].show  = "false";
+      if(borrarUno == true){
+        preguntas[index].show = "false";
+      }else{
+        preguntas[preguntaCondicional[i].index].show  = "false";
+      }
+      
+      List<RespuestaModel> unaRespuesta =   await DBProvider.db.unaRespuestaFicha(idFicha,preguntaCondicional[i].idPregunta);
+      print(unaRespuesta);
+      if(unaRespuesta.length > 0){
+        for (var j = 0; j < unaRespuesta.length; j++) {
+          
+          //print(unaRespuesta[j].idRespuesta);
+          //code to delete record
+          List<RespuestaModel> temp =   await DBProvider.db.eliminarRespuestasById(unaRespuesta[j].idRespuesta.toString());
+          if(temp.isEmpty){
+            print('Se elimino el registro');
+            var indexOpcion =  opcionesPreguntas.indexWhere((element) => element.idOpcion.toString() == unaRespuesta[j].idsOpcion);
+            print('Index : ' + indexOpcion.toString());
+
+            opcionesPreguntas[indexOpcion].selected = false;
+          }
+
+          
+
+        }
+        
+      }
+
+      
+    }
+
+    update();
+
   }
 
 
 
 
 
-
-
-  capturarRespuestaSimple(OpcionesModel opcionEscogida) async {
+  capturarRespuestaSimple(OpcionesModel opcionEscogida,String condicional,String show, String formula_condicion) async {
     
    List response = await DBProvider.db.getHijosOpcion(opcionEscogida.idOpcion);
 
@@ -591,17 +697,59 @@ class RetommarController extends GetxController {
 
     update(['opciones']);
 
-    var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
-    if(index3 != -1){
+    if(condicional  == "false"){
 
-      await Future.delayed(Duration(milliseconds: 500),(){
-        //print("hola");
-        conditional(_preguntas[index3].id_pregunta);
-      });
+      var index3 = _preguntas.indexWhere((element) => element.tipo_pregunta == "condicional");
+      if(index3 != -1){
+
+        await Future.delayed(Duration(milliseconds: 500),(){
+          //print("hola");
+          conditional(_preguntas[index3].id_pregunta);
+        });
+      }else{
+        await Future.delayed(Duration(milliseconds: 200),(){
+          //print("hola");
+          //dontShowDependiente();
+          condicionalDependiente(opcionEscogida.idPregunta.toString(),opcionEscogida.valor);
+        });
+        
+      }
+
+
+    }else if(formula_condicion != ""){
+      List<RespuestaModel> lastvalor = await DBProvider.db.ultimoRegistro(idFicha.toString());
+      condicionalDependiente(opcionEscogida.idPregunta.toString(),opcionEscogida.valor);
+
     }
-
    
   }
+
+
+  condicionalDependiente(String idPregunta,String valors)async{
+
+    print('Condicional dependiente' + "  $idPregunta"  +"  $valors " );
+    for (var i = 0; i < preguntaCondicional.length; i++) {
+
+      if(idPregunta == preguntaCondicional[i].formula.split("-")[0]  /*&&  preguntaCondicional[i].formula.split("-")[1] == valors*/){
+
+        if(preguntaCondicional[i].formula.split("-")[1] == valors){
+          preguntas[preguntaCondicional[i].index].show  = "true";
+        }else{
+          preguntas[preguntaCondicional[i].index].show  = "false";
+        }
+        
+
+      }
+
+
+    }
+    update();
+
+  }
+
+
+
+
 
   capturarRespuestaSimpleHijos(OpcionesModel opcionEscogidaHijos)async{
     var nuevoValor = "";

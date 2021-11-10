@@ -119,7 +119,7 @@ class Opciones extends StatelessWidget {
 
                                   
 
-                                  _.capturarRespuestaSimple(_.opcionesPreguntas[index]);
+                                  _.capturarRespuestaSimple(_.opcionesPreguntas[index], condicional,show,formula_condicion);
 
                                 },
                                 child: Container(
