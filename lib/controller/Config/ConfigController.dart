@@ -52,8 +52,10 @@ class ConfigController extends GetxController {
     update();
   }
 
-  /*sendDataToServer() async {
+  sendDataToServer() async {
     Get.back();
+    //loadingStatus("Subiendo las fichas finalizadas, espere por favor...","loading");
+    modal(true, false);
     List data = [];
     List<FichasModel> listFichas = await DBProvider.db.fichasPendientes('F');
     ApiServices apiConexion = new ApiServices();
@@ -63,7 +65,7 @@ class ConfigController extends GetxController {
       var dataEncuesta = await DBProvider.db.getOneEncuesta(listFichas[i].idEncuesta.toString());
       print(dataEncuesta);
 
-      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha);
+      List<RespuestaModel> listRespuestaDBlocal = await DBProvider.db.getAllRespuestasxFicha(listFichas[i].idFicha.toString());
       List<TrackingModel> listTracking = await DBProvider.db.getAllTrackingOfOneSurvery(listFichas[i].idFicha.toString());
       List<MultimediaModel> listMultimedia = await DBProvider.db.getAllMultimediaxFicha(listFichas[i].idFicha.toString());
 
@@ -176,24 +178,32 @@ class ConfigController extends GetxController {
 
       var multimedia = {};
       List<Map> listMultimediaMap =  []; //new List();
+      if(listMultimedia.length == 0 ){
+      
+        sendFicha['multimedia']  = listMultimediaMap;
+        sendFicha['idficha']      =  listFichas[i].idFicha;
+      }else{
 
-      for (var z = 0; z < listMultimedia.length; z++) {
-        multimedia["idMultimedia"] = listMultimedia[z].idMultimedia;
-        multimedia["latitud"] = listMultimedia[z].latitud;
-        multimedia["longitud"] = listMultimedia[z].longitud;
-        multimedia["url"] = listMultimedia[z].tipo;
-        multimedia["nombre"] = listMultimedia[z].nombre;
+        for (var z = 0; z < listMultimedia.length; z++) {
+          multimedia["idMultimedia"] = listMultimedia[z].idMultimedia;
+          multimedia["latitud"] = listMultimedia[z].latitud;
+          multimedia["longitud"] = listMultimedia[z].longitud;
+          multimedia["url"] = listMultimedia[z].tipo;
+          multimedia["nombre"] = listMultimedia[z].nombre;
 
-        listMultimediaMap.add(multimedia);
+          listMultimediaMap.add(multimedia);
 
-        sendFicha['multimedia'] = listMultimediaMap;
-        multimedia = {};
+          sendFicha['multimedia'] = listMultimediaMap;
+          multimedia = {};
+        }
+
+
       }
 
       data.add(sendFicha);
     }
     ;
-    
+    print(data);
 
     ConnectivityResult conectivityResult = await Connectivity().checkConnectivity();
 
@@ -201,20 +211,22 @@ class ConfigController extends GetxController {
       int contador = 0;
 
       if (conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile) {
-        modal(true, false);
+        //modal(true, false);
 
         for (var x = 0; x < data.length; x++) {
           var response = await apiConexion.sendFichaToServer(data[x]);
 
           if(response == 1){
             print("token");
+            Get.back();
             showModal("Estimado usuario su token expiro.",false,"Error inesperado");
-            Future.delayed(Duration(seconds: 2),(){
+            Future.delayed(Duration(seconds: 4),(){
               Get.back();
             });
           }else if(response == 2){
+            Get.back();
             showModal("Error de servidor comuniquese con el administrador del sistema.",false,"Error inesperado");
-            Future.delayed(Duration(seconds: 2),(){
+            Future.delayed(Duration(seconds: 4),(){
               Get.back();
               
             });
@@ -222,7 +234,7 @@ class ConfigController extends GetxController {
           }else if(response == 3){
             print("error 404 o bad request");
             showModal("Error por parte del cliente, apunta a una ruta desconocia o envia mal los datos, comuniquese con el administrador del sistema.",false,"Error inesperado");
-            Future.delayed(Duration(seconds: 2),(){
+            Future.delayed(Duration(seconds: 4),(){
               Get.back();
         
             });
@@ -270,6 +282,7 @@ class ConfigController extends GetxController {
         }
         //aca el else
       } else {
+        Get.back();
         Get.dialog(AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -279,7 +292,7 @@ class ConfigController extends GetxController {
         ));
       }
     }
-  }*/
+  }
 
   showModal(String mensaje, bool loading, String titulo){
     Get.dialog(
@@ -328,9 +341,9 @@ class ConfigController extends GetxController {
                             borderRadius: BorderRadius.circular(10)),
                         color: Color.fromRGBO(0, 102, 84, 1),
                         onPressed: () {
-                          //sendDataToServer();
+                          sendDataToServer();
                         },
-                        child: Text('Subir'),
+                        child: Text('Subir',style: TextStyle(color: Colors.white),),
                       ),
                     ),
                     Container(
@@ -431,21 +444,26 @@ class ConfigController extends GetxController {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('$message'),
-          SizedBox(
-            height: 20,
-          ),
+          
+          
           status == "Success"
               ? Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
                   size: 60,
                 )
-              : Icon(
+              : status == "CANCEL" ?  
+              Icon(
                   Icons.cancel,
                   color: Colors.redAccent,
                   size: 60,
-                )
+              )
+              : CircularProgressIndicator(),
+              SizedBox(
+                height: 20,
+              ),
+              Text('$message'),
+
         ],
       ),
     ));
@@ -640,13 +658,10 @@ class ConfigController extends GetxController {
     if (listProyecto != 1 && listProyecto != 2 && listProyecto != 3) {
       if (listProyecto.length == 0) {
         print('no hay proyectos');
-        //_isLoading = false;
-        //_hayData = false;
+        
         var insertDataLocal = "Si";
         preferences.setString('primeraCarga', insertDataLocal);
-        //update();
-
-        //return;
+        
       }
       listProyecto.forEach((item) {
         _proyectos.add(ProyectoModel(

@@ -16,6 +16,7 @@ class ImagenesEncuesta extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Imágenes'),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Container(
           child: ListView.builder(
