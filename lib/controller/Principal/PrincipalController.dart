@@ -101,64 +101,76 @@ class PrincipalController extends GetxController {
   checkVersion()async{
     
     SharedPreferences pref = await SharedPreferences.getInstance();
-    
+    ConnectivityResult conectivityResult =
+        await Connectivity().checkConnectivity();
     final info = await PackageInfo.fromPlatform();
     //print(info);
 
     var versionAndroid = info.version == null || info.version == "" ? "" :info.version ;
     var versioniOS =  info.version == null || info.version == "" ? "" :info.version;
     
+    if (conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile) {
 
-    var response = await apiConexion.getVersionsApp();
+      var response = await apiConexion.getVersionsApp();
 
-    var isDrastico = false;
+      var isDrastico = false;
 
-    var prefresp = pref.getBool('drastico');
+      var prefresp = pref.getBool('drastico');
 
-    if(prefresp == null){
-
-       if (Platform.isAndroid) {
-      
-        if(versionAndroid == response[0]['versionAndroid']){
-          validarCarga();
-        }else{
-          showModalUpdateApp('android',isDrastico);
-          print('hay nueva actualizacion de la aplicacion');
-        }
-
-      } else if (Platform.isIOS) {
-        if(versioniOS == response[0]['versionIos']){
-          validarCarga();
-        }else{
-          showModalUpdateApp('ios',isDrastico);
-          print('hay nueva actualizacion de la aplicacion');
-        }
-      }
-      
-
-    } else if( isDrastico == prefresp ){
-      validarCarga();
-    } else{
+      if(prefresp == null){
 
         if (Platform.isAndroid) {
-      
-        if(versionAndroid == response[0]['versionAndroid']){
-          validarCarga();
-        }else{
-          showModalUpdateApp('android',isDrastico);
-          print('hay nueva actualizacion de la aplicacion');
+        
+          if(versionAndroid == response[0]['versionAndroid']){
+            validarCarga();
+          }else{
+            showModalUpdateApp('android',isDrastico);
+            print('hay nueva actualizacion de la aplicacion');
+          }
+
+        } else if (Platform.isIOS) {
+          if(versioniOS == response[0]['versionIos']){
+            validarCarga();
+          }else{
+            showModalUpdateApp('ios',isDrastico);
+            print('hay nueva actualizacion de la aplicacion');
+          }
+        }
+        
+
+      } else if( isDrastico == prefresp ){
+        validarCarga();
+      } else{
+
+          if (Platform.isAndroid) {
+        
+          if(versionAndroid == response[0]['versionAndroid']){
+            validarCarga();
+          }else{
+            showModalUpdateApp('android',isDrastico);
+            print('hay nueva actualizacion de la aplicacion');
+          }
+
+        } else if (Platform.isIOS) {
+          if(versioniOS == response[0]['versionIos']){
+            validarCarga();
+          }else{
+            showModalUpdateApp('ios',isDrastico);
+            print('hay nueva actualizacion de la aplicacion');
+          }
         }
 
-      } else if (Platform.isIOS) {
-        if(versioniOS == response[0]['versionIos']){
-          validarCarga();
-        }else{
-          showModalUpdateApp('ios',isDrastico);
-          print('hay nueva actualizacion de la aplicacion');
-        }
       }
 
+
+
+    }else{
+
+      validarCarga();
+
     }
+
+    
 
     
 
@@ -445,6 +457,7 @@ class PrincipalController extends GetxController {
         var idUsuario = int.parse(preferences.getString('idUsuario'));
         _proyectos = await DBProvider.db.getAllProyectos();
         if (_proyectos.length > 0) {
+          Get.back();
           _isLoading = false;
           _hayData = true;
         } else {
