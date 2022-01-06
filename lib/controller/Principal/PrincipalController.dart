@@ -91,191 +91,173 @@ class PrincipalController extends GetxController {
   }
 
   ApiServices apiConexion = new ApiServices();
-  
 
   navigateToProfile() {
     Get.to(ProfilePage());
   }
 
-
-  checkVersion()async{
-    
+  checkVersion() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     ConnectivityResult conectivityResult =
         await Connectivity().checkConnectivity();
     final info = await PackageInfo.fromPlatform();
     //print(info);
 
-    var versionAndroid = info.version == null || info.version == "" ? "" :info.version ;
-    var versioniOS =  info.version == null || info.version == "" ? "" :info.version;
-    
-    if (conectivityResult == ConnectivityResult.wifi || conectivityResult == ConnectivityResult.mobile) {
+    var versionAndroid =
+        info.version == null || info.version == "" ? "" : info.version;
+    var versioniOS =
+        info.version == null || info.version == "" ? "" : info.version;
 
+    if (conectivityResult == ConnectivityResult.wifi ||
+        conectivityResult == ConnectivityResult.mobile) {
       var response = await apiConexion.getVersionsApp();
 
       var isDrastico = false;
 
       var prefresp = pref.getBool('drastico');
 
-      if(prefresp == null){
-
+      if (prefresp == null) {
         if (Platform.isAndroid) {
-        
-          if(versionAndroid == response[0]['versionAndroid']){
+          if (versionAndroid == response[0]['versionAndroid']) {
             validarCarga();
-          }else{
-            showModalUpdateApp('android',isDrastico);
+          } else {
+            showModalUpdateApp('android', isDrastico);
             print('hay nueva actualizacion de la aplicacion');
           }
-
         } else if (Platform.isIOS) {
-          if(versioniOS == response[0]['versionIos']){
+          if (versioniOS == response[0]['versionIos']) {
             validarCarga();
-          }else{
-            showModalUpdateApp('ios',isDrastico);
+          } else {
+            showModalUpdateApp('ios', isDrastico);
             print('hay nueva actualizacion de la aplicacion');
           }
         }
-        
-
-      } else if( isDrastico == prefresp ){
+      } else if (isDrastico == prefresp) {
         validarCarga();
-      } else{
-
-          if (Platform.isAndroid) {
-        
-          if(versionAndroid == response[0]['versionAndroid']){
+      } else {
+        if (Platform.isAndroid) {
+          if (versionAndroid == response[0]['versionAndroid']) {
             validarCarga();
-          }else{
-            showModalUpdateApp('android',isDrastico);
+          } else {
+            showModalUpdateApp('android', isDrastico);
             print('hay nueva actualizacion de la aplicacion');
           }
-
         } else if (Platform.isIOS) {
-          if(versioniOS == response[0]['versionIos']){
+          if (versioniOS == response[0]['versionIos']) {
             validarCarga();
-          }else{
-            showModalUpdateApp('ios',isDrastico);
+          } else {
+            showModalUpdateApp('ios', isDrastico);
             print('hay nueva actualizacion de la aplicacion');
           }
         }
-
       }
-
-
-
-    }else{
-
+    } else {
       validarCarga();
-
     }
 
-    
-
-    
-
     //print(response[0]['versionAndroid']);
-
   }
 
-
-
-  
-  showModalUpdateApp(String icon, bool isDrastico){
+  showModalUpdateApp(String icon, bool isDrastico) {
     Get.dialog(
-      
       AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text('Actualización de GSEncuesta'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Tenemos una nueva versión de GSEncuesta, presione "Descargar" a continuación para obtener la ultima versión más reciente de las tiendas digitales'),
-            SizedBox(height: 20,),
+            Text(
+                'Tenemos una nueva versión de GSEncuesta, presione "Descargar" a continuación para obtener la ultima versión más reciente de las tiendas digitales'),
+            SizedBox(
+              height: 20,
+            ),
             GestureDetector(
-              onTap: ()async{
-                var androidurl = "https://play.google.com/store/apps/details?id=pe.gob.regionsanmartin.gsencuesta";
-                var iOSurl = "https://apps.apple.com/pe/app/gsencuesta/id1566926144";
+              onTap: () async {
+                var androidurl =
+                    "https://play.google.com/store/apps/details?id=pe.gob.regionsanmartin.gsencuesta";
+                var iOSurl =
+                    "https://apps.apple.com/pe/app/gsencuesta/id1566926144";
 
                 if (Platform.isAndroid) {
-      
-                    if (  await canLaunch(androidurl)) {
-                      await launch(androidurl);
-                    } 
-                      else {
-                          throw 'Could not launch $androidurl';
-                    }
-
+                  if (await canLaunch(androidurl)) {
+                    await launch(androidurl);
+                  } else {
+                    throw 'Could not launch $androidurl';
+                  }
                 } else if (Platform.isIOS) {
-                  
-                  if (  await canLaunch(iOSurl)) {
-                      await launch(iOSurl);
-                    } 
-                      else {
-                          throw 'Could not launch $iOSurl';
-                    }
-
+                  if (await canLaunch(iOSurl)) {
+                    await launch(iOSurl);
+                  } else {
+                    throw 'Could not launch $iOSurl';
+                  }
                 }
-                  
-                
               },
               child: Container(
                 height: 40,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(0, 102, 84, 1),
-                  borderRadius: BorderRadius.circular(10)
-                ),
+                    color: Color.fromRGBO(0, 102, 84, 1),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon( icon == "android"? FontAwesomeIcons.googlePlay : FontAwesomeIcons.appStore,color: Colors.white),
-                    SizedBox(width: 20,),
-                    Text('Descargar',style: TextStyle(color: Colors.white),)
+                    Icon(
+                        icon == "android"
+                            ? FontAwesomeIcons.googlePlay
+                            : FontAwesomeIcons.appStore,
+                        color: Colors.white),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      'Descargar',
+                      style: TextStyle(color: Colors.white),
+                    )
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 12,),
-            isDrastico == true ?  Container():
-            GestureDetector(
-              onTap: ()async{
-                SharedPreferences pref = await SharedPreferences.getInstance();
-                pref.setBool('drastico', false);
-                
-                Get.back();
-                validarCarga();
-              },
-              child: Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(0, 102, 84, 1),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Descargar, más tarde',style: TextStyle(color: Colors.white),),
-                    SizedBox(width: 20,),
-                    Icon( Icons.arrow_forward_ios,color: Colors.white),
-                  ],
-                ),
-              ),
+            SizedBox(
+              height: 12,
             ),
+            isDrastico == true
+                ? Container()
+                : GestureDetector(
+                    onTap: () async {
+                      SharedPreferences pref =
+                          await SharedPreferences.getInstance();
+                      pref.setBool('drastico', false);
 
+                      Get.back();
+                      validarCarga();
+                    },
+                    child: Container(
+                      height: 40,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(0, 102, 84, 1),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Descargar, más tarde',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
-      
       barrierDismissible: false,
-      
     );
   }
-
-  
 
   validarCarga() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -283,12 +265,13 @@ class PrincipalController extends GetxController {
         await Connectivity().checkConnectivity();
     var ubigeo = preferences.getString('ubigeoCargo');
     if (ubigeo != "si") {
-              loadingUbigeo();
-              await cargarUbigeo();
-    }else{
+      loadingUbigeo();
+      await cargarUbigeo();
+    } else {
       loading();
     }
     var flag1 = preferences.getString('primeraCarga');
+    print('Primera carga : ' + flag1.toString());
     if (conectivityResult == ConnectivityResult.wifi ||
         conectivityResult == ConnectivityResult.mobile) {
       print('hay conexion a internet');
@@ -310,7 +293,7 @@ class PrincipalController extends GetxController {
           print(
               'descargar los nuevos usuarios para guardar en la base de datos local');
           await DBProvider.db.deleteAllUsuario();
-          
+
           var listUserApi = await apiConexion.getAllUsers();
           listUserApi.forEach((item) {
             _usuarios.add(UsuarioModel(
@@ -324,7 +307,7 @@ class PrincipalController extends GetxController {
               password: item["password"],
               foto: item["foto"],
               estado: item["estado"].toString(),
-              metaData: item["metaData"]  == null ? "" : item["metaData"],
+              metaData: item["metaData"] == null ? "" : item["metaData"],
               createdAt: item["createdAt"],
             ));
           });
@@ -359,7 +342,10 @@ class PrincipalController extends GetxController {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              title: Text('Notificación',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+              title: Text(
+                'Notificación',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               content: Text(
                   'Se encontró una actualización, no se puede proceder ya que usted cuenta con  $pendientesLength $finalizadaslenght para subir al servidor'),
               actions: [
@@ -372,7 +358,10 @@ class PrincipalController extends GetxController {
                     onPressed: () async {
                       Get.back();
                     },
-                    child: Text('Ok',style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'Ok',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -397,13 +386,13 @@ class PrincipalController extends GetxController {
 
             await DBProvider.db.updateParametros(resp["ultimaActualizacion"],
                 idInstitucion, response["ultimaActualizacionUsuario"]);
-            
-            
+
             await cargarEncuestados();
             await cargarUsuarios();
             await cargarParcelas();
             await cargarProyectosEncuesta();
-
+            preferences.setString('primeraCarga', "Si");
+            //preferences.getString('primeraCarga');
             //await cargarUbigeo();
             Get.back();
           }
@@ -477,7 +466,6 @@ class PrincipalController extends GetxController {
     if (flag == "Si") {
       print("Consulto a la base de datos a la tabla proyecto");
     } else {
-
       var ubigeo = preferences.getString('ubigeoCargo');
       /*if (ubigeo != "si") {
         loadingUbigeo();
@@ -531,33 +519,31 @@ class PrincipalController extends GetxController {
       //print(dataParametro2);
       await cargarParcelas();
       await cargarProyectosEncuesta();
-      
+
       _isLoading = false;
       _hayData = true;
-
-      
-      
+      preferences.setString('primeraCarga', "si");
       update();
       Get.back();
     }
   }
 
-  loading(){
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 12,),
-            Text('Cargando las encuestas...')
-          ],
-        ),
-      )
-    );
+  loading() {
+    Get.dialog(AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(
+            height: 12,
+          ),
+          Text('Cargando las encuestas...')
+        ],
+      ),
+    ));
   }
 
   searchProyecto(String value) async {
@@ -639,21 +625,20 @@ class PrincipalController extends GetxController {
       for (var i = 0; i < listEncuestados.length; i++) {
         var listEncuestados2 = listEncuestados[i]["encuestado"];
         //print(listEncuestados2["documento"]);
-        _encuestadosLista.add(
-          EncuestadoModel(
-            idEncuestado    : listEncuestados2["idEncuestado"].toString(),
-            documento       : listEncuestados2["documento"],
-            nombre          : listEncuestados2["nombre"],
-            apellidoPaterno : listEncuestados2["apellidoPaterno"],
-            apellidoMaterno : listEncuestados2["apellidoMaterno"],
-            sexo            : listEncuestados2["sexo"],
-            estadoCivil     : listEncuestados2["estadoCivil"],
-            direccion       : listEncuestados2["direccion"],
-            telefono        : listEncuestados2["telefono"],
-            email           : listEncuestados2["email"],
-            idUbigeo        : listEncuestados2["idUbigeo"],
-            estado          : listEncuestados2["estado"].toString(),
-            idInstitucion   : listEncuestados[i]["idInstitucion"].toString(),
+        _encuestadosLista.add(EncuestadoModel(
+            idEncuestado: listEncuestados2["idEncuestado"].toString(),
+            documento: listEncuestados2["documento"],
+            nombre: listEncuestados2["nombre"],
+            apellidoPaterno: listEncuestados2["apellidoPaterno"],
+            apellidoMaterno: listEncuestados2["apellidoMaterno"],
+            sexo: listEncuestados2["sexo"],
+            estadoCivil: listEncuestados2["estadoCivil"],
+            direccion: listEncuestados2["direccion"],
+            telefono: listEncuestados2["telefono"],
+            email: listEncuestados2["email"],
+            idUbigeo: listEncuestados2["idUbigeo"],
+            estado: listEncuestados2["estado"].toString(),
+            idInstitucion: listEncuestados[i]["idInstitucion"].toString(),
             foto: listEncuestados2["foto"]));
       }
     }
@@ -802,35 +787,38 @@ class PrincipalController extends GetxController {
           int idPregunta = item["idPregunta"];
           _preguntas.add(
             PreguntaModel(
-                id_pregunta       : item["idPregunta"],
-                id_bloque         : item["id_bloque"],
-                idEncuesta        : int.parse(idEncuesta),
-                enunciado         : StringUtils.capitalize(item["enunciado"]),
-                tipo_pregunta     : item["tipoPregunta"]["questionType"],
-                apariencia        : item["apariencia"]["appearance"],
-                requerido         : item["requerido"].toString(),
-                requerido_msj     : item["requerido_msj"],
-                readonly          : item["readonly"].toString(),
-                defecto           : item["defecto"],
-                calculation       : item["calculation"],
-                restriccion       : item["restriccion"].toString(),
-                restriccion_msj   : item["restriccion_msj"],
-                relevant          : item["relevant"],
-                choice_filter     : item["choice_filter"],
-                bind_name         : item["name"],
-                bind_type         : item["bindType"],
-                bind_field_length : item["bindFieldLength"].toString(),
+                id_pregunta: item["idPregunta"],
+                id_bloque: item["id_bloque"],
+                idEncuesta: int.parse(idEncuesta),
+                enunciado: StringUtils.capitalize(item["enunciado"]),
+                tipo_pregunta: item["tipoPregunta"]["questionType"],
+                apariencia: item["apariencia"]["appearance"],
+                requerido: item["requerido"].toString(),
+                requerido_msj: item["requerido_msj"],
+                readonly: item["readonly"].toString(),
+                defecto: item["defecto"],
+                calculation: item["calculation"],
+                restriccion: item["restriccion"].toString(),
+                restriccion_msj: item["restriccion_msj"],
+                relevant: item["relevant"],
+                choice_filter: item["choice_filter"],
+                bind_name: item["name"],
+                bind_type: item["bindType"],
+                bind_field_length: item["bindFieldLength"].toString(),
                 bind_field_placeholder: item["bindFieldPlaceholder"],
-                orden             : item["orden"],
-                estado            : item["estado"].toString(),
-                updated_at        : item["updatedAt"],
-                created_at        : item["createdAt"],
-                index1            : index,
-                bloqueDescripcion : item["bloque"]["nombre"],
-                formula_condicion : item["formulaCondicion"]  == null ? "" : item["formulaCondicion"],
-                condicion         : item["condicionalDependiente"].toString(),
-                show              : item["condicionalDependiente"].toString() == "false" ? "true" : "false" 
-            ),
+                orden: item["orden"],
+                estado: item["estado"].toString(),
+                updated_at: item["updatedAt"],
+                created_at: item["createdAt"],
+                index1: index,
+                bloqueDescripcion: item["bloque"]["nombre"],
+                formula_condicion: item["formulaCondicion"] == null
+                    ? ""
+                    : item["formulaCondicion"],
+                condicion: item["condicionalDependiente"].toString(),
+                show: item["condicionalDependiente"].toString() == "false"
+                    ? "true"
+                    : "false"),
           );
           List preguOpcion = item["preguntaGrupoOpcion"];
           if (preguOpcion.length > 0) {
@@ -839,10 +827,7 @@ class PrincipalController extends GetxController {
             print(listOpciones);
 
             listOpciones.forEach((item2) {
-
-              _opcionesPreguntas.add(
-
-                OpcionesModel(
+              _opcionesPreguntas.add(OpcionesModel(
                   idOpcion: item2["idOpcion"],
                   idPreguntaGrupoOpcion: idPreguOpcion.toString(),
                   idPregunta: idPregunta,
@@ -853,18 +838,14 @@ class PrincipalController extends GetxController {
                   createdAt: item2["createdAt"],
                   updated_at: item2["updatedAt"],
                   requiereDescripcion: item2["requiereDescripcion"].toString(),
-                  padre   :   item2["padre"] 
-                )
-
-              );
-
+                  padre: item2["padre"]));
             });
           }
         });
       }
 
       print(_opcionesPreguntas);
-      
+
       for (var e = 0; e < _preguntas.length; e++) {
         await DBProvider.db.insertPreguntasxEncuestas(_preguntas[e]);
       }
@@ -873,7 +854,6 @@ class PrincipalController extends GetxController {
       }
       var opcion = await DBProvider.db.getAllOpciones();
       print(opcion);
-
 
       if (_proyectos.length > 0) {
         /*_isLoading = false;
@@ -897,24 +877,22 @@ class PrincipalController extends GetxController {
   cargarUsuarios() async {
     var listUserApi = await apiConexion.getAllUsers();
     listUserApi.forEach((item) {
-      _usuarios.add(
-          UsuarioModel(
-          idUsuario: item["idUsuario"],
-          nombre: item["nombre"],
-          apellidoPaterno: item["apellidoPaterno"],
-          apellidoMaterno: item["apellidoMaterno"],
-          dni: item["dni"],
-          email: item["email"],
-          username: item["login"],
-          password: item["password"],
-          foto: item["foto"],
-          fechaAlta: item["fechaAlta"],
-          perfil: item['perfil']['nombre'],
-          estado: item["estado"].toString(),
-          metaData: item["metaData"] == null ? "" : item["metaData"],
-          createdAt: item["createdAt"],
-        )
-      );
+      _usuarios.add(UsuarioModel(
+        idUsuario: item["idUsuario"],
+        nombre: item["nombre"],
+        apellidoPaterno: item["apellidoPaterno"],
+        apellidoMaterno: item["apellidoMaterno"],
+        dni: item["dni"],
+        email: item["email"],
+        username: item["login"],
+        password: item["password"],
+        foto: item["foto"],
+        fechaAlta: item["fechaAlta"],
+        perfil: item['perfil']['nombre'],
+        estado: item["estado"].toString(),
+        metaData: item["metaData"] == null ? "" : item["metaData"],
+        createdAt: item["createdAt"],
+      ));
     });
 
     for (var i = 0; i < _usuarios.length; i++) {
@@ -970,7 +948,7 @@ class PrincipalController extends GetxController {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: Text(
           'Notificación',
-          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
